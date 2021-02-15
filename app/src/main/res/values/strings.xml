@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">LetMeQuiet</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="let_me_quiet">Let Me Quiet</string>
+    <string name="blank"> </string>
+
+    <string name="Quiet_Once">바로 조용히 하기</string>
+    <string name="WeekDay_Night">평일 밤 조용히</string>
+    <string name="WeekEnd_Night">주말 밤 조용히</string>
+    <string name="Sunday_Church">주일 교회 예배</string>
+    <string name="action_add">추가</string>
+    <string name="action_reset">모두 재 설정 하기</string>
+    <string name="action_delete">Deleting</string>
+
+    <string name="subject">제목</string>
+
+    <string name="set">설정</string>
+
+    <string name="week_0">주</string>
+    <string name="week_1">월</string>
+    <string name="week_2">화</string>
+    <string name="week_3">수</string>
+    <string name="week_4">목</string>
+    <string name="week_5">금</string>
+    <string name="week_6">토</string>
+    <string name="hh_mm">HH:MM</string>
+    <string name="already_passed_time">이미 지난 시각입니다</string>
+    <string name="update_table">수정</string>
+    <string name="add_table">추가</string>
+    <string name="no_subject">제목 없음</string>
+    <string name="at_least_one_day_selected">적어도 하루는 선택해야 하지 않을까요?</string>
+    <string name="sound_when_manner_changed">매너 변경시 소리</string>
+    <string name="date_time">23:59</string>
+    <string name="subject_name">Weekly DayTime</string>
+    <string name="startFinish">시작</string>
+
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="week_margin">4dp</dimen>
+    <dimen name="week_padding">4dp</dimen>
+</resources>
