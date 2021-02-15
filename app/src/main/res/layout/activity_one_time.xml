@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TimePicker
+            android:id="@+id/oneTimePicker"
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:theme="@style/NumberPickerStyle"
+            android:headerBackground="@color/headerBackground"
+            android:headerTimeTextAppearance="@style/Base.TextAppearance.AppCompat.Display2"
+            android:layerType="software" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="까지"
+            android:textSize="24sp"
+            android:gravity="left"
+            android:layout_gravity="center" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/oneDuration"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:text="02:00"/>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/oneVibrate"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:src="@mipmap/phone_vibrate"
+            android:contentDescription="@string/blank" />
+
+        <TextView
+            android:id="@+id/minus30Min"
+            android:gravity="center_vertical"
+            android:text="30분▼"
+            android:textSize="20sp"
+            android:layout_margin="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/minus10Min"
+            android:gravity="center_vertical"
+            android:text="10분▼"
+            android:textSize="20sp"
+            android:layout_margin="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/plus10Min"
+            android:gravity="center_vertical"
+            android:text="10분▲"
+            android:textSize="20sp"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/plus30Min"
+            android:gravity="center_vertical"
+            android:text="30분▲"
+            android:textSize="20sp"
+            android:layout_marginLeft="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

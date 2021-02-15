@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
+import static com.urrecliner.letmequiet.Vars.mainContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
@@ -35,6 +36,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert caseSFO != null;
         switch (caseSFO) {
             case "S":   // start
+                if (quietTask.speaking)
+                    speak_subject();
                 MannerMode.turnOn(context, subject, quietTask.vibrate);
                 break;
             case "F":   // finish
@@ -71,4 +74,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            Log.e(LOG_TAG,"-- Dumping Intent end");
 //        }
 //    }
+    void speak_subject() {
+
+        Text2Speech text2Speech = new Text2Speech();
+        text2Speech.initiateTTS(mainContext);
+        text2Speech.speak(quietTask.subject);
+    }
 }

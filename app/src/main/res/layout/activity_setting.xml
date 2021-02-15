@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/setting_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/setSoundText"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:gravity="end|center_vertical"
+            android:layout_height="wrap_content"
+            android:text="@string/beep_to_manner_mode"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/setSound"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:onClick="adjustSetting"
+            android:clickable="true"
+            android:layout_height="wrap_content"
+            android:text="@string/set"
+            android:textColor="#012345"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:background="@drawable/setting_border"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/Quiet_Once"
+            android:layout_margin="0dp"
+            android:padding="4dp"
+            android:textSize="20sp" />
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/setting_border"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_weight="5"
+                android:layout_marginTop="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_short"
+                    android:layout_margin="0dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalShortMinus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_minus"
+                    android:onClick="adjustSetting"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalShort"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:clickable="true"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalShortPlus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_plus"
+                    android:onClick="adjustSetting"
+                    android:clickable="true"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/interval_long"
+                    android:layout_margin="0dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalLongMinus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_minus"
+                    android:onClick="adjustSetting"
+                    android:clickable="true"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalLong"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setIntervalLongPlus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_plus"
+                    android:onClick="adjustSetting"
+                    android:clickable="true"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:gravity="end|center_vertical"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_duration"
+                    android:layout_margin="0dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setDefaultDurationMinus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_minus"
+                    android:onClick="adjustSetting"
+                    android:clickable="true"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setDefaultDuration"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/setDefaultDurationPlus"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_plus"
+                    android:onClick="adjustSetting"
+                    android:clickable="true"
+                    android:textColor="#012345"
+                    android:textStyle="bold"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -113,12 +113,12 @@ public class AddUpdateActivity extends AppCompatActivity {
             }
         });
 
-        binding.speakFlag.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
-        binding.speakFlag.setOnClickListener(new View.OnClickListener() {
+        binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
+        binding.ivSpeaking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 speaking ^= true;
-                binding.speakFlag.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
+                binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
                 v.invalidate();
             }
         });
