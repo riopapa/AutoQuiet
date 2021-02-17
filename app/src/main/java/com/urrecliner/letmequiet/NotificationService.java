@@ -7,8 +7,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
@@ -20,7 +23,10 @@ public class NotificationService extends Service {
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
-    private static final int STOP_ONETIME = 10011;
+    private static final int STOP_ONETIME = 100;
+    private static final int STOP_SPEAK = 10022;
+    static boolean no_speak = true;
+    String dateTime, subject, startFinish;
 
     @Override
     public void onCreate() {
@@ -42,17 +48,23 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         int operation = -1;
+        boolean isUpdate;
         try {
             operation = intent.getIntExtra("operation", -1);
         } catch (Exception e) {
             Log.e("operation", e.toString());
         }
-        boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
-        String dateTime = intent.getStringExtra("dateTime");
-        String subject = intent.getStringExtra("subject");
-        String startFinish = intent.getStringExtra("startFinish");
+        try {
+            isUpdate = intent.getBooleanExtra("isUpdate", false);
+        } catch (Exception e) {
+            return START_STICKY;
+        }
         createNotification();
         if (isUpdate) {
+            dateTime = intent.getStringExtra("dateTime");
+            subject = intent.getStringExtra("subject");
+            startFinish = intent.getStringExtra("startFinish");
+            no_speak = startFinish.equals("F");
             updateRemoteViews(dateTime, subject, startFinish);
             startForeground(100, mBuilder.build());
             return START_STICKY;
@@ -60,6 +72,11 @@ public class NotificationService extends Service {
         if (operation == STOP_ONETIME) {
             intent = new Intent(context, OneTimeActivity.class);
             startActivity(intent);
+        }
+        if (operation == STOP_SPEAK) {
+            AlarmReceiver.speak_off();
+            no_speak = false;
+            updateRemoteViews(dateTime, subject, startFinish);
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -88,21 +105,23 @@ public class NotificationService extends Service {
 
         Intent stopOneTime = new Intent(this, NotificationService.class);
         stopOneTime.putExtra("operation", STOP_ONETIME);
-        stopOneTime.putExtra("isFromNotification", true);
         PendingIntent pi = PendingIntent.getService(context, 2, stopOneTime, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
+
+        Intent stopSpeak = new Intent(this, NotificationService.class);
+        stopSpeak.putExtra("operation", STOP_SPEAK);
+        PendingIntent ps = PendingIntent.getService(context, 3, stopSpeak, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pi);
+        mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    private void updateRemoteViews(String dateTime, String subject, String startFinish) {
+    void updateRemoteViews(String dateTime, String subject, String startFinish) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_now);
         mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
         mRemoteViews.setTextViewText(R.id.subject, subject);
         mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
-//        int color = startFinish.equals("S") ? Color.GREEN : Color.BLUE;
-//        mRemoteViews.setTextColor(R.id.dateTime, color);
-//        mRemoteViews.setTextColor(R.id.subject, color);
-//        mRemoteViews.setTextColor(R.id.startFinish, color);
+        mRemoteViews.setViewVisibility(R.id.no_speak, (no_speak) ? View.VISIBLE:View.GONE);
     }
 
     @Override

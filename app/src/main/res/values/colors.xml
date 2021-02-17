@@ -8,7 +8,7 @@
     <color name="white">#ffffff</color>
     <color name="back">#E6E6E6</color>
     <color name="transparent">#00000000</color>
-    <color name="notification_back">#B4C6C4</color>
+    <color name="notification_back">#3DCFCCCC</color>
     <color name="line_item_back">#FFc4cAcE</color>
 
     <color name="colorInactiveBack">#808080</color>
@@ -17,6 +17,7 @@
     <color name="colorOff">#98AFC7</color>
     <color name="colorActive">#0000A0</color>
     <color name="colorOffBack">#00000000</color>
+    <color name="colorNotification">#98AFC7</color>
     <color name="headerBackground">#FBB117</color>
 
 </resources>

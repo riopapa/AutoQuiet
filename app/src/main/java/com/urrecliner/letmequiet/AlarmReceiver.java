@@ -1,14 +1,22 @@
 package com.urrecliner.letmequiet;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
+import static com.urrecliner.letmequiet.Vars.mainActivity;
 import static com.urrecliner.letmequiet.Vars.mainContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
@@ -16,6 +24,9 @@ import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    private static int loopCount;
+    TextToSpeech textToSpeech;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -76,8 +87,32 @@ public class AlarmReceiver extends BroadcastReceiver {
 //    }
     void speak_subject() {
 
-        Text2Speech text2Speech = new Text2Speech();
-        text2Speech.initiateTTS(mainContext);
-        text2Speech.speak(quietTask.subject);
+        loopCount = 10;
+        textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        Timer speakTimer = new Timer();
+        speakTimer.schedule(new TimerTask() {
+            public void run() {
+                if (loopCount-- > 0)
+                    textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
+                else {
+                    speakTimer.cancel();
+                    speakTimer.purge();
+                    textToSpeech.stop();
+                    final int STOP_SPEAK = 10022;
+                    Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
+                    stopSpeak.putExtra("operation", STOP_SPEAK);
+                    mainContext.startService(stopSpeak);
+                }
+            }
+        }, 2000, 2000);
+
+
+//
+//        text2Speech.initiateTTS(mainContext);
+//        text2Speech.speak(quietTask.subject);
     }
+    static void speak_off() {
+        loopCount = 0;
+    }
+
 }
