@@ -48,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         switch (caseSFO) {
             case "S":   // start
                 if (quietTask.speaking)
-                    speak_subject();
+                    speak_subject(context);
                 MannerMode.turnOn(context, subject, quietTask.vibrate);
                 break;
             case "F":   // finish
@@ -85,16 +85,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            Log.e(LOG_TAG,"-- Dumping Intent end");
 //        }
 //    }
-    void speak_subject() {
+    void speak_subject(Context context) {
 
         loopCount = 10;
         textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
-                if (loopCount-- > 0)
-                    textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
-                else {
+                if (loopCount-- > 0) {
+                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
+                textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else {
                     speakTimer.cancel();
                     speakTimer.purge();
                     textToSpeech.stop();
@@ -106,10 +107,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }, 2000, 2000);
 
-
-//
-//        text2Speech.initiateTTS(mainContext);
-//        text2Speech.speak(quietTask.subject);
     }
     static void speak_off() {
         loopCount = 0;
