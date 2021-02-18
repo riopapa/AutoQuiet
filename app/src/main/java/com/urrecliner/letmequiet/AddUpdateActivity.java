@@ -157,12 +157,6 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         stateCode = STATE_ADD_UPDATE;
         utils.log(logID, stateCode + " "+utils.hourMin(startHour,startMin));
-//        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//        Bundle args = new Bundle();
-//        args.putSerializable("silentInfo", silentInfo);
-//        i.putExtra("DATA", args);
-//        getApplicationContext().startActivity(i);
-//        utils.log("AddUpdateActivity","start MainActivity");
         finish();
         recycleViewAdapter.notifyItemChanged(qIdx, quietTask);
 
@@ -196,8 +190,8 @@ public class AddUpdateActivity extends AppCompatActivity {
             case R.id.action_save:
                 save_QuietTask();
                 break;
-            case R.id.action_cancel:
-                break;
+//            case R.id.action_cancel:
+//                break;
             case R.id.action_delete:
                 quietTasks.remove(qIdx);
                 utils.saveSharedPrefTables();

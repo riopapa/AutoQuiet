@@ -113,7 +113,7 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
         else{
             boolean[] week = quietTask.week;
             for (int i = 0; i < 7; i++) {
-                tViewWeek[i].setTextColor(week[i] ? colorActive : colorOff);
+                tViewWeek[i].setTextColor(active ? colorActive : colorOff);
                 if (active)
                     tViewWeek[i].setBackgroundColor(week[i] ? colorOnBack : colorOffBack);
                 else

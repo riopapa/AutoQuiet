@@ -164,7 +164,6 @@ public class OneTimeActivity extends AppCompatActivity {
         if (mainActivity == null)
             mainActivity = new MainActivity();
         mainActivity.scheduleNextTask("One Time");
-        finish();
 //
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 //        assert alarmManager != null;
@@ -191,15 +190,16 @@ public class OneTimeActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_save) {
             saveOneTime();
-            return true;
-        }
-
-        if (id == R.id.action_cancel) {
-            quietTasks.set(qIdx, quietTask);
-            utils.saveSharedPrefTables();
             finish();
             return true;
         }
+
+//        if (id == R.id.action_cancel) {
+//            quietTasks.set(qIdx, quietTask);
+//            utils.saveSharedPrefTables();
+//            finish();
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

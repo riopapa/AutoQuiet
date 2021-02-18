@@ -49,7 +49,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             case "S":   // start
                 if (quietTask.speaking)
                     speak_subject(context);
-                MannerMode.turnOn(context, subject, quietTask.vibrate);
+                else
+                    MannerMode.turnOn(context, subject, quietTask.vibrate);
                 break;
             case "F":   // finish
                 MannerMode.turnOff(context, subject);
@@ -65,11 +66,35 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         stateCode = STATE_ALARM;
         actionHandler.sendEmptyMessage(0);
+    }
 
-//        Intent i = new Intent(context, MainActivity.class);
-//        i.putExtra("stateCode",stateCode);
-//        i.putExtra("DATA",args);
-//        context.startActivity(i);
+    void speak_subject(Context context) {
+
+        loopCount = 10;
+        textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        Timer speakTimer = new Timer();
+        speakTimer.schedule(new TimerTask() {
+            public void run() {
+                if (loopCount-- > 0) {
+                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
+                    textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
+                } else {
+                    speakTimer.cancel();
+                    speakTimer.purge();
+                    textToSpeech.stop();
+                    final int STOP_SPEAK = 10022;
+                    Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
+                    stopSpeak.putExtra("operation", STOP_SPEAK);
+                    mainContext.startService(stopSpeak);
+                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
+
+                }
+            }
+        }, 2000, 2000);
+
+    }
+    static void speak_off() {
+        loopCount = -1;
     }
 
 //    private static void dumpIntent(Intent i){
@@ -85,31 +110,5 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            Log.e(LOG_TAG,"-- Dumping Intent end");
 //        }
 //    }
-    void speak_subject(Context context) {
-
-        loopCount = 10;
-        textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
-        Timer speakTimer = new Timer();
-        speakTimer.schedule(new TimerTask() {
-            public void run() {
-                if (loopCount-- > 0) {
-                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
-                textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    speakTimer.cancel();
-                    speakTimer.purge();
-                    textToSpeech.stop();
-                    final int STOP_SPEAK = 10022;
-                    Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
-                    stopSpeak.putExtra("operation", STOP_SPEAK);
-                    mainContext.startService(stopSpeak);
-                }
-            }
-        }, 2000, 2000);
-
-    }
-    static void speak_off() {
-        loopCount = 0;
-    }
 
 }

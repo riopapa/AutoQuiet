@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setTitle("데이터 초기화")
                         .setMessage("이미 설정되어 있는 테이블을 다 삭제합니다")
-                        .setIcon(R.mipmap.icon_alert)
+                        .setIcon(R.mipmap.alert)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 initiate_QuietTasks();

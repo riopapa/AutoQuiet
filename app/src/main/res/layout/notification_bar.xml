@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:src="@mipmap/let_me_quiet" />
 
         <TextView
@@ -67,26 +67,21 @@
             android:layout_width="0sp"
             android:layout_weight="3"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
-            android:src="@mipmap/quiet_now" />
-        </LinearLayout>
-    <LinearLayout
-        android:id="@+id/lo_speak"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
+            android:layout_margin="4dp"
+            android:src="@mipmap/quiet_right_now" />
+
         <TextView
             android:id="@+id/no_speak"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:background="@drawable/stop_talking"
             android:textStyle="bold"
-            android:text="Press Here to Stop Speaking"
+            android:text="Press Here\n to Stop\n Speaking"
             android:textSize="18sp" />
-    </LinearLayout>
+
+        </LinearLayout>
 
 </LinearLayout>

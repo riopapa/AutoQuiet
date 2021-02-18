@@ -7,7 +7,7 @@
         android:id="@+id/action_reset"
         android:orderInCategory="100"
         android:title="@string/action_reset"
-        android:icon="@mipmap/icon_reset"
+        android:icon="@mipmap/reset"
         app:showAsAction="ifRoom"
         />
 

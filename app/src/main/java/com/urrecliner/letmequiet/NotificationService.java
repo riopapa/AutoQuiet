@@ -7,14 +7,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
+
+import static com.urrecliner.letmequiet.Vars.mainContext;
 
 public class NotificationService extends Service {
 
@@ -23,7 +23,7 @@ public class NotificationService extends Service {
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
-    private static final int STOP_ONETIME = 100;
+    private static final int INVOKE_ONETIME = 100;
     private static final int STOP_SPEAK = 10022;
     static boolean no_speak = true;
     String dateTime, subject, startFinish;
@@ -69,8 +69,8 @@ public class NotificationService extends Service {
             startForeground(100, mBuilder.build());
             return START_STICKY;
         }
-        if (operation == STOP_ONETIME) {
-            intent = new Intent(context, OneTimeActivity.class);
+        if (operation == INVOKE_ONETIME) {
+            intent = new Intent(mainContext, OneTimeActivity.class);
             startActivity(intent);
         }
         if (operation == STOP_SPEAK) {
@@ -85,11 +85,9 @@ public class NotificationService extends Service {
     private void createNotification() {
 
         if (null == mNotificationChannel) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
-                mNotificationManager.createNotificationChannel(mNotificationChannel);
-//            }
+            mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(mNotificationChannel);
         }
         if (null == mBuilder) {
             mBuilder = new NotificationCompat.Builder(context,"default")
@@ -104,7 +102,7 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(context, 0, mainIntent, 0));
 
         Intent stopOneTime = new Intent(this, NotificationService.class);
-        stopOneTime.putExtra("operation", STOP_ONETIME);
+        stopOneTime.putExtra("operation", INVOKE_ONETIME);
         PendingIntent pi = PendingIntent.getService(context, 2, stopOneTime, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
@@ -117,7 +115,7 @@ public class NotificationService extends Service {
     }
 
     void updateRemoteViews(String dateTime, String subject, String startFinish) {
-        mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_now);
+        mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
         mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
         mRemoteViews.setTextViewText(R.id.subject, subject);
         mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
