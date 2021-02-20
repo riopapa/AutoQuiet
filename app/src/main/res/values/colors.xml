@@ -9,7 +9,7 @@
     <color name="back">#E6E6E6</color>
     <color name="transparent">#00000000</color>
     <color name="notification_back">#3DCFCCCC</color>
-    <color name="line_item_back">#FFc4cAcE</color>
+    <color name="line_item_back">#FFF4F4F4</color>
 
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>

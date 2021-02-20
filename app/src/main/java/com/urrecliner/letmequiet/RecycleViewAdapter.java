@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
@@ -109,8 +111,7 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
             holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
             txt = utils.hourMin(quietTask.finishHour, quietTask.finishMin);
             holder.tvFinishTime.setText(txt);
-        }
-        else{
+        } else{
             boolean[] week = quietTask.week;
             for (int i = 0; i < 7; i++) {
                 tViewWeek[i].setTextColor(active ? colorActive : colorOff);
@@ -127,8 +128,8 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
         }
         holder.tvFinishTime.setTextColor((active) ? colorOn:colorOff);
         holder.tvIdx.setText(""+position);
-//        int diff = position * 16;
-//        holder.view.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.line_item_back) + diff + diff*256 + diff*256*256);
+        int diff = position * 8;
+        holder.viewLine.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.line_item_back) - diff - diff*256 - diff*256*256);
     }
 
     @Override

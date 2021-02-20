@@ -76,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
+                    MannerMode.vibratePhone(context);
                     textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     speakTimer.cancel();

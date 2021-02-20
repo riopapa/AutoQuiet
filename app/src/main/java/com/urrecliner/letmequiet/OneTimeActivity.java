@@ -181,7 +181,7 @@ public class OneTimeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_timer, menu);
+        getMenuInflater().inflate(R.menu.menu_onetime, menu);
         return true;
     }
 
@@ -193,13 +193,6 @@ public class OneTimeActivity extends AppCompatActivity {
             finish();
             return true;
         }
-
-//        if (id == R.id.action_cancel) {
-//            quietTasks.set(qIdx, quietTask);
-//            utils.saveSharedPrefTables();
-//            finish();
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 

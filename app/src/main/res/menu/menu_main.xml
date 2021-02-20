@@ -15,7 +15,7 @@
         android:id="@+id/action_setting"
         android:orderInCategory="100"
         android:title="@string/set"
-        android:icon="@mipmap/icon_setting"
+        android:icon="@mipmap/setting"
         app:showAsAction="ifRoom"
         />
 
@@ -23,7 +23,7 @@
         android:id="@+id/action_add"
         android:orderInCategory="100"
         android:title="@string/action_add"
-        android:icon="@mipmap/icon_add"
+        android:icon="@mipmap/add"
         app:showAsAction="ifRoom"
         />
 
