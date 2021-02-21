@@ -15,6 +15,7 @@ import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 
 import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.quietTask;
 
 public class NotificationService extends Service {
 
@@ -26,7 +27,7 @@ public class NotificationService extends Service {
     private static final int INVOKE_ONETIME = 100;
     private static final int STOP_SPEAK = 10022;
     static boolean no_speak = true;
-    String dateTime, subject, startFinish;
+    String dateTime, subject, startFinish, sIcon;
 
     @Override
     public void onCreate() {
@@ -64,6 +65,7 @@ public class NotificationService extends Service {
             dateTime = intent.getStringExtra("dateTime");
             subject = intent.getStringExtra("subject");
             startFinish = intent.getStringExtra("startFinish");
+
             no_speak = startFinish.equals("F");
             updateRemoteViews(dateTime, subject, startFinish);
             startForeground(100, mBuilder.build());
@@ -114,12 +116,19 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
+    int [] smallIcons = { R.mipmap.small_speaker_on, R.mipmap.small_vibrate, R.mipmap.small_mute};
+
     void updateRemoteViews(String dateTime, String subject, String startFinish) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
         mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
         mRemoteViews.setTextViewText(R.id.subject, subject);
         mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
         mRemoteViews.setViewVisibility(R.id.no_speak, (no_speak) ? View.VISIBLE:View.GONE);
+        int smallIcon = smallIcons[0];
+        if (!startFinish.equals("S")) {
+            smallIcon = smallIcons[(quietTask.vibrate) ? 1:2];
+        }
+        mBuilder.setSmallIcon(smallIcon);
     }
 
     @Override
