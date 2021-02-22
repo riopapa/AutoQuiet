@@ -70,7 +70,7 @@
             android:layout_margin="16dp"
             android:layout_width="60dp"
             android:layout_height="48dp"
-            android:src="@mipmap/phone_vibrate"
+            android:src="@mipmap/phone_vibrate_blue"
             android:contentDescription="@string/blank" />
 
         <EditText

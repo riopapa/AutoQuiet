@@ -1,6 +1,5 @@
 package com.urrecliner.letmequiet;
 
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,7 +10,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-
 import androidx.core.app.NotificationCompat;
 
 import static com.urrecliner.letmequiet.Vars.mainContext;
@@ -93,7 +91,7 @@ public class NotificationService extends Service {
         }
         if (null == mBuilder) {
             mBuilder = new NotificationCompat.Builder(context,"default")
-                    .setSmallIcon(R.mipmap.let_me_quiet_small)
+                    .setSmallIcon(R.mipmap.let_me_quiet)
                     .setContent(mRemoteViews)
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(false)
@@ -116,7 +114,7 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    int [] smallIcons = { R.mipmap.small_speaker_on, R.mipmap.small_vibrate, R.mipmap.small_mute};
+    int [] smallIcons = { R.mipmap.phone_normal, R.mipmap.phone_vibrate_blue, R.mipmap.phone_quiet_red};
 
     void updateRemoteViews(String dateTime, String subject, String startFinish) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);

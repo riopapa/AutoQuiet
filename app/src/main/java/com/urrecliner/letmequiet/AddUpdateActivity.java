@@ -93,12 +93,12 @@ public class AddUpdateActivity extends AppCompatActivity {
             weekView[i].setText(weekName[i]);
         }
 
-        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate:R.mipmap.phone_quiet);
+        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
         binding.avVibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vibrate ^= true;
-                binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate:R.mipmap.phone_quiet);
+                binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
                 v.invalidate();
             }
         });

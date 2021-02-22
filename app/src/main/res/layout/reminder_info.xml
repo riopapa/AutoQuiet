@@ -22,7 +22,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@mipmap/phone_vibrate"
+            android:src="@mipmap/phone_vibrate_blue"
             android:contentDescription="@string/blank" />
         <TextView
             android:id="@+id/idx"

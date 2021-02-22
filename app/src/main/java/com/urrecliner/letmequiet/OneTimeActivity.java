@@ -86,18 +86,18 @@ public class OneTimeActivity extends AppCompatActivity {
 
     void buildScreen() {
         String text;
-        text = interval_Short+"분↓"; binding.minus10Min.setText(text);
-        text = interval_Short+"분↑"; binding.plus10Min.setText(text);
-        text = interval_Long+"분↓"; binding.minus30Min.setText(text);
-        text = interval_Long+"분↑"; binding.plus30Min.setText(text);
+        text = interval_Short+"분▽"; binding.minus10Min.setText(text);
+        text = interval_Short+"분△"; binding.plus10Min.setText(text);
+        text = interval_Long+"분▽"; binding.minus30Min.setText(text);
+        text = interval_Long+"분△"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
-        binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate:R.mipmap.phone_quiet);
+        binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
         binding.oneVibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vibrate ^= true;
-                binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate:R.mipmap.phone_quiet);
+                binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
                 v.invalidate();
             }
         });

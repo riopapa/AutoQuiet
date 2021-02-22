@@ -87,9 +87,9 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
         boolean vibrate = quietTask.vibrate;
         boolean speaking = quietTask.speaking;
         if (vibrate)
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate :R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate_blue :R.mipmap.speaking_noactive);
         else
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet_red : R.mipmap.speaking_noactive);
         if (speaking)
             holder.lvSpeak.setImageResource((active) ? R.mipmap.speaking_on :R.mipmap.speaking_noactive);
         else
@@ -128,7 +128,7 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
         }
         holder.tvFinishTime.setTextColor((active) ? colorOn:colorOff);
         holder.tvIdx.setText(""+position);
-        int diff = position * 8;
+        int diff = position * 6;
         holder.viewLine.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.line_item_back) - diff - diff*256 - diff*256*256);
     }
 
