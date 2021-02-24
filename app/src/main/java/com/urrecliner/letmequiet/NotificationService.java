@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 
+import static com.urrecliner.letmequiet.Vars.INVOKE_ONETIME;
+import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
 import static com.urrecliner.letmequiet.Vars.mainContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 
@@ -22,8 +24,6 @@ public class NotificationService extends Service {
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
-    private static final int INVOKE_ONETIME = 100;
-    private static final int STOP_SPEAK = 10022;
     static boolean no_speak = true;
     String dateTime, subject, startFinish, sIcon;
 

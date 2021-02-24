@@ -48,14 +48,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         switch (caseSFO) {
             case "S":   // start
                 if (quietTask.speaking)
-                    speak_subject(context);
-                else {
-                    MannerMode.turnOn(context, subject, quietTask.vibrate);
-                    final int STOP_SPEAK = 10022;
-                    Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
-                    stopSpeak.putExtra("operation", STOP_SPEAK);
-                    mainContext.startService(stopSpeak);
-                }
+                    loopCount = 10;
+                else
+                    loopCount = -1;
+                speak_subject();
                 break;
             case "F":   // finish
                 MannerMode.turnOff(context, subject);
@@ -73,21 +69,20 @@ public class AlarmReceiver extends BroadcastReceiver {
         actionHandler.sendEmptyMessage(0);
     }
 
-    void speak_subject(Context context) {
+    void speak_subject() {
 
-        loopCount = 10;
         textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    MannerMode.vibratePhone(context);
+                    MannerMode.vibratePhone(mainContext);
                     textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
                     textToSpeech.stop();
-                    MannerMode.turnOn(context, quietTask.subject, quietTask.vibrate);
+                    MannerMode.turnOn(mainContext, quietTask.subject, quietTask.vibrate);
                     final int STOP_SPEAK = 10022;
                     Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
                     stopSpeak.putExtra("operation", STOP_SPEAK);

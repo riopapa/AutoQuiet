@@ -45,4 +45,7 @@ class Vars {
     static final String STATE_BOOT = "Boot";
     static final String STATE_ADD_UPDATE = "AddUpdate";
     static Handler actionHandler;
+    static final int INVOKE_ONETIME = 100;
+    static final int STOP_SPEAK = 10022;
+
 }
