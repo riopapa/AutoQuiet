@@ -25,7 +25,7 @@ import static com.urrecliner.letmequiet.Vars.colorOff;
 import static com.urrecliner.letmequiet.Vars.colorOffBack;
 import static com.urrecliner.letmequiet.Vars.colorOn;
 import static com.urrecliner.letmequiet.Vars.colorOnBack;
-import static com.urrecliner.letmequiet.Vars.mainActivity;
+import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.qIdx;
 import static com.urrecliner.letmequiet.Vars.quietTask;
@@ -54,7 +54,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         binding = ActivityAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (addNewQuiet)
-            quietTask = mainActivity.getQuietTaskDefault();
+            quietTask = mActivity.getQuietTaskDefault();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle((addNewQuiet) ? R.string.add_table :R.string.update_table);

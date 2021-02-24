@@ -1,13 +1,10 @@
 package com.urrecliner.letmequiet;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -15,9 +12,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
+import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
-import static com.urrecliner.letmequiet.Vars.mainActivity;
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mActivity;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
@@ -46,11 +44,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         utils.log("Activated ","// case:"+ caseSFO + " subject: "+subject+" ///");
         assert caseSFO != null;
         switch (caseSFO) {
-            case "S":   // start
-                if (quietTask.speaking)
-                    loopCount = 10;
-                else
-                    loopCount = -1;
+            case "S":   // start?
+                loopCount = (quietTask.speaking) ? 10:-1;
                 speak_subject();
                 break;
             case "F":   // finish
@@ -71,22 +66,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void speak_subject() {
 
-        textToSpeech = new TextToSpeech(mainContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    MannerMode.vibratePhone(mainContext);
+                    MannerMode.vibratePhone(mContext);
                     textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
                     textToSpeech.stop();
-                    MannerMode.turnOn(mainContext, quietTask.subject, quietTask.vibrate);
-                    final int STOP_SPEAK = 10022;
-                    Intent stopSpeak = new Intent(mainActivity, NotificationService.class);
+                    MannerMode.turnOn(mContext, quietTask.subject, quietTask.vibrate);
+                    Intent stopSpeak = new Intent(mActivity, NotificationService.class);
                     stopSpeak.putExtra("operation", STOP_SPEAK);
-                    mainContext.startService(stopSpeak);
+                    mContext.startService(stopSpeak);
 
                 }
             }

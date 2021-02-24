@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.sdfDate;
 import static com.urrecliner.letmequiet.Vars.sdfLogTime;
 import static com.urrecliner.letmequiet.Vars.sharedPreferences;
@@ -66,7 +66,7 @@ class Utils {
 
     private File getPackageDirectory() {
 
-        String applicationName = getAppLabel(mainContext);
+        String applicationName = getAppLabel(mContext);
         File directory = new File(Environment.getExternalStorageDirectory(), applicationName);
         try {
             if (!directory.exists()) {
@@ -149,7 +149,7 @@ class Utils {
 
     void saveSharedPrefTables() {
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainContext);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);
@@ -160,7 +160,7 @@ class Utils {
     ArrayList<QuietTask> readSharedPrefTables() {
 
         ArrayList<QuietTask> list;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainContext);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("silentInfo", "");
         if (json.isEmpty()) {

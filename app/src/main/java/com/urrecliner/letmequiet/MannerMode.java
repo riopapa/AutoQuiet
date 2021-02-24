@@ -8,7 +8,7 @@ import android.os.Vibrator;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 import static com.urrecliner.letmequiet.Vars.beepManner;
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.utils;
 
 class MannerMode {
@@ -21,7 +21,7 @@ class MannerMode {
         beepStart();
         vibratePhone(context);
 
-        AudioManager am = (AudioManager) mainContext.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         if (vibrate)
             am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
@@ -60,7 +60,7 @@ class MannerMode {
         if (beepManner) {
             if (mpStart == null) {
                 utils.log(logID, "creating beep mpStart");
-                mpStart = MediaPlayer.create(mainContext, R.raw.manner_starting);
+                mpStart = MediaPlayer.create(mContext, R.raw.manner_starting);
                 mpStart.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
@@ -77,7 +77,7 @@ class MannerMode {
 
         if (beepManner) {
             if (mpFinish == null) {
-                mpFinish = MediaPlayer.create(mainContext, R.raw.now_be_noisy);
+                mpFinish = MediaPlayer.create(mContext, R.raw.now_be_noisy);
                 mpFinish.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {

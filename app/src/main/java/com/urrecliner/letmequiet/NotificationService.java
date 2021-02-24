@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import static com.urrecliner.letmequiet.Vars.INVOKE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 
 public class NotificationService extends Service {
@@ -70,7 +70,7 @@ public class NotificationService extends Service {
             return START_STICKY;
         }
         if (operation == INVOKE_ONETIME) {
-            intent = new Intent(mainContext, OneTimeActivity.class);
+            intent = new Intent(mContext, OneTimeActivity.class);
             startActivity(intent);
         }
         if (operation == STOP_SPEAK) {

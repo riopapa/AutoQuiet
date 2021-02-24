@@ -50,8 +50,8 @@ import static com.urrecliner.letmequiet.Vars.colorOnBack;
 import static com.urrecliner.letmequiet.Vars.default_Duration;
 import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
-import static com.urrecliner.letmequiet.Vars.mainActivity;
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mActivity;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.sdfDateTime;
 import static com.urrecliner.letmequiet.Vars.sdfTime;
@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = this;
-        mainContext = this.getApplicationContext();
+        mActivity = this;
+        mContext = this.getApplicationContext();
         if (utils == null)
             utils = new Utils();
         utils.log(logID, "Main start ");
@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else
-                Toast.makeText(mainContext, "Permissions not granted.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Permissions not granted.", Toast.LENGTH_LONG).show();
         }
     }
     private void showDialog(String msg) {
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(mainActivity)
+        new AlertDialog.Builder(mActivity)
                 .setMessage(message)
                 .setPositiveButton("OK", okListener)
                 .setNegativeButton("Cancel", null)

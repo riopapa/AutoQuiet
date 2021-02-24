@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ import static com.urrecliner.letmequiet.Vars.colorOff;
 import static com.urrecliner.letmequiet.Vars.colorOffBack;
 import static com.urrecliner.letmequiet.Vars.colorOn;
 import static com.urrecliner.letmequiet.Vars.colorOnBack;
-import static com.urrecliner.letmequiet.Vars.mainContext;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.qIdx;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
@@ -59,12 +58,12 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
                     Intent intent;
                     if (qIdx != 0) {
                         addNewQuiet = false;
-                        intent = new Intent(mainContext, AddUpdateActivity.class);
+                        intent = new Intent(mContext, AddUpdateActivity.class);
                     } else {
-                        intent = new Intent(mainContext, OneTimeActivity.class);
+                        intent = new Intent(mContext, OneTimeActivity.class);
                     }
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainContext.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
         }
@@ -129,7 +128,7 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter<RecycleViewAdapter
         holder.tvFinishTime.setTextColor((active) ? colorOn:colorOff);
         holder.tvIdx.setText(""+position);
         int diff = position * 6;
-        holder.viewLine.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.line_item_back) - diff - diff*256 - diff*256*256);
+        holder.viewLine.setBackgroundColor(ContextCompat.getColor(mContext, R.color.line_item_back) - diff - diff*256 - diff*256*256);
     }
 
     @Override

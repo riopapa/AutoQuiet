@@ -18,7 +18,7 @@ import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.default_Duration;
 import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
-import static com.urrecliner.letmequiet.Vars.mainActivity;
+import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.qIdx;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
@@ -161,9 +161,9 @@ public class OneTimeActivity extends AppCompatActivity {
         utils.saveSharedPrefTables();
         MannerMode.turnOn(getApplicationContext(), subject, vibrate);
         stateCode = STATE_ONETIME;
-        if (mainActivity == null)
-            mainActivity = new MainActivity();
-        mainActivity.scheduleNextTask("One Time");
+        if (mActivity == null)
+            mActivity = new MainActivity();
+        mActivity.scheduleNextTask("One Time");
 //
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 //        assert alarmManager != null;

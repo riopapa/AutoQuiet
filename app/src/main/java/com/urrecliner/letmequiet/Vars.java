@@ -16,8 +16,8 @@ class Vars {
     static Utils utils = null;
 
     static boolean addNewQuiet = false;
-    static MainActivity mainActivity;
-    static Context mainContext;
+    static MainActivity mActivity;
+    static Context mContext;
     static RecycleViewAdapter recycleViewAdapter;
 
     static String stateCode;
