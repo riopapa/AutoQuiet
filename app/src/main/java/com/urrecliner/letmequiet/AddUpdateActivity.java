@@ -44,7 +44,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
     private boolean vibrate;
-    private String logID = "Add,Update";
+    private final String logID = "Add,Update";
     private ActivityAddBinding binding;
 
     @Override
@@ -94,33 +94,24 @@ public class AddUpdateActivity extends AppCompatActivity {
         }
 
         binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
-        binding.avVibrate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrate ^= true;
-                binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
-                v.invalidate();
-            }
+        binding.avVibrate.setOnClickListener(v -> {
+            vibrate ^= true;
+            binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
+            v.invalidate();
         });
 
         binding.swActive.setChecked(active);
-        binding.swActive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                active ^= true;
-                binding.swActive.setChecked(active);
-                v.invalidate();
-            }
+        binding.swActive.setOnClickListener(v -> {
+            active ^= true;
+            binding.swActive.setChecked(active);
+            v.invalidate();
         });
 
         binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
-        binding.ivSpeaking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speaking ^= true;
-                binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
-                v.invalidate();
-            }
+        binding.ivSpeaking.setOnClickListener(v -> {
+            speaking ^= true;
+            binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
+            v.invalidate();
         });
     }
 
@@ -190,19 +181,15 @@ public class AddUpdateActivity extends AppCompatActivity {
             case R.id.action_save:
                 save_QuietTask();
                 break;
-//            case R.id.action_cancel:
-//                break;
             case R.id.action_delete:
                 quietTasks.remove(qIdx);
+                recycleViewAdapter.notifyItemChanged(qIdx);
                 utils.saveSharedPrefTables();
                 cancel_QuietTask();
                 break;
         }
         finish();
-//        Intent intent = new Intent(mainContext,MainActivity.class);
-//        mainContext.startActivity(intent);
         return false;
-//        return super.onOptionsItemSelected(item);
     }
 
     private void cancel_QuietTask() {

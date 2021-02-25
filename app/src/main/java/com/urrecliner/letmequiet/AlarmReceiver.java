@@ -67,12 +67,15 @@ public class AlarmReceiver extends BroadcastReceiver {
     void speak_subject() {
 
         textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        textToSpeech.setPitch(1.4f);
+        textToSpeech.setSpeechRate(1.2f);
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    textToSpeech.speak(quietTask.subject, TextToSpeech.QUEUE_FLUSH, null, null);
+                    String s = quietTask.startHour+":"+quietTask.startMin+" "+quietTask.subject;
+                    textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();

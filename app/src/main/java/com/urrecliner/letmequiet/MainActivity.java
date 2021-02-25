@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initiate_QuietTasks() {
         quietTasks.clear();
-        quietTask = getQuietTaskOne();
+        quietTask = getQuietTaskOneTime();
         quietTasks.add(quietTask);
         quietTask = getQuietTaskDefault();
         quietTasks.add(quietTask);
@@ -286,12 +287,19 @@ public class MainActivity extends AppCompatActivity {
 
     QuietTask getQuietTaskDefault() {
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.MINUTE, 10);
+        int hStart = calendar.get(Calendar.HOUR_OF_DAY);
+        int mStart = calendar.get(Calendar.MINUTE);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
         boolean [] week = new boolean[]{false, true, true, true, true, true, false};
-        return new QuietTask(getString(R.string.WeekDay_Night), 23, 30, 6, 30,
-                week, true, false, true);
+        return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
+                week, true, true, true);
     }
 
-    QuietTask getQuietTaskOne() {
+    QuietTask getQuietTaskOneTime() {
 
         boolean [] week = new boolean[]{false, false, false, false, false, false, false};
         return new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
