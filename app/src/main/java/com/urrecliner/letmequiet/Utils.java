@@ -116,7 +116,7 @@ class Utils {
     }
 
     private static String[] omits = { "performResume", "performCreate", "callActivityOnResume", "access$",
-            "handleReceiver", "handleMessage", "dispatchKeyEvent"};
+            "handleReceiver", "handleMessage", "dispatchKeyEvent", "dispatchTransformedTouchEvent","dispatchTouchEvent"};
     private String traceName (String s) {
         for (String o : omits) {
             if (s.contains(o)) return "";

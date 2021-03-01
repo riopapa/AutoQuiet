@@ -6,5 +6,7 @@
             android:dashWidth="1px"
             android:width="2dp"
             android:color="#4fa5d5" />
+        <solid
+                android:color="@color/colorBackground" />
 </shape>
 <!--<stroke android:width="2dp" android:color="#4fa5d5"/>-->

@@ -17,6 +17,7 @@ import com.urrecliner.letmequiet.databinding.ActivityMainBinding;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,11 +65,11 @@ import static com.urrecliner.letmequiet.Vars.utils;
 import static com.urrecliner.letmequiet.Vars.weekName;
 import static com.urrecliner.letmequiet.Vars.xSize;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private static String logID = "Main";
     private ActivityMainBinding binding;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
         askPermission();
 
         setContentView(R.layout.activity_main);
-        recyclerView = findViewById(R.id.mainRecycler);
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLinearLayoutManager);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -228,7 +226,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void showArrayLists() {
 
+        recyclerView = findViewById(R.id.mainRecycler);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLinearLayoutManager);
+
+        VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(14);
+        recyclerView.addItemDecoration(itemDecorator);
+
         recycleViewAdapter = new RecycleViewAdapter();
+        ItemTouchHelper.Callback callback = new MyItemTouchHelper(recycleViewAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        recycleViewAdapter.setTouchHelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(recycleViewAdapter);
     }
 
@@ -305,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
         return new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
                 week, false, true, false);
     }
+
 
 //    @Override
 //    protected void onResume() {
