@@ -1,7 +1,17 @@
 package com.urrecliner.letmequiet.utility;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +21,14 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
     private final Context mContext;
+
+    Paint mClearPaint;
+    ColorDrawable mBackground;
+    int backgroundColor;
+    Drawable deleteDrawable;
+    int intrinsicWidth;
+    int intrinsicHeight;
+
     public MyItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
         mContext = context;
@@ -58,5 +76,47 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
-    
+
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+        View itemView = viewHolder.itemView;
+        int itemHeight = itemView.getHeight();
+
+        mBackground = new ColorDrawable();
+        backgroundColor = Color.parseColor("#b80f0a");
+        mClearPaint = new Paint();
+        mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        deleteDrawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_menu_delete);
+        intrinsicWidth = deleteDrawable.getIntrinsicWidth();
+        intrinsicHeight = deleteDrawable.getIntrinsicHeight();
+
+        boolean isCancelled = dX == 0 && !isCurrentlyActive;
+
+        if (isCancelled) {
+            clearCanvas(c, itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            return;
+        }
+
+        mBackground.setColor(mContext.getColor(R.color.colorPrimary));
+        mBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        mBackground.draw(c);
+
+        int deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+        int deleteIconMargin = (itemHeight - intrinsicHeight) / 2;
+        int deleteIconLeft = itemView.getRight() - deleteIconMargin - intrinsicWidth;
+        int deleteIconRight = itemView.getRight() - deleteIconMargin;
+        int deleteIconBottom = deleteIconTop + intrinsicHeight;
+        deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+        deleteDrawable.draw(c);
+
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
+        c.drawRect(left, top, right, bottom, mClearPaint);
+
+    }
 }

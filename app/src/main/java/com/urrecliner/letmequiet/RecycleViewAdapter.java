@@ -1,12 +1,15 @@
 package com.urrecliner.letmequiet;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.urrecliner.letmequiet.models.QuietTask;
 import com.urrecliner.letmequiet.utility.ItemTouchHelperAdapter;
 
@@ -30,6 +34,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private QuietTask quietTask;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
+    private View swipeView;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,8 +45,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOffBack, null);
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_info, parent, false);
-        return new ViewHolder(view);
+        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_info, parent, false);
+
+        return new ViewHolder(swipeView);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
@@ -209,9 +215,24 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public void onItemSwiped(int position) {
         if (position != 0) {
+            quietTask = quietTasks.get(position);
             quietTasks.remove(position);
             notifyItemRemoved(position);
             utils.saveSharedPrefTables();
+            Snackbar snackbar = Snackbar
+                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
+            snackbar.setAction("복원", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    quietTasks.add(position, quietTask);
+                    notifyItemInserted(position);
+                    utils.saveSharedPrefTables();
+                }
+            });
+
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+
         } else {
             if (topLine++ < 0)
                 Toast.makeText(mContext,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
@@ -220,6 +241,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 //           notifyItemChanged(0);
         }
     }
+
 
     public void setTouchHelper(ItemTouchHelper touchHelper){
         this.mTouchHelper = touchHelper;
