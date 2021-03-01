@@ -53,8 +53,14 @@ public class AddUpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Intent intent = getIntent();
+        currIdx = intent.getExtras().getInt("idx",-1);
         if (addNewQuiet)
             quietTask = mActivity.getQuietTaskDefault();
+        else
+            quietTask = quietTasks.get(currIdx);
+
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle((addNewQuiet) ? R.string.add_table :R.string.update_table);
@@ -66,16 +72,13 @@ public class AddUpdateActivity extends AppCompatActivity {
         colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
         colorOff = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOff, null);
         colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
-        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOffBack, null);
+        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null);
 
         build_QuietTask();
     }
 
     void build_QuietTask() {
 
-        Intent intent = getIntent();
-        currIdx = intent.getExtras().getInt("idx",-1);
-        quietTask = quietTasks.get(currIdx);
         subject = quietTask.getSubject();
         startHour = quietTask.getStartHour();
         startMin = quietTask.getStartMin();
@@ -97,7 +100,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             weekView[i].setId(i);
             weekView[i].setWidth(xSize);
             weekView[i].setGravity(Gravity.CENTER);
-            weekView[i].setTextColor((week[i]) ? colorOn:colorOff);
+            weekView[i].setTextColor(colorOn);
             weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);
             weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD: Typeface.NORMAL);
             weekView[i].setText(weekName[i]);
@@ -128,7 +131,6 @@ public class AddUpdateActivity extends AppCompatActivity {
    public void toggleWeek(View v) {
         int i = v.getId();
         week[i] ^= true;
-        weekView[i].setTextColor((week[i]) ? colorOn:colorOff);
         weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);
         weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD: Typeface.NORMAL);
         v.invalidate();

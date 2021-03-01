@@ -7,7 +7,11 @@
     <color name="white">#ffffff</color>
     <color name="notification_back">#3DCFCCCC</color>
 
-    <color name="colorBackground">#F3F3DD</color>
+    <color name="itemNormalBorder">#788887</color>
+    <color name="itemNormalFill">#E1E8D9</color>
+    <color name="itemSelectBorder">#798E8E</color>
+    <color name="itemSelectFill">#B2C59D</color>
+
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>
     <color name="colorOnBack">#008577</color>

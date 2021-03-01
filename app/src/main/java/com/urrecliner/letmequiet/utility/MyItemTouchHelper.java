@@ -30,15 +30,14 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        viewHolder.itemView.setBackgroundColor(mContext.getColor(R.color.colorBackground));
-        viewHolder.itemView.setBackground(mContext.getDrawable(R.drawable.list_border));
+        viewHolder.itemView.setBackground(mContext.getDrawable(R.drawable.item_normal));
     }
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            viewHolder.itemView.setBackgroundColor(mContext.getColor(R.color.colorPrimary));
+            viewHolder.itemView.setBackground(mContext.getDrawable(R.drawable.item_selected));
         }
     }
 

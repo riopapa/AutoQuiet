@@ -29,7 +29,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private ItemTouchHelper mTouchHelper;
     private QuietTask quietTask;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
-
+    private int topLine = -1;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -199,7 +199,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             notifyItemMoved(fromPosition, toPosition);
             utils.saveSharedPrefTables();
         } else {
-            Toast.makeText(mContext,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
+            if (topLine++ < 0)
+                Toast.makeText(mContext,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
+            else if (topLine > 30)
+                topLine = -1;
         }
     }
 
@@ -210,8 +213,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             notifyItemRemoved(position);
             utils.saveSharedPrefTables();
         } else {
-            Toast.makeText(mContext,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
-            notifyItemChanged(0);
+            if (topLine++ < 0)
+                Toast.makeText(mContext,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
+            else if (topLine > 30)
+                topLine = -1;
+//           notifyItemChanged(0);
         }
     }
 

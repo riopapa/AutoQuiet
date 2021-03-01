@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/itemNormalFill"
     android:orientation="vertical">
 
     <LinearLayout
@@ -81,13 +82,16 @@
             android:textSize="20sp"
             android:hint="@string/subject"
             android:gravity="center_vertical"
-            android:background="@color/white"
+            android:background="@color/itemNormalFill"
             android:padding="8dp"
             android:importantForAutofill="no" />
 
         <Switch
             android:id="@+id/swActive"
-            android:layout_width="64dp"
+            android:layout_width="72dp"
+            android:text="@string/blank"
+            android:layout_gravity="center_vertical"
+            android:textSize="2dp"
             android:layout_height="wrap_content"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 

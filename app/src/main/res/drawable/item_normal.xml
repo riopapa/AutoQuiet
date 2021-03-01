@@ -5,7 +5,7 @@
             android:dashGap="1px"
             android:dashWidth="2px"
             android:width="2dp"
-            android:color="#938828" />
-        <corners android:radius="16dp" />
-        <solid android:color="@color/colorBackground" />
+            android:color="@color/itemNormalBorder" />
+        <corners android:radius="8dp" />
+        <solid android:color="@color/itemNormalFill" />
 </shape>

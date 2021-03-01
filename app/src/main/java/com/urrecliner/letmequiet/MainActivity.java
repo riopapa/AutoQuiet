@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity  {
             case R.id.action_add:
                 addNewQuiet = true;
                 intent = new Intent(MainActivity.this, AddUpdateActivity.class);
+                intent.putExtra("idx",-1);
                 startActivity(intent);
                 return true;
             case R.id.action_setting:
