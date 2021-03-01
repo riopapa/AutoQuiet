@@ -32,7 +32,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         String logID = "ALARM RCV";
         if (utils == null)
             utils = new Utils();
-//        utils.log(logID, "action: " + intent.getAction()+" stateCode: "+ stateCode);
 
         Bundle args = intent.getBundleExtra("DATA");
         assert args != null;
@@ -40,7 +39,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert quietTask != null;
         subject = quietTask.subject;
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
-//        utils.log(logID,"case:"+ caseSFO + " subject: "+subject);
         utils.log("Activated ","// case:"+ caseSFO + " subject: "+subject+" ///");
         assert caseSFO != null;
         switch (caseSFO) {
@@ -93,19 +91,5 @@ public class AlarmReceiver extends BroadcastReceiver {
     static void speak_off() {
         loopCount = -1;
     }
-
-//    private static void dumpIntent(Intent i){
-//        String LOG_TAG = "dump";
-//        Bundle bundle = i.getExtras();
-//        if (bundle != null) {
-//            Log.e(LOG_TAG,"-- Dumping Intent start");
-//            Log.e(LOG_TAG,bundle.toString());
-//            Set<String> keys = bundle.keySet();
-//            for (String key : keys) {
-//                Log.e(LOG_TAG, "[" + key + "=" + bundle.get(key) + "]");
-//            }
-//            Log.e(LOG_TAG,"-- Dumping Intent end");
-//        }
-//    }
 
 }
