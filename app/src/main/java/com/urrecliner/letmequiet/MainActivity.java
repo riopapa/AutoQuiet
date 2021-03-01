@@ -65,7 +65,7 @@ import static com.urrecliner.letmequiet.Vars.xSize;
 
 public class MainActivity extends AppCompatActivity  {
 
-    private static String logID = "Main";
+    private static final String logID = "Main";
     private ActivityMainBinding binding;
     private RecyclerView recyclerView;
 
@@ -308,15 +308,6 @@ public class MainActivity extends AppCompatActivity  {
                 week, false, true, false);
     }
 
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        utils.log(logID, "RESUME " + stateCode);
-//        setVariables();
-//        actOnStateCode();
-//    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -350,11 +341,8 @@ public class MainActivity extends AppCompatActivity  {
         // get permission for silent mode
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !notificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent = new Intent(
-                    android.provider.Settings
-                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
     }
@@ -388,14 +376,8 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
     private void showDialog(String msg) {
-        showMessageOKCancel(msg,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestPermissions(permissionsRejected.toArray(
-                                new String[0]), ALL_PERMISSIONS_RESULT);
-                    }
-                });
+        showMessageOKCancel(msg, (dialog, which) -> requestPermissions(permissionsRejected.toArray(
+                        new String[0]), ALL_PERMISSIONS_RESULT));
     }
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(mActivity)
@@ -405,7 +387,6 @@ public class MainActivity extends AppCompatActivity  {
                 .create()
                 .show();
     }
-
 
 // ↑ ↑ ↑ ↑ P E R M I S S I O N    RELATED /////// ↑ ↑ ↑
 

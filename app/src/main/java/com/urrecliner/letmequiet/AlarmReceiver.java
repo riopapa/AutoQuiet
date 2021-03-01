@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import com.urrecliner.letmequiet.models.QuietTask;
 
@@ -72,20 +73,20 @@ public class AlarmReceiver extends BroadcastReceiver {
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
-                if (loopCount-- > 0) {
-                    MannerMode.vibratePhone(mContext);
-                    String s = quietTask.getStartHour()+":"+quietTask.getStartMin()+" "+quietTask.getSubject();
-                    textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
-                } else {
-                    speakTimer.cancel();
-                    speakTimer.purge();
-                    textToSpeech.stop();
-                    MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
-                    Intent stopSpeak = new Intent(mActivity, NotificationService.class);
-                    stopSpeak.putExtra("operation", STOP_SPEAK);
-                    mContext.startService(stopSpeak);
-
-                }
+            if (loopCount-- > 0) {
+                MannerMode.vibratePhone(mContext);
+                String s = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin())+" 입니다. 곧 "
+                        +quietTask.getSubject()+" 가 시작됩니다";
+                textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+            } else {
+                speakTimer.cancel();
+                speakTimer.purge();
+                textToSpeech.stop();
+                MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
+                Intent stopSpeak = new Intent(mActivity, NotificationService.class);
+                stopSpeak.putExtra("operation", STOP_SPEAK);
+                mContext.startService(stopSpeak);
+            }
             }
         }, 2000, 2000);
 

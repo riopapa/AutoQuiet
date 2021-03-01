@@ -213,7 +213,6 @@ public class AddUpdateActivity extends AppCompatActivity {
         alarmManager.cancel(pendingIntent);
         pendingIntent = PendingIntent.getBroadcast(com.urrecliner.letmequiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-        utils.log(logID, "quietTask Deleted");
     }
 
     @Override
