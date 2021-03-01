@@ -7,7 +7,7 @@
     <color name="white">#ffffff</color>
     <color name="notification_back">#3DCFCCCC</color>
 
-    <color name="colorBackground">#E3E3CF</color>
+    <color name="colorBackground">#F3F3DD</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>
     <color name="colorOnBack">#008577</color>

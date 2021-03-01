@@ -2,6 +2,7 @@ package com.urrecliner.letmequiet;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
 import static com.urrecliner.letmequiet.Vars.mContext;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
@@ -27,6 +28,7 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
         viewHolder.itemView.setBackgroundColor(mContext.getColor(R.color.colorBackground));
+        viewHolder.itemView.setBackground(mContext.getDrawable(R.drawable.list_border));
     }
 
     @Override
