@@ -1,16 +1,19 @@
-package com.urrecliner.letmequiet;
+package com.urrecliner.letmequiet.utility;
+
+import android.content.Context;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.urrecliner.letmequiet.Vars.mContext;
+import com.urrecliner.letmequiet.R;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
-
-    public MyItemTouchHelper(ItemTouchHelperAdapter adapter) {
+    private final Context mContext;
+    public MyItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
+        mContext = context;
     }
 
     @Override
@@ -56,6 +59,5 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
-
-
+    
 }

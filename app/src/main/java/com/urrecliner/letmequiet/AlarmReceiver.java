@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
+import com.urrecliner.letmequiet.models.QuietTask;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
@@ -37,13 +39,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert args != null;
         quietTask = (QuietTask) args.getSerializable("quietTask");
         assert quietTask != null;
-        subject = quietTask.subject;
+        subject = quietTask.getSubject();
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         utils.log("Activated ","// case:"+ caseSFO + " subject: "+subject+" ///");
         assert caseSFO != null;
         switch (caseSFO) {
             case "S":   // start?
-                loopCount = (quietTask.speaking) ? 10:-1;
+                loopCount = (quietTask.isSpeaking()) ? 10:-1;
                 speak_subject();
                 break;
             case "F":   // finish
@@ -72,13 +74,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    String s = quietTask.startHour+":"+quietTask.startMin+" "+quietTask.subject;
+                    String s = quietTask.getStartHour()+":"+quietTask.getStartMin()+" "+quietTask.getSubject();
                     textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null, null);
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
                     textToSpeech.stop();
-                    MannerMode.turnOn(mContext, quietTask.subject, quietTask.vibrate);
+                    MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
                     Intent stopSpeak = new Intent(mActivity, NotificationService.class);
                     stopSpeak.putExtra("operation", STOP_SPEAK);
                     mContext.startService(stopSpeak);

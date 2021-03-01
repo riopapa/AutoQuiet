@@ -1,4 +1,4 @@
-package com.urrecliner.letmequiet;
+package com.urrecliner.letmequiet.utility;
 
 public interface ItemTouchHelperAdapter {
 

@@ -4,20 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
+import com.urrecliner.letmequiet.models.QuietTask;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-class Vars {
-    static int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
+public class Vars {
     static int xSize; // width for each week in AddUpdateActivity
-    static int [] listViewWeek = new int[7];
     static String[] weekName = new String[7];
-    static Utils utils = null;
+    public static Utils utils = null;
 
-    static boolean addNewQuiet = false;
+    public static boolean addNewQuiet = false;
     static MainActivity mActivity;
-    static Context mContext;
+    public static Context mContext;
     static RecycleViewAdapter recycleViewAdapter;
 
     static String stateCode;
@@ -34,9 +34,8 @@ class Vars {
     static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.US);
     static final SimpleDateFormat sdfLogTime = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US);
-    static QuietTask quietTask = new QuietTask();
-    static ArrayList<QuietTask> quietTasks;
-    static int qIdx;
+    static QuietTask quietTask;
+    public static ArrayList<QuietTask> quietTasks;
     static int quietUniq = 123456;
 
     static final String STATE_BLANK = "BLANK";

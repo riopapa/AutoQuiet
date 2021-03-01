@@ -1,10 +1,10 @@
-package com.urrecliner.letmequiet;
+package com.urrecliner.letmequiet.utility;
 
 import java.util.Calendar;
 
-class CalculateNext {
+public class CalculateNext {
 
-    static long calc(boolean finish, int hour, int min, boolean[] week, long add24Hour) {
+    public static long calc(boolean finish, int hour, int min, boolean[] week, long add24Hour) {
         Calendar nextDay = Calendar.getInstance();
         nextDay.set(Calendar.HOUR_OF_DAY, hour);
         nextDay.set(Calendar.MINUTE, min);

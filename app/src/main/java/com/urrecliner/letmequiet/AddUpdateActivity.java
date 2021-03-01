@@ -16,19 +16,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.letmequiet.databinding.ActivityAddBinding;
+import com.urrecliner.letmequiet.models.QuietTask;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
-import static com.urrecliner.letmequiet.Vars.colorOff;
-import static com.urrecliner.letmequiet.Vars.colorOffBack;
-import static com.urrecliner.letmequiet.Vars.colorOn;
-import static com.urrecliner.letmequiet.Vars.colorOnBack;
 import static com.urrecliner.letmequiet.Vars.mActivity;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
-import static com.urrecliner.letmequiet.Vars.qIdx;
-import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.quietUniq;
 import static com.urrecliner.letmequiet.Vars.stateCode;
@@ -45,7 +42,10 @@ public class AddUpdateActivity extends AppCompatActivity {
     private TextView[] weekView = new TextView[7];
     private boolean vibrate;
     private final String logID = "Add,Update";
+    private QuietTask quietTask;
+    private int currIdx;
     private ActivityAddBinding binding;
+    private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +61,30 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2; weekView[3] = binding.avWeek3;
         weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5; weekView[6] = binding.avWeek6;
+        colorOn = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOn, null);
+        colorInactiveBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorInactiveBack, null);
+        colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
+        colorOff = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOff, null);
+        colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
+        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOffBack, null);
+
         build_QuietTask();
     }
 
     void build_QuietTask() {
 
-        subject = quietTask.subject;
-        startHour = quietTask.startHour;
-        startMin = quietTask.startMin;
-        finishHour = quietTask.finishHour;
-        finishMin = quietTask.finishMin;
-        active = quietTask.active;
-        speaking = quietTask.speaking;
-        week = quietTask.week;
-        vibrate = quietTask.vibrate;
+        Intent intent = getIntent();
+        currIdx = intent.getExtras().getInt("idx",-1);
+        quietTask = quietTasks.get(currIdx);
+        subject = quietTask.getSubject();
+        startHour = quietTask.getStartHour();
+        startMin = quietTask.getStartMin();
+        finishHour = quietTask.getFinishHour();
+        finishMin = quietTask.getFinishMin();
+        active = quietTask.isActive();
+        speaking = quietTask.isSpeaking();
+        week = quietTask.getWeek();
+        vibrate = quietTask.isVibrate();
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
         binding.timePickerFinish.setIs24HourView(true);
@@ -143,13 +153,13 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (addNewQuiet)
             quietTasks.add(quietTask);
         else
-            quietTasks.set(qIdx, quietTask);
+            quietTasks.set(currIdx, quietTask);
         utils.saveSharedPrefTables();
 
         stateCode = STATE_ADD_UPDATE;
-        utils.log(logID, stateCode + " "+utils.hourMin(startHour,startMin));
+        utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
         finish();
-        recycleViewAdapter.notifyItemChanged(qIdx, quietTask);
+        recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
 
     }
 
@@ -182,8 +192,8 @@ public class AddUpdateActivity extends AppCompatActivity {
                 save_QuietTask();
                 break;
             case R.id.action_delete:
-                quietTasks.remove(qIdx);
-                recycleViewAdapter.notifyItemChanged(qIdx);
+                quietTasks.remove(currIdx);
+                recycleViewAdapter.notifyItemChanged(currIdx);
                 utils.saveSharedPrefTables();
                 cancel_QuietTask();
                 break;

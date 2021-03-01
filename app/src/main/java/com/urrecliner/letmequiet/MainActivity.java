@@ -13,10 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.urrecliner.letmequiet.databinding.ActivityMainBinding;
+import com.urrecliner.letmequiet.models.QuietTask;
+import com.urrecliner.letmequiet.utility.CalculateNext;
+import com.urrecliner.letmequiet.utility.MyItemTouchHelper;
+import com.urrecliner.letmequiet.utility.NextAlarm;
+import com.urrecliner.letmequiet.utility.VerticalSpacingItemDecorator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,12 +47,6 @@ import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
 import static com.urrecliner.letmequiet.Vars.beepManner;
-import static com.urrecliner.letmequiet.Vars.colorActive;
-import static com.urrecliner.letmequiet.Vars.colorInactiveBack;
-import static com.urrecliner.letmequiet.Vars.colorOff;
-import static com.urrecliner.letmequiet.Vars.colorOffBack;
-import static com.urrecliner.letmequiet.Vars.colorOn;
-import static com.urrecliner.letmequiet.Vars.colorOnBack;
 import static com.urrecliner.letmequiet.Vars.default_Duration;
 import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
@@ -122,12 +120,6 @@ public class MainActivity extends AppCompatActivity  {
         interval_Short = sharedPreferences.getInt("interval_Short", 5);
         interval_Long = sharedPreferences.getInt("interval_Long", 30);
         default_Duration = sharedPreferences.getInt("default_Duration", 60);
-        colorOn = ContextCompat.getColor(getBaseContext(), R.color.colorOn);
-        colorInactiveBack = ContextCompat.getColor(getBaseContext(), R.color.colorInactiveBack);
-        colorOnBack = ContextCompat.getColor(getBaseContext(), R.color.colorOnBack);
-        colorOff = ContextCompat.getColor(getBaseContext(), R.color.colorOff);
-        colorActive = ContextCompat.getColor(getBaseContext(), R.color.colorActive);
-        colorOffBack = ContextCompat.getColor(getBaseContext(), R.color.colorOffBack);
 
         quietTasks = utils.readSharedPrefTables();
         if (quietTasks.size() == 0)
@@ -234,7 +226,7 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView.addItemDecoration(itemDecorator);
 
         recycleViewAdapter = new RecycleViewAdapter();
-        ItemTouchHelper.Callback callback = new MyItemTouchHelper(recycleViewAdapter);
+        ItemTouchHelper.Callback callback = new MyItemTouchHelper(recycleViewAdapter, mContext);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         recycleViewAdapter.setTouchHelper(itemTouchHelper);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -248,16 +240,16 @@ public class MainActivity extends AppCompatActivity  {
         boolean[] week;
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask quietTask1 = quietTasks.get(idx);
-            if (quietTask1.active) {
-                week = quietTask1.week;
-                long nextStart = CalculateNext.calc(false, quietTask1.startHour, quietTask1.startMin, week, 0);
+            if (quietTask1.isActive()) {
+                week = quietTask1.getWeek();
+                long nextStart = CalculateNext.calc(false, quietTask1.getStartHour(), quietTask1.getStartMin(), week, 0);
                 if (nextStart < nextTime) {
                     nextTime = nextStart;
                     saveIdx = idx;
                     StartFinish = "S";
                 }
 
-                long nextFinish = CalculateNext.calc(true, quietTask1.finishHour, quietTask1.finishMin, week, (quietTask1.startHour> quietTask1.finishHour) ? (long)24*60*60*1000 : 0);
+                long nextFinish = CalculateNext.calc(true, quietTask1.getFinishHour(), quietTask1.getFinishMin(), week, (quietTask1.getStartHour()> quietTask1.getFinishHour()) ? (long)24*60*60*1000 : 0);
                 if (nextFinish < nextTime) {
                     nextTime = nextFinish;
                     saveIdx = idx;
@@ -267,13 +259,13 @@ public class MainActivity extends AppCompatActivity  {
         }
         quietTask = quietTasks.get(saveIdx);
         NextAlarm.request(quietTask, nextTime, StartFinish, getApplicationContext());
-        String msg = headInfo + "\n" + quietTask.subject + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
+        String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
 //        utils.log(logID, msg);
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-        utils.log(logID,sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.subject);
-        updateNotificationBar (sdfTime.format(nextTime), quietTask.subject, StartFinish);
+        utils.log(logID,sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.getSubject());
+        updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
         if (stateCode.equals("@back") && StartFinish.equals("F")) {
-            MannerMode.turnOn(getApplicationContext(), quietTask.subject, quietTask.vibrate);
+            MannerMode.turnOn(getApplicationContext(), quietTask.getSubject(), quietTask.isVibrate());
         }
     }
 

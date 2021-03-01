@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.urrecliner.letmequiet.databinding.ActivityOneTimeBinding;
+import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.util.Calendar;
 
@@ -19,8 +20,8 @@ import static com.urrecliner.letmequiet.Vars.default_Duration;
 import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
 import static com.urrecliner.letmequiet.Vars.mActivity;
-import static com.urrecliner.letmequiet.Vars.qIdx;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
+import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
 
@@ -51,11 +52,10 @@ public class OneTimeActivity extends AppCompatActivity {
 //        Bundle data = getIntent().getExtras();
 //        assert data != null;
 //        silentInfo = (SilentInfo) data.getSerializable("silentInfo");
-        qIdx = 0;
-        quietTask = quietTasks.get(qIdx);
-        subject = quietTask.subject;
-        vibrate = quietTask.vibrate;
-        speaking = quietTask.speaking;
+        quietTask = quietTasks.get(0);
+        subject = quietTask.getSubject();
+        vibrate = quietTask.isVibrate();
+        speaking = quietTask.isSpeaking();
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
         startHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -158,6 +158,8 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                 week, true, vibrate, speaking);
         quietTasks.set(0, quietTask);
+        recycleViewAdapter.notifyItemChanged(0);
+
         utils.saveSharedPrefTables();
         MannerMode.turnOn(getApplicationContext(), subject, vibrate);
         stateCode = STATE_ONETIME;

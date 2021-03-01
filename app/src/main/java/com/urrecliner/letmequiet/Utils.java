@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,10 +28,10 @@ import static com.urrecliner.letmequiet.Vars.sdfLogTime;
 import static com.urrecliner.letmequiet.Vars.sharedPreferences;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 
-class Utils {
+public class Utils {
 
     private final String PREFIX = "log_";
-    String hourMin (int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
+    public String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
     private String int2NN (int nbr) {
         return (""+(100 + nbr)).substring(1);
     }
@@ -91,7 +92,7 @@ class Utils {
         return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
     }
 
-    void log(String tag, String text) {
+    public void log(String tag, String text) {
 
         String log = logTrace() + " {"+ tag + "} " + text;
         Log.w(tag , log);

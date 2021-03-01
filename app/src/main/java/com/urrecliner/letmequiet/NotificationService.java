@@ -124,7 +124,7 @@ public class NotificationService extends Service {
         mRemoteViews.setViewVisibility(R.id.no_speak, (no_speak) ? View.VISIBLE:View.GONE);
         int smallIcon = smallIcons[0];
         if (!startFinish.equals("S")) {
-            smallIcon = smallIcons[(quietTask.vibrate) ? 1:2];
+            smallIcon = smallIcons[(quietTask.isVibrate()) ? 1:2];
         }
         mBuilder.setSmallIcon(smallIcon);
     }

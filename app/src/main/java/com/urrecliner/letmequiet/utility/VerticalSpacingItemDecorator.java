@@ -1,4 +1,4 @@
-package com.urrecliner.letmequiet;
+package com.urrecliner.letmequiet.utility;
 
 import android.graphics.Rect;
 import android.view.View;
