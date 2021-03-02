@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#037E71</color>
+    <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
@@ -12,9 +12,10 @@
     <color name="itemSelectBorder">#798E8E</color>
     <color name="itemSelectFill">#B2C59D</color>
 
+    <color name="colorClockDark">#064E48</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>
-    <color name="colorOnBack">#008577</color>
+    <color name="colorOnBack">#05B3A1</color>
     <color name="colorOff">#98AFC7</color>
     <color name="colorActive">#0000A0</color>
     <color name="colorOffBack">#00000000</color>

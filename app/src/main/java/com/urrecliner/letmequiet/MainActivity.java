@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Insets;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,10 +29,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -201,8 +207,8 @@ public class MainActivity extends AppCompatActivity  {
                 return true;
             case R.id.action_reset:
                 new AlertDialog.Builder(this)
-                        .setTitle("데이터 초기화")
-                        .setMessage("이미 설정되어 있는 테이블을 다 삭제합니다")
+                        .setTitle(R.string.reset_title)
+                        .setMessage(R.string.reset_table)
                         .setIcon(R.mipmap.alert)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -273,14 +279,16 @@ public class MainActivity extends AppCompatActivity  {
     private void initiate_QuietTasks() {
         boolean [] week;
         quietTasks.clear();
-        quietTask = getQuietTaskOneTime();
+        week = new boolean[]{false, false, false, false, false, false, false};
+        quietTask = new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
+                week, false, true, false);
         quietTasks.add(quietTask);
         week = new boolean[]{false, true, true, true, true, true, false};
-        quietTask = new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 7, 30,
+        quietTask = new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 6, 30,
                 week, true, false, false);
         quietTasks.add(quietTask);
         week = new boolean[]{true, false, false, false, false, false, true};
-        quietTask = new QuietTask(getString(R.string.WeekEnd_Night), 22, 30, 10, 30,
+        quietTask = new QuietTask(getString(R.string.WeekEnd_Night), 23, 30, 9, 30,
                 week, true, false, true);
         quietTasks.add(quietTask);
         week = new boolean[]{true, false, false, false, false, false, false};
@@ -288,27 +296,6 @@ public class MainActivity extends AppCompatActivity  {
                 week, true, true, true);
         quietTasks.add(quietTask);
         utils.saveSharedPrefTables();
-    }
-
-    QuietTask getQuietTaskDefault() {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, 10);
-        int hStart = calendar.get(Calendar.HOUR_OF_DAY);
-        int mStart = calendar.get(Calendar.MINUTE);
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
-        boolean [] week = new boolean[]{false, true, true, true, true, true, false};
-        return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
-                week, true, true, true);
-    }
-
-    QuietTask getQuietTaskOneTime() {
-
-        boolean [] week = new boolean[]{false, false, false, false, false, false, false};
-        return new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
-                week, false, true, false);
     }
 
     @Override
@@ -351,7 +338,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private ArrayList findUnAskedPermissions(@NonNull ArrayList<String> wanted) {
-        ArrayList <String> result = new ArrayList<String>();
+        ArrayList <String> result = new ArrayList<>();
         for (String perm : wanted) if (hasPermission(perm)) result.add(perm);
         return result;
     }

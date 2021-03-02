@@ -1,4 +1,6 @@
 <resources>
     <dimen name="week_margin">2dp</dimen>
-    <dimen name="week_padding">2dp</dimen>
+    <dimen name="week_padding">4dp</dimen>
+    <dimen name="week_size">18sp</dimen>
+    <dimen name="week_time">19sp</dimen>
 </resources>

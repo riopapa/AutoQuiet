@@ -21,9 +21,10 @@ import androidx.core.content.res.ResourcesCompat;
 import com.urrecliner.letmequiet.databinding.ActivityAddBinding;
 import com.urrecliner.letmequiet.models.QuietTask;
 
+import java.util.Calendar;
+
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
-import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
@@ -57,7 +58,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currIdx = intent.getExtras().getInt("idx",-1);
         if (addNewQuiet)
-            quietTask = mActivity.getQuietTaskDefault();
+            quietTask = getQuietTaskDefault();
         else
             quietTask = quietTasks.get(currIdx);
 
@@ -106,10 +107,10 @@ public class AddUpdateActivity extends AppCompatActivity {
             weekView[i].setText(weekName[i]);
         }
 
-        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
+        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
         binding.avVibrate.setOnClickListener(v -> {
             vibrate ^= true;
-            binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
+            binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
             v.invalidate();
         });
 
@@ -128,7 +129,20 @@ public class AddUpdateActivity extends AppCompatActivity {
         });
     }
 
-   public void toggleWeek(View v) {
+    QuietTask getQuietTaskDefault() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.MINUTE, 10);
+        int hStart = calendar.get(Calendar.HOUR_OF_DAY);
+        int mStart = calendar.get(Calendar.MINUTE);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
+        boolean [] week = new boolean[]{false, true, true, true, true, true, false};
+        return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
+                week, true, true, true);
+    }
+
+    public void toggleWeek(View v) {
         int i = v.getId();
         week[i] ^= true;
         weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);

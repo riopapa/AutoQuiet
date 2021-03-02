@@ -51,7 +51,7 @@
             android:layout_gravity="center"
             android:scaleX="0.8"
             android:scaleY="0.8"
-            android:src="@mipmap/phone_vibrate_blue"
+            android:src="@mipmap/phone_vibrate"
             android:contentDescription="@string/blank" />
 
         <TextView

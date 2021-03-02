@@ -22,7 +22,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@mipmap/phone_vibrate_blue"
+            android:src="@mipmap/phone_vibrate"
             android:contentDescription="@string/blank" />
         <ImageView
             android:id="@+id/lv_speak"
@@ -74,7 +74,7 @@
                         android:id="@+id/lt_week0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -84,7 +84,7 @@
                         android:id="@+id/lt_week1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -95,16 +95,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
-                        android:text="@string/week_2"
-                        android:textSize="18sp" />
+                        android:text="@string/week_2" />
                     <TextView
                         android:id="@+id/lt_week3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -114,7 +114,7 @@
                         android:id="@+id/lt_week4"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -124,7 +124,7 @@
                         android:id="@+id/lt_week5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -134,7 +134,7 @@
                         android:id="@+id/lt_week6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/week_size"
                         android:layout_margin="@dimen/week_margin"
                         android:paddingStart="@dimen/week_padding"
                         android:paddingEnd="@dimen/week_padding"
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hh_mm"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/week_time"
                     android:textStyle="bold"
                     android:gravity="center"/>
                 <TextView
@@ -162,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hh_mm"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/week_time"
                     android:textStyle="bold"
                     android:gravity="center"/>
 

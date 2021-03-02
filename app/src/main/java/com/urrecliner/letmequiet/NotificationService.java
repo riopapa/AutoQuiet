@@ -114,7 +114,7 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    int [] smallIcons = { R.mipmap.phone_normal, R.mipmap.phone_vibrate_blue, R.mipmap.phone_quiet_red};
+    int [] smallIcons = { R.mipmap.phone_normal, R.mipmap.phone_vibrate, R.mipmap.phone_quiet};
 
     void updateRemoteViews(String dateTime, String subject, String startFinish) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);

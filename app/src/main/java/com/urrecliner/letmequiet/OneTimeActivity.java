@@ -92,12 +92,12 @@ public class OneTimeActivity extends AppCompatActivity {
         text = interval_Long+"분△"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
-        binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
+        binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
         binding.oneVibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vibrate ^= true;
-                binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate_blue:R.mipmap.phone_quiet_red);
+                binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
                 v.invalidate();
             }
         });

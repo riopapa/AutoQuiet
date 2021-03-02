@@ -2,14 +2,12 @@ package com.urrecliner.letmequiet;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,9 +147,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         boolean vibrate = quietTask.isVibrate();
         boolean speaking = quietTask.isSpeaking();
         if (vibrate)
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate_blue : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
         else
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet_red : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
         if (speaking)
             holder.lvSpeak.setImageResource((active) ? R.mipmap.speaking_on : R.mipmap.speaking_noactive);
         else
