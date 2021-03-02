@@ -26,8 +26,8 @@
             android:contentDescription="@string/blank" />
         <ImageView
             android:id="@+id/lv_speak"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
@@ -60,13 +60,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/subject"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginBottom="4dp"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hh_mm"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
                 <TextView
@@ -162,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hh_mm"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
 

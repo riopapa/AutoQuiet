@@ -147,7 +147,7 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         subject = binding.etSubject.getText().toString();
         if (subject.length() == 0)
-            subject = "No Subject";
+            subject = getString(R.string.no_subject);
         startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
         finishHour = binding.timePickerFinish.getHour(); finishMin = binding.timePickerFinish.getMinute();
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
@@ -162,7 +162,6 @@ public class AddUpdateActivity extends AppCompatActivity {
         utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
         finish();
         recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
-
     }
 
     @Override

@@ -11,7 +11,7 @@ import static com.urrecliner.letmequiet.Vars.default_Duration;
 import static com.urrecliner.letmequiet.Vars.editor;
 import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
-import static com.urrecliner.letmequiet.Vars.sharedPreferences;
+import static com.urrecliner.letmequiet.Vars.sharedPref;
 import static com.urrecliner.letmequiet.Vars.utils;
 
 public class SettingActivity extends AppCompatActivity {
@@ -28,7 +28,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void adjustSetting(View v) {
-        editor = sharedPreferences.edit();
+        editor = sharedPref.edit();
         switch (v.getId()) {
             case R.id.setIntervalShortMinus:
                 if (interval_Short > 1) {

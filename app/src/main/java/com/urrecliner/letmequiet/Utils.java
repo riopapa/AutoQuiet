@@ -25,7 +25,7 @@ import java.util.List;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.sdfDate;
 import static com.urrecliner.letmequiet.Vars.sdfLogTime;
-import static com.urrecliner.letmequiet.Vars.sharedPreferences;
+import static com.urrecliner.letmequiet.Vars.sharedPref;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 
 public class Utils {
@@ -150,8 +150,8 @@ public class Utils {
 
     void saveSharedPrefTables() {
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);
         prefsEditor.putString("silentInfo", json);
@@ -161,9 +161,9 @@ public class Utils {
     ArrayList<QuietTask> readSharedPrefTables() {
 
         ArrayList<QuietTask> list;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString("silentInfo", "");
+        String json = sharedPref.getString("silentInfo", "");
         if (json.isEmpty()) {
             list = new ArrayList<>();
         } else {

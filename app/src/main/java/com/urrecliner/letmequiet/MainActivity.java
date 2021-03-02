@@ -55,7 +55,7 @@ import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.sdfDateTime;
 import static com.urrecliner.letmequiet.Vars.sdfTime;
-import static com.urrecliner.letmequiet.Vars.sharedPreferences;
+import static com.urrecliner.letmequiet.Vars.sharedPref;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity  {
             }
         }, 100);
         actionHandler = new Handler() { public void handleMessage(Message msg) { actOnStateCode(); }};
-
+        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
     }
 
     void updateNotificationBar(String dateTime, String subject, String startFinish) {
@@ -115,11 +115,11 @@ public class MainActivity extends AppCompatActivity  {
 
     void setVariables() {
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        beepManner = sharedPreferences.getBoolean("beepManner", true);
-        interval_Short = sharedPreferences.getInt("interval_Short", 5);
-        interval_Long = sharedPreferences.getInt("interval_Long", 30);
-        default_Duration = sharedPreferences.getInt("default_Duration", 60);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        beepManner = sharedPref.getBoolean("beepManner", true);
+        interval_Short = sharedPref.getInt("interval_Short", 5);
+        interval_Long = sharedPref.getInt("interval_Long", 30);
+        default_Duration = sharedPref.getInt("default_Duration", 60);
 
         quietTasks = utils.readSharedPrefTables();
         if (quietTasks.size() == 0)
@@ -271,18 +271,21 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void initiate_QuietTasks() {
+        boolean [] week;
         quietTasks.clear();
         quietTask = getQuietTaskOneTime();
         quietTasks.add(quietTask);
-        quietTask = getQuietTaskDefault();
-        quietTasks.add(quietTask);
-        boolean [] week = new boolean[]{true, false, false, false, false, false, false};
-        quietTask = new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
-                week, true, true, true);
+        week = new boolean[]{false, true, true, true, true, true, false};
+        quietTask = new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 7, 30,
+                week, true, false, false);
         quietTasks.add(quietTask);
         week = new boolean[]{true, false, false, false, false, false, true};
         quietTask = new QuietTask(getString(R.string.WeekEnd_Night), 22, 30, 10, 30,
                 week, true, false, true);
+        quietTasks.add(quietTask);
+        week = new boolean[]{true, false, false, false, false, false, false};
+        quietTask = new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
+                week, true, true, true);
         quietTasks.add(quietTask);
         utils.saveSharedPrefTables();
     }

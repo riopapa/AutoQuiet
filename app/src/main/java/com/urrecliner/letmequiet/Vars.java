@@ -22,7 +22,7 @@ public class Vars {
 
     static String stateCode;
 
-    static SharedPreferences sharedPreferences;
+    static SharedPreferences sharedPref;
     static SharedPreferences.Editor editor;
     static boolean beepManner = true;
 

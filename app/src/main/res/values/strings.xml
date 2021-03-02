@@ -2,6 +2,7 @@
     <string name="app_name">Let me Quiet</string>
     <string name="blank"> </string>
     <string name="Quiet_Once">바로 조용히 하기</string>
+    <string name="WeekDay_Night">평일 밤 조용히</string>
     <string name="WeekEnd_Night">주말 밤 조용히</string>
     <string name="Sunday_Church">주일 교회 예배</string>
     <string name="action_add">추가</string>
@@ -32,6 +33,7 @@
     <string name="update_table">수정</string>
     <string name="add_table">추가</string>
     <string name="no_subject">제목 없음</string>
+    <string name="back_key">뒤로가기 키를 눌러야 작동 시작됨</string>
     <string name="at_least_one_day_selected">적어도 하루는 선택해야 하지 않을까요?</string>
     <string name="sound_when_manner_changed">매너 변경시 소리</string>
     <string name="date_time">23:59</string>
