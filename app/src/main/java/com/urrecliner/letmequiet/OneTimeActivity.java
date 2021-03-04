@@ -56,13 +56,14 @@ public class OneTimeActivity extends AppCompatActivity {
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
         speaking = quietTask.isSpeaking();
+        durationMin = default_Duration;
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
         startHour = calendar.get(Calendar.HOUR_OF_DAY);
         startMin = calendar.get(Calendar.MINUTE);
-        finishHour = startHour + 1;     // default is 60 min.
-        finishMin = startMin;
-        durationMin = default_Duration;
+        calendar.add(Calendar.MINUTE, durationMin);
+        finishHour = calendar.get(Calendar.HOUR_OF_DAY);
+        finishMin = calendar.get(Calendar.MINUTE);
         binding.oneTimePicker.setIs24HourView(true);
         binding.oneTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
@@ -86,10 +87,10 @@ public class OneTimeActivity extends AppCompatActivity {
 
     void buildScreen() {
         String text;
-        text = interval_Short+"분▽"; binding.minus10Min.setText(text);
-        text = interval_Short+"분△"; binding.plus10Min.setText(text);
-        text = interval_Long+"분▽"; binding.minus30Min.setText(text);
-        text = interval_Long+"분△"; binding.plus30Min.setText(text);
+        text = "▽"+interval_Short+"분▽"; binding.minus10Min.setText(text);
+        text = "△"+interval_Short+"분△"; binding.plus10Min.setText(text);
+        text = "▽"+interval_Long+"분▽"; binding.minus30Min.setText(text);
+        text = "△"+interval_Long+"분△"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
         binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
