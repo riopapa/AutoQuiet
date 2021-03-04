@@ -138,25 +138,6 @@ public class NotificationService extends Service {
         mBuilder.setSmallIcon(smallIcon);
     }
 
-    private void showInForeground() {
-
-        ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasks =activityManager.getRunningTasks(10); //얻어올 task갯수 원하는 만큼의 수를 입력하면 된다.
-        if(!tasks.isEmpty()) {
-            int tasksSize = tasks.size();
-//            utils.log(logID, "tasksSize "+tasksSize);
-            for(int i = 0; i < tasksSize;  i++) {
-                ActivityManager.RunningTaskInfo taskInfo = tasks.get(i);
-//                utils.log(logID, taskInfo.topActivity.getPackageName()+" vs "+ mContext.getPackageName());
-                if(taskInfo.topActivity.getPackageName().equals(mContext.getPackageName())) {
-//                    utils.log(logID, taskInfo.topActivity.getPackageName()+" EQUALS "+ mContext.getPackageName());
-                    activityManager.moveTaskToFront(taskInfo.id, 0);
-                }
-            }
-        }
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
