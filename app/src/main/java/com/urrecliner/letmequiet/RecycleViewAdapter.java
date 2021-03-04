@@ -201,7 +201,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             quietTasks.remove(quietTask);
             quietTasks.add(toPosition, quietTask);
             notifyItemMoved(fromPosition, toPosition);
-            utils.saveSharedPrefTables();
+            utils.saveQuietTasksToShared();
         } else {
             if (topLine++ < 0)
                 Toast.makeText(mContext,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
@@ -216,7 +216,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             quietTask = quietTasks.get(position);
             quietTasks.remove(position);
             notifyItemRemoved(position);
-            utils.saveSharedPrefTables();
+            utils.saveQuietTasksToShared();
             Snackbar snackbar = Snackbar
                     .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", new View.OnClickListener() {
@@ -224,7 +224,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 public void onClick(View view) {
                     quietTasks.add(position, quietTask);
                     notifyItemInserted(position);
-                    utils.saveSharedPrefTables();
+                    utils.saveQuietTasksToShared();
                 }
             });
 
@@ -239,7 +239,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 //           notifyItemChanged(0);
         }
     }
-
 
     public void setTouchHelper(ItemTouchHelper touchHelper){
         this.mTouchHelper = touchHelper;

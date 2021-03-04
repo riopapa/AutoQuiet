@@ -160,7 +160,7 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTasks.set(0, quietTask);
         recycleViewAdapter.notifyItemChanged(0);
 
-        utils.saveSharedPrefTables();
+        utils.saveQuietTasksToShared();
         MannerMode.turnOn(getApplicationContext(), subject, vibrate);
         stateCode = STATE_ONETIME;
         if (mActivity == null)

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Insets;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,19 +28,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowInsets;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -119,6 +112,11 @@ public class MainActivity extends AppCompatActivity  {
         startService(updateIntent);
     }
 
+
+    static void beQuietRightNowTouched() {
+        actionHandler.sendEmptyMessage(0);
+    }
+
     void setVariables() {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity  {
         interval_Long = sharedPref.getInt("interval_Long", 30);
         default_Duration = sharedPref.getInt("default_Duration", 60);
 
-        quietTasks = utils.readSharedPrefTables();
+        quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
             initiate_QuietTasks();
 
@@ -280,22 +278,22 @@ public class MainActivity extends AppCompatActivity  {
         boolean [] week;
         quietTasks.clear();
         week = new boolean[]{false, false, false, false, false, false, false};
-        quietTask = new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
-                week, false, true, false);
-        quietTasks.add(quietTask);
+        quietTasks.add(new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
+                week, false, true, false));
+
         week = new boolean[]{false, true, true, true, true, true, false};
-        quietTask = new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 6, 30,
-                week, true, false, false);
-        quietTasks.add(quietTask);
+        quietTasks.add(new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 6, 30,
+                week, true, false, false));
+
         week = new boolean[]{true, false, false, false, false, false, true};
-        quietTask = new QuietTask(getString(R.string.WeekEnd_Night), 23, 30, 9, 30,
-                week, true, false, true);
-        quietTasks.add(quietTask);
+        quietTasks.add(new QuietTask(getString(R.string.WeekEnd_Night), 23, 30, 9, 30,
+                week, true, false, true));
+
         week = new boolean[]{true, false, false, false, false, false, false};
-        quietTask = new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
-                week, true, true, true);
-        quietTasks.add(quietTask);
-        utils.saveSharedPrefTables();
+        quietTasks.add(new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
+                week, true, true, true));
+
+        utils.saveQuietTasksToShared();
     }
 
     @Override

@@ -46,7 +46,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     private QuietTask quietTask;
     private int currIdx;
     private ActivityAddBinding binding;
-    private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
+    private int colorOn, colorOnBack, colorOffBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +69,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2; weekView[3] = binding.avWeek3;
         weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5; weekView[6] = binding.avWeek6;
         colorOn = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOn, null);
-        colorInactiveBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorInactiveBack, null);
         colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
-        colorOff = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOff, null);
-        colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null);
 
         build_QuietTask();
@@ -170,7 +167,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             quietTasks.add(quietTask);
         else
             quietTasks.set(currIdx, quietTask);
-        utils.saveSharedPrefTables();
+        utils.saveQuietTasksToShared();
 
         stateCode = STATE_ADD_UPDATE;
         utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
@@ -209,7 +206,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             case R.id.action_delete:
                 quietTasks.remove(currIdx);
                 recycleViewAdapter.notifyItemChanged(currIdx);
-                utils.saveSharedPrefTables();
+                utils.saveQuietTasksToShared();
                 cancel_QuietTask();
                 break;
         }

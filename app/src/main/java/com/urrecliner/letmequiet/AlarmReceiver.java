@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 
 import com.urrecliner.letmequiet.models.QuietTask;
 
@@ -56,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 MannerMode.turnOff(context, subject);
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
-                utils.saveSharedPrefTables();
+                utils.saveQuietTasksToShared();
                 break;
             default:
                 utils.log(logID,"Case Error " + caseSFO);

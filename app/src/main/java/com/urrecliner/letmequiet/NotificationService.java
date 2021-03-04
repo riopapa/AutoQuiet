@@ -1,5 +1,6 @@
 package com.urrecliner.letmequiet;
 
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
+
+import java.util.List;
 
 import static com.urrecliner.letmequiet.Vars.INVOKE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
@@ -70,8 +73,14 @@ public class NotificationService extends Service {
             return START_STICKY;
         }
         if (operation == INVOKE_ONETIME) {
-            intent = new Intent(mContext, OneTimeActivity.class);
-            startActivity(intent);
+            Intent oIntent = new Intent(context, OneTimeActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, oIntent, 0);
+            try {
+                pendingIntent.send();
+            }
+            catch(PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
         }
         if (operation == STOP_SPEAK) {
             AlarmReceiver.speak_off();
@@ -128,6 +137,25 @@ public class NotificationService extends Service {
         }
         mBuilder.setSmallIcon(smallIcon);
     }
+
+    private void showInForeground() {
+
+        ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks =activityManager.getRunningTasks(10); //얻어올 task갯수 원하는 만큼의 수를 입력하면 된다.
+        if(!tasks.isEmpty()) {
+            int tasksSize = tasks.size();
+//            utils.log(logID, "tasksSize "+tasksSize);
+            for(int i = 0; i < tasksSize;  i++) {
+                ActivityManager.RunningTaskInfo taskInfo = tasks.get(i);
+//                utils.log(logID, taskInfo.topActivity.getPackageName()+" vs "+ mContext.getPackageName());
+                if(taskInfo.topActivity.getPackageName().equals(mContext.getPackageName())) {
+//                    utils.log(logID, taskInfo.topActivity.getPackageName()+" EQUALS "+ mContext.getPackageName());
+                    activityManager.moveTaskToFront(taskInfo.id, 0);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onDestroy() {

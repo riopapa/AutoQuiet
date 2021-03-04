@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -148,9 +149,9 @@ public class Utils {
     }
 
 
-    void saveSharedPrefTables() {
+    void saveQuietTasksToShared() {
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);
@@ -158,7 +159,7 @@ public class Utils {
         prefsEditor.apply();
     }
 
-    ArrayList<QuietTask> readSharedPrefTables() {
+    ArrayList<QuietTask> readQuietTasksFromShared() {
 
         ArrayList<QuietTask> list;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
