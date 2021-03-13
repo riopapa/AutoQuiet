@@ -21,13 +21,13 @@ import com.urrecliner.letmequiet.utility.VerticalSpacingItemDecorator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.Display;
 
 import android.view.Menu;
@@ -112,18 +112,13 @@ public class MainActivity extends AppCompatActivity  {
         startService(updateIntent);
     }
 
-
-    static void beQuietRightNowTouched() {
-        actionHandler.sendEmptyMessage(0);
-    }
-
     void setVariables() {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         beepManner = sharedPref.getBoolean("beepManner", true);
         interval_Short = sharedPref.getInt("interval_Short", 5);
         interval_Long = sharedPref.getInt("interval_Long", 30);
-        default_Duration = sharedPref.getInt("default_Duration", 60);
+        default_Duration = sharedPref.getInt("default_Duration", 30);
 
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)

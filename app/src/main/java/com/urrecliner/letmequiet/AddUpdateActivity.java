@@ -63,11 +63,14 @@ public class AddUpdateActivity extends AppCompatActivity {
             quietTask = quietTasks.get(currIdx);
 
         ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
         actionBar.setTitle((addNewQuiet) ? R.string.add_table :R.string.update_table);
+        actionBar.setIcon(R.mipmap.let_me_quiet);
+//        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(true);
 
-        weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2; weekView[3] = binding.avWeek3;
-        weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5; weekView[6] = binding.avWeek6;
+        weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2;
+        weekView[3] = binding.avWeek3; weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5;
+        weekView[6] = binding.avWeek6;
         colorOn = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOn, null);
         colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
         colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null);

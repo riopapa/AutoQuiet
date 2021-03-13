@@ -28,7 +28,7 @@ public class Vars {
 
     static int interval_Short = 10;
     static int interval_Long = 30;
-    static int default_Duration = 60;
+    static int default_Duration = 30;
 
     static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("MM-dd HH:mm", Locale.US);

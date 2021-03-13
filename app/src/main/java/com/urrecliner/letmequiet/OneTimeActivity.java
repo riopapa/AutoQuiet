@@ -48,7 +48,9 @@ public class OneTimeActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(getResources().getString(R.string.Quiet_Once));
-
+        actionBar.setIcon(R.mipmap.quiet_right_now) ;
+        actionBar.setDisplayUseLogoEnabled(true) ;
+        actionBar.setDisplayShowHomeEnabled(true) ;
 //        Bundle data = getIntent().getExtras();
 //        assert data != null;
 //        silentInfo = (SilentInfo) data.getSerializable("silentInfo");

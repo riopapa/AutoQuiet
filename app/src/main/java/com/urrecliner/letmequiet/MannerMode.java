@@ -77,7 +77,7 @@ class MannerMode {
 
         if (beepManner) {
             if (mpFinish == null) {
-                mpFinish = MediaPlayer.create(mContext, R.raw.now_be_noisy);
+                mpFinish = MediaPlayer.create(mContext, R.raw.back2normal);
                 mpFinish.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
