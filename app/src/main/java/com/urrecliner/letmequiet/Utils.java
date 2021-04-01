@@ -117,7 +117,7 @@ public class Utils {
         return traceName(traces[6].getMethodName()) + traceName(traces[5].getMethodName()) + traceClassName(traces[4].getClassName())+"> "+traces[4].getMethodName() + "#" + traces[4].getLineNumber();
     }
 
-    private static String[] omits = { "performResume", "performCreate", "callActivityOnResume", "access$",
+    private static final String[] omits = { "performResume", "performCreate", "callActivityOnResume", "access$",
             "handleReceiver", "handleMessage", "dispatchKeyEvent", "dispatchTransformedTouchEvent","dispatchTouchEvent"};
     private String traceName (String s) {
         for (String o : omits) {

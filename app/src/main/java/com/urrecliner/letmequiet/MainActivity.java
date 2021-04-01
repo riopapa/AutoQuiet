@@ -274,19 +274,19 @@ public class MainActivity extends AppCompatActivity  {
         quietTasks.clear();
         week = new boolean[]{false, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
-                week, false, true, false));
+                week, false, true, 0));
 
         week = new boolean[]{false, true, true, true, true, true, false};
         quietTasks.add(new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 6, 30,
-                week, true, false, false));
+                week, true, false, 1));
 
         week = new boolean[]{true, false, false, false, false, false, true};
         quietTasks.add(new QuietTask(getString(R.string.WeekEnd_Night), 23, 30, 9, 30,
-                week, true, false, true));
+                week, true, false, 1));
 
         week = new boolean[]{true, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
-                week, true, true, true));
+                week, true, true, 0));
 
         utils.saveQuietTasksToShared();
     }

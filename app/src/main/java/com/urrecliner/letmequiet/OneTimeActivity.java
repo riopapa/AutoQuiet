@@ -30,7 +30,7 @@ public class OneTimeActivity extends AppCompatActivity {
     QuietTask quietTask;
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
-    private boolean vibrate, speaking;
+    private boolean vibrate;
     private int durationMin = 0;       // in minutes
     Calendar calendar;
     boolean timePicker_UpDown = false;
@@ -57,7 +57,6 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTask = quietTasks.get(0);
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
-        speaking = quietTask.isSpeaking();
         durationMin = default_Duration;
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
@@ -159,7 +158,7 @@ public class OneTimeActivity extends AppCompatActivity {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-                week, true, vibrate, speaking);
+                week, true, vibrate, 0);    // onetime repeat is 0
         quietTasks.set(0, quietTask);
         recycleViewAdapter.notifyItemChanged(0);
 

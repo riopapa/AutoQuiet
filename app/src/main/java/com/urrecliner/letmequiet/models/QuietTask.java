@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class QuietTask implements Serializable {
     String subject;
     int startHour, startMin, finishHour, finishMin;
-    boolean active, speaking, vibrate;
+    boolean active, vibrate;
     boolean[] week = {true, true, true, true, true, true, true};
+    int repeat;
 
     public String getSubject() {
         return subject;
@@ -26,17 +27,16 @@ public class QuietTask implements Serializable {
     public boolean isActive() {
         return active;
     }
-    public boolean isSpeaking() {
-        return speaking;
-    }
     public boolean isVibrate() {
         return vibrate;
     }
     public boolean[] getWeek() {
         return week;
     }
+    public int getRepeat() { return repeat;}
+
     public QuietTask(String subject, int startHour, int startMin, int finishHour, int finishMin,
-                     boolean[] week, boolean active, boolean vibrate, boolean speaking) {
+                     boolean[] week, boolean active, boolean vibrate, int repeat) {
         this.subject = subject;
         this.startHour = startHour;
         this.startMin = startMin;
@@ -44,7 +44,7 @@ public class QuietTask implements Serializable {
         this.finishMin = finishMin;
         this.active = active;
         this.vibrate = vibrate;
-        this.speaking = speaking;
+        this.repeat = repeat;
         System.arraycopy(week, 0, this.week, 0, 7);
     }
     public void setSubject(String subject) { this.subject = subject; }

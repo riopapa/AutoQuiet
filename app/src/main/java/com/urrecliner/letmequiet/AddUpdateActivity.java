@@ -38,7 +38,8 @@ public class AddUpdateActivity extends AppCompatActivity {
 
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
-    private boolean active, speaking;
+    private boolean active;
+    private int repeat;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
     private boolean vibrate;
@@ -86,9 +87,10 @@ public class AddUpdateActivity extends AppCompatActivity {
         finishHour = quietTask.getFinishHour();
         finishMin = quietTask.getFinishMin();
         active = quietTask.isActive();
-        speaking = quietTask.isSpeaking();
+        repeat = quietTask.getRepeat();
         week = quietTask.getWeek();
         vibrate = quietTask.isVibrate();
+
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
         binding.timePickerFinish.setIs24HourView(true);
@@ -121,10 +123,15 @@ public class AddUpdateActivity extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
+        binding.ivSpeaking.setImageResource((repeat == 0)? R.mipmap.speaking_off: (repeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         binding.ivSpeaking.setOnClickListener(v -> {
-            speaking ^= true;
-            binding.ivSpeaking.setImageResource((speaking)? R.mipmap.speaking_on:R.mipmap.speaking_off);
+            if (repeat == 0)
+                repeat = 1;
+            else if (repeat == 1)
+                repeat = 11;
+            else
+                repeat = 0;
+            binding.ivSpeaking.setImageResource((repeat == 0)? R.mipmap.speaking_off: (repeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
     }
@@ -139,7 +146,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
         boolean [] week = new boolean[]{false, true, true, true, true, true, false};
         return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
-                week, true, true, true);
+                week, true, true, 1);
     }
 
     public void toggleWeek(View v) {
@@ -165,7 +172,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
         finishHour = binding.timePickerFinish.getHour(); finishMin = binding.timePickerFinish.getMinute();
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-            week, active, vibrate, speaking);
+            week, active, vibrate, repeat);
         if (addNewQuiet)
             quietTasks.add(quietTask);
         else

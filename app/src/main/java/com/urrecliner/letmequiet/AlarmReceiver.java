@@ -45,14 +45,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert caseSFO != null;
         switch (caseSFO) {
             case "S":   // start?
-                loopCount = (quietTask.isSpeaking()) ? 10:-1;
+                loopCount = quietTask.getRepeat();
                 speak_subject();
                 break;
             case "F":   // finish
                 MannerMode.turnOff(context, subject);
+                loopCount = 0;
+                speak_subject();
                 break;
             case "O":   // onetime
                 MannerMode.turnOff(context, subject);
+                loopCount = 0;
+                speak_subject();
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 utils.saveQuietTasksToShared();
@@ -87,7 +91,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 mContext.startService(stopSpeak);
             }
             }
-        }, 2000, 2000);
+        }, 100, 3000);
 
     }
     static void speak_off() {
