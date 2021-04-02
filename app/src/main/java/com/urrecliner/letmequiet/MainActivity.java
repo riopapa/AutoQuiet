@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.urrecliner.letmequiet.databinding.ActivityMainBinding;
 import com.urrecliner.letmequiet.models.QuietTask;
 import com.urrecliner.letmequiet.utility.CalculateNext;
+import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
 import com.urrecliner.letmequiet.utility.MyItemTouchHelper;
 import com.urrecliner.letmequiet.utility.NextAlarm;
 import com.urrecliner.letmequiet.utility.VerticalSpacingItemDecorator;
@@ -66,15 +67,13 @@ public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
     private ActivityMainBinding binding;
-    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
         mContext = this.getApplicationContext();
-        if (utils == null)
-            utils = new Utils();
+        utils = new Utils();
         utils.log(logID, "Main start ");
         askPermission();
 
@@ -103,15 +102,6 @@ public class MainActivity extends AppCompatActivity  {
 //        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
     }
 
-    void updateNotificationBar(String dateTime, String subject, String startFinish) {
-        Intent updateIntent = new Intent(MainActivity.this, NotificationService.class);
-        updateIntent.putExtra("isUpdate", true);
-        updateIntent.putExtra("dateTime", dateTime);
-        updateIntent.putExtra("subject", subject);
-        updateIntent.putExtra("startFinish", startFinish);
-        startService(updateIntent);
-    }
-
     void setVariables() {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -122,10 +112,7 @@ public class MainActivity extends AppCompatActivity  {
 
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
-            initiate_QuietTasks();
-
-        weekName[0] = getResources().getString(R.string.week_0);    weekName[1] = getResources().getString(R.string.week_1);    weekName[2] = getResources().getString(R.string.week_2);    weekName[3] = getResources().getString(R.string.week_3);
-        weekName[4] = getResources().getString(R.string.week_4);    weekName[5] = getResources().getString(R.string.week_5);    weekName[6] = getResources().getString(R.string.week_6);
+            new ClearQuiteTasks();
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -155,13 +142,13 @@ public class MainActivity extends AppCompatActivity  {
 
             case STATE_ALARM:
                 stateCode = "@" + stateCode;
-                scheduleNextTask("Next Alarm Settled ");
+                new ScheduleNextTask("Next Alarm Settled ");
                 finish();
                 break;
 
             case STATE_BOOT:  // it means from receiver
                 stateCode = "@" + stateCode;
-                scheduleNextTask("Boot triggered new Alarm ");
+                new ScheduleNextTask("Boot triggered new Alarm ");
                 finish();
                 break;
 
@@ -174,7 +161,7 @@ public class MainActivity extends AppCompatActivity  {
                 utils.log(logID,"Invalid statCode>"+stateCode);
                 break;
         }
-        showArrayLists();
+        new ShowList();
     }
 
     @Override
@@ -205,8 +192,8 @@ public class MainActivity extends AppCompatActivity  {
                         .setIcon(R.mipmap.alert)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                initiate_QuietTasks();
-                                showArrayLists();
+                                new ClearQuiteTasks();
+                                new ShowList();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -214,83 +201,6 @@ public class MainActivity extends AppCompatActivity  {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void showArrayLists() {
-
-        recyclerView = findViewById(R.id.mainRecycler);
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLinearLayoutManager);
-
-        VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(14);
-        recyclerView.addItemDecoration(itemDecorator);
-
-        recycleViewAdapter = new RecycleViewAdapter();
-        ItemTouchHelper.Callback callback = new MyItemTouchHelper(recycleViewAdapter, mContext);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        recycleViewAdapter.setTouchHelper(itemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(recycleViewAdapter);
-    }
-
-    void scheduleNextTask(String headInfo) {
-        if (headInfo == null)
-            return;
-        long nextTime = System.currentTimeMillis() + (long)240*60*60*1000;
-        int saveIdx = 0;
-        String StartFinish = "S";
-        boolean[] week;
-        for (int idx = 0; idx < quietTasks.size(); idx++) {
-            QuietTask quietTask1 = quietTasks.get(idx);
-            if (quietTask1.isActive()) {
-                week = quietTask1.getWeek();
-                long nextStart = CalculateNext.calc(false, quietTask1.getStartHour(), quietTask1.getStartMin(), week, 0);
-                if (nextStart < nextTime) {
-                    nextTime = nextStart;
-                    saveIdx = idx;
-                    StartFinish = "S";
-                }
-
-                long nextFinish = CalculateNext.calc(true, quietTask1.getFinishHour(), quietTask1.getFinishMin(), week, (quietTask1.getStartHour()> quietTask1.getFinishHour()) ? (long)24*60*60*1000 : 0);
-                if (nextFinish < nextTime) {
-                    nextTime = nextFinish;
-                    saveIdx = idx;
-                    StartFinish = (idx == 0) ? "O":"F";
-                }
-            }
-        }
-        quietTask = quietTasks.get(saveIdx);
-        NextAlarm.request(quietTask, nextTime, StartFinish, getApplicationContext());
-        String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
-//        utils.log(logID, msg);
-        Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-        utils.log(logID,sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.getSubject());
-        updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
-        if (stateCode.equals("@back") && StartFinish.equals("F")) {
-            MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
-        }
-    }
-
-    private void initiate_QuietTasks() {
-        boolean [] week;
-        quietTasks.clear();
-        week = new boolean[]{false, false, false, false, false, false, false};
-        quietTasks.add(new QuietTask(getString(R.string.Quiet_Once), 1,2,3,4,
-                week, false, true, 0));
-
-        week = new boolean[]{false, true, true, true, true, true, false};
-        quietTasks.add(new QuietTask(getString(R.string.WeekDay_Night), 22, 30, 6, 30,
-                week, true, false, 1));
-
-        week = new boolean[]{true, false, false, false, false, false, true};
-        quietTasks.add(new QuietTask(getString(R.string.WeekEnd_Night), 23, 30, 9, 30,
-                week, true, false, 1));
-
-        week = new boolean[]{true, false, false, false, false, false, false};
-        quietTasks.add(new QuietTask(getString(R.string.Sunday_Church), 9, 30, 16, 30,
-                week, true, true, 0));
-
-        utils.saveQuietTasksToShared();
     }
 
     @Override
@@ -302,7 +212,7 @@ public class MainActivity extends AppCompatActivity  {
     public void onBackPressed() {
         super.onBackPressed();
         stateCode = "@back";
-        scheduleNextTask("Activate Silent Time ");
+        new ScheduleNextTask("Activate Silent Time ");
     }
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓

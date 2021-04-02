@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class Vars {
     static int xSize; // width for each week in AddUpdateActivity
-    static String[] weekName = new String[7];
+    static String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
     public static Utils utils = null;
 
     public static boolean addNewQuiet = false;

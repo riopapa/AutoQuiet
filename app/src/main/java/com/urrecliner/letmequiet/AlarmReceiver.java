@@ -72,7 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         textToSpeech.setPitch(1.4f);
-        textToSpeech.setSpeechRate(1.2f);
+        textToSpeech.setSpeechRate(1.3f);
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
@@ -91,7 +91,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 mContext.startService(stopSpeak);
             }
             }
-        }, 100, 3000);
+        }, 1000, 6000);
 
     }
     static void speak_off() {

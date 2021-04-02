@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import static com.urrecliner.letmequiet.Vars.STATE_BOOT;
+import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
@@ -27,15 +28,13 @@ public class BootReceiver extends BroadcastReceiver {
         i.putExtra("stateCode", stateCode);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startForegroundService(i);
-
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent mainIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         mainIntent.addFlags(mainIntent.FLAG_ACTIVITY_NEW_TASK);
 //        mainIntent.putExtra("stateCode", stateCode);
         PendingIntent alarmIntent = PendingIntent.getActivity(context, 0, mainIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        Log.e(logID,"ACTIVATED");
-        alarmMgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, alarmIntent);
-//        Runtime.getRuntime().exit(0);
+        alarmMgr.set(AlarmManager.RTC, System.currentTimeMillis() + 20000, alarmIntent);
+        new ScheduleNextTask("Booted Again");
 
     }
 }

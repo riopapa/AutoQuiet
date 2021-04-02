@@ -147,7 +147,7 @@ public class OneTimeActivity extends AppCompatActivity {
         stateCode = STATE_ONETIME;
         if (mActivity == null)
             mActivity = new MainActivity();
-        mActivity.scheduleNextTask("One Time");
+        new ScheduleNextTask("One Time");
     }
 
     @Override

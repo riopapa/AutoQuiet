@@ -149,7 +149,7 @@ public class Utils {
     }
 
 
-    void saveQuietTasksToShared() {
+    public void saveQuietTasksToShared() {
 
         sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();

@@ -185,7 +185,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         stateCode = STATE_ADD_UPDATE;
         utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
         finish();
-        mActivity.scheduleNextTask("One Time");
+        new ScheduleNextTask("New Schedule Settled");
         recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
