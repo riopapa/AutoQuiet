@@ -94,13 +94,13 @@ public class MainActivity extends AppCompatActivity  {
             return;
         setVariables();
         actOnStateCode();
-        new Timer().schedule(new TimerTask() {
-            public void run () {
-                updateNotificationBar("xx:xx","not activated yet","S");
-            }
-        }, 100);
+//        new Timer().schedule(new TimerTask() {
+//            public void run () {
+//                updateNotificationBar("xx:xx","not activated yet","S");
+//            }
+//        }, 100);
         actionHandler = new Handler() { public void handleMessage(Message msg) { actOnStateCode(); }};
-        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
+//        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
     }
 
     void updateNotificationBar(String dateTime, String subject, String startFinish) {
@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     void scheduleNextTask(String headInfo) {
+        if (headInfo == null)
+            return;
         long nextTime = System.currentTimeMillis() + (long)240*60*60*1000;
         int saveIdx = 0;
         String StartFinish = "S";
@@ -261,11 +263,11 @@ public class MainActivity extends AppCompatActivity  {
         NextAlarm.request(quietTask, nextTime, StartFinish, getApplicationContext());
         String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
 //        utils.log(logID, msg);
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log(logID,sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.getSubject());
         updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
         if (stateCode.equals("@back") && StartFinish.equals("F")) {
-            MannerMode.turnOn(getApplicationContext(), quietTask.getSubject(), quietTask.isVibrate());
+            MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
         }
     }
 
@@ -298,9 +300,9 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         stateCode = "@back";
         scheduleNextTask("Activate Silent Time ");
-        super.onBackPressed();
     }
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓

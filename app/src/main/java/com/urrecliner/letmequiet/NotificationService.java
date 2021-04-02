@@ -1,6 +1,6 @@
 package com.urrecliner.letmequiet;
 
-import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,11 +13,8 @@ import android.view.View;
 import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 
-import java.util.List;
-
 import static com.urrecliner.letmequiet.Vars.INVOKE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
-import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 
 public class NotificationService extends Service {
@@ -34,6 +31,7 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
+
         if (null != mRemoteViews) {
             mRemoteViews.removeAllViews(R.layout.notification_bar);
             mRemoteViews = null;

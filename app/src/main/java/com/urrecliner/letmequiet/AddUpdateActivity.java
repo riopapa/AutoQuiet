@@ -25,6 +25,7 @@ import java.util.Calendar;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
+import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
@@ -160,7 +161,9 @@ public class AddUpdateActivity extends AppCompatActivity {
     private void save_QuietTask() {
 
         boolean any = false;
-        for (int i = 0; i < 7; i++) { any |= week[i]; }
+        for (int i = 0; i < 7; i++) {
+            any |= week[i];
+        }
         if (!any) {
             Toast.makeText(getBaseContext(), R.string.at_least_one_day_selected, Toast.LENGTH_LONG).show();
             return;
@@ -182,6 +185,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         stateCode = STATE_ADD_UPDATE;
         utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
         finish();
+        mActivity.scheduleNextTask("One Time");
         recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 

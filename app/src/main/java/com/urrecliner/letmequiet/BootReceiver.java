@@ -8,24 +8,25 @@ import android.content.Intent;
 import android.util.Log;
 
 import static com.urrecliner.letmequiet.Vars.STATE_BOOT;
+import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.stateCode;
+import static com.urrecliner.letmequiet.Vars.utils;
 
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        if (utils == null) {
-//            utils = new Utils();
-////            mainContext = context;
-//        }
+
+        utils = new Utils();
+        mContext = context;
         String logID = STATE_BOOT;
-//        utils.log(logID, "Activated  ------------- " + intent.getAction());
+        utils.log(logID, "Activated  ------------- " + intent.getAction());
         stateCode = STATE_BOOT;
         Log.e("Booted",stateCode);
         Intent i = new Intent(context, MainActivity.class);
         i.putExtra("stateCode", stateCode);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(i);
+        context.startForegroundService(i);
 
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent mainIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());

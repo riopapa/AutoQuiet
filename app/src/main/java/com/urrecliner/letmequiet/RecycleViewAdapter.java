@@ -90,7 +90,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             itemView.setOnTouchListener(this);
         }
 
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
@@ -216,13 +215,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             utils.saveQuietTasksToShared();
             Snackbar snackbar = Snackbar
                     .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
-            snackbar.setAction("복원", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    quietTasks.add(position, quietTask);
-                    notifyItemInserted(position);
-                    utils.saveQuietTasksToShared();
-                }
+            snackbar.setAction("복원", view -> {
+                quietTasks.add(position, quietTask);
+                notifyItemInserted(position);
+                utils.saveQuietTasksToShared();
             });
 
             snackbar.setActionTextColor(Color.YELLOW);

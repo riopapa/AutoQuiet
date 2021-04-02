@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,20 +64,17 @@ public class OneTimeActivity extends AppCompatActivity {
         finishHour = calendar.get(Calendar.HOUR_OF_DAY);
         finishMin = calendar.get(Calendar.MINUTE);
         binding.oneTimePicker.setIs24HourView(true);
-        binding.oneTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker timePicker, int hour, int min) {
-                if (timePicker_UpDown)
-                    return;
-                finishHour = hour; finishMin = min;
-                durationMin = (finishHour - startHour) * 60 + finishMin - startMin;
-                String text;
-                if (durationMin > 1)
-                    text = (""+(100 + durationMin / 60)).substring(1) + " : " + (""+(100 + durationMin % 60)).substring(1)+  " 후";
-                else
-                    text = getString(R.string.already_passed_time);
-                binding.oneDuration.setText(text);
-            }
+        binding.oneTimePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
+            if (timePicker_UpDown)
+                return;
+            finishHour = hour; finishMin = min;
+            durationMin = (finishHour - startHour) * 60 + finishMin - startMin;
+            String text;
+            if (durationMin > 1)
+                text = (""+(100 + durationMin / 60)).substring(1) + " : " + (""+(100 + durationMin % 60)).substring(1)+  " 후";
+            else
+                text = getString(R.string.already_passed_time);
+            binding.oneDuration.setText(text);
         });
         buildScreen();
         buttonSetting();
@@ -95,48 +90,33 @@ public class OneTimeActivity extends AppCompatActivity {
     }
     void buttonSetting() {
         binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
-        binding.oneVibrate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrate ^= true;
-                binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
-                v.invalidate();
-            }
+        binding.oneVibrate.setOnClickListener(v -> {
+            vibrate ^= true;
+            binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+            v.invalidate();
         });
-        binding.minus10Min.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (durationMin > interval_Short) {
-                    durationMin -= interval_Short;
-                    adjustTimePicker();
-                }
-            }
-        });
-
-        binding.plus10Min.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                durationMin += interval_Short;
+        binding.minus10Min.setOnClickListener(v -> {
+            if (durationMin > interval_Short) {
+                durationMin -= interval_Short;
                 adjustTimePicker();
             }
         });
 
-        binding.minus30Min.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (durationMin > interval_Long) {
-                    durationMin -= interval_Long;
-                    adjustTimePicker();
-                }
+        binding.plus10Min.setOnClickListener(v -> {
+            durationMin += interval_Short;
+            adjustTimePicker();
+        });
+
+        binding.minus30Min.setOnClickListener(v -> {
+            if (durationMin > interval_Long) {
+                durationMin -= interval_Long;
+                adjustTimePicker();
             }
         });
 
-        binding.plus30Min.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                durationMin += interval_Long;
-                adjustTimePicker();
-            }
+        binding.plus30Min.setOnClickListener(v -> {
+            durationMin += interval_Long;
+            adjustTimePicker();
         });
     }
 
@@ -168,14 +148,6 @@ public class OneTimeActivity extends AppCompatActivity {
         if (mActivity == null)
             mActivity = new MainActivity();
         mActivity.scheduleNextTask("One Time");
-//
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        assert alarmManager != null;
-//        Intent intentS = new Intent(this, AlarmReceiver.class);
-//        Bundle args = new Bundle();
-//        args.putSerializable("silentInfo", silentInfo);
-//        intentS.putExtra("DATA",args);
-//        intentS.putExtra("case","O");
     }
 
     @Override
@@ -198,10 +170,5 @@ public class OneTimeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 }
