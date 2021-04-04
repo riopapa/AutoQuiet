@@ -9,16 +9,15 @@ import android.os.Vibrator;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static com.urrecliner.letmequiet.Vars.beepManner;
 import static com.urrecliner.letmequiet.Vars.mContext;
-import static com.urrecliner.letmequiet.Vars.utils;
 
 class MannerMode {
 
     static private String logID = "MannerMode";
     private static MediaPlayer mpStart, mpFinish;
 
-    static void turnOn(Context context, String subject, boolean vibrate) {
+    static void turn2Quiet(Context context, boolean vibrate) {
 //        final String text = subject + ", Go into Silent";
-        beepStart();
+        beepStartQuiet();
         vibratePhone(context);
 
         AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
@@ -39,23 +38,23 @@ class MannerMode {
 
     }
 
-    static void turnOff(Context context, String subject) {
-//        final  String text = subject + ", Return to normal";
+    static void turn2Normal(Context context) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         vibratePhone(context);
-        beepFinish();
+        beepFinishQuiet();
     }
 
     static void vibratePhone(Context context) {
-        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+//        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+        long[] pattern = {0, 100, 1000, 300, 1000, 500, 100};
         Vibrator v = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
         assert v != null;
         v.vibrate(VibrationEffect.createWaveform(pattern, -1));
     }
 
-    private static void beepStart() {
+    private static void beepStartQuiet() {
 
         if (beepManner) {
             if (mpStart == null) {
@@ -73,7 +72,7 @@ class MannerMode {
         }
     }
 
-    private static void beepFinish() {
+    private static void beepFinishQuiet() {
 
         if (beepManner) {
             if (mpFinish == null) {

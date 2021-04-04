@@ -49,12 +49,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 speak_subject();
                 break;
             case "F":   // finish
-                MannerMode.turnOff(context, subject);
+                MannerMode.turn2Normal(context);
                 loopCount = 0;
                 speak_subject();
                 break;
             case "O":   // onetime
-                MannerMode.turnOff(context, subject);
+                MannerMode.turn2Normal(context);
                 loopCount = 0;
                 speak_subject();
                 quietTask.setActive(false);
@@ -85,7 +85,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 speakTimer.cancel();
                 speakTimer.purge();
                 textToSpeech.stop();
-                MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
+                MannerMode.turn2Quiet(mContext, quietTask.isVibrate());
                 Intent stopSpeak = new Intent(mActivity, NotificationService.class);
                 stopSpeak.putExtra("operation", STOP_SPEAK);
                 mContext.startService(stopSpeak);

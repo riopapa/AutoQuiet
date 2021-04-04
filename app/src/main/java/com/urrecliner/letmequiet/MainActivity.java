@@ -210,9 +210,9 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        stateCode = "@back";
-        new ScheduleNextTask("Activate Silent Time ");
+//        super.onBackPressed();
+//        stateCode = "@back";
+//        new ScheduleNextTask("Activate Silent Time ");
     }
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓

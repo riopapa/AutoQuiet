@@ -49,9 +49,9 @@ public class ScheduleNextTask {
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log("schedule",sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.getSubject());
         updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
-        if (stateCode.equals("@back") && StartFinish.equals("F")) {
-            MannerMode.turnOn(mContext, quietTask.getSubject(), quietTask.isVibrate());
-        }
+//        if (stateCode.equals("@back") && StartFinish.equals("F")) {
+//            MannerMode.turn2Quiet(mContext, quietTask.isVibrate());
+//        }
     }
 
     void updateNotificationBar(String dateTime, String subject, String startFinish) {
