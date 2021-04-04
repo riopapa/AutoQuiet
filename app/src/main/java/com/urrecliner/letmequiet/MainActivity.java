@@ -66,7 +66,7 @@ import static com.urrecliner.letmequiet.Vars.xSize;
 public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
-    private ActivityMainBinding binding;
+    private boolean notScheduled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,27 +204,25 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-//        stateCode = "@back";
-//        new ScheduleNextTask("Activate Silent Time ");
+        super.onBackPressed();
+        if(notScheduled)
+            new ScheduleNextTask("Start setting Silent Time ");
     }
 
     // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓
-    ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 101;
+    ArrayList<String> permissions = new ArrayList<>();
     ArrayList<String> permissionsToRequest;
     ArrayList<String> permissionsRejected = new ArrayList<>();
 
     private void askPermission() {
+
         permissions.add(Manifest.permission.READ_PHONE_STATE);
+        permissions.add(Manifest.permission.REORDER_TASKS);
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.VIBRATE);
+        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
         permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
         permissions.add(Manifest.permission.RECEIVE_BOOT_COMPLETED);
         permissionsToRequest = findUnAskedPermissions(permissions);
@@ -251,7 +249,7 @@ public class MainActivity extends AppCompatActivity  {
         return (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+//    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == ALL_PERMISSIONS_RESULT) {
