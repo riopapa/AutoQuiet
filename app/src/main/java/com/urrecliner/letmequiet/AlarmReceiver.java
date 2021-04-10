@@ -8,19 +8,17 @@ import android.speech.tts.TextToSpeech;
 
 import com.urrecliner.letmequiet.models.QuietTask;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
 import static com.urrecliner.letmequiet.Vars.STOP_SPEAK;
-import static com.urrecliner.letmequiet.Vars.actionHandler;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
-import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -30,8 +28,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String subject;
-        String logID = "ALARM RCV";
         if (utils == null)
             utils = new Utils();
 
@@ -39,63 +35,84 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert args != null;
         quietTask = (QuietTask) args.getSerializable("quietTask");
         assert quietTask != null;
-        subject = quietTask.getSubject();
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
-        utils.log("Activated ","// case:"+ caseSFO + " subject: "+subject+" ///");
         assert caseSFO != null;
+        loopCount = quietTask.getRepeat();
         switch (caseSFO) {
             case "S":   // start?
-                loopCount = quietTask.getRepeat();
-                speak_subject();
+                say_Started(quietTask.getSubject(), quietTask.isVibrate());
                 break;
             case "F":   // finish
                 MannerMode.turn2Normal(context);
-                loopCount = 0;
-                speak_subject();
+                if (loopCount > 0) {
+                    loopCount = 1;
+                    say_Finished(quietTask.getSubject());
+                }
                 break;
             case "O":   // onetime
                 MannerMode.turn2Normal(context);
-                loopCount = 0;
-                speak_subject();
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 utils.saveQuietTasksToShared();
                 break;
             default:
-                utils.log(logID,"Case Error " + caseSFO);
+                utils.log("Alarm Receive","Case Error " + caseSFO);
         }
-        stateCode = STATE_ALARM;
-        actionHandler.sendEmptyMessage(0);
+        new ScheduleNextTask("Next");
     }
 
-    void speak_subject() {
-
-        textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
-        textToSpeech.setPitch(1.4f);
-        textToSpeech.setSpeechRate(1.3f);
+    void say_Started(String subject, boolean vibrate) {
+        ready_TTS();
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
-            if (loopCount-- > 0) {
-                MannerMode.vibratePhone(mContext);
-                String s = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin())+" 입니다. 곧 "
-                        +quietTask.getSubject()+" 가 시작됩니다";
-                textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
-            } else {
-                speakTimer.cancel();
-                speakTimer.purge();
-                textToSpeech.stop();
-                MannerMode.turn2Quiet(mContext, quietTask.isVibrate());
-                Intent stopSpeak = new Intent(mActivity, NotificationService.class);
-                stopSpeak.putExtra("operation", STOP_SPEAK);
-                mContext.startService(stopSpeak);
+                if (loopCount-- > 0) {
+                    MannerMode.vibratePhone(mContext);
+                    String s = nowTimeToString() + " 입니다. 곧 " + subject + " 가 시작됩니다";
+                    textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+                } else {
+                    speakTimer.cancel();
+                    speakTimer.purge();
+                    textToSpeech.stop();
+                    MannerMode.turn2Quiet(mContext, vibrate);
+                    Intent notification = new Intent(mActivity, NotificationService.class);
+                    notification.putExtra("operation", STOP_SPEAK);
+                    mContext.startService(notification);
+                }
             }
-            }
-        }, 1000, 6000);
-
+        }, 3000, 5000);
     }
+
+    void say_Finished(String subject) {
+        ready_TTS();
+        Timer speakTimer = new Timer();
+        speakTimer.schedule(new TimerTask() {
+            public void run() {
+                if (loopCount-- > 0) {
+                    MannerMode.vibratePhone(mContext);
+                    String s = nowTimeToString() + " 입니다. " + subject + " 가 종료 되었습니다";
+                    textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+                } else {
+                    speakTimer.cancel();
+                    speakTimer.purge();
+                    textToSpeech.stop();
+                }
+            }
+        }, 3000, 5000);
+    }
+
+    void ready_TTS() {
+        textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        textToSpeech.setPitch(1.4f);
+        textToSpeech.setSpeechRate(1.3f);
+    }
+
+    String nowTimeToString() {
+        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdfTime.format(System.currentTimeMillis());
+    }
+
     static void speak_off() {
         loopCount = -1;
     }
-
 }

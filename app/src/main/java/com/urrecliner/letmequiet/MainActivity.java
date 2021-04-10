@@ -1,7 +1,6 @@
 package com.urrecliner.letmequiet;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -9,36 +8,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
-
-import com.urrecliner.letmequiet.databinding.ActivityMainBinding;
-import com.urrecliner.letmequiet.models.QuietTask;
-import com.urrecliner.letmequiet.utility.CalculateNext;
-import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
-import com.urrecliner.letmequiet.utility.MyItemTouchHelper;
-import com.urrecliner.letmequiet.utility.NextAlarm;
-import com.urrecliner.letmequiet.utility.VerticalSpacingItemDecorator;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Message;
 import android.view.Display;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
 import static com.urrecliner.letmequiet.Vars.STATE_BLANK;
@@ -52,21 +35,16 @@ import static com.urrecliner.letmequiet.Vars.interval_Long;
 import static com.urrecliner.letmequiet.Vars.interval_Short;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
-import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
-import static com.urrecliner.letmequiet.Vars.sdfDateTime;
-import static com.urrecliner.letmequiet.Vars.sdfTime;
+import static com.urrecliner.letmequiet.Vars.notScheduled;
 import static com.urrecliner.letmequiet.Vars.sharedPref;
-import static com.urrecliner.letmequiet.Vars.quietTask;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
-import static com.urrecliner.letmequiet.Vars.weekName;
 import static com.urrecliner.letmequiet.Vars.xSize;
 
 public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
-    private boolean notScheduled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +71,6 @@ public class MainActivity extends AppCompatActivity  {
             return;
         setVariables();
         actOnStateCode();
-//        new Timer().schedule(new TimerTask() {
-//            public void run () {
-//                updateNotificationBar("xx:xx","not activated yet","S");
-//            }
-//        }, 100);
         actionHandler = new Handler() { public void handleMessage(Message msg) { actOnStateCode(); }};
 //        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
     }

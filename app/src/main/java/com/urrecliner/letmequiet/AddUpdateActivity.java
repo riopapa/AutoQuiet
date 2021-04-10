@@ -182,10 +182,8 @@ public class AddUpdateActivity extends AppCompatActivity {
             quietTasks.set(currIdx, quietTask);
         utils.saveQuietTasksToShared();
 
-        stateCode = STATE_ADD_UPDATE;
-        utils.log(logID, stateCode + " "+utils.buildHourMin(startHour,startMin));
         finish();
-        new ScheduleNextTask("New Schedule Settled");
+        new ScheduleNextTask("Schedule "+ ((addNewQuiet) ? "Added" : "Updated"));
         recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
@@ -219,7 +217,7 @@ public class AddUpdateActivity extends AppCompatActivity {
                 break;
             case R.id.action_delete:
                 quietTasks.remove(currIdx);
-                recycleViewAdapter.notifyItemChanged(currIdx);
+                recycleViewAdapter.notifyDataSetChanged();
                 utils.saveQuietTasksToShared();
                 cancel_QuietTask();
                 break;
@@ -235,8 +233,8 @@ public class AddUpdateActivity extends AppCompatActivity {
         Intent intent = new Intent(this, com.urrecliner.letmequiet.AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.letmequiet.AddUpdateActivity.this, quietUniq, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-        pendingIntent = PendingIntent.getBroadcast(com.urrecliner.letmequiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.cancel(pendingIntent);
+//        pendingIntent = PendingIntent.getBroadcast(com.urrecliner.letmequiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//        alarmManager.cancel(pendingIntent);
     }
 
     @Override
