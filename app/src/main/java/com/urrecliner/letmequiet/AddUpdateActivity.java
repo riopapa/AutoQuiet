@@ -18,6 +18,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.urrecliner.letmequiet.databinding.ActivityAddEditBinding;
+import com.urrecliner.letmequiet.databinding.ReminderInfoBinding;
 import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.util.Calendar;
@@ -43,14 +45,14 @@ public class AddUpdateActivity extends AppCompatActivity {
     private final String logID = "Add,Update";
     private QuietTask quietTask;
     private int currIdx;
-    private ActivityAddBinding binding;
+    private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        binding = ActivityAddBinding.inflate(getLayoutInflater());
+        binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();

@@ -9,21 +9,16 @@ import android.os.Bundle;
 import com.urrecliner.letmequiet.AlarmReceiver;
 import com.urrecliner.letmequiet.models.QuietTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import static com.urrecliner.letmequiet.Vars.utils;
 
 public class NextAlarm {
     public static void request(QuietTask quietTask, long nextTime, String StartFinish, Context context) {
         String logID = "NextAlarm";
-        final SimpleDateFormat sdfDateTime = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);
         Bundle args = new Bundle();
         args.putSerializable("quietTask", quietTask);
-        utils.log(logID,"time:"+sdfDateTime.format(nextTime)+" "+StartFinish+" "+ quietTask.getSubject());
 
         intent.putExtra("DATA",args);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time

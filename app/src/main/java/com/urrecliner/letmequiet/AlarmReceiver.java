@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.urrecliner.letmequiet.models.QuietTask;
 
@@ -69,7 +70,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    String s = nowTimeToString() + " 입니다. 곧 " + subject + " 가 시작됩니다";
+                    String lastCode = subject.substring(subject.length()-1);
+                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                    String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
+                            + ((lastNFKD.length() == 2) ? "가": "이") +" 시작됩니다";
                     textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
                 } else {
                     speakTimer.cancel();
@@ -91,10 +95,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    String lastCode = subject.substring(subject.length()-2,subject.length()-1);
+                    String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
-                            + ((lastNFKD.length() == 2) ? " 가": " 이") +" 종료 되었습니다";
+                            + ((lastNFKD.length() == 2) ? "가": "이") +" 종료 되었습니다";
                     textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
                 } else {
                     speakTimer.cancel();
