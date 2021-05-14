@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.letmequiet.databinding.ActivityAddEditBinding;
-import com.urrecliner.letmequiet.databinding.ReminderInfoBinding;
 import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.util.Calendar;
@@ -42,7 +41,6 @@ public class AddUpdateActivity extends AppCompatActivity {
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
     private boolean vibrate;
-    private final String logID = "Add,Update";
     private QuietTask quietTask;
     private int currIdx;
     private ActivityAddEditBinding binding;
