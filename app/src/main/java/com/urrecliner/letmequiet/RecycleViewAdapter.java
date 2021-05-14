@@ -53,7 +53,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     {
 
         View viewLine;
-        ImageView lvVibrate, lvRepeat;
+        ImageView lvVibrate, lvStartRepeat, lvFinishRepeat;
         TextView rmdSubject, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvStartTime, tvFinishTime;
         GestureDetector mGestureDetector;
@@ -62,7 +62,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             super(itemView);
             this.viewLine = itemView.findViewById(R.id.one_reminder);
             this.lvVibrate = itemView.findViewById(R.id.lv_vibrate);
-            this.lvRepeat = itemView.findViewById(R.id.lv_repeat);
+            this.lvStartRepeat = itemView.findViewById(R.id.lv_startRepeat);
+            this.lvFinishRepeat = itemView.findViewById(R.id.lv_finishRepeat);
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
             this.ltWeek0 = itemView.findViewById(R.id.lt_week0);
             this.ltWeek1 = itemView.findViewById(R.id.lt_week1);
@@ -144,12 +145,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         quietTask = quietTasks.get(position);
         boolean active = quietTask.isActive();
         boolean vibrate = quietTask.isVibrate();
-        int repeat = quietTask.getRepeat();
+        int startRepeat = quietTask.getStartRepeat();
+        int finishRepeat = quietTask.getFinishRepeat();
         if (vibrate)
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
         else
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
-        holder.lvRepeat.setImageResource((repeat == 0)? R.mipmap.speaking_off: (repeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        holder.lvStartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        holder.lvFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
 
         holder.rmdSubject.setText(quietTask.getSubject());
         holder.rmdSubject.setTextColor((active) ? colorOn:colorOff);

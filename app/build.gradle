@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.urrecliner.letmequiet"
-        minSdkVersion 29
+        minSdkVersion 28
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -25,10 +25,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    viewBinding {
-        enabled true
-    }
+    buildFeatures { viewBinding = true }
+//
+//    viewBinding {
+//        enabled = true
+//    }
 
 }
 
@@ -37,9 +38,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.navigation:navigation-fragment:2.3.3'
-    implementation 'androidx.navigation:navigation-ui:2.3.3'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.preference:preference:1.1.1'
 

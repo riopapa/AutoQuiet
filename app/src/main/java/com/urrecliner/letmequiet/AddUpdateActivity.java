@@ -18,19 +18,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.urrecliner.letmequiet.databinding.ActivityAddBinding;
 import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.util.Calendar;
 
-import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
-import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.quietUniq;
-import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
 import static com.urrecliner.letmequiet.Vars.weekName;
 import static com.urrecliner.letmequiet.Vars.xSize;
@@ -40,7 +36,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
     private boolean active;
-    private int repeat;
+    private int startRepeat, finishRepeat;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
     private boolean vibrate;
@@ -88,7 +84,8 @@ public class AddUpdateActivity extends AppCompatActivity {
         finishHour = quietTask.getFinishHour();
         finishMin = quietTask.getFinishMin();
         active = quietTask.isActive();
-        repeat = quietTask.getRepeat();
+        startRepeat = quietTask.getStartRepeat();
+        finishRepeat = quietTask.getFinishRepeat();
         week = quietTask.getWeek();
         vibrate = quietTask.isVibrate();
 
@@ -124,15 +121,27 @@ public class AddUpdateActivity extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.ivSpeaking.setImageResource((repeat == 0)? R.mipmap.speaking_off: (repeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
-        binding.ivSpeaking.setOnClickListener(v -> {
-            if (repeat == 0)
-                repeat = 1;
-            else if (repeat == 1)
-                repeat = 11;
+        binding.iVstartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.iVstartRepeat.setOnClickListener(v -> {
+            if (startRepeat == 0)
+                startRepeat = 1;
+            else if (startRepeat == 1)
+                startRepeat = 11;
             else
-                repeat = 0;
-            binding.ivSpeaking.setImageResource((repeat == 0)? R.mipmap.speaking_off: (repeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+                startRepeat = 0;
+            binding.iVstartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            v.invalidate();
+        });
+
+        binding.iVFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.iVFinishRepeat.setOnClickListener(v -> {
+            if (finishRepeat == 0)
+                finishRepeat = 1;
+            else if (finishRepeat == 1)
+                finishRepeat = 11;
+            else
+                finishRepeat = 0;
+            binding.iVFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
     }
@@ -147,7 +156,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
         boolean [] week = new boolean[]{false, true, true, true, true, true, false};
         return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
-                week, true, true, 1);
+                week, true, true, 1, 0);
     }
 
     public void toggleWeek(View v) {
@@ -175,7 +184,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
         finishHour = binding.timePickerFinish.getHour(); finishMin = binding.timePickerFinish.getMinute();
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-            week, active, vibrate, repeat);
+            week, active, vibrate, startRepeat, finishRepeat);
         if (addNewQuiet)
             quietTasks.add(quietTask);
         else

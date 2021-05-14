@@ -10,8 +10,7 @@
     <LinearLayout
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="44dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:layout_gravity="center"
@@ -21,13 +20,17 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="0dp"
             android:layout_marginStart="4dp"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
             android:src="@mipmap/phone_vibrate"
             android:contentDescription="@string/blank" />
+        <LinearLayout
+            android:layout_width="44dp"
+            android:layout_height="28dp"
+            android:orientation="horizontal">
         <ImageView
-            android:id="@+id/lv_repeat"
+            android:id="@+id/lv_startRepeat"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="4dp"
             android:layout_marginStart="4dp"
@@ -36,6 +39,17 @@
             android:layout_gravity="center"
             android:src="@mipmap/speaking_on"
             android:contentDescription="@string/blank" />
+        <ImageView
+            android:id="@+id/lv_finishRepeat"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/speaking_on"
+            android:contentDescription="@string/blank" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -147,8 +161,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_width="60sp"
                 android:gravity="center_vertical"
                 android:layout_height="match_parent"
                 android:orientation="vertical">

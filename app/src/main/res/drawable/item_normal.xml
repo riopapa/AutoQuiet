@@ -6,6 +6,6 @@
             android:dashWidth="2px"
             android:width="2dp"
             android:color="@color/itemNormalBorder" />
-        <corners android:radius="6dp" />
+        <corners android:radius="4dp" />
         <solid android:color="@color/itemNormalFill" />
 </shape>

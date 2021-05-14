@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech;
 
 import com.urrecliner.letmequiet.models.QuietTask;
 
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert quietTask != null;
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
-        loopCount = quietTask.getRepeat();
+        loopCount = quietTask.getStartRepeat();
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());
@@ -90,7 +91,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    String s = nowTimeToString() + " 입니다. " + subject + " 가 종료 되었습니다";
+                    String lastCode = subject.substring(subject.length()-2,subject.length()-1);
+                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                    String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
+                            + ((lastNFKD.length() == 2) ? " 가": " 이") +" 종료 되었습니다";
                     textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
                 } else {
                     speakTimer.cancel();
