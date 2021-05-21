@@ -16,7 +16,6 @@ import static com.urrecliner.letmequiet.Vars.utils;
 
 public class SettingActivity extends AppCompatActivity {
 
-    static private String logID = "Setting";
     private ActivitySettingBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class SettingActivity extends AppCompatActivity {
                 editor.putBoolean("beepManner", beepManner).apply();
                 break;
             default:
-                utils.log(logID,"click ID : "+v.getId());
+                utils.log("setting","click ID : "+v.getId());
         }
         showSoundSetting();
     }

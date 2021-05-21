@@ -43,7 +43,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOffBack, null);
 
-        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_info, parent, false);
+        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_line, parent, false);
 
         return new ViewHolder(swipeView);
     }
@@ -75,7 +75,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             this.tvStartTime = itemView.findViewById(R.id.rmdStartTime);
             this.tvFinishTime = itemView.findViewById(R.id.rmdFinishTime);
             this.viewLine.setOnClickListener(v -> {
-                int qIdx = getAdapterPosition();
+                int qIdx = getBindingAdapterPosition();
                 quietTask = quietTasks.get(qIdx);
                 Intent intent;
                 if (qIdx != 0) {
@@ -107,7 +107,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            int qIdx = getAdapterPosition();
+            int qIdx = getBindingAdapterPosition();
             quietTask = quietTasks.get(qIdx);
             Intent intent;
             if (qIdx != 0) {
