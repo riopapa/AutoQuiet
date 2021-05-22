@@ -23,12 +23,8 @@ public class Vars {
     static String stateCode;
 
     static SharedPreferences sharedPref;
-    static SharedPreferences.Editor editor;
-    static boolean beepManner = true;
-
-    static int interval_Short = 10;
-    static int interval_Long = 30;
-    static int default_Duration = 30;
+    static String sharedTimeShort, sharedTimeLong, sharedTimeInit;
+    static boolean sharedManner = true;
 
     static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("MM-dd HH:mm", Locale.US);

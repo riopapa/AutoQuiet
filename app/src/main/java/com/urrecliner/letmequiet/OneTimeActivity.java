@@ -14,12 +14,12 @@ import com.urrecliner.letmequiet.models.QuietTask;
 import java.util.Calendar;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
-import static com.urrecliner.letmequiet.Vars.default_Duration;
-import static com.urrecliner.letmequiet.Vars.interval_Long;
-import static com.urrecliner.letmequiet.Vars.interval_Short;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
+import static com.urrecliner.letmequiet.Vars.sharedTimeInit;
+import static com.urrecliner.letmequiet.Vars.sharedTimeLong;
+import static com.urrecliner.letmequiet.Vars.sharedTimeShort;
 import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
 
@@ -33,6 +33,7 @@ public class OneTimeActivity extends AppCompatActivity {
     Calendar calendar;
     boolean timePicker_UpDown = false;
     ActivityOneTimeBinding binding;
+    int shortInterval, longInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,9 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTask = quietTasks.get(0);
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
-        durationMin = default_Duration;
+        durationMin = Integer.parseInt(sharedTimeInit);
+        shortInterval = Integer.parseInt(sharedTimeShort);
+        longInterval = Integer.parseInt(sharedTimeLong);
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
         startHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -83,10 +86,10 @@ public class OneTimeActivity extends AppCompatActivity {
 
     void buildScreen() {
         String text;
-        text = "▽"+interval_Short+"분▽"; binding.minus10Min.setText(text);
-        text = "△"+interval_Short+"분△"; binding.plus10Min.setText(text);
-        text = "▽"+interval_Long+"분▽"; binding.minus30Min.setText(text);
-        text = "△"+interval_Long+"분△"; binding.plus30Min.setText(text);
+        text = "▽"+sharedTimeShort+"분▽"; binding.minus10Min.setText(text);
+        text = "△"+sharedTimeShort+"분△"; binding.plus10Min.setText(text);
+        text = "▽"+sharedTimeLong+"분▽"; binding.minus30Min.setText(text);
+        text = "△"+sharedTimeLong+"분△"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
         binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
@@ -96,26 +99,26 @@ public class OneTimeActivity extends AppCompatActivity {
             v.invalidate();
         });
         binding.minus10Min.setOnClickListener(v -> {
-            if (durationMin > interval_Short) {
-                durationMin -= interval_Short;
+            if (durationMin > shortInterval) {
+                durationMin -= shortInterval;
                 adjustTimePicker();
             }
         });
 
         binding.plus10Min.setOnClickListener(v -> {
-            durationMin += interval_Short;
+            durationMin += shortInterval;
             adjustTimePicker();
         });
 
         binding.minus30Min.setOnClickListener(v -> {
-            if (durationMin > interval_Long) {
-                durationMin -= interval_Long;
+            if (durationMin > longInterval) {
+                durationMin -= longInterval;
                 adjustTimePicker();
             }
         });
 
         binding.plus30Min.setOnClickListener(v -> {
-            durationMin += interval_Long;
+            durationMin += longInterval;
             adjustTimePicker();
         });
     }

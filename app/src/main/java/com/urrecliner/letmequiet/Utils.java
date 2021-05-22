@@ -26,8 +26,12 @@ import java.util.List;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.sdfDate;
 import static com.urrecliner.letmequiet.Vars.sdfLogTime;
+import static com.urrecliner.letmequiet.Vars.sharedManner;
 import static com.urrecliner.letmequiet.Vars.sharedPref;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
+import static com.urrecliner.letmequiet.Vars.sharedTimeInit;
+import static com.urrecliner.letmequiet.Vars.sharedTimeLong;
+import static com.urrecliner.letmequiet.Vars.sharedTimeShort;
 
 public class Utils {
 
@@ -134,6 +138,8 @@ public class Utils {
         String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 2*24*60*60*1000L);
         if (packageDir == null) packageDir = getPackageDirectory();
         File[] files = getCurrentFileList(packageDir);
+        if (files == null)
+            return;
         Collator myCollator = Collator.getInstance();
         for (File file : files) {
             String shortFileName = file.getName();
@@ -173,6 +179,24 @@ public class Utils {
             list = gson.fromJson(json, type);
         }
         return list;
+    }
+
+    void getPreference() {
+        sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedTimeShort = sharedPref.getString("timeShort", "");
+        if (sharedTimeShort.equals("")) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("mannerBeep", true);
+            editor.putString("timeInit","60");
+            editor.putString("timeShort", "5");
+            editor.putString("timeLong", "20");
+            editor.apply();
+            editor.commit();
+        }
+        sharedManner = sharedPref.getBoolean("mannerBeep", true);
+        sharedTimeInit = sharedPref.getString("timeInit", "60");
+        sharedTimeShort = sharedPref.getString("timeShort", "5");
+        sharedTimeLong = sharedPref.getString("timeLong", "20");
     }
 
 }

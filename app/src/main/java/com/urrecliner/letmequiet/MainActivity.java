@@ -6,22 +6,22 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
+import com.urrecliner.letmequiet.utility.Permission;
+
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
 import static com.urrecliner.letmequiet.Vars.STATE_BLANK;
@@ -29,14 +29,9 @@ import static com.urrecliner.letmequiet.Vars.STATE_BOOT;
 import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
-import static com.urrecliner.letmequiet.Vars.beepManner;
-import static com.urrecliner.letmequiet.Vars.default_Duration;
-import static com.urrecliner.letmequiet.Vars.interval_Long;
-import static com.urrecliner.letmequiet.Vars.interval_Short;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.notScheduled;
-import static com.urrecliner.letmequiet.Vars.sharedPref;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.stateCode;
 import static com.urrecliner.letmequiet.Vars.utils;
@@ -53,7 +48,13 @@ public class MainActivity extends AppCompatActivity  {
         mContext = this.getApplicationContext();
         utils = new Utils();
         utils.log(logID, "Main start ");
-        askPermission();
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
+                    .getPackageName(), PackageManager.GET_PERMISSIONS);
+            Permission.ask(this, this, info);
+        } catch (Exception e) {
+            Log.e("Permission", "No Permission "+e.toString());
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -77,12 +78,7 @@ public class MainActivity extends AppCompatActivity  {
 
     void setVariables() {
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        beepManner = sharedPref.getBoolean("beepManner", true);
-        interval_Short = sharedPref.getInt("interval_Short", 5);
-        interval_Long = sharedPref.getInt("interval_Long", 30);
-        default_Duration = sharedPref.getInt("default_Duration", 30);
-
+        utils.getPreference();
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
             new ClearQuiteTasks();
@@ -96,9 +92,7 @@ public class MainActivity extends AppCompatActivity  {
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent = new Intent(
-                    android.provider.Settings
-                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
     }
@@ -155,8 +149,9 @@ public class MainActivity extends AppCompatActivity  {
                 startActivity(intent);
                 return true;
             case R.id.action_setting:
-                intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
+//                intent = new Intent(MainActivity.this, SettingActivity.class);
+//                startActivity(intent);
+                startActivity(new Intent(this, PreferActivity.class));
                 return true;
             case R.id.action_reset:
                 new AlertDialog.Builder(this)
@@ -182,78 +177,5 @@ public class MainActivity extends AppCompatActivity  {
         if(notScheduled)
             new ScheduleNextTask("Start setting Silent Time ");
     }
-
-    // ↓ ↓ ↓ P E R M I S S I O N    RELATED /////// ↓ ↓ ↓ ↓
-    private final static int ALL_PERMISSIONS_RESULT = 101;
-    ArrayList<String> permissions = new ArrayList<>();
-    ArrayList<String> permissionsToRequest;
-    ArrayList<String> permissionsRejected = new ArrayList<>();
-
-    private void askPermission() {
-
-        permissions.add(Manifest.permission.READ_PHONE_STATE);
-        permissions.add(Manifest.permission.REORDER_TASKS);
-        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        permissions.add(Manifest.permission.VIBRATE);
-        permissions.add(Manifest.permission.FOREGROUND_SERVICE);
-        permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
-        permissions.add(Manifest.permission.RECEIVE_BOOT_COMPLETED);
-        permissionsToRequest = findUnAskedPermissions(permissions);
-        if (permissionsToRequest.size() != 0) {
-            requestPermissions(permissionsToRequest.toArray(new String[0]),
-//            requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    ALL_PERMISSIONS_RESULT);
-        }
-        // get permission for silent mode
-        NotificationManager notificationManager =
-                (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if (!notificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-            startActivity(intent);
-        }
-    }
-
-    private ArrayList findUnAskedPermissions(@NonNull ArrayList<String> wanted) {
-        ArrayList <String> result = new ArrayList<>();
-        for (String perm : wanted) if (hasPermission(perm)) result.add(perm);
-        return result;
-    }
-    private boolean hasPermission(@NonNull String permission) {
-        return (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED);
-    }
-
-//    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ALL_PERMISSIONS_RESULT) {
-            for (String perms : permissionsToRequest) {
-                if (hasPermission(perms)) {
-                    permissionsRejected.add(perms);
-                }
-            }
-            if (permissionsRejected.size() > 0) {
-                if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                    String msg = "These permissions are mandatory for the application. Please allow access.";
-                    showDialog(msg);
-                }
-            }
-            else
-                Toast.makeText(mContext, "Permissions not granted.", Toast.LENGTH_LONG).show();
-        }
-    }
-    private void showDialog(String msg) {
-        showMessageOKCancel(msg, (dialog, which) -> requestPermissions(permissionsRejected.toArray(
-                        new String[0]), ALL_PERMISSIONS_RESULT));
-    }
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(mActivity)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
-// ↑ ↑ ↑ ↑ P E R M I S S I O N    RELATED /////// ↑ ↑ ↑
 
 }

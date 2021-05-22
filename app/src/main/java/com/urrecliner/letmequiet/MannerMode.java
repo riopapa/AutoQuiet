@@ -7,16 +7,14 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import static android.content.Context.VIBRATOR_SERVICE;
-import static com.urrecliner.letmequiet.Vars.beepManner;
 import static com.urrecliner.letmequiet.Vars.mContext;
+import static com.urrecliner.letmequiet.Vars.sharedManner;
 
 class MannerMode {
 
-    static private String logID = "MannerMode";
     private static MediaPlayer mpStart, mpFinish;
 
     static void turn2Quiet(Context context, boolean vibrate) {
-//        final String text = subject + ", Go into Silent";
         beepStartQuiet();
         vibratePhone(context);
 
@@ -48,7 +46,7 @@ class MannerMode {
 
     static void vibratePhone(Context context) {
 //        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
-        long[] pattern = {0, 100, 1000, 300, 1000, 500, 100};
+        long[] pattern = {0, 100, 300, 200, 300, 100, 200};
         Vibrator v = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
         assert v != null;
         v.vibrate(VibrationEffect.createWaveform(pattern, -1));
@@ -56,16 +54,10 @@ class MannerMode {
 
     private static void beepStartQuiet() {
 
-        if (beepManner) {
+        if (sharedManner) {
             if (mpStart == null) {
-//                utils.log(logID, "creating beep mpStart");
                 mpStart = MediaPlayer.create(mContext, R.raw.manner_starting);
-                mpStart.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        mediaPlayer.start();
-                    }
-                });
+                mpStart.setOnPreparedListener(MediaPlayer::start);
             }
             else
                 mpStart.start();
@@ -74,15 +66,10 @@ class MannerMode {
 
     private static void beepFinishQuiet() {
 
-        if (beepManner) {
+        if (sharedManner) {
             if (mpFinish == null) {
                 mpFinish = MediaPlayer.create(mContext, R.raw.back2normal);
-                mpFinish.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        mediaPlayer.start();
-                    }
-                });
+                mpFinish.setOnPreparedListener(MediaPlayer::start);
             }
             else
                 mpFinish.start();

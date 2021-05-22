@@ -46,7 +46,7 @@ public class ScheduleNextTask {
         NextAlarm.request(quietTask, nextTime, StartFinish, mContext);
         String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-        utils.log("schedule",sdfDateTime.format(nextTime) + " " + StartFinish + " " + quietTask.getSubject());
+        utils.log("schedule",msg);
         updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
         notScheduled = false;
     }

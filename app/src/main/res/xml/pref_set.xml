@@ -1,0 +1,44 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:holo="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+        app:key="manner_beep"
+        holo:title="매너 변경시 소리"
+        app:iconSpaceReserved="false"
+        />
+
+    <PreferenceCategory app:title="바로 조용히 하기 시간 간격 조절"
+        app:iconSpaceReserved="false"
+        >
+
+        <ListPreference
+            holo:defaultValue="3"
+            holo:key="timeInit"
+            app:entries="@array/times_init"
+            app:entryValues="@array/times_init"
+            holo:summary="초기"
+            android:text="분"
+            app:iconSpaceReserved="false"
+            holo:title="타이틀 바로 조용히 하기 초기 시간 (분)" />
+
+        <ListPreference
+            holo:defaultValue="5"
+            app:entries="@array/times_short"
+            app:entryValues="@array/times_short"
+            holo:key="timeShort"
+            app:iconSpaceReserved="false"
+            holo:title="바로 조용히 하기 미세 조정 정도 (분)"
+            holo:summary="짧은" />
+
+        <ListPreference
+            holo:defaultValue="30"
+            app:entries="@array/times_long"
+            app:entryValues="@array/times_long"
+            holo:key="timeLong"
+            app:iconSpaceReserved="false"
+            holo:title="바로 조용히 하기 큰 조정 정도 (분)"
+            holo:summary="긴" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
