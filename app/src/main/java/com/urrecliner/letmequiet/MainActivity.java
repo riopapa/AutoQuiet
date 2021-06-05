@@ -10,8 +10,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,8 +21,14 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.urrecliner.letmequiet.models.Agenda;
 import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
+import com.urrecliner.letmequiet.utility.GetAgenda;
 import com.urrecliner.letmequiet.utility.Permission;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import static com.urrecliner.letmequiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.letmequiet.Vars.STATE_ALARM;
@@ -29,6 +37,7 @@ import static com.urrecliner.letmequiet.Vars.STATE_BOOT;
 import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.actionHandler;
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
+import static com.urrecliner.letmequiet.Vars.agendas;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.notScheduled;
@@ -74,6 +83,23 @@ public class MainActivity extends AppCompatActivity  {
         actOnStateCode();
         actionHandler = new Handler() { public void handleMessage(Message msg) { actOnStateCode(); }};
 //        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        agendas = new ArrayList<>();
+        GetAgenda.get(mContext);
+        utils.log("agendas","size="+agendas.size());
+        agendas.sort(new Comparator<Agenda>() {
+            @Override
+            public int compare(Agenda arg0, Agenda arg1) {
+                return Long.compare(arg0.startTime, arg1.startTime);
+            }
+        });
+        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss ");
+
+        for (int i = 0; i < agendas.size(); i++) {
+            utils.log("Sorted",agendas.get(i).title+", time="+sdf.format(agendas.get(i).startTime));
+        }
     }
 
     void setVariables() {

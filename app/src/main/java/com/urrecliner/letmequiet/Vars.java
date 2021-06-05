@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
+import com.urrecliner.letmequiet.models.Agenda;
 import com.urrecliner.letmequiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ public class Vars {
     static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.US);
     static final SimpleDateFormat sdfLogTime = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US);
     static QuietTask quietTask;
+    public static ArrayList<Agenda> agendas;
     public static ArrayList<QuietTask> quietTasks;
     static int quietUniq = 123456;
 
