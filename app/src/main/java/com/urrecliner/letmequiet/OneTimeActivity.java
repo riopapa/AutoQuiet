@@ -16,7 +16,7 @@ import java.util.Calendar;
 import static com.urrecliner.letmequiet.Vars.STATE_ONETIME;
 import static com.urrecliner.letmequiet.Vars.mActivity;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
-import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
+import static com.urrecliner.letmequiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.sharedTimeInit;
 import static com.urrecliner.letmequiet.Vars.sharedTimeLong;
 import static com.urrecliner.letmequiet.Vars.sharedTimeShort;
@@ -143,7 +143,7 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                 week, true, vibrate, 0, 0);    // onetime repeat is 0
         quietTasks.set(0, quietTask);
-        recycleViewAdapter.notifyItemChanged(0);
+        mainRecycleViewAdapter.notifyItemChanged(0);
 
         utils.saveQuietTasksToShared();
         MannerMode.turn2Quiet(getApplicationContext(), vibrate);

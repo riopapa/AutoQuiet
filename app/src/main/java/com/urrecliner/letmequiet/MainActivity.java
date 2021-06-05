@@ -97,9 +97,14 @@ public class MainActivity extends AppCompatActivity  {
         });
         SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss ");
 
-        for (int i = 0; i < agendas.size(); i++) {
+        for (int i = 0; i < agendas.size();) {
             utils.log("Sorted",agendas.get(i).title+", time="+sdf.format(agendas.get(i).startTime));
+            if (agendas.get(i).startTime < System.currentTimeMillis())
+                agendas.remove(i);
+            else
+                i++;
         }
+        utils.log("agendas","size="+agendas.size());
     }
 
     void setVariables() {

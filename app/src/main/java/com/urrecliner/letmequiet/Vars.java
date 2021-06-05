@@ -19,7 +19,8 @@ public class Vars {
     public static boolean addNewQuiet = false;
     static MainActivity mActivity;
     public static Context mContext;
-    static RecycleViewAdapter recycleViewAdapter;
+    static MainRecycleViewAdapter mainRecycleViewAdapter;
+    static CalRecycleViewAdapter calRecyclerViewAdapter;
 
     static String stateCode;
 

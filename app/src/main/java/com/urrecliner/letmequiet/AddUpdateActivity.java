@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
 import static com.urrecliner.letmequiet.Vars.mContext;
-import static com.urrecliner.letmequiet.Vars.recycleViewAdapter;
+import static com.urrecliner.letmequiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.quietUniq;
 import static com.urrecliner.letmequiet.Vars.utils;
@@ -193,7 +193,7 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         finish();
         new ScheduleNextTask("Schedule "+ ((addNewQuiet) ? "Added" : "Updated"));
-        recycleViewAdapter.notifyItemChanged(currIdx, quietTask);
+        mainRecycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class AddUpdateActivity extends AppCompatActivity {
                 break;
             case R.id.action_delete:
                 quietTasks.remove(currIdx);
-                recycleViewAdapter.notifyDataSetChanged();
+                mainRecycleViewAdapter.notifyDataSetChanged();
                 utils.saveQuietTasksToShared();
                 cancel_QuietTask();
                 break;

@@ -17,19 +17,23 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.urrecliner.letmequiet.models.Agenda;
 import com.urrecliner.letmequiet.models.QuietTask;
 import com.urrecliner.letmequiet.utility.ItemTouchHelperAdapter;
 
+import java.text.SimpleDateFormat;
+
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
+import static com.urrecliner.letmequiet.Vars.agendas;
 import static com.urrecliner.letmequiet.Vars.mContext;
 import static com.urrecliner.letmequiet.Vars.quietTasks;
 import static com.urrecliner.letmequiet.Vars.utils;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>
+public class CalRecycleViewAdapter extends RecyclerView.Adapter<CalRecycleViewAdapter.ViewHolder>
         implements ItemTouchHelperAdapter {
 
     private ItemTouchHelper mTouchHelper;
-    private QuietTask quietTask;
+    private Agenda agenda;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
     private View swipeView;
@@ -76,7 +80,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             this.tvFinishTime = itemView.findViewById(R.id.rmdFinishTime);
             this.viewLine.setOnClickListener(v -> {
                 int qIdx = getBindingAdapterPosition();
-                quietTask = quietTasks.get(qIdx);
+                agenda = agendas.get(qIdx);
                 Intent intent;
                 if (qIdx != 0) {
                     addNewQuiet = false;
@@ -108,7 +112,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             int qIdx = getBindingAdapterPosition();
-            quietTask = quietTasks.get(qIdx);
+            agenda = agendas.get(qIdx);
             Intent intent;
             if (qIdx != 0) {
                 addNewQuiet = false;
@@ -142,11 +146,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        quietTask = quietTasks.get(position);
-        boolean active = quietTask.isActive();
-        boolean vibrate = quietTask.isVibrate();
-        int startRepeat = quietTask.getStartRepeat();
-        int finishRepeat = quietTask.getFinishRepeat();
+        agenda = agendas.get(position);
+        boolean active = true;;
+        boolean vibrate = true;;
+        int startRepeat = agenda.quietStart;
+        int finishRepeat = agenda.quietFinish;
         if (vibrate)
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
         else
@@ -154,38 +158,21 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.lvStartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         holder.lvFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
 
-        holder.rmdSubject.setText(quietTask.getSubject());
+        holder.rmdSubject.setText(agenda.title);
         holder.rmdSubject.setTextColor((active) ? colorOn:colorOff);
 
         TextView[] tViewWeek = new TextView[7];
         tViewWeek[0] = holder.ltWeek0; tViewWeek[1] = holder.ltWeek1; tViewWeek[2] = holder.ltWeek2;
         tViewWeek[3] = holder.ltWeek3; tViewWeek[4] = holder.ltWeek4; tViewWeek[5] = holder.ltWeek5;
         tViewWeek[6] = holder.ltWeek6;
-        if (position == 0) {
-            for (int i = 0; i < 7; i++) {
-                tViewWeek[i].setTextColor(colorOffBack);  // transparent
-            }
-            String txt = "-";
-            holder.tvStartTime.setText(txt);
-            holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
-            txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
-            holder.tvFinishTime.setText(txt);
-        } else{
-            boolean[] week = quietTask.getWeek();
-            for (int i = 0; i < 7; i++) {
-                tViewWeek[i].setTextColor(active ? colorActive : colorOff);
-                if (active)
-                    tViewWeek[i].setBackgroundColor(week[i] ? colorOnBack : colorOffBack);
-                else
-                    tViewWeek[i].setBackgroundColor(week[i] ? colorInactiveBack : colorOffBack);
-            }
-            String txt = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
-            holder.tvStartTime.setText(txt);
-            holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
-            txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
-            holder.tvFinishTime.setText(txt);
-        }
-        holder.tvFinishTime.setTextColor((active) ? colorOn:colorOff);
+        String txt = "-";
+        holder.tvStartTime.setText(txt);
+        holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
+        final SimpleDateFormat sdf = new SimpleDateFormat("MM-DD HH;mm");
+        txt = sdf.format(agenda.startTime);
+        holder.tvStartTime.setText(txt);
+        txt = sdf.format(agenda.finishTime);
+        holder.tvFinishTime.setText(txt);
     }
 
     @Override
@@ -211,29 +198,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onItemSwiped(int position) {
-        if (position != 0) {
-            quietTask = quietTasks.get(position);
-            quietTasks.remove(position);
-            notifyItemRemoved(position);
-            utils.saveQuietTasksToShared();
-            Snackbar snackbar = Snackbar
-                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
-            snackbar.setAction("복원", view -> {
-                quietTasks.add(position, quietTask);
-                notifyItemInserted(position);
-                utils.saveQuietTasksToShared();
-            });
 
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-
-        } else {
-            if (topLine++ < 0)
-                Toast.makeText(mContext,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
-            else if (topLine > 30)
-                topLine = -1;
-//           notifyItemChanged(0);
-        }
     }
 
     public void setTouchHelper(ItemTouchHelper touchHelper){
