@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.urrecliner.letmequiet.models.QuietTask;
 import com.urrecliner.letmequiet.utility.ItemTouchHelperAdapter;
+
+import java.text.SimpleDateFormat;
 
 import static com.urrecliner.letmequiet.Vars.addNewQuiet;
 import static com.urrecliner.letmequiet.Vars.mContext;
@@ -55,7 +58,8 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         View viewLine;
         ImageView lvVibrate, lvStartRepeat, lvFinishRepeat;
         TextView rmdSubject, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
-                tvStartTime, tvFinishTime;
+                tvStartTime, tvFinishTime, tvDesc, tvLocation;
+        LinearLayout llCalInfo, llStartFinishTime, llWeekFlag;
         GestureDetector mGestureDetector;
 
         public ViewHolder(View itemView) {
@@ -72,6 +76,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             this.ltWeek4 = itemView.findViewById(R.id.lt_week4);
             this.ltWeek5 = itemView.findViewById(R.id.lt_week5);
             this.ltWeek6 = itemView.findViewById(R.id.lt_week6);
+            this.llStartFinishTime = itemView.findViewById(R.id.startFinishTime);
             this.tvStartTime = itemView.findViewById(R.id.rmdStartTime);
             this.tvFinishTime = itemView.findViewById(R.id.rmdFinishTime);
             this.viewLine.setOnClickListener(v -> {
@@ -87,6 +92,10 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             });
+            this.llWeekFlag = itemView.findViewById(R.id.weekFlag);
+            this.llCalInfo = itemView.findViewById(R.id.calInfo);
+            this.tvDesc = itemView.findViewById(R.id.calDesc);
+            this.tvLocation = itemView.findViewById(R.id.calLoc);
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);
         }
@@ -143,49 +152,83 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         quietTask = quietTasks.get(position);
+        boolean gCalendar = quietTask.gCalendar;
         boolean active = quietTask.isActive();
         boolean vibrate = quietTask.isVibrate();
-        int startRepeat = quietTask.getStartRepeat();
-        int finishRepeat = quietTask.getFinishRepeat();
-        if (vibrate)
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
-        else
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
-        holder.lvStartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
-        holder.lvFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        if (!gCalendar) {
+            holder.llCalInfo.setVisibility(View.GONE);
+            holder.llStartFinishTime.setVisibility(View.VISIBLE);
+            int startRepeat = quietTask.getStartRepeat();
+            int finishRepeat = quietTask.getFinishRepeat();
+            if (vibrate)
+                holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
+            else
+                holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
+            holder.lvStartRepeat.setImageResource((startRepeat == 0) ? R.mipmap.speaking_off : (startRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            holder.lvFinishRepeat.setImageResource((finishRepeat == 0) ? R.mipmap.speaking_off : (finishRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
 
-        holder.rmdSubject.setText(quietTask.getSubject());
-        holder.rmdSubject.setTextColor((active) ? colorOn:colorOff);
+            holder.rmdSubject.setText(quietTask.getSubject());
+            holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
-        TextView[] tViewWeek = new TextView[7];
-        tViewWeek[0] = holder.ltWeek0; tViewWeek[1] = holder.ltWeek1; tViewWeek[2] = holder.ltWeek2;
-        tViewWeek[3] = holder.ltWeek3; tViewWeek[4] = holder.ltWeek4; tViewWeek[5] = holder.ltWeek5;
-        tViewWeek[6] = holder.ltWeek6;
-        if (position == 0) {
-            for (int i = 0; i < 7; i++) {
-                tViewWeek[i].setTextColor(colorOffBack);  // transparent
+            TextView[] tViewWeek = new TextView[7];
+            tViewWeek[0] = holder.ltWeek0;
+            tViewWeek[1] = holder.ltWeek1;
+            tViewWeek[2] = holder.ltWeek2;
+            tViewWeek[3] = holder.ltWeek3;
+            tViewWeek[4] = holder.ltWeek4;
+            tViewWeek[5] = holder.ltWeek5;
+            tViewWeek[6] = holder.ltWeek6;
+            if (position == 0) {
+                for (int i = 0; i < 7; i++) {
+                    tViewWeek[i].setTextColor(colorOffBack);  // transparent
+                }
+                String txt = "-";
+                holder.tvStartTime.setText(txt);
+                holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
+                txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
+                holder.tvFinishTime.setText(txt);
+            } else {
+                boolean[] week = quietTask.getWeek();
+                for (int i = 0; i < 7; i++) {
+                    tViewWeek[i].setTextColor(active ? colorActive : colorOff);
+                    if (active)
+                        tViewWeek[i].setBackgroundColor(week[i] ? colorOnBack : colorOffBack);
+                    else
+                        tViewWeek[i].setBackgroundColor(week[i] ? colorInactiveBack : colorOffBack);
+                }
+                String txt = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
+                holder.tvStartTime.setText(txt);
+                holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
+                txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
+                holder.tvFinishTime.setText(txt);
             }
-            String txt = "-";
-            holder.tvStartTime.setText(txt);
-            holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
-            txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
-            holder.tvFinishTime.setText(txt);
-        } else{
-            boolean[] week = quietTask.getWeek();
-            for (int i = 0; i < 7; i++) {
-                tViewWeek[i].setTextColor(active ? colorActive : colorOff);
-                if (active)
-                    tViewWeek[i].setBackgroundColor(week[i] ? colorOnBack : colorOffBack);
-                else
-                    tViewWeek[i].setBackgroundColor(week[i] ? colorInactiveBack : colorOffBack);
+            holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
+        } else {
+            utils.log("holder","A="+quietTask.isActive()+" v="+quietTask.isVibrate()
+                    +" S"+quietTask.getStartRepeat()+" F"+quietTask.getFinishRepeat()+quietTask.getSubject());
+            holder.llCalInfo.setVisibility(View.VISIBLE);
+            holder.llStartFinishTime.setVisibility(View.GONE);
+            holder.llWeekFlag.setVisibility(View.GONE);
+            final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd(EEE) HH:mm");
+            final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+            if (quietTask.calLocation.equals("") && quietTask.calDesc.equals("")) {
+                holder.rmdSubject.setText(quietTask.getSubject());
+                holder.tvLocation.setText(sdf.format(quietTask.calStartDate));
+                holder.tvDesc.setText("~ "+sdf2.format(quietTask.calFinishDate));
+            } else if (quietTask.calDesc.equals("")) {          // location O, desc X
+                holder.rmdSubject.setText(quietTask.getSubject()+" "+sdf.format(quietTask.calStartDate));
+                holder.tvLocation.setText(quietTask.calLocation);
+                holder.tvDesc.setText(sdf2.format(quietTask.calFinishDate));
+            } else if (quietTask.calLocation.equals("")) {          // location O, desc X
+                holder.rmdSubject.setText(quietTask.getSubject()+" "+sdf.format(quietTask.calStartDate));
+                holder.tvLocation.setText("~ "+sdf2.format(quietTask.calFinishDate));
+                holder.tvDesc.setText(quietTask.calDesc);
+            } else {    // location O, desc O
+                holder.rmdSubject.setText(quietTask.getSubject()+" "+sdf.format(quietTask.calStartDate));
+                holder.tvLocation.setText(quietTask.calLocation);
+                holder.tvDesc.setText("~ "+sdf2.format(quietTask.calFinishDate)+" ⋙");
             }
-            String txt = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
-            holder.tvStartTime.setText(txt);
-            holder.tvStartTime.setTextColor((active) ? colorOn:colorOff);
-            txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
-            holder.tvFinishTime.setText(txt);
         }
-        holder.tvFinishTime.setTextColor((active) ? colorOn:colorOff);
     }
 
     @Override

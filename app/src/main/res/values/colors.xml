@@ -11,6 +11,8 @@
     <color name="itemSelectBorder">#798E8E</color>
     <color name="itemSelectFill">#B2C59D</color>
 
+    <color name="itemAgendaFill">#A2E457</color>
+
     <color name="colorClockDark">#064E48</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>

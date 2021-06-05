@@ -71,7 +71,6 @@ public class GetAgenda {
                     +", loc="+eLocation+", all="+eAllay +", zone="+eZone +", disp="+eCalName +", rule="+eRule
                     +", dur="+eDuration
             );
-
             Agenda agenda=new Agenda();
             agenda.id       = eID;
             agenda.title    = eTitle;

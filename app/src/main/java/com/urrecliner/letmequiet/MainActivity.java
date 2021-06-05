@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.urrecliner.letmequiet.models.Agenda;
+import com.urrecliner.letmequiet.models.QuietTask;
 import com.urrecliner.letmequiet.utility.ClearQuiteTasks;
 import com.urrecliner.letmequiet.utility.GetAgenda;
 import com.urrecliner.letmequiet.utility.Permission;
@@ -88,23 +89,23 @@ public class MainActivity extends AppCompatActivity  {
         }
         agendas = new ArrayList<>();
         GetAgenda.get(mContext);
-        utils.log("agendas","size="+agendas.size());
+        utils.log("agendas","size="+agendas.size()+" taskSize="+quietTasks.size());
         agendas.sort(new Comparator<Agenda>() {
             @Override
             public int compare(Agenda arg0, Agenda arg1) {
                 return Long.compare(arg0.startTime, arg1.startTime);
             }
         });
-        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss ");
-
-        for (int i = 0; i < agendas.size();) {
-            utils.log("Sorted",agendas.get(i).title+", time="+sdf.format(agendas.get(i).startTime));
-            if (agendas.get(i).startTime < System.currentTimeMillis())
-                agendas.remove(i);
-            else
-                i++;
+        final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd(EEE) HH:mm");
+        for (int i = 0; i < agendas.size(); i++) {
+            if (agendas.get(i).startTime > System.currentTimeMillis()) {
+                Agenda a = agendas.get(i);
+                Log.w("agenda",a.title+" start="+sdf.format(a.startTime));
+                QuietTask q = new QuietTask(a.title, a.startTime, a.finishTime, a.id, a.desc,
+                                                a.location, false, true, 1,1);
+                quietTasks.add(q);
+            }
         }
-        utils.log("agendas","size="+agendas.size());
     }
 
     void setVariables() {

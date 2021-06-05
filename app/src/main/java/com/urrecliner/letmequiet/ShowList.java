@@ -29,19 +29,5 @@ public class ShowList {
         mainRecycleViewAdapter.setTouchHelper(mainItemTouchHelper);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleViewAdapter);
-
-        calRecyclerView = mActivity.findViewById(R.id.calRecycler);
-        LinearLayoutManager calLinearLayoutManager = new LinearLayoutManager(mContext);
-        calRecyclerView.setLayoutManager(calLinearLayoutManager);
-
-        VerticalSpacingItemDecorator calItemDecorator = new VerticalSpacingItemDecorator(14);
-        calRecyclerView.addItemDecoration(calItemDecorator);
-
-        calRecyclerViewAdapter = new CalRecycleViewAdapter();
-        ItemTouchHelper.Callback calCallback = new MyItemTouchHelper(calRecyclerViewAdapter, mContext);
-        ItemTouchHelper calItemTouchHelper = new ItemTouchHelper(calCallback);
-        calRecyclerViewAdapter.setTouchHelper(calItemTouchHelper);
-        calItemTouchHelper.attachToRecyclerView(calRecyclerView);
-        calRecyclerView.setAdapter(calRecyclerViewAdapter);
     }
 }
