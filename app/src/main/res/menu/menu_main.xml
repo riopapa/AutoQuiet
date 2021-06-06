@@ -8,7 +8,7 @@
         android:orderInCategory="100"
         android:title="@string/action_reset"
         android:icon="@mipmap/reset"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
 
     <item
@@ -16,7 +16,15 @@
         android:orderInCategory="100"
         android:title="@string/set"
         android:icon="@mipmap/setting"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_calendar"
+        android:orderInCategory="100"
+        android:title="@string/action_reset"
+        android:icon="@mipmap/calendar_black"
+        app:showAsAction="always"
         />
 
     <item
@@ -24,7 +32,7 @@
         android:orderInCategory="100"
         android:title="@string/action_add"
         android:icon="@mipmap/add"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
 
 </menu>
