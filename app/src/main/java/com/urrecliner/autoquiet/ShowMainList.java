@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.urrecliner.autoquiet.utility.MyItemTouchHelper;
 import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
 
-import static com.urrecliner.autoquiet.Vars.calRecyclerViewAdapter;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 
-public class ShowList {
-    public ShowList () {
-        RecyclerView mainRecyclerView, calRecyclerView;
+public class ShowMainList {
+    public ShowMainList() {
+        RecyclerView mainRecyclerView;
 
         mainRecyclerView = mActivity.findViewById(R.id.mainRecycler);
         LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(mContext);

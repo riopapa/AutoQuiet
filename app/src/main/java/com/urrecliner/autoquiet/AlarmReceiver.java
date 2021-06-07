@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 
 import com.urrecliner.autoquiet.models.QuietTask;
 
@@ -39,7 +38,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert quietTask != null;
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
-        loopCount = quietTask.getStartRepeat();
+        loopCount = quietTask.getsRepeatCount();
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());

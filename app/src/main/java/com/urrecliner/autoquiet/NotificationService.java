@@ -1,6 +1,5 @@
 package com.urrecliner.autoquiet;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -126,7 +125,7 @@ public class NotificationService extends Service {
     void updateRemoteViews(String dateTime, String subject, String startFinish) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
         mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
-        mRemoteViews.setTextViewText(R.id.subject, subject);
+        mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
         mRemoteViews.setViewVisibility(R.id.no_speak, (no_speak) ? View.VISIBLE:View.GONE);
         int smallIcon = smallIcons[0];

@@ -19,7 +19,7 @@
             app:entryValues="@array/times_init"
             holo:summary="초기"
             android:text="분"
-            app:iconSpaceReserved="false"
+            app:iconSpaceReserved="true"
             holo:title="타이틀 바로 조용히 하기 초기 시간 (분)" />
 
         <ListPreference
@@ -27,7 +27,7 @@
             app:entries="@array/times_short"
             app:entryValues="@array/times_short"
             holo:key="timeShort"
-            app:iconSpaceReserved="false"
+            app:iconSpaceReserved="true"
             holo:title="바로 조용히 하기 미세 조정 정도 (분)"
             holo:summary="짧은" />
 
@@ -36,9 +36,10 @@
             app:entries="@array/times_long"
             app:entryValues="@array/times_long"
             holo:key="timeLong"
-            app:iconSpaceReserved="false"
+            app:iconSpaceReserved="true"
             holo:title="바로 조용히 하기 큰 조정 정도 (분)"
             holo:summary="긴" />
     </PreferenceCategory>
+
 
 </PreferenceScreen>

@@ -1,6 +1,6 @@
 package com.urrecliner.autoquiet.models;
 
-public class Agenda {
+public class GCal {
 
     public int id;              // 0
     public String title;        // 1
@@ -13,6 +13,5 @@ public class Agenda {
     public String timeZone;     // 8
     public String rule;         // 9
 
-    public int quietStart, quietFinish;
-    public long getStartTime() { return startTime; }
+    public boolean repeat;
 }

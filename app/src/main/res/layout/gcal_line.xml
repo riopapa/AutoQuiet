@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_agenda"
-    android:id="@+id/one_agenda"
+    android:id="@+id/one_Gcal"
     android:layout_margin="0dp"
     android:orientation="horizontal"
     android:baselineAligned="false">
@@ -19,15 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="DD"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"/>
         <TextView
-            android:id="@+id/aDat"
+            android:id="@+id/aDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="목"
-            android:textSize="@dimen/week_time"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:gravity="center"/>
     </LinearLayout>
@@ -70,13 +69,21 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/rmdSubject"
+                android:id="@+id/calSubject"
                 android:layout_width="0dp"
                 android:layout_weight="9"
                 android:layout_height="wrap_content"
                 android:text="@string/subject"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/calName"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/subject"
+                android:textSize="12sp"
                 android:gravity="center"/>
             <ImageView
                 android:id="@+id/repeating"
@@ -85,34 +92,23 @@
                 android:src="@mipmap/repeating"
                 android:contentDescription="repeating" />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/calInfo"
+        <TextView
+            android:id="@+id/calLoc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="4dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/calLoc"
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:text="location"
-                />
-            <TextView
-                android:id="@+id/calDesc"
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:text="desc"
-                />
-        </LinearLayout>
+            android:textSize="18sp"
+            android:text="location"
+            />
+        <TextView
+            android:id="@+id/calDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="desc"
+            />
     </LinearLayout>
 </LinearLayout>

@@ -84,8 +84,8 @@ public class AddUpdateActivity extends AppCompatActivity {
         finishHour = quietTask.getFinishHour();
         finishMin = quietTask.getFinishMin();
         active = quietTask.isActive();
-        startRepeat = quietTask.getStartRepeat();
-        finishRepeat = quietTask.getFinishRepeat();
+        startRepeat = quietTask.getsRepeatCount();
+        finishRepeat = quietTask.getfRepeatCount();
         week = quietTask.getWeek();
         vibrate = quietTask.isVibrate();
 

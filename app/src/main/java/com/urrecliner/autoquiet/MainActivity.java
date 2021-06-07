@@ -21,15 +21,8 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.urrecliner.autoquiet.models.Agenda;
-import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
-import com.urrecliner.autoquiet.utility.GetAgenda;
 import com.urrecliner.autoquiet.utility.Permission;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
 
 import static com.urrecliner.autoquiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
@@ -38,7 +31,6 @@ import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
 import static com.urrecliner.autoquiet.Vars.STATE_ONETIME;
 import static com.urrecliner.autoquiet.Vars.actionHandler;
 import static com.urrecliner.autoquiet.Vars.addNewQuiet;
-import static com.urrecliner.autoquiet.Vars.agendas;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.notScheduled;
@@ -86,25 +78,6 @@ public class MainActivity extends AppCompatActivity  {
 //        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
-        }
-        agendas = new ArrayList<>();
-        GetAgenda.get(mContext);
-        utils.log("agendas","size="+agendas.size()+" taskSize="+quietTasks.size());
-        agendas.sort(new Comparator<Agenda>() {
-            @Override
-            public int compare(Agenda arg0, Agenda arg1) {
-                return Long.compare(arg0.startTime, arg1.startTime);
-            }
-        });
-        final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd(EEE) HH:mm");
-        for (int i = 0; i < agendas.size(); i++) {
-            if (agendas.get(i).startTime > System.currentTimeMillis()) {
-                Agenda a = agendas.get(i);
-                Log.w("agenda",a.title+" start="+sdf.format(a.startTime));
-                QuietTask q = new QuietTask(a.title, a.startTime, a.finishTime, a.id, a.desc,
-                                                a.location, false, true, 1,1);
-                quietTasks.add(q);
-            }
         }
     }
 
@@ -160,7 +133,7 @@ public class MainActivity extends AppCompatActivity  {
                 utils.log(logID,"Invalid statCode>"+stateCode);
                 break;
         }
-        new ShowList();
+        new ShowMainList();
     }
 
     @Override
@@ -180,6 +153,10 @@ public class MainActivity extends AppCompatActivity  {
                 intent.putExtra("idx",-1);
                 startActivity(intent);
                 return true;
+            case R.id.action_calendar:
+                intent = new Intent(MainActivity.this, GCalShowActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.action_setting:
 //                intent = new Intent(MainActivity.this, SettingActivity.class);
 //                startActivity(intent);
@@ -193,7 +170,7 @@ public class MainActivity extends AppCompatActivity  {
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 new ClearQuiteTasks();
-                                new ShowList();
+                                new ShowMainList();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)

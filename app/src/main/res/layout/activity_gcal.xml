@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coordinatorLayout"
-    android:background="@color/itemNormalFill"
-    tools:context=".MainActivity">
+    android:id="@+id/one_Gcal"
+    android:background="@color/itemAgendaFill"
+    tools:context=".GCalShowActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mainRecycler"
+        android:id="@+id/gCalRecycler"
         android:layout_margin="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

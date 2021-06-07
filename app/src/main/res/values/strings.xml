@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Let me Quiet</string>
+    <string name="app_name">Auto Quiet</string>
     <string name="blank"> </string>
     <string name="Quiet_Once">바로 조용히 하기</string>
     <string name="WeekDay_Night">평일 밤 조용히</string>
