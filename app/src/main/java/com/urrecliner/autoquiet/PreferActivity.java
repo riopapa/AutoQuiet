@@ -7,6 +7,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import static com.urrecliner.autoquiet.Vars.sharedManner;
+import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
 import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
 import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
 import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
@@ -35,12 +36,13 @@ public class PreferActivity extends AppCompatActivity {
     public static class PreferFragment extends PreferenceFragmentCompat  {
 
         final String TIME_SHORT = "timeShort", TIME_LONG = "timeLong", TIME_INIT = "timeInit",
-                MANNER_BEEP = "manner_beep";
+                MANNER_BEEP = "manner_beep", TIME_BEFORE = "timeBefore";
         final String fTimeInit = "초기 바로 조용히 시간은  %s(분) 입니다";
         final String fTimeLong = "긴 변경 단위는 %s(분) 입니다";
         final String fTimeShort = "짧은 변경 단위 %s(분) 입니다";
+        final String fTimeBefore = "일정 시작 %s(분) 전에 알립니다";
 
-        Preference pTimeShort, pTimeLong, pMannerBeep, pTimeInit;
+        Preference pTimeShort, pTimeLong, pMannerBeep, pTimeInit, pTimeBefore;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -81,6 +83,16 @@ public class PreferActivity extends AppCompatActivity {
                 pTimeInit.setSummary(String.format(fTimeInit, sharedTimeInit));
                 return true;
             });
+
+            pTimeBefore = findPreference(TIME_BEFORE);
+            assert pTimeBefore != null;
+            pTimeBefore.setSummary(String.format(fTimeBefore, sharedTimeBefore));
+            pTimeBefore.setOnPreferenceChangeListener((preference, newValue) -> {
+                sharedTimeBefore = newValue.toString();
+                pTimeBefore.setSummary(String.format(fTimeBefore, sharedTimeBefore));
+                return true;
+            });
+
         }
     }
 }

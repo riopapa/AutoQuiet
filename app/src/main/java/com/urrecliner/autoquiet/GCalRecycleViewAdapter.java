@@ -1,38 +1,27 @@
 package com.urrecliner.autoquiet;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.models.GCal;
-import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.ItemTouchHelperAdapter;
 import com.urrecliner.autoquiet.utility.NameColor;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.gCals;
 import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.utils;
 
 public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleViewAdapter.ViewHolder> {
 
-    private ItemTouchHelper mTouchHelper;
     private View swipeView;
     @NonNull
     @Override
@@ -42,14 +31,11 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
         return new ViewHolder(swipeView);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         View viewLine;
         TextView tvADate, tvADay, tvSTime, tvFTime, tvSubject, tvName, tvLoc, tvDesc;
         ImageView ivRepeat;
-        GestureDetector mGestureDetector;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -64,75 +50,20 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             this.tvLoc = itemView.findViewById(R.id.calLoc);
             this.tvDesc = itemView.findViewById(R.id.calDesc);
             this.viewLine.setOnLongClickListener(v -> {
-//                int qIdx = getBindingAdapterPosition();
-//                GCal = GCals.get(qIdx);
-//                Intent intent;
-//                if (qIdx != 0) {
-//                    addNewQuiet = false;
-//                    intent = new Intent(mContext, AddUpdateActivity.class);
-//                } else {
-//                    intent = new Intent(mContext, OneTimeActivity.class);
-//                }
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                mContext.startActivity(intent);
+                int idx = getBindingAdapterPosition();
+                Intent intent;
+                intent = new Intent(mContext, AddAgendaActivity.class);
+                intent.putExtra("idx",idx);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
                 return false;
             });
-            mGestureDetector = new GestureDetector(itemView.getContext(), this);
-            itemView.setOnTouchListener(this);
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            mGestureDetector.onTouchEvent(event);
-            return true;
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) { }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            int qIdx = getBindingAdapterPosition();
-            GCal gCal = gCals.get(qIdx);
-            Intent intent;
-            if (qIdx != 0) {
-                addNewQuiet = false;
-                intent = new Intent(mContext, AddUpdateActivity.class);
-            } else {
-                intent = new Intent(mContext, OneTimeActivity.class);
-            }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("idx",qIdx);
-            mContext.startActivity(intent);
-
-            return true;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            mTouchHelper.startDrag(this);
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
         }
     }
 
     final SimpleDateFormat sdfDate = new SimpleDateFormat("dd", Locale.getDefault());
     final SimpleDateFormat sdfDay = new SimpleDateFormat("EEE", Locale.getDefault());
     final SimpleDateFormat sdfHHMM = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ");
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {

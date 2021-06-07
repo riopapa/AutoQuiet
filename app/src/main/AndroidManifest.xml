@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddUpdateActivity" />
+        <activity android:name=".AddAgendaActivity" />
         <activity android:name=".GCalShowActivity" />
         <activity android:name=".OneTimeActivity" />
         <activity android:name=".PreferActivity" />

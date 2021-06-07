@@ -51,7 +51,6 @@ public class GetAgenda {
         cursor.moveToFirst();
         // fetching calendars name
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
         int count = cursor.getCount();
         Log.e("Total","Cursor count="+count);
         while (cursor.moveToNext()) {
@@ -93,13 +92,12 @@ public class GetAgenda {
             else {
                 ArrayList<sfTime> sfTimes = calcRepeat (eTitle, eStart, eRule, eDuration,
                         TimeTODAY, TimeRangeTo);
-                utils.log("repeat ","sfTimes size="+sfTimes.size());
                 for (int i = 0; i < sfTimes.size() ; i++) {
                     if (sfTimes.get(i).sTime > TimeTODAY && sfTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
                         g.id = eID;
                         g.title = eTitle + "_" + i;
-                        g.desc = eDesc + " " + eRule;
+                        g.desc = eDesc;
                         g.startTime = sfTimes.get(i).sTime;
                         g.finishTime = sfTimes.get(i).fTime;
                         g.location = eLocation;

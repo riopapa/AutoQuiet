@@ -25,7 +25,7 @@ public class Vars {
     static String stateCode;
 
     static SharedPreferences sharedPref;
-    static String sharedTimeShort, sharedTimeLong, sharedTimeInit;
+    static String sharedTimeShort, sharedTimeLong, sharedTimeInit, sharedTimeBefore;
     static boolean sharedManner = true;
 
     static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
