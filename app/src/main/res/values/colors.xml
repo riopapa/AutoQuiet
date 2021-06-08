@@ -13,6 +13,7 @@
 
     <color name="itemAgendaFill">#CAF1A3</color>
 
+    <color name="colorMain">#AAE1A3</color>
     <color name="colorClockDark">#064E48</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>

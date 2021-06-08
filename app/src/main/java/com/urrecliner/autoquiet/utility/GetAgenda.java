@@ -26,7 +26,7 @@ public class GetAgenda {
         // 반복 설정이 있는 것을 고려 calendar 를 360일전 부터 다음 달 까지 읽어 옴
         long TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
         long TimeRangeTo = System.currentTimeMillis() + (long) 30*ONE_DAY;
-        long TimeTODAY = System.currentTimeMillis() - ONE_DAY;
+        long TimeTODAY = System.currentTimeMillis() - 4*60*60*1000;
 
         String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + TimeRangeFrom + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + TimeRangeTo + " ))";
         Cursor cursor = context.getContentResolver().query(
@@ -96,7 +96,7 @@ public class GetAgenda {
                     if (sfTimes.get(i).sTime > TimeTODAY && sfTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
                         g.id = eID;
-                        g.title = eTitle + "_" + i;
+                        g.title = eTitle;
                         g.desc = eDesc;
                         g.startTime = sfTimes.get(i).sTime;
                         g.finishTime = sfTimes.get(i).fTime;

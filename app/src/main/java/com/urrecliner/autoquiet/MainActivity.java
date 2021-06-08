@@ -33,6 +33,7 @@ import static com.urrecliner.autoquiet.Vars.actionHandler;
 import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
+import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.notScheduled;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.stateCode;
@@ -179,6 +180,13 @@ public class MainActivity extends AppCompatActivity  {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainRecycleViewAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onBackPressed() {

@@ -49,14 +49,13 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             this.ivRepeat = itemView.findViewById(R.id.repeating);
             this.tvLoc = itemView.findViewById(R.id.calLoc);
             this.tvDesc = itemView.findViewById(R.id.calDesc);
-            this.viewLine.setOnLongClickListener(v -> {
+            this.viewLine.setOnClickListener(v -> {
                 int idx = getBindingAdapterPosition();
                 Intent intent;
                 intent = new Intent(mContext, AddAgendaActivity.class);
                 intent.putExtra("idx",idx);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
-                return false;
             });
         }
     }

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/itemAgendaFill"
     android:orientation="vertical">
 
     <TextView
@@ -53,38 +52,11 @@
             android:layout_weight="2"
             android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="장소"
-            android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/aLocation"
-            android:layout_width="0dp"
-            android:layout_weight="8"
-            android:layout_height="wrap_content"
-            android:text="@string/finish_time"
-            android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:padding="4dp"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:layout_height="wrap_content"
             android:text="일자"
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/aDate"
@@ -95,8 +67,49 @@
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="장소"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/aLocation"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="wrap_content"
+            android:text="@string/finish_time"
+            android:textStyle="bold"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/acalName"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="@string/finish_time"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            android:textSize="12sp" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,33 +117,26 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="진동"
-            android:textStyle="bold"
-            android:layout_marginEnd="0dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/avVibrate"
-            android:layout_margin="16dp"
-            android:layout_width="60dp"
+            android:layout_width="40dp"
             android:layout_height="48dp"
             android:src="@mipmap/phone_vibrate"
             android:contentDescription="@string/blank" />
         <TextView
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="시작"
             android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
         <ImageView
             android:id="@+id/aStartRepeat"
-            android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@mipmap/speaking_on"
@@ -138,20 +144,35 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="종료"
-            android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
         <ImageView
             android:id="@+id/aFinishRepeat"
-            android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@mipmap/speaking_on"
             android:contentDescription="@string/blank" />
+
+        <EditText
+            android:id="@+id/aBefore"
+            android:layout_width="36sp"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:layout_height="wrap_content"
+            android:text="12"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="분전 울림"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -168,7 +189,7 @@
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/aRepeat"
@@ -179,7 +200,7 @@
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -195,7 +216,7 @@
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/aDesc"
@@ -206,7 +227,7 @@
             android:textStyle="bold"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

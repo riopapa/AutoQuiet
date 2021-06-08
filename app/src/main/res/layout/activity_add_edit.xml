@@ -63,6 +63,13 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="40sp">
+        <ImageView
+            android:id="@+id/gCal"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/blank"
+            android:src="@mipmap/calendar" />
 
         <EditText
             android:id="@+id/etSubject"
@@ -86,6 +93,7 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,6 +152,7 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/weekFlag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -233,5 +242,15 @@
             android:gravity="center_vertical"
             android:textSize="@dimen/edit_week"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/dateDesc"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/finish_time"
+        android:textStyle="bold"
+        android:layout_margin="4dp"
+        android:padding="4dp"
+        android:textSize="20sp" />
 
 </LinearLayout>

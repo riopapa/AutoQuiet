@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,14 +21,18 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
+import com.urrecliner.autoquiet.utility.NameColor;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.quietUniq;
+import static com.urrecliner.autoquiet.Vars.sdfDateTime;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.weekName;
 import static com.urrecliner.autoquiet.Vars.xSize;
@@ -37,10 +42,10 @@ public class AddUpdateActivity extends AppCompatActivity {
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
     private boolean active;
-    private int startRepeat, finishRepeat;
+    private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
-    private boolean vibrate;
+    private boolean vibrate, agenda;
     private QuietTask quietTask;
     private int currIdx;
     private ActivityAddEditBinding binding;
@@ -84,11 +89,13 @@ public class AddUpdateActivity extends AppCompatActivity {
         finishHour = quietTask.getFinishHour();
         finishMin = quietTask.getFinishMin();
         active = quietTask.isActive();
-        startRepeat = quietTask.getsRepeatCount();
-        finishRepeat = quietTask.getfRepeatCount();
+        sRepeatCount = quietTask.getsRepeatCount();
+        fRepeatCount = quietTask.getfRepeatCount();
         week = quietTask.getWeek();
         vibrate = quietTask.isVibrate();
+        agenda = quietTask.agenda;
 
+        binding.gCal.setImageResource((agenda)? R.mipmap.calendar:R.mipmap.transparent);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
         binding.timePickerFinish.setIs24HourView(true);
@@ -97,16 +104,21 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (subject == null)
             subject = getString(R.string.no_subject);
         binding.etSubject.setText(subject);
-        for (int i=0; i < 7; i++) {
-            weekView[i].setId(i);
-            weekView[i].setWidth(xSize);
-            weekView[i].setGravity(Gravity.CENTER);
-            weekView[i].setTextColor(colorOn);
-            weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);
-            weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD: Typeface.NORMAL);
-            weekView[i].setText(weekName[i]);
+        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName));
+        if (agenda)
+            binding.weekFlag.setVisibility(View.GONE);
+        else {
+            binding.weekFlag.setVisibility(View.VISIBLE);
+            for (int i = 0; i < 7; i++) {
+                weekView[i].setId(i);
+                weekView[i].setWidth(xSize);
+                weekView[i].setGravity(Gravity.CENTER);
+                weekView[i].setTextColor(colorOn);
+                weekView[i].setBackgroundColor((week[i]) ? colorOnBack : colorOffBack);
+                weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD : Typeface.NORMAL);
+                weekView[i].setText(weekName[i]);
+            }
         }
-
         binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
         binding.avVibrate.setOnClickListener(v -> {
             vibrate ^= true;
@@ -114,36 +126,51 @@ public class AddUpdateActivity extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.swActive.setChecked(active);
-        binding.swActive.setOnClickListener(v -> {
-            active ^= true;
+        if (agenda)
+            binding.swActive.setVisibility(View.GONE);
+        else {
             binding.swActive.setChecked(active);
-            v.invalidate();
-        });
-
-        binding.iVstartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.swActive.setOnClickListener(v -> {
+                active ^= true;
+                binding.swActive.setChecked(active);
+                v.invalidate();
+            });
+        }
+        binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.mipmap.speaking_off: (sRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         binding.iVstartRepeat.setOnClickListener(v -> {
-            if (startRepeat == 0)
-                startRepeat = 1;
-            else if (startRepeat == 1)
-                startRepeat = 11;
+            if (sRepeatCount == 0)
+                sRepeatCount = 1;
+            else if (sRepeatCount == 1)
+                sRepeatCount = 11;
             else
-                startRepeat = 0;
-            binding.iVstartRepeat.setImageResource((startRepeat == 0)? R.mipmap.speaking_off: (startRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+                sRepeatCount = 0;
+            binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.mipmap.speaking_off: (sRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 
-        binding.iVFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         binding.iVFinishRepeat.setOnClickListener(v -> {
-            if (finishRepeat == 0)
-                finishRepeat = 1;
-            else if (finishRepeat == 1)
-                finishRepeat = 11;
+            if (fRepeatCount == 0)
+                fRepeatCount = 1;
+            else if (fRepeatCount == 1)
+                fRepeatCount = 11;
             else
-                finishRepeat = 0;
-            binding.iVFinishRepeat.setImageResource((finishRepeat == 0)? R.mipmap.speaking_off: (finishRepeat == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+                fRepeatCount = 0;
+            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
+
+        TextView tv = findViewById(R.id.dateDesc);
+        if (agenda) {
+            SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
+            String s = sdfDate.format(quietTask.calStartDate);
+            if (!quietTask.calLocation.equals(""))
+                s += "\n" + quietTask.calLocation;
+            if (!quietTask.calDesc.equals(""))
+                s += "\n" + quietTask.calDesc;
+            tv.setText(s);
+        } else
+            tv.setText("");
     }
 
     QuietTask getQuietTaskDefault() {
@@ -183,12 +210,34 @@ public class AddUpdateActivity extends AppCompatActivity {
             subject = getString(R.string.no_subject);
         startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
         finishHour = binding.timePickerFinish.getHour(); finishMin = binding.timePickerFinish.getMinute();
-        quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-            week, active, vibrate, startRepeat, finishRepeat);
-        if (addNewQuiet)
-            quietTasks.add(quietTask);
-        else
-            quietTasks.set(currIdx, quietTask);
+
+        if (agenda) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(quietTask.calStartDate);
+            String s = sdfDateTime.format(quietTask.calStartDate);
+            Log.w("start", s);
+            c.set(Calendar.HOUR_OF_DAY, startHour);
+            c.set(Calendar.MINUTE, startMin);
+            long startDate = c.getTimeInMillis();
+            s = sdfDateTime.format(startDate);
+            Log.w("start", s);
+            c.set(Calendar.HOUR_OF_DAY, finishHour);
+            c.set(Calendar.MINUTE, finishMin);
+            long finishDate = c.getTimeInMillis();
+            s = sdfDateTime.format(finishDate);
+            Log.w("finish", s);
+            QuietTask quietNew = new QuietTask(subject, startDate, finishDate,
+                    quietTask.calId, quietTask.calName, quietTask.calDesc, quietTask.calLocation,
+                    true, vibrate, sRepeatCount, fRepeatCount, true);
+            quietTasks.set(currIdx, quietNew);
+        } else {
+            quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
+                    week, active, vibrate, sRepeatCount, fRepeatCount);
+            if (addNewQuiet)
+                quietTasks.add(quietTask);
+            else
+                quietTasks.set(currIdx, quietTask);
+        }
         utils.saveQuietTasksToShared();
 
         finish();
@@ -225,9 +274,19 @@ public class AddUpdateActivity extends AppCompatActivity {
                 save_QuietTask();
                 break;
             case R.id.action_delete:
-                quietTasks.remove(currIdx);
-                mainRecycleViewAdapter.notifyDataSetChanged();
+                if (agenda) {
+                    int delId = quietTask.calId;
+                    for (int i = 0; i < quietTasks.size(); ) {
+                        if (quietTasks.get(i).calId == delId)
+                            quietTasks.remove(i);
+                        else
+                            i++;
+                    }
+
+                } else
+                    quietTasks.remove(currIdx);
                 utils.saveQuietTasksToShared();
+                mainRecycleViewAdapter.notifyDataSetChanged();
                 cancel_QuietTask();
                 break;
         }

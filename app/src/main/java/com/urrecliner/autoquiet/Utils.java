@@ -158,6 +158,15 @@ public class Utils {
 
     public void saveQuietTasksToShared() {
 
+        for (int i = 0; i < quietTasks.size(); i++) {
+            QuietTask q = quietTasks.get(i);
+            if (!q.agenda) {
+                q.calStartDate = 10000 + i;
+                quietTasks.set(i, q);
+            }
+        }
+        quietTasks.sort((arg0, arg1) -> Long.compare(arg0.calStartDate, arg1.calStartDate));
+
         sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
