@@ -214,18 +214,12 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (agenda) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(quietTask.calStartDate);
-            String s = sdfDateTime.format(quietTask.calStartDate);
-            Log.w("start", s);
             c.set(Calendar.HOUR_OF_DAY, startHour);
             c.set(Calendar.MINUTE, startMin);
             long startDate = c.getTimeInMillis();
-            s = sdfDateTime.format(startDate);
-            Log.w("start", s);
             c.set(Calendar.HOUR_OF_DAY, finishHour);
             c.set(Calendar.MINUTE, finishMin);
             long finishDate = c.getTimeInMillis();
-            s = sdfDateTime.format(finishDate);
-            Log.w("finish", s);
             QuietTask quietNew = new QuietTask(subject, startDate, finishDate,
                     quietTask.calId, quietTask.calName, quietTask.calDesc, quietTask.calLocation,
                     true, vibrate, sRepeatCount, fRepeatCount, true);

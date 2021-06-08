@@ -42,6 +42,7 @@ public class ScheduleNextTask {
                 }
             }
         }
+
         quietTask = quietTasks.get(saveIdx);
         NextAlarm.request(quietTask, nextTime, StartFinish, mContext);
         String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
@@ -58,5 +59,4 @@ public class ScheduleNextTask {
         updateIntent.putExtra("startFinish", startFinish);
         mActivity.startService(updateIntent);
     }
-
 }

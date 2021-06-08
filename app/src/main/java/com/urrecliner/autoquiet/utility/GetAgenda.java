@@ -58,11 +58,13 @@ public class GetAgenda {
             String eTitle = cursor.getString(1);
             if (eTitle == null)
                 continue;
+            if (cursor.getInt(6) == 1)
+                continue;
             String eDesc = cursor.getString(2);
             long eStart = cursor.getLong(3);
             long eFinish = cursor.getLong(4);
             String eLocation = cursor.getString(5);
-            boolean eAllay = (cursor.getInt(6) == 1);
+//            boolean eAllay = (cursor.getInt(6) == 1);
             String eCalName = cursor.getString(7);
             String eZone = cursor.getString(8);
             String eRule = cursor.getString(9);
@@ -81,7 +83,6 @@ public class GetAgenda {
                     gCal.startTime =eStart;
                     gCal.finishTime =eFinish;
                     gCal.location=eLocation;
-                    gCal.isAllDay =eAllay;
                     gCal.calName = eCalName;
                     gCal.timeZone =eZone;
                     gCal.rule = eRule;
@@ -101,7 +102,6 @@ public class GetAgenda {
                         g.startTime = sfTimes.get(i).sTime;
                         g.finishTime = sfTimes.get(i).fTime;
                         g.location = eLocation;
-                        g.isAllDay = eAllay;
                         g.calName = eCalName;
                         g.timeZone = eZone;
                         g.rule = eRule;
@@ -122,8 +122,8 @@ public class GetAgenda {
         String startYMD = sdf.format(startDateTime);
         Log.w("calc "+title,startYMD+ ", rule="+ruleStr+", dur="+durStr);
         ArrayList<sfTime> sfTimes = new ArrayList<>();
-        long durMin,untilTime, interval;
-        int count;
+        long durMin, untilTime;
+        int count, interval;
         boolean [] weekDays; // 0: BYDAY YES/NO, sun = 1, sat = 7;
         boolean daily, weekly, monthly;
 
@@ -144,9 +144,9 @@ public class GetAgenda {
                         if (lDateTime > timeToday && lDateTime < untilTime)
                             sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY;
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(lDateTime);
-                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
+                        Calendar c = Calendar.getInstance();
+                        c.setTimeInMillis(lDateTime);
+                        int weekNbr = c.get(Calendar.DAY_OF_WEEK);
                         if (weekDays[weekNbr]) {
                             sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                             i++;
@@ -167,7 +167,6 @@ public class GetAgenda {
                     lDateTime += interval * ONE_DAY;
                 }
             }
-            return sfTimes;
         }
         if (weekly) {
             if (count != 999) {
@@ -177,7 +176,6 @@ public class GetAgenda {
                             sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY;
                     }
-                    return sfTimes;
                 } else {
                     sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                     for (int i = 1; i < count;    ) {
@@ -193,14 +191,12 @@ public class GetAgenda {
                         }
                     }
                 }
-                return sfTimes;
             } else {
                 if (!weekDays[0]) { // weekly, countless, noWeek
                     while (lDateTime < untilTime) {
                         sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY * 7;
                     }
-                    return sfTimes;
                 } else {
                     sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
                     for (int i = 1; i < count;    ) {
@@ -216,10 +212,61 @@ public class GetAgenda {
                         }
                     }
                 }
-                return sfTimes;
             }
         }
-
+        if (monthly) {
+            if (count != 999) {
+                if (!weekDays[0]) {
+                    for (int i = 0; i < count; i++) {
+                        if (lDateTime < untilTime)
+                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(lDateTime);
+                        calendar.add(Calendar.MONTH, interval);
+                        lDateTime = calendar.getTimeInMillis();
+                    }
+                } else {
+                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+//                    for (int i = 1; i < count;    ) {     // may be no case
+//                        lDateTime += interval * ONE_DAY * 7;
+//                        if (lDateTime > untilTime)
+//                            break;
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.setTimeInMillis(lDateTime);
+//                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
+//                        if (weekDays[weekNbr]) {
+//                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+//                            i++;
+//                        }
+//                    }
+                }
+            } else {    // may be no case
+//                if (!weekDays[0]) { // weekly, countless, noWeek
+//                    while (lDateTime < untilTime) {
+//                        sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.setTimeInMillis(lDateTime);
+//                        calendar.add(Calendar.MONTH, 1);
+//                        lDateTime = calendar.getTimeInMillis();
+//                    }
+//                } else {
+//                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+//                    for (int i = 1; i < count;    ) {
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.setTimeInMillis(lDateTime);
+//                        calendar.add(Calendar.MONTH, 1);
+//                        lDateTime = calendar.getTimeInMillis();
+//                        if (lDateTime > untilTime)
+//                            break;
+//                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
+//                        if (weekDays[weekNbr]) {
+//                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+//                            i++;
+//                        }
+//                    }
+//                }
+            }
+        }
         return  sfTimes;
     }
 
@@ -264,8 +311,8 @@ public class GetAgenda {
         return untilTime;
     }
 
-    private static long getIntervalValue(String ruleStr) {
-        long interval = 1;
+    private static int getIntervalValue(String ruleStr) {
+        int interval = 1;
         int pos = ruleStr.indexOf("INTERVAL");
         if (pos > 0) {
             if (ruleStr.substring(pos+10).equals(";"))

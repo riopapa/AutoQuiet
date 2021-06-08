@@ -220,7 +220,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
                 holder.tvDesc.setText("");
             } else if (quietTask.calLocation.equals("")) {
                 holder.tvLocation.setText(sdfDate.format(quietTask.calStartDate));
-                holder.tvDesc.setText("");
+                holder.tvDesc.setText(quietTask.calDesc);
             } else if (quietTask.calDesc.equals("")) {
                 holder.tvLocation.setText(quietTask.calLocation);
                 holder.tvDesc.setText(sdfDate.format(quietTask.calStartDate));
