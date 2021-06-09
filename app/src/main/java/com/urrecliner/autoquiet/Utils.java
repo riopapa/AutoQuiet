@@ -161,6 +161,7 @@ public class Utils {
         for (int i = 0; i < quietTasks.size(); i++) {
             QuietTask q = quietTasks.get(i);
             if (!q.agenda) {
+                q.calId = 1000 + i;
                 q.calStartDate = 10000 + i;
                 quietTasks.set(i, q);
             }

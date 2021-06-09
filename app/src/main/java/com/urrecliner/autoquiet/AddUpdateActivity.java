@@ -268,6 +268,12 @@ public class AddUpdateActivity extends AppCompatActivity {
                 save_QuietTask();
                 break;
             case R.id.action_delete:
+                quietTasks.remove(currIdx);
+                utils.saveQuietTasksToShared();
+                mainRecycleViewAdapter.notifyDataSetChanged();
+                cancel_QuietTask();
+                break;
+            case R.id.action_delete_multi:
                 if (agenda) {
                     int delId = quietTask.calId;
                     for (int i = 0; i < quietTasks.size(); ) {
@@ -276,14 +282,13 @@ public class AddUpdateActivity extends AppCompatActivity {
                         else
                             i++;
                     }
-
                 } else
                     quietTasks.remove(currIdx);
                 utils.saveQuietTasksToShared();
                 mainRecycleViewAdapter.notifyDataSetChanged();
                 cancel_QuietTask();
                 break;
-        }
+            }
         finish();
         return false;
     }

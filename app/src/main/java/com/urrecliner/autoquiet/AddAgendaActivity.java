@@ -110,7 +110,7 @@ public class AddAgendaActivity extends AppCompatActivity {
     void addAgenda(int id, int before) {
 
         int count = 0;
-        int newId = (int) (System.currentTimeMillis() & 0xFFFFFFFF);
+        int newId = (int) (System.currentTimeMillis() & 0x7FFFFFF);
         for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
             if (gCals.get(i).id == id) {
                 GCal g = gCals.get(i);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.urrecliner.autoquiet.models.QuietTask;
 
@@ -24,7 +25,8 @@ import static com.urrecliner.autoquiet.Vars.utils;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static int loopCount;
+    private static int loopCount, savedId;
+    private static boolean savedAgenda;
     TextToSpeech textToSpeech;
 
     @Override
@@ -42,10 +44,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());
+                savedId = quietTask.calId;
+                savedAgenda = quietTask.agenda;
                 break;
             case "F":   // finish
                 MannerMode.turn2Normal(context);
-                if (loopCount > 0) {
+                if (loopCount > 0) {    // 끝날 때는 여러번 울리기 없음
                     loopCount = 1;
                     say_Finished(quietTask.getSubject());
                 }
@@ -103,6 +107,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                     speakTimer.cancel();
                     speakTimer.purge();
                     textToSpeech.stop();
+                    if (savedAgenda) { // delete if agenda based
+                        for (int i = 0; i < quietTasks.size(); i++) {
+                            Log.w("id "+i, savedId+" vs "+quietTasks.get(i).calId+quietTasks.get(i).subject
+                                    +quietTasks.get(i).finishHour+quietTasks.get(i).finishMin);
+                            if (quietTasks.get(i).calId == savedId) {
+                                Log.w("remove", quietTasks.get(i).subject);
+                                quietTasks.remove(i);
+                                utils.saveQuietTasksToShared();
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }, 3000, 5000);

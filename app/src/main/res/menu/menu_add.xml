@@ -2,16 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_delete_multi"
+        android:orderInCategory="100"
+        android:title="@string/action_delete"
+        android:icon="@mipmap/delete_multi"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:title="@string/action_delete"
         android:icon="@mipmap/delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
         android:title="@string/action_add"
         android:icon="@mipmap/check_mark"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
