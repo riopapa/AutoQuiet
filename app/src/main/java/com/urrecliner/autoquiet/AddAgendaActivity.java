@@ -114,18 +114,19 @@ public class AddAgendaActivity extends AppCompatActivity {
 
     void addAgenda(int id, int before, int after) {
 
-        int count = 0;
-        int newId = (int) (System.currentTimeMillis() & 0x7FFFFFF);
+        StringBuilder sb  = new StringBuilder();
+        sb.append("Following Tasks Added");
+        int qId = (int) (gCal.startTime & 0x7ffffff);
         for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
             if (gCals.get(i).id == id) {
-                GCal g = gCals.get(i);
-                QuietTask q = new QuietTask(mTitle, g.startTime + (long) before * 60 * 1000, g.finishTime + (long) after * 60 * 1000,
-                        newId, g.calName, g.desc, g.location, true, vibrate, sRepeatTime, fRepeatTime, g.repeat);
+                GCal gC = gCals.get(i);
+                QuietTask q = new QuietTask(mTitle, gC.startTime + (long) before * 60 * 1000, gC.finishTime + (long) after * 60 * 1000,
+                        qId, gC.calName, gC.desc, gC.location, true, vibrate, sRepeatTime, fRepeatTime, gC.repeat);
+                sb.append("\n").append(q.subject).append(" ").append(sdfDate.format(q.calStartDate));
                 quietTasks.add(q);
-                count++;
             }
         }
-        Toast.makeText(mContext,"Total "+count+" agenda Added",Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, sb, Toast.LENGTH_LONG).show();
         utils.saveQuietTasksToShared();
         finish();
     }

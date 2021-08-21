@@ -20,14 +20,15 @@ import static com.urrecliner.autoquiet.Vars.ONE_DAY;
 
 public class GetAgenda {
 
+    static long TimeRangeFrom, TimeRangeTo, TimeTODAY;
+    static int bySetPos = -1;
 
-    public static void get (Context context) {
+    public static void get(Context context) {
 
         // 반복 설정이 있는 것을 고려 calendar 를 360일전 부터 다음 달 까지 읽어 옴
-        long TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
-        long TimeRangeTo = System.currentTimeMillis() + (long) 30*ONE_DAY;
-        long TimeTODAY = System.currentTimeMillis() - 3*60*60*1000; //  지금부터 4 시간전 꺼는 무시
-        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.getDefault());
+        TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
+        TimeRangeTo = System.currentTimeMillis() + (long) 50*ONE_DAY;
+        TimeTODAY = System.currentTimeMillis() - 4*60*60*1000; //  지금부터 4 시간전 꺼는 무시
 
         String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + TimeRangeFrom + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + TimeRangeTo + " ))";
         Cursor cursor = context.getContentResolver().query(
@@ -52,8 +53,8 @@ public class GetAgenda {
         cursor.moveToFirst();
         // fetching calendars name
 
-        int count = cursor.getCount();
-        Log.e("Total","Cursor count="+count);
+//        int count = cursor.getCount();
+//        Log.e("Total","Cursor count="+count);
         while (cursor.moveToNext()) {
             int eID = cursor.getInt(0);
             String eTitle = cursor.getString(1);
@@ -70,8 +71,6 @@ public class GetAgenda {
             String eZone = cursor.getString(8);
             String eRule = cursor.getString(9);
             String eDuration = cursor.getString(10);
-//            Log.w("id="+eID,"title="+eTitle +", time="+sdf.format(eStart)+"~"+sdf.format(eFinish)
-//                    +", loc="+eLocation+", disp="+eCalName +", rule="+eRule +", dur="+eDuration);
             if (eRule == null) {
                 if (eStart > TimeTODAY && eStart < TimeRangeTo) {
                     GCal gCal =new GCal();
@@ -89,8 +88,7 @@ public class GetAgenda {
                 }
             }
             else {
-                ArrayList<startFinishTime> startFinishTimes = calcRepeat (eTitle, eStart, eRule, eDuration,
-                        TimeTODAY, TimeRangeTo);
+                ArrayList<startFinishTime> startFinishTimes = calcRepeat (eTitle, eStart, eRule, eDuration);
                 for (int i = 0; i < startFinishTimes.size() ; i++) {
                     if (startFinishTimes.get(i).sTime > TimeTODAY && startFinishTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
@@ -112,168 +110,136 @@ public class GetAgenda {
     }
 
     static ArrayList <startFinishTime> calcRepeat(String title, long startDateTime,
-                                                  String ruleStr, String durStr, long timeToday,
-                                                  long timeRangeTo) {
+                                                  String ruleStr, String durStr) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
-
-        String startYMD = sdf.format(startDateTime);
-        Log.w("calc "+title,startYMD+ ", rule="+ruleStr+", dur="+durStr);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
+//        String startYMD = sdf.format(startDateTime);
+//        Log.w("calc "+title,startYMD+ ", rule="+ruleStr+", dur="+durStr);
         ArrayList<startFinishTime> startFinishTimes = new ArrayList<>();
         long durMin, untilTime;
         int count, interval;
         boolean [] weekDays; // 0: BYDAY YES/NO, sun = 1, sat = 7;
         boolean daily, weekly, monthly;
 
-        durMin = getDurationMinutes(durStr);
-        count = getCountValue(ruleStr);         // default to 999
-        interval = getIntervalValue(ruleStr);   // default to 1
-        untilTime = getUntilTime(ruleStr, timeRangeTo);      // default to 60 days after
-        weekDays = getWeekDay(ruleStr);         // default to false
-
         daily = ruleStr.contains("DAILY");
         weekly = ruleStr.contains("WEEKLY");
         monthly = ruleStr.contains("MONTHLY");
-        long lDateTime = startDateTime;
-        if (daily) {
-            if (count != 999) {
-                if (weekDays[0]) {  // week constraint
-                    for (int i = 1; i < count;    ) {
-                        if (lDateTime > timeToday && lDateTime < untilTime)
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                        lDateTime += interval * ONE_DAY;
-                        Calendar c = Calendar.getInstance();
-                        c.setTimeInMillis(lDateTime);
-                        int weekNbr = c.get(Calendar.DAY_OF_WEEK);
-                        if (weekDays[weekNbr]) {
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                            i++;
-                        }
-                    }
-                } else {
-                    for (int i = 0; i < count; i++) {
-                        if (untilTime > lDateTime)
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                        lDateTime += interval * ONE_DAY;
-                    }
-                }
-            } else {
-                for (int i = 0; i < 5; i++) {   // 5번 정도만 insert
-                    if (lDateTime > untilTime)
-                        break;
-                    startFinishTimes.add(new startFinishTime(lDateTime ,lDateTime + durMin));
-                    lDateTime += interval * ONE_DAY;
-                }
-            }
-        }
-        if (weekly) {
-            if (count != 999) {
-                if (!weekDays[0]) {
-                    for (int i = 0; i < count; i++) {
-                        if (lDateTime < untilTime)
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                        lDateTime += interval * ONE_DAY;
-                    }
-                } else {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                    for (int i = 1; i < count;    ) {
-                        lDateTime += interval * ONE_DAY * 7;
-                        if (lDateTime > untilTime)
-                            break;
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(lDateTime);
-                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
-                        if (weekDays[weekNbr]) {
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                            i++;
-                        }
-                    }
-                }
-            } else {
-                if (!weekDays[0]) { // weekly, countless, noWeek
-                    while (lDateTime < untilTime) {
-                        startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                        lDateTime += interval * ONE_DAY * 7;
-                    }
-                } else {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                    for (int i = 1; i < count;    ) {
-                        lDateTime += interval * ONE_DAY;
-                        if (lDateTime > untilTime)
-                            break;
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(lDateTime);
-                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
-                        if (weekDays[weekNbr]) {
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                            i++;
-                        }
-                    }
-                }
-            }
-        }
-        if (monthly) {
-            if (count != 999) {
-                if (!weekDays[0]) {
-                    for (int i = 0; i < count; i++) {
-                        if (lDateTime < untilTime)
-                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(lDateTime);
-                        calendar.add(Calendar.MONTH, interval);
-                        lDateTime = calendar.getTimeInMillis();
-                    }
-                } else {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
-//                    for (int i = 1; i < count;    ) {     // may be no case
-//                        lDateTime += interval * ONE_DAY * 7;
-//                        if (lDateTime > untilTime)
-//                            break;
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.setTimeInMillis(lDateTime);
-//                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
-//                        if (weekDays[weekNbr]) {
-//                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
-//                            i++;
-//                        }
-//                    }
-                }
-            } else {    // may be no case
-//                if (!weekDays[0]) { // weekly, countless, noWeek
-//                    while (lDateTime < untilTime) {
-//                        sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.setTimeInMillis(lDateTime);
-//                        calendar.add(Calendar.MONTH, 1);
-//                        lDateTime = calendar.getTimeInMillis();
-//                    }
-//                } else {
-//                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
-//                    for (int i = 1; i < count;    ) {
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.setTimeInMillis(lDateTime);
-//                        calendar.add(Calendar.MONTH, 1);
-//                        lDateTime = calendar.getTimeInMillis();
-//                        if (lDateTime > untilTime)
-//                            break;
-//                        int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
-//                        if (weekDays[weekNbr]) {
-//                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
-//                            i++;
-//                        }
-//                    }
-//                }
-            }
-        }
+        if (ruleStr.contains("YEARLY"))
+            return startFinishTimes;
+
+        durMin = getDurationMinutes(durStr);
+        count = getKeywordValue(ruleStr,"COUNT",9999);
+        interval = getKeywordValue(ruleStr,"INTERVAL",1);
+        untilTime = getUntilTime(ruleStr);      // max to TimeRangeTo
+        weekDays = getByDay(ruleStr);         // default to false
+
+        if (daily)
+            repeatDaily(startFinishTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
+
+        if (weekly)
+            repeatWeekly(startFinishTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
+
+        if (monthly)
+            repeatMonthly(ruleStr, startFinishTimes, durMin, untilTime, count, weekDays[0], startDateTime);
+
         return startFinishTimes;
     }
 
-    private static boolean[] getWeekDay(String ruleStr) {
+    private static void repeatMonthly(String ruleStr, ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, boolean weekBased, long lDateTime) {
+        if (weekBased) {
+            if (bySetPos == -1)
+                bySetPos = getKeywordValue(ruleStr, "BYSETPOS",-1);
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(lDateTime);
+            int weekNbr = c.get(Calendar.DAY_OF_WEEK);
+            for (int i = 0; i < count; i++) {
+                if (lDateTime > untilTime)
+                    break;
+                startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                c.add(Calendar.MONTH,1);
+                c.set(Calendar.DATE,1);
+                while (c.get(Calendar.DAY_OF_WEEK) != weekNbr)
+                    c.add(Calendar.DATE,1);
+                c.add(Calendar.DATE, (bySetPos-1)*7);
+                lDateTime = c.getTimeInMillis();
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                if (lDateTime > untilTime)
+                    break;
+                if (lDateTime > TimeTODAY) {
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                }
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(lDateTime);
+                c.add(Calendar.MONTH,1);
+                lDateTime = c.getTimeInMillis();
+            }
+        }
+    }
+
+    private static void repeatWeekly(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+        if (weekDays[0]) {
+            for (int i = 0; i < count;    ) {
+                if (lDateTime > untilTime)
+                    break;
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(lDateTime);
+                if (weekDays[c.get(Calendar.DAY_OF_WEEK)]) {
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    i++;
+                }
+                lDateTime += interval * ONE_DAY;
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                if (lDateTime > untilTime)
+                    break;
+                if (lDateTime > TimeTODAY) {
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                }
+                lDateTime += interval * ONE_DAY * 7;
+            }
+        }
+    }
+
+    private static void repeatDaily(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+        if (weekDays[0]) {  // week constraint
+            for (int i = 1; i < count;    ) {
+                if (lDateTime > untilTime)
+                    break;
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(lDateTime);
+                if (weekDays[c.get(Calendar.DAY_OF_WEEK)]) {
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    i++;
+                }
+                lDateTime += interval * ONE_DAY;
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                if (lDateTime > untilTime)
+                    break;
+                startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                lDateTime += interval * ONE_DAY;
+            }
+        }
+    }
+
+    private static boolean[] getByDay(String ruleStr) {
         int pos = ruleStr.indexOf("BYDAY");
         boolean [] weekDays = new boolean[8];
         if (pos > 0) {
             weekDays[0] = true;     // we have weekDay values
             String byDay = ruleStr.substring(pos+6);
+            int by1stCode = Character.getNumericValue(byDay.charAt(0));
+            if (by1stCode >= 0 && by1stCode <= 9)
+                bySetPos = by1stCode;
+            else
+                bySetPos = -1;
+            if (byDay.contains(";")) {
+                byDay = byDay.substring(0,byDay.indexOf(";"));
+            }
             String [] byDays = byDay.split(",");
             for (String day : byDays) {
                 switch (day) {
@@ -290,42 +256,35 @@ public class GetAgenda {
         return weekDays;
     }
 
-    private static long getUntilTime(String ruleStr, long timeRangeTo) {
-        SimpleDateFormat sdfZ = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
+    private static long getUntilTime(String ruleStr) {
+        SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
-        long untilTime = timeRangeTo; // limited 2 months max
+        long untilTime = TimeRangeTo; // limited 2 months max
         int pos = ruleStr.indexOf("UNTIL");
         if (pos > 0) {
             String time = ruleStr.substring(pos + 6, pos + 14); // pos+ pos + 22);
             try {
-                Date date = sdfZ.parse(time);
-                untilTime = date.getTime() +ONE_DAY;
-//                utils.log("time",time+" > "+sdf.format(untilTime));
-            } catch (ParseException e) {
+                Date date = sdfYMD.parse(time);
+                untilTime = date.getTime() + ONE_DAY;
+                if (untilTime > TimeRangeTo)
+                    untilTime = TimeRangeTo;
+            } catch (Exception e) {
 //                utils.log("Time", "error" + time);
             }
         }
         return untilTime;
     }
 
-    private static int getIntervalValue(String ruleStr) {
-        int interval = 1;
-        int pos = ruleStr.indexOf("INTERVAL");
+    private static int getKeywordValue(String ruleStr, String keyword, int init) {
+        int count = init;
+        int pos = ruleStr.indexOf(keyword);
         if (pos > 0) {
-            if (ruleStr.substring(pos+10).equals(";"))
-                interval = Integer.parseInt(ruleStr.substring(pos + 9, pos + 9));
-            else
-                interval = Integer.parseInt(ruleStr.substring(pos + 9, pos + 10));
+            String countStr = ruleStr.substring(pos + keyword.length() + 1);
+            pos = countStr.indexOf(";");
+            if (pos > 0)
+                countStr = countStr.substring(0, pos);
+            count = Integer.parseInt(countStr);
         }
-        return interval;
-    }
-
-    private static int getCountValue(String ruleStr) {
-        int count = 999;
-        int pos = ruleStr.indexOf("COUNT");
-        if (pos > 0)
-            count = Integer.parseInt(ruleStr.substring(pos + 6, pos + 7));
         return count;
     }
 
