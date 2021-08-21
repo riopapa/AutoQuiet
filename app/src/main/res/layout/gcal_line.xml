@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="location"
             />
         <TextView
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="desc"
             />
     </LinearLayout>

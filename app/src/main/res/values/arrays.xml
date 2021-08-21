@@ -3,6 +3,9 @@
 
     <string-array name="times_short">
         <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
         <item>5</item>
         <item>10</item>
         <item>15</item>
@@ -23,7 +26,18 @@
         <item>120</item>
     </string-array>
 
-    <string-array name="times_before">
+    <string-array name="times_before_after">
+        <item>-10</item>
+        <item>-9</item>
+        <item>-8</item>
+        <item>-7</item>
+        <item>-6</item>
+        <item>-5</item>
+        <item>-4</item>
+        <item>-3</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -31,8 +45,27 @@
         <item>5</item>
         <item>10</item>
         <item>15</item>
-        <item>30</item>
-        <item>60</item>
+    </string-array>
+
+    <string-array name="times_before_after_text">
+        <item>10 분전</item>
+        <item>9 분전</item>
+        <item>8 분전</item>
+        <item>7 분전</item>
+        <item>6 분전</item>
+        <item>5 분전</item>
+        <item>4 분전</item>
+        <item>3 분전</item>
+        <item>2 분전</item>
+        <item>1 분전</item>
+        <item>0 분전</item>
+        <item>1 분후</item>
+        <item>2 분후</item>
+        <item>3 분후</item>
+        <item>4 분후</item>
+        <item>5 분후</item>
+        <item>10 분후</item>
+        <item>15 분후</item>
     </string-array>
 
 </resources>

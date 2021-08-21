@@ -9,7 +9,7 @@ public class GCal {
     public long finishTime;     // 4
     public String location;     // 5
 //    public boolean isAllDay;    // 6
-    public String calName;      // 7
+    public String calName;      // 7    riopapa, event
     public String timeZone;     // 8
     public String rule;         // 9
 

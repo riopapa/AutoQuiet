@@ -3,7 +3,6 @@ package com.urrecliner.autoquiet;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,11 +16,11 @@ import com.urrecliner.autoquiet.utility.NameColor;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.jar.Attributes;
 
 import static com.urrecliner.autoquiet.Vars.gCals;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
 import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
 import static com.urrecliner.autoquiet.Vars.utils;
 
@@ -31,6 +30,7 @@ public class AddAgendaActivity extends AppCompatActivity {
     private boolean vibrate = true;
     private GCal gCal;
     private ActivityAddAgendaBinding binding;
+    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +50,14 @@ public class AddAgendaActivity extends AppCompatActivity {
     void show_OneAgenda() {
 
         binding.aTitle.setText(gCal.title);
-        binding.aTitle.setBackgroundColor(NameColor.get(gCal.calName));
+        mTitle = gCal.title;
+
+        binding.aTitle.setBackgroundColor(NameColor.get(gCal.calName, mContext));
         String s = sdfDate.format(gCal.startTime)+ sdfHourMin.format(gCal.startTime)
                 +" ~ "+ sdfHourMin.format(gCal.finishTime);
         binding.aDate.setText(s);
         binding.acalName.setText(gCal.calName);
-        binding.acalName.setBackgroundColor(NameColor.get(gCal.calName));
+        binding.acalName.setBackgroundColor(NameColor.get(gCal.calName, mContext));
         binding.aLocation.setText(gCal.location);
         binding.aDesc.setText(gCal.desc);
         binding.aRepeat.setText((gCal.repeat)? gCal.rule:"");
@@ -92,10 +94,13 @@ public class AddAgendaActivity extends AppCompatActivity {
         });
 
         binding.aBefore.setText(sharedTimeBefore);
-
+        binding.aAfter.setText(sharedTimeAfter);
         binding.aAdd.setOnClickListener(v -> {
-            EditText et = findViewById(R.id.aBefore);
-            addAgenda(gCal.id, Integer.parseInt(et.getText().toString()));
+            mTitle = binding.aTitle.getText().toString();
+            EditText etBefore = findViewById(R.id.aBefore);
+            EditText etAfter = findViewById(R.id.aAfter);
+            addAgenda(gCal.id, Integer.parseInt(etBefore.getText().toString()),
+                    Integer.parseInt(etAfter.getText().toString()));
         });
     }
 
@@ -107,14 +112,14 @@ public class AddAgendaActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    void addAgenda(int id, int before) {
+    void addAgenda(int id, int before, int after) {
 
         int count = 0;
         int newId = (int) (System.currentTimeMillis() & 0x7FFFFFF);
         for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
             if (gCals.get(i).id == id) {
                 GCal g = gCals.get(i);
-                QuietTask q = new QuietTask(g.title, g.startTime - before * 60 * 1000, g.finishTime,
+                QuietTask q = new QuietTask(mTitle, g.startTime + (long) before * 60 * 1000, g.finishTime + (long) after * 60 * 1000,
                         newId, g.calName, g.desc, g.location, true, vibrate, sRepeatTime, fRepeatTime, g.repeat);
                 quietTasks.add(q);
                 count++;

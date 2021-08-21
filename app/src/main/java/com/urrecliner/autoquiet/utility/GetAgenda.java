@@ -26,7 +26,7 @@ public class GetAgenda {
         // 반복 설정이 있는 것을 고려 calendar 를 360일전 부터 다음 달 까지 읽어 옴
         long TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
         long TimeRangeTo = System.currentTimeMillis() + (long) 30*ONE_DAY;
-        long TimeTODAY = System.currentTimeMillis() - 4*60*60*1000; //  지금부터 4 시간전 꺼는 무시
+        long TimeTODAY = System.currentTimeMillis() - 3*60*60*1000; //  지금부터 4 시간전 꺼는 무시
 
         String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + TimeRangeFrom + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + TimeRangeTo + " ))";
         Cursor cursor = context.getContentResolver().query(
@@ -91,16 +91,16 @@ public class GetAgenda {
                 }
             }
             else {
-                ArrayList<sfTime> sfTimes = calcRepeat (eTitle, eStart, eRule, eDuration,
+                ArrayList<startFinishTime> startFinishTimes = calcRepeat (eTitle, eStart, eRule, eDuration,
                         TimeTODAY, TimeRangeTo);
-                for (int i = 0; i < sfTimes.size() ; i++) {
-                    if (sfTimes.get(i).sTime > TimeTODAY && sfTimes.get(i).sTime < TimeRangeTo) {
+                for (int i = 0; i < startFinishTimes.size() ; i++) {
+                    if (startFinishTimes.get(i).sTime > TimeTODAY && startFinishTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
                         g.id = eID;
                         g.title = eTitle;
                         g.desc = eDesc;
-                        g.startTime = sfTimes.get(i).sTime;
-                        g.finishTime = sfTimes.get(i).fTime;
+                        g.startTime = startFinishTimes.get(i).sTime;
+                        g.finishTime = startFinishTimes.get(i).fTime;
                         g.location = eLocation;
                         g.calName = eCalName;
                         g.timeZone = eZone;
@@ -113,15 +113,15 @@ public class GetAgenda {
         }
     }
 
-    static ArrayList <sfTime> calcRepeat(String title, long startDateTime,
-                                         String ruleStr, String durStr, long timeToday,
-                                         long timeRangeTo) {
+    static ArrayList <startFinishTime> calcRepeat(String title, long startDateTime,
+                                                  String ruleStr, String durStr, long timeToday,
+                                                  long timeRangeTo) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
 
         String startYMD = sdf.format(startDateTime);
         Log.w("calc "+title,startYMD+ ", rule="+ruleStr+", dur="+durStr);
-        ArrayList<sfTime> sfTimes = new ArrayList<>();
+        ArrayList<startFinishTime> startFinishTimes = new ArrayList<>();
         long durMin, untilTime;
         int count, interval;
         boolean [] weekDays; // 0: BYDAY YES/NO, sun = 1, sat = 7;
@@ -142,20 +142,20 @@ public class GetAgenda {
                 if (weekDays[0]) {  // week constraint
                     for (int i = 1; i < count;    ) {
                         if (lDateTime > timeToday && lDateTime < untilTime)
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY;
                         Calendar c = Calendar.getInstance();
                         c.setTimeInMillis(lDateTime);
                         int weekNbr = c.get(Calendar.DAY_OF_WEEK);
                         if (weekDays[weekNbr]) {
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                             i++;
                         }
                     }
                 } else {
                     for (int i = 0; i < count; i++) {
                         if (untilTime > lDateTime)
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY;
                     }
                 }
@@ -163,7 +163,7 @@ public class GetAgenda {
                 for (int i = 0; i < 5; i++) {   // 5번 정도만 insert
                     if (lDateTime > untilTime)
                         break;
-                    sfTimes.add(new sfTime(lDateTime ,lDateTime + durMin));
+                    startFinishTimes.add(new startFinishTime(lDateTime ,lDateTime + durMin));
                     lDateTime += interval * ONE_DAY;
                 }
             }
@@ -173,11 +173,11 @@ public class GetAgenda {
                 if (!weekDays[0]) {
                     for (int i = 0; i < count; i++) {
                         if (lDateTime < untilTime)
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY;
                     }
                 } else {
-                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                     for (int i = 1; i < count;    ) {
                         lDateTime += interval * ONE_DAY * 7;
                         if (lDateTime > untilTime)
@@ -186,7 +186,7 @@ public class GetAgenda {
                         calendar.setTimeInMillis(lDateTime);
                         int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
                         if (weekDays[weekNbr]) {
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                             i++;
                         }
                     }
@@ -194,11 +194,11 @@ public class GetAgenda {
             } else {
                 if (!weekDays[0]) { // weekly, countless, noWeek
                     while (lDateTime < untilTime) {
-                        sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                        startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                         lDateTime += interval * ONE_DAY * 7;
                     }
                 } else {
-                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                     for (int i = 1; i < count;    ) {
                         lDateTime += interval * ONE_DAY;
                         if (lDateTime > untilTime)
@@ -207,7 +207,7 @@ public class GetAgenda {
                         calendar.setTimeInMillis(lDateTime);
                         int weekNbr = calendar.get(Calendar.DAY_OF_WEEK);
                         if (weekDays[weekNbr]) {
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                             i++;
                         }
                     }
@@ -219,14 +219,14 @@ public class GetAgenda {
                 if (!weekDays[0]) {
                     for (int i = 0; i < count; i++) {
                         if (lDateTime < untilTime)
-                            sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                            startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(lDateTime);
                         calendar.add(Calendar.MONTH, interval);
                         lDateTime = calendar.getTimeInMillis();
                     }
                 } else {
-                    sfTimes.add(new sfTime(lDateTime, lDateTime + durMin));
+                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
 //                    for (int i = 1; i < count;    ) {     // may be no case
 //                        lDateTime += interval * ONE_DAY * 7;
 //                        if (lDateTime > untilTime)
@@ -267,7 +267,7 @@ public class GetAgenda {
 //                }
             }
         }
-        return  sfTimes;
+        return startFinishTimes;
     }
 
     private static boolean[] getWeekDay(String ruleStr) {
@@ -343,11 +343,11 @@ public class GetAgenda {
         return durMin;
     }
 
-    static class sfTime {
+    static class startFinishTime {
         long sTime;
         long fTime;
 
-        public sfTime(long sTime, long fTime) {
+        public startFinishTime(long sTime, long fTime) {
             this.sTime = sTime;
             this.fTime = fTime;
         }

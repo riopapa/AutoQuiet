@@ -72,24 +72,28 @@ public class OneTimeActivity extends AppCompatActivity {
                 return;
             finishHour = hour; finishMin = min;
             durationMin = (finishHour - startHour) * 60 + finishMin - startMin;
-            String text;
-            if (durationMin > 1)
-                text = (""+(100 + durationMin / 60)).substring(1) + " : " + (""+(100 + durationMin % 60)).substring(1)+  " 후";
-            else
-                text = getString(R.string.already_passed_time);
-            binding.oneDuration.setText(text);
+            binding.oneDuration.setText(durationText());
         });
         buildScreen();
         buttonSetting();
         adjustTimePicker();
     }
 
+    private String durationText() {
+        String text;
+        if (durationMin > 1)
+            text = " "+(""+(100 + durationMin / 60)).substring(1) + "시간 \n" + (""+(100 + durationMin % 60)).substring(1)+  "분후";
+        else
+            text = getString(R.string.already_passed_time);
+        return text;
+    }
+
     void buildScreen() {
         String text;
-        text = "▽"+sharedTimeShort+"분▽"; binding.minus10Min.setText(text);
-        text = "△"+sharedTimeShort+"분△"; binding.plus10Min.setText(text);
-        text = "▽"+sharedTimeLong+"분▽"; binding.minus30Min.setText(text);
-        text = "△"+sharedTimeLong+"분△"; binding.plus30Min.setText(text);
+        text = "▼"+sharedTimeShort+"분▼"; binding.minus10Min.setText(text);
+        text = "▲"+sharedTimeShort+"분▲"; binding.plus10Min.setText(text);
+        text = "▼"+sharedTimeLong+"분▼"; binding.minus30Min.setText(text);
+        text = "▲"+sharedTimeLong+"분▲"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
         binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
@@ -131,8 +135,7 @@ public class OneTimeActivity extends AppCompatActivity {
         timePicker_UpDown = true;  // to prevent double TimeChanged action
         binding.oneTimePicker.setHour(finishHour);
         binding.oneTimePicker.setMinute(finishMin);
-        String text = (""+(100 + durationMin / 60)).substring(1) + " : " + (""+(100 + durationMin % 60)).substring(1) + " 후";
-        binding.oneDuration.setText(text);
+        binding.oneDuration.setText(durationText());
         timePicker_UpDown = false;
         binding.oneTimePicker.invalidate();
     }

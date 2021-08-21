@@ -89,7 +89,7 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             holder.tvDesc.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
         holder.tvSTime.setText(sdfHHMM.format(g.startTime));
         holder.tvFTime.setText(sdfHHMM.format(g.finishTime));
-        int backColor = NameColor.get(g.calName);
+        int backColor = NameColor.get(g.calName, mContext);
         holder.viewLine.setBackgroundColor(backColor);
     }
 

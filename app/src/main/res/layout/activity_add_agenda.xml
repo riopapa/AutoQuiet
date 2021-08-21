@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <EditText
             android:id="@+id/aTitle"
             android:layout_width="0dp"
             android:layout_weight="8"
@@ -155,9 +155,38 @@
             android:src="@mipmap/speaking_on"
             android:contentDescription="@string/blank" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="울림 시각 조정"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:paddingRight="32sp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="시작"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/aBefore"
-            android:layout_width="36sp"
+            android:layout_width="48sp"
             android:layout_gravity="center"
             android:gravity="right"
             android:layout_height="wrap_content"
@@ -168,8 +197,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="분전 울림"
+            android:text="분전, "
             android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="종료"
+            android:textStyle="bold"
+            android:textColor="#35373A"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/aAfter"
+            android:layout_width="48sp"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:layout_height="wrap_content"
+            android:text="12"
+            android:textColor="#35373A"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="분전"
+            android:textStyle="bold"
+            android:textColor="#35373A"
             android:layout_margin="2dp"
             android:padding="2dp"
             android:textSize="16sp" />

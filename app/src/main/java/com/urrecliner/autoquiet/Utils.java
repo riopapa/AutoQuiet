@@ -29,6 +29,7 @@ import static com.urrecliner.autoquiet.Vars.sdfLogTime;
 import static com.urrecliner.autoquiet.Vars.sharedManner;
 import static com.urrecliner.autoquiet.Vars.sharedPref;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
 import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
 import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
 import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
@@ -37,10 +38,6 @@ import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
 public class Utils {
 
     private final String PREFIX = "log_";
-    public String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
-    private String int2NN (int nbr) {
-        return (""+(100 + nbr)).substring(1);
-    }
     private File packageDir = null;
 
     private void append2file(String logFile, String textLine) {
@@ -106,14 +103,14 @@ public class Utils {
         String logFile = packageDir.toString() + "/" + PREFIX + sdfDate.format(new Date())+".txt";
         append2file(logFile, sdfLogTime.format(new Date())+" " +log);
     }
-
-    void logE(String tag, String text) {
-        String log = logTrace() + " {"+ tag + "} " + text;
-        Log.e("<" + tag + ">" , log);
-        if (packageDir == null) packageDir = getPackageDirectory();
-        String logFile = packageDir.toString() + "/" + PREFIX + sdfDate.format(new Date())+"E.txt";
-        append2file(logFile, sdfLogTime.format(new Date())+" : " +log);
-    }
+//
+//    void logE(String tag, String text) {
+//        String log = logTrace() + " {"+ tag + "} " + text;
+//        Log.e("<" + tag + ">" , log);
+//        if (packageDir == null) packageDir = getPackageDirectory();
+//        String logFile = packageDir.toString() + "/" + PREFIX + sdfDate.format(new Date())+"E.txt";
+//        append2file(logFile, sdfLogTime.format(new Date())+" : " +log);
+//    }
 
     private String logTrace () {
 //        int pid = android.os.Process.myPid();
@@ -209,7 +206,8 @@ public class Utils {
         sharedTimeInit = sharedPref.getString("timeInit", "60");
         sharedTimeShort = sharedPref.getString("timeShort", "5");
         sharedTimeLong = sharedPref.getString("timeLong", "20");
-        sharedTimeBefore = sharedPref.getString("timeBefore", "2");
+        sharedTimeBefore = sharedPref.getString("timeBefore", "10");
+        sharedTimeAfter = sharedPref.getString("timeAfter", "-9");
     }
 
 }

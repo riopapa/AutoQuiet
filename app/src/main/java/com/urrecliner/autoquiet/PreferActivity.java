@@ -7,6 +7,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import static com.urrecliner.autoquiet.Vars.sharedManner;
+import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
 import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
 import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
 import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
@@ -36,13 +37,14 @@ public class PreferActivity extends AppCompatActivity {
     public static class PreferFragment extends PreferenceFragmentCompat  {
 
         final String TIME_SHORT = "timeShort", TIME_LONG = "timeLong", TIME_INIT = "timeInit",
-                MANNER_BEEP = "manner_beep", TIME_BEFORE = "timeBefore";
+                MANNER_BEEP = "manner_beep", TIME_BEFORE = "timeBefore", TIME_AFTER = "timeAfter";
         final String fTimeInit = "초기 바로 조용히 시간은  %s(분) 입니다";
         final String fTimeLong = "긴 변경 단위는 %s(분) 입니다";
         final String fTimeShort = "짧은 변경 단위 %s(분) 입니다";
-        final String fTimeBefore = "일정 시작 %s(분) 전에 알립니다";
+        final String fTimeBefore = "일정 시작하는 시각 %s분 에 알립니다";
+        final String fTimeAfter = "일정 끝나는 시각 %s분 에 알립니다";
 
-        Preference pTimeShort, pTimeLong, pMannerBeep, pTimeInit, pTimeBefore;
+        Preference pTimeShort, pTimeLong, pMannerBeep, pTimeInit, pTimeBefore, pTimeAfter;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -93,6 +95,14 @@ public class PreferActivity extends AppCompatActivity {
                 return true;
             });
 
+            pTimeAfter = findPreference(TIME_AFTER);
+            assert pTimeAfter != null;
+            pTimeAfter.setSummary(String.format(fTimeAfter, sharedTimeAfter));
+            pTimeAfter.setOnPreferenceChangeListener((preference, newValue) -> {
+                sharedTimeAfter = newValue.toString();
+                pTimeAfter.setSummary(String.format(fTimeAfter, sharedTimeAfter));
+                return true;
+            });
         }
     }
 }

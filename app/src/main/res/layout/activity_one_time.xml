@@ -28,19 +28,12 @@
             android:gravity="left"
             android:layout_gravity="center" />
     </LinearLayout>
-    <TextView
-        android:id="@+id/oneDuration"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:text="02:00"/>
     <LinearLayout
-        android:gravity="center"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/oneVibrate"
@@ -53,39 +46,60 @@
             android:scaleY="0.8"
             android:src="@mipmap/phone_vibrate"
             android:contentDescription="@string/blank" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/plus10Min"
+                android:gravity="center_vertical"
+                android:text="10분▲"
+                android:textSize="20sp"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/minus10Min"
+                android:gravity="center_vertical"
+                android:text="10분▼"
+                android:textSize="20sp"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/oneDuration"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:background="@color/itemNormalBorder"
+            android:text="01시간\n30분후"/>
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/plus30Min"
+                android:gravity="center_vertical"
+                android:text="30분▲"
+                android:textSize="20sp"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/minus30Min"
+                android:gravity="center_vertical"
+                android:text="30분▼"
+                android:textSize="20sp"
+                android:layout_margin="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/minus30Min"
-            android:gravity="center_vertical"
-            android:text="30분▼"
-            android:textSize="20sp"
-            android:layout_margin="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <TextView
-            android:id="@+id/minus10Min"
-            android:gravity="center_vertical"
-            android:text="10분▼"
-            android:textSize="20sp"
-            android:layout_margin="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <TextView
-            android:id="@+id/plus10Min"
-            android:gravity="center_vertical"
-            android:text="10분▲"
-            android:textSize="20sp"
-            android:layout_marginLeft="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <TextView
-            android:id="@+id/plus30Min"
-            android:gravity="center_vertical"
-            android:text="30분▲"
-            android:textSize="20sp"
-            android:layout_marginLeft="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

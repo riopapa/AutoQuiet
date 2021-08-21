@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,6 @@ import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.quietUniq;
-import static com.urrecliner.autoquiet.Vars.sdfDateTime;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.weekName;
 import static com.urrecliner.autoquiet.Vars.xSize;
@@ -104,7 +102,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (subject == null)
             subject = getString(R.string.no_subject);
         binding.etSubject.setText(subject);
-        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName));
+        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName, mContext));
         if (agenda)
             binding.weekFlag.setVisibility(View.GONE);
         else {

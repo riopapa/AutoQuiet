@@ -41,7 +41,6 @@
             holo:summary="긴" />
     </PreferenceCategory>
 
-
     <PreferenceCategory app:title="Agenda에서 추가하기"
         app:iconSpaceReserved="false"
         >
@@ -49,12 +48,21 @@
         <ListPreference
             holo:defaultValue="3"
             holo:key="timeBefore"
-            app:entries="@array/times_before"
-            app:entryValues="@array/times_before"
+            app:entries="@array/times_before_after_text"
+            app:entryValues="@array/times_before_after"
             holo:summary="초기"
             android:text="분"
             app:iconSpaceReserved="true"
-            holo:title="일정 시작하기 전" />
+            holo:title="일정 시작하는 시각" />
+        <ListPreference
+            holo:defaultValue="-3"
+            holo:key="timeAfter"
+            app:entries="@array/times_before_after_text"
+            app:entryValues="@array/times_before_after"
+            holo:summary="초기"
+            android:text="분"
+            app:iconSpaceReserved="true"
+            holo:title="일정 끝나는 시각" />
     </PreferenceCategory>
 
 

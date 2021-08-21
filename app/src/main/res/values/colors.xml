@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
-    <color name="notification_back">#3DCFCCCC</color>
+    <color name="notification_back">#A7FFEB</color>
+    <color name="colorNotification">#172670</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>
@@ -20,8 +21,13 @@
     <color name="colorOnBack">#05B3A1</color>
     <color name="colorOff">#98AFC7</color>
     <color name="colorActive">#0000A0</color>
-    <color name="colorOffBack">#00000000</color>
-    <color name="colorNotification">#98AFC7</color>
+    <color name="colorTransparent">#00000000</color>
     <color name="headerBackground">#FBB117</color>
+
+    <color name="nameRioPapa">#80F4FF81</color>
+    <color name="nameRioMama">#80FF80AB</color>
+    <color name="nameDigital">#80CCFF90</color>
+    <color name="nameEvents">#807FDDFA</color>
+    <color name="nameOthers">#801F2DA6</color>
 
 </resources>

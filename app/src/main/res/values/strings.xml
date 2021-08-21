@@ -23,7 +23,7 @@
     <string name="hh_mm">HH:MM</string>
     <string name="start_time">시작 시각</string>
     <string name="finish_time">종료 시각</string>
-    <string name="already_passed_time">이미 지난 시각입니다</string>
+    <string name="already_passed_time">이미 지난\n시각임</string>
     <string name="interval_short">짧은 간격</string>
     <string name="sign_plus">+</string>
     <string name="beep_to_manner_mode">매너 설정시 소리내기</string>

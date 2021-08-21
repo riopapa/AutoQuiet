@@ -46,7 +46,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
         colorOff = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOff, null);
         colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
-        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOffBack, null);
+        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorTransparent, null);
 
         swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_line, parent, false);
 
@@ -162,9 +162,9 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
-        String txt = utils.buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
+        String txt = buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
         holder.tvStartTime.setText(txt);
-        txt = utils.buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
+        txt = buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
         holder.tvFinishTime.setText(txt);
         holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
@@ -174,10 +174,9 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
         int sRepeat = quietTask.getsRepeatCount();
         int fRepeat = quietTask.getfRepeatCount();
-        String s = quietTask.subject;
         holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.mipmap.speaking_off : (sRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.mipmap.speaking_off : (fRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
-        holder.viewLine.setBackgroundColor(mContext.getResources().getColor(R.color.itemNormalFill));
+        holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null));
 
         if (!gCalendar) {
             holder.lvgCal.setImageResource(R.mipmap.transparent);
@@ -195,8 +194,9 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             if (position == 0) {
                 for (int i = 0; i < 7; i++) {
                     tViewWeek[i].setTextColor(colorOffBack);  // transparent
+                    tViewWeek[i].setBackgroundColor(colorOffBack);
                 }
-                txt = "-";
+                txt = "";
                 holder.tvStartTime.setText(txt);
                 holder.tvFinishTime.setText(txt);
             } else {
@@ -211,7 +211,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             }
 
         } else {
-            holder.lvgCal.setImageResource(R.mipmap.calendar);
+            holder.lvgCal.setImageResource(R.mipmap.calendar_mini);
             holder.llCalInfo.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.GONE);
             final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
@@ -226,13 +226,18 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
                 holder.tvDesc.setText(sdfDate.format(quietTask.calStartDate));
             } else {
                 holder.tvLocation.setText(quietTask.calLocation);
-                s = sdfDate.format(quietTask.calStartDate)+" ⋙";
+                String s = sdfDate.format(quietTask.calStartDate) + " ⋙";
                 holder.tvDesc.setText(s);
             }
             holder.tvLocation.setTextColor(colorOn);
             holder.tvDesc.setTextColor(colorOn);
-            holder.viewLine.setBackgroundColor(NameColor.get(quietTask.calName));
+            holder.viewLine.setBackgroundColor(NameColor.get(quietTask.calName, mContext));
         }
+    }
+
+    String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
+    String int2NN (int nbr) {
+        return (""+(100 + nbr)).substring(1);
     }
 
     @Override
