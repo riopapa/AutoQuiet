@@ -87,8 +87,9 @@
                 android:gravity="center"/>
             <ImageView
                 android:id="@+id/repeating"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:src="@mipmap/repeating"
                 android:contentDescription="repeating" />
         </LinearLayout>

@@ -89,11 +89,12 @@
 
             <ImageView
                 android:id="@+id/gCal"
-                android:layout_width="22dp"
+                android:layout_margin="4dp"
+                android:layout_width="16dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:contentDescription="@string/blank"
-                android:src="@mipmap/calendar" />
+                android:src="@mipmap/calendar_mini" />
             <TextView
                 android:id="@+id/rmdSubject"
                 android:layout_width="match_parent"

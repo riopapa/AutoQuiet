@@ -27,6 +27,7 @@ public class GetAgenda {
         long TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
         long TimeRangeTo = System.currentTimeMillis() + (long) 30*ONE_DAY;
         long TimeTODAY = System.currentTimeMillis() - 3*60*60*1000; //  지금부터 4 시간전 꺼는 무시
+        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.getDefault());
 
         String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + TimeRangeFrom + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + TimeRangeTo + " ))";
         Cursor cursor = context.getContentResolver().query(
@@ -69,23 +70,20 @@ public class GetAgenda {
             String eZone = cursor.getString(8);
             String eRule = cursor.getString(9);
             String eDuration = cursor.getString(10);
-//            Log.w("id="+eID,"title="+eTitle
-//                    +", time="+sdf.format(eStart)+"~"+sdf.format(eFinish)
-//                    +", loc="+eLocation+", all="+eAllay +", zone="+eZone +", disp="+eCalName +", rule="+eRule
-//                    +", dur="+eDuration
-//            );
+//            Log.w("id="+eID,"title="+eTitle +", time="+sdf.format(eStart)+"~"+sdf.format(eFinish)
+//                    +", loc="+eLocation+", disp="+eCalName +", rule="+eRule +", dur="+eDuration);
             if (eRule == null) {
                 if (eStart > TimeTODAY && eStart < TimeRangeTo) {
                     GCal gCal =new GCal();
                     gCal.id       = eID;
                     gCal.title    = eTitle;
-                    gCal.desc     = eDesc;
+                    gCal.desc     = (eDesc == null)? "":eDesc;
                     gCal.startTime =eStart;
                     gCal.finishTime =eFinish;
-                    gCal.location=eLocation;
+                    gCal.location =(eLocation == null)? "":eLocation;
                     gCal.calName = eCalName;
                     gCal.timeZone =eZone;
-                    gCal.rule = eRule;
+                    gCal.rule = "";
                     gCal.repeat = false;
                     gCals.add(gCal);
                 }
@@ -98,10 +96,10 @@ public class GetAgenda {
                         GCal g = new GCal();
                         g.id = eID;
                         g.title = eTitle;
-                        g.desc = eDesc;
+                        g.desc = (eDesc == null)? "":eDesc;
                         g.startTime = startFinishTimes.get(i).sTime;
                         g.finishTime = startFinishTimes.get(i).fTime;
-                        g.location = eLocation;
+                        g.location = (eLocation == null)? "":eLocation;
                         g.calName = eCalName;
                         g.timeZone = eZone;
                         g.rule = eRule;

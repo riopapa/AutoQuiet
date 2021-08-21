@@ -121,7 +121,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                 }
             }
-        }, 3000, 5000);
+        }, 2000, 6000);
     }
 
     void ready_TTS() {

@@ -48,7 +48,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorTransparent, null);
 
-        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_line, parent, false);
+        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_line, parent, false);
 
         return new ViewHolder(swipeView);
     }
