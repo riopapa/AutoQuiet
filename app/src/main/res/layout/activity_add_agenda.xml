@@ -181,25 +181,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="시작 + "
+            android:text="시작 "
             android:textStyle="bold"
             android:layout_margin="2dp"
             android:textSize="16sp" />
 
-        <EditText
+        <NumberPicker
             android:id="@+id/aBefore"
-            android:layout_width="48sp"
-            android:layout_gravity="center"
-            android:gravity="right"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="분,   "
+            android:text=",   "
             android:textStyle="bold"
             android:layout_margin="2dp"
             android:padding="2dp"
@@ -209,33 +209,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="종료 + "
+            android:text="종료"
             android:textStyle="bold"
             android:textColor="#35373A"
             android:layout_margin="2dp"
             android:padding="2dp"
             android:textSize="16sp" />
 
-        <EditText
+        <NumberPicker
             android:id="@+id/aAfter"
-            android:layout_width="48sp"
-            android:layout_gravity="center"
-            android:gravity="right"
-            android:layout_height="wrap_content"
-            android:text="12"
-            android:textColor="#35373A"
-            />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="분"
-            android:textStyle="bold"
-            android:textColor="#35373A"
-            android:layout_margin="2dp"
-            android:padding="2dp"
-            android:textSize="16sp" />
+            />
 
     </LinearLayout>
 

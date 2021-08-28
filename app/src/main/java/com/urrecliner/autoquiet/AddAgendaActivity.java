@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,14 +94,26 @@ public class AddAgendaActivity extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.aBefore.setText(sharedTimeBefore);
-        binding.aAfter.setText(sharedTimeAfter);
+        String []dispName = new String[] { "10분전", "9분전", "8분전", "7분전", "6분전",
+                "5분전",  "4분전", "3분전",  "2분전", "1분전",  " 정시 ", "1분후",  "2분후",  "3분후",  "4분후",
+                "5분후", "6분후", "7분후", "8분후", "9분후", "10분후" };
+        binding.aBefore.setMaxValue(20);
+        binding.aBefore.setMinValue(0);
+        binding.aBefore.setWrapSelectorWheel(false);
+        binding.aBefore.setDisplayedValues(dispName);
+        binding.aBefore.setValue(Integer.parseInt(sharedTimeBefore)+10);
+        binding.aBefore.setTextSize(60);
+        binding.aAfter.setMaxValue(20);
+        binding.aAfter.setMinValue(0);
+        binding.aAfter.setWrapSelectorWheel(false);
+        binding.aAfter.setDisplayedValues(dispName);
+        binding.aAfter.setValue(Integer.parseInt(sharedTimeAfter)+10);
+        binding.aAfter.setTextSize(60);
         binding.aAdd.setOnClickListener(v -> {
             mTitle = binding.aTitle.getText().toString();
-            EditText etBefore = findViewById(R.id.aBefore);
-            EditText etAfter = findViewById(R.id.aAfter);
-            addAgenda(gCal.id, Integer.parseInt(etBefore.getText().toString()),
-                    Integer.parseInt(etAfter.getText().toString()));
+            int before = binding.aBefore.getValue() - 10;
+            int after = binding.aAfter.getValue() - 10;
+            addAgenda(gCal.id, before, after);
         });
     }
 
