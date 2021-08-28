@@ -9,7 +9,6 @@ import com.urrecliner.autoquiet.utility.NextAlarm;
 
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.notScheduled;
 import static com.urrecliner.autoquiet.Vars.quietTask;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.sdfDateTime;
@@ -49,7 +48,6 @@ public class ScheduleNextTask {
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log("schedule",msg);
         updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
-        notScheduled = false;
     }
     void updateNotificationBar(String dateTime, String subject, String startFinish) {
         Intent updateIntent = new Intent(mActivity, NotificationService.class);

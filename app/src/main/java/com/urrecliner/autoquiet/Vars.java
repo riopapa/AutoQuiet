@@ -45,7 +45,6 @@ public class Vars {
     static Handler actionHandler;
     static final int INVOKE_ONETIME = 100;
     static final int STOP_SPEAK = 1022;
-    static boolean notScheduled = true;
 
     public static long ONE_DAY = 24*60*60*1000;
 

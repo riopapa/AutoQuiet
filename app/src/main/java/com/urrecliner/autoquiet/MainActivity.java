@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Display;
@@ -23,7 +23,6 @@ import android.view.MenuItem;
 
 import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
 import com.urrecliner.autoquiet.utility.Permission;
-
 import static com.urrecliner.autoquiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
 import static com.urrecliner.autoquiet.Vars.STATE_BLANK;
@@ -34,7 +33,6 @@ import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
-import static com.urrecliner.autoquiet.Vars.notScheduled;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.stateCode;
 import static com.urrecliner.autoquiet.Vars.utils;
@@ -75,10 +73,9 @@ public class MainActivity extends AppCompatActivity  {
             return;
         setVariables();
         actOnStateCode();
-        actionHandler = new Handler() { public void handleMessage(Message msg) { actOnStateCode(); }};
-//        Toast.makeText(mContext,getString(R.string.back_key),Toast.LENGTH_LONG).show();
+        actionHandler = new Handler(Looper.getMainLooper()) { public void handleMessage(Message msg) { actOnStateCode(); }};
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            Log.w("Permission","Required for READ_CALENDAR");
         }
     }
 
@@ -147,36 +144,32 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                addNewQuiet = true;
-                intent = new Intent(MainActivity.this, AddUpdateActivity.class);
-                intent.putExtra("idx",-1);
-                startActivity(intent);
-                return true;
-            case R.id.action_calendar:
-                intent = new Intent(MainActivity.this, GCalShowActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_setting:
-//                intent = new Intent(MainActivity.this, SettingActivity.class);
-//                startActivity(intent);
-                startActivity(new Intent(this, PreferActivity.class));
-                return true;
-            case R.id.action_reset:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.reset_title)
-                        .setMessage(R.string.reset_table)
-                        .setIcon(R.mipmap.alert)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                new ClearQuiteTasks();
-                                new ShowMainList();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-                return true;
+        int menuItem = item.getItemId();
+        if (menuItem == R.id.action_add) {
+            addNewQuiet = true;
+            intent = new Intent(MainActivity.this, AddUpdateActivity.class);
+            intent.putExtra("idx", -1);
+            startActivity(intent);
+            return true;
+        }
+        else if (menuItem == R.id.action_calendar) {
+            startActivity(new Intent(MainActivity.this, GCalShowActivity.class));
+            return true;
+        } else if (menuItem == R.id.action_setting) {
+            startActivity(new Intent(this, PreferActivity.class));
+            return true;
+        } else if (menuItem == R.id.action_reset) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.reset_title)
+                    .setMessage(R.string.reset_table)
+                    .setIcon(R.mipmap.alert)
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                        new ClearQuiteTasks();
+                        new ShowMainList();
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -191,8 +184,11 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(notScheduled)
-            new ScheduleNextTask("Start setting Silent Time ");
+        new ScheduleNextTask("Start setting Silent Time ");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

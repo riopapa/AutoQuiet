@@ -44,11 +44,11 @@ public class AddAgendaActivity extends AppCompatActivity {
         gCal = gCals.get(currIdx);
         show_OneAgenda();
     }
-    SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE) ", Locale.getDefault());
-    SimpleDateFormat sdfHourMin = new SimpleDateFormat("HH:mm ", Locale.getDefault());
 
     void show_OneAgenda() {
 
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE) ", Locale.getDefault());
+        SimpleDateFormat sdfHourMin = new SimpleDateFormat("HH:mm ", Locale.getDefault());
         binding.aTitle.setText(gCal.title);
         mTitle = gCal.title;
 
@@ -114,6 +114,7 @@ public class AddAgendaActivity extends AppCompatActivity {
 
     void addAgenda(int id, int before, int after) {
 
+        SimpleDateFormat sdfDateHour = new SimpleDateFormat("MM-dd(EEE) HH:mm", Locale.getDefault());
         StringBuilder sb  = new StringBuilder();
         sb.append("Following Tasks Added");
         int qId = (int) (gCal.startTime & 0x7ffffff);
@@ -122,7 +123,7 @@ public class AddAgendaActivity extends AppCompatActivity {
                 GCal gC = gCals.get(i);
                 QuietTask q = new QuietTask(mTitle, gC.startTime + (long) before * 60 * 1000, gC.finishTime + (long) after * 60 * 1000,
                         qId, gC.calName, gC.desc, gC.location, true, vibrate, sRepeatTime, fRepeatTime, gC.repeat);
-                sb.append("\n").append(q.subject).append(" ").append(sdfDate.format(q.calStartDate));
+                sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calStartDate));
                 quietTasks.add(q);
             }
         }

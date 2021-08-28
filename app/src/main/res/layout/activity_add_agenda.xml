@@ -157,22 +157,25 @@
 
     </LinearLayout>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="울림 시각 조정"
+        android:textStyle="bold"
+        android:layout_margin="2dp"
+        android:background="@color/colorPrimary"
+        android:paddingRight="32sp"
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="울림 시각 조정"
-            android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:padding="2dp"
-            android:paddingRight="32sp"
-            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -181,7 +184,6 @@
             android:text="시작 + "
             android:textStyle="bold"
             android:layout_margin="2dp"
-            android:padding="2dp"
             android:textSize="16sp" />
 
         <EditText
