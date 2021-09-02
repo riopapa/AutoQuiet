@@ -166,7 +166,7 @@
         android:text="울림 시각 조정"
         android:textStyle="bold"
         android:layout_margin="2dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorTimer"
         android:paddingRight="32sp"
         android:textSize="20sp" />
 
@@ -174,7 +174,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorTimer"
         android:orientation="horizontal">
 
         <TextView

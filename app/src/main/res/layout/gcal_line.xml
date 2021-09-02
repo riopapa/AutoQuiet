@@ -8,7 +8,6 @@
     android:baselineAligned="false">
 <!-- Date/ day   -->
     <LinearLayout
-        android:id="@+id/aDateDay"
         android:layout_width="40sp"
         android:gravity="center_vertical"
         android:layout_height="match_parent"
@@ -32,7 +31,6 @@
     </LinearLayout>
     <!--  time start finish  -->
     <LinearLayout
-        android:id="@+id/aDateTime"
         android:layout_width="60sp"
         android:gravity="center_vertical"
         android:layout_height="match_parent"
