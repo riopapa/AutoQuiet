@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
+        utils.beepsInitiate();
+        utils.beepOnce(0); utils.beepOnce(1);
     }
 
     void actOnStateCode() {

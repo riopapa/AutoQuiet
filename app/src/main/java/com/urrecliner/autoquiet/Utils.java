@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -133,7 +136,7 @@ public class Utils {
 
     void deleteOldLogFiles() {     // remove older than 5 days
 
-        String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 2*24*60*60*1000L);
+        String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 7*24*60*60*1000L);
         if (packageDir == null) packageDir = getPackageDirectory();
         File[] files = getCurrentFileList(packageDir);
         if (files == null)
@@ -208,6 +211,42 @@ public class Utils {
         sharedTimeLong = sharedPref.getString("timeLong", "20");
         sharedTimeBefore = sharedPref.getString("timeBefore", "10");
         sharedTimeAfter = sharedPref.getString("timeAfter", "-9");
+    }
+
+    private SoundPool soundPool = null;
+    private final int[] beepSound = {
+            R.raw.say_notification,
+            R.raw.leading_sound                   //  event button pressed
+    };
+    private final int[] soundNbr = new int[beepSound.length];
+
+    void beepsInitiate() {
+
+        SoundPool.Builder builder;
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        builder = new SoundPool.Builder();
+        builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
+        soundPool = builder.build();
+        for (int i = 0; i < beepSound.length; i++) {
+            soundNbr[i] = soundPool.load(mContext, beepSound[i], 1);
+        }
+    }
+
+    void beepOnce(final int soundId) {
+
+        if (soundPool == null) {
+            beepsInitiate();
+            Handler handler = new Handler();
+            handler.postDelayed(() -> beepSound(soundId), 100);
+        } else
+            beepSound(soundId);
+    }
+    private void beepSound(int soundId) {
+        soundPool.play(soundNbr[soundId], .5f, .5f, 1, 0, 1f);
     }
 
 }

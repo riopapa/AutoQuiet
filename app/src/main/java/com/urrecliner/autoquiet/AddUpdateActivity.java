@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
@@ -47,7 +48,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     private QuietTask quietTask;
     private int currIdx;
     private ActivityAddEditBinding binding;
-    private int colorOn, colorOnBack, colorOffBack;
+    private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +66,18 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle((addNewQuiet) ? R.string.add_table :R.string.update_table);
-        actionBar.setIcon(R.mipmap.let_me_quiet);
+        actionBar.setIcon(R.mipmap.let_me_quiet_mini);
 //        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
 
         weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2;
         weekView[3] = binding.avWeek3; weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5;
         weekView[6] = binding.avWeek6;
-        colorOn = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOn, null);
-        colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
-        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null);
-
+        colorOn = ContextCompat.getColor(mContext, R.color.colorOn);
+        colorOnBack = ContextCompat.getColor(mContext, R.color.colorOnBack);
+        colorOffBack = ContextCompat.getColor(mContext, R.color.itemNormalFill);
+        BGColorOff = ContextCompat.getColor(mContext, R.color.BackGroundActiveOff);
+        BGColorOn = ContextCompat.getColor(mContext, R.color.BackGroundActiveOn);
         build_QuietTask();
     }
 
@@ -130,9 +132,11 @@ public class AddUpdateActivity extends AppCompatActivity {
             binding.swActive.setChecked(active);
             binding.swActive.setOnClickListener(v -> {
                 active ^= true;
+                binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
                 binding.swActive.setChecked(active);
                 v.invalidate();
             });
+            binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
         }
         binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.mipmap.speaking_off: (sRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         binding.iVstartRepeat.setOnClickListener(v -> {

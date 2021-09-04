@@ -48,6 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 savedAgenda = quietTask.agenda;
                 break;
             case "F":   // finish
+                utils.deleteOldLogFiles();
                 MannerMode.turn2Normal(context);
                 if (loopCount > 0) {    // 끝날 때는 여러번 울리기 없음
                     loopCount = 1;
@@ -73,6 +74,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
+                    utils.beepOnce(0);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
@@ -97,6 +99,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
+                    utils.beepOnce(1);
                     MannerMode.vibratePhone(mContext);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);

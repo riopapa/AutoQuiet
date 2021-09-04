@@ -22,6 +22,8 @@
     <color name="colorOnBack">#05B3A1</color>
     <color name="colorOff">#98AFC7</color>
     <color name="colorActive">#0000A0</color>
+    <color name="BackGroundActiveOn">#EDF1E9</color>
+    <color name="BackGroundActiveOff">#5E615B</color>
     <color name="colorTransparent">#00000000</color>
     <color name="headerBackground">#FBB117</color>
 
