@@ -47,14 +47,15 @@ public class ScheduleNextTask {
         String msg = headInfo + "\n" + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log("schedule",msg);
-        updateNotificationBar (sdfTime.format(nextTime), quietTask.getSubject(), StartFinish);
-    }
-    void updateNotificationBar(String dateTime, String subject, String startFinish) {
+//        updateNotificationBar (, , StartFinish);
+//    }
+//    void updateNotificationBar(String dateTime, String subject, String startFinish) {
         Intent updateIntent = new Intent(mActivity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
-        updateIntent.putExtra("dateTime", dateTime);
-        updateIntent.putExtra("subject", subject);
-        updateIntent.putExtra("startFinish", startFinish);
+        updateIntent.putExtra("dateTime", sdfTime.format(nextTime));
+        updateIntent.putExtra("subject", quietTask.getSubject());
+        updateIntent.putExtra("startFinish", StartFinish);
+        updateIntent.putExtra("loopCount", (StartFinish.equals("F") ? quietTask.getfRepeatCount() : quietTask.getsRepeatCount()));
         mActivity.startService(updateIntent);
     }
 }

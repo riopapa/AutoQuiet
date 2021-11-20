@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -28,6 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static int loopCount, savedId;
     private static boolean savedAgenda;
     TextToSpeech textToSpeech;
+    boolean nowSpeaking = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -74,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     MannerMode.vibratePhone(mContext);
-                    utils.beepOnce(0);
+                    utils.beepOnce(1);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
@@ -83,7 +85,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
-                    textToSpeech.stop();
                     MannerMode.turn2Quiet(mContext, vibrate);
                     Intent notification = new Intent(mActivity, NotificationService.class);
                     notification.putExtra("operation", STOP_SPEAK);
@@ -109,7 +110,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
-                    textToSpeech.stop();
                     if (savedAgenda) { // delete if agenda based
                         for (int i = 0; i < quietTasks.size(); i++) {
                             Log.w("id "+i, savedId+" vs "+quietTasks.get(i).calId+quietTasks.get(i).subject
@@ -131,6 +131,25 @@ public class AlarmReceiver extends BroadcastReceiver {
         textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         textToSpeech.setPitch(1.4f);
         textToSpeech.setSpeechRate(1.3f);
+
+        textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) { }
+
+            @Override
+            public void onDone(String utteranceId) {
+                textToSpeech.stop();
+                new Timer().schedule(new TimerTask() {
+                    public void run () {
+                        utils.beepOnce(0);
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onError(String utteranceId) { }
+        });
+
     }
 
     String nowTimeToString() {

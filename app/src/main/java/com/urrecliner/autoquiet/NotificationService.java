@@ -23,8 +23,9 @@ public class NotificationService extends Service {
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
-    static boolean no_speak = true;
-    String dateTime, subject, startFinish, sIcon;
+    static boolean goOnSpeak = false;
+    int loopCount;
+    String sDateTime, sSubject, sStartFinish;
 
     @Override
     public void onCreate() {
@@ -60,12 +61,12 @@ public class NotificationService extends Service {
         }
         createNotification();
         if (isUpdate) {
-            dateTime = intent.getStringExtra("dateTime");
-            subject = intent.getStringExtra("subject");
-            startFinish = intent.getStringExtra("startFinish");
-
-            no_speak = startFinish.equals("F");
-            updateRemoteViews(dateTime, subject, startFinish);
+            sDateTime = intent.getStringExtra("dateTime");
+            sSubject = intent.getStringExtra("subject");
+            sStartFinish = intent.getStringExtra("startFinish");
+            loopCount = intent.getIntExtra("loopCount", 0);
+            goOnSpeak = loopCount > 1;
+            updateRemoteViews(sDateTime, sSubject, sStartFinish);
             startForeground(100, mBuilder.build());
             return START_STICKY;
         }
@@ -81,8 +82,8 @@ public class NotificationService extends Service {
         }
         if (operation == STOP_SPEAK) {
             AlarmReceiver.speak_off();
-            no_speak = false;
-            updateRemoteViews(dateTime, subject, startFinish);
+            goOnSpeak = false;
+            updateRemoteViews(sDateTime, sSubject, sStartFinish);
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -127,7 +128,7 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
-        mRemoteViews.setViewVisibility(R.id.no_speak, (no_speak) ? View.VISIBLE:View.GONE);
+        mRemoteViews.setViewVisibility(R.id.no_speak, (goOnSpeak) ? View.VISIBLE:View.GONE);
         int smallIcon = smallIcons[0];
         if (!startFinish.equals("S")) {
             smallIcon = smallIcons[(quietTask.isVibrate()) ? 1:2];

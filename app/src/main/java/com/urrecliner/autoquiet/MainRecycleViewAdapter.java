@@ -2,6 +2,7 @@ package com.urrecliner.autoquiet;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,7 +61,7 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         View viewLine;
         ImageView lvVibrate, lvStartRepeat, lvFinishRepeat, lvgCal;
         TextView rmdSubject, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
-                tvStartTime, tvFinishTime, tvDesc, tvLocation;
+                tvStartTime, tvFinishTime, tvCalRight, tvCalLeft;
         LinearLayout llCalInfo, llStartFinishTime, llWeekFlag;
         GestureDetector mGestureDetector;
 
@@ -97,8 +98,8 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             });
             this.llWeekFlag = itemView.findViewById(R.id.weekFlag);
             this.llCalInfo = itemView.findViewById(R.id.calInfo);
-            this.tvDesc = itemView.findViewById(R.id.calDesc);
-            this.tvLocation = itemView.findViewById(R.id.calLoc);
+            this.tvCalRight = itemView.findViewById(R.id.calRight);
+            this.tvCalLeft = itemView.findViewById(R.id.calLeft);
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
             itemView.setOnTouchListener(this);
         }
@@ -211,26 +212,30 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             }
 
         } else {
-            holder.lvgCal.setImageResource(R.mipmap.calendar_mini);
+            holder.lvgCal.setImageResource(R.drawable.calendar);
             holder.llCalInfo.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.GONE);
             final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
             if (quietTask.calDesc.equals("") && quietTask.calLocation.equals("")) {
-                holder.tvLocation.setText(sdfDate.format(quietTask.calStartDate));
-                holder.tvDesc.setText("");
+                holder.tvCalLeft.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalRight.setText("");
             } else if (quietTask.calLocation.equals("")) {
-                holder.tvLocation.setText(sdfDate.format(quietTask.calStartDate));
-                holder.tvDesc.setText(quietTask.calDesc);
+                holder.tvCalLeft.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalRight.setText(quietTask.calDesc);
             } else if (quietTask.calDesc.equals("")) {
-                holder.tvLocation.setText(quietTask.calLocation);
-                holder.tvDesc.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalLeft.setText(quietTask.calLocation);
+                holder.tvCalRight.setText(sdfDate.format(quietTask.calStartDate));
             } else {
-                holder.tvLocation.setText(quietTask.calLocation);
+                holder.tvCalLeft.setText(quietTask.calLocation);
                 String s = sdfDate.format(quietTask.calStartDate) + " ⋙";
-                holder.tvDesc.setText(s);
+                holder.tvCalRight.setText(s);
             }
-            holder.tvLocation.setTextColor(colorOn);
-            holder.tvDesc.setTextColor(colorOn);
+//            holder.tvCalLeft.setTextColor(colorOn);
+//            holder.tvCalRight.setTextColor(colorOn);
+            holder.tvCalRight.setSingleLine(true);
+            holder.tvCalRight.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            holder.tvCalRight.setSelected(true);
+
             holder.viewLine.setBackgroundColor(NameColor.get(quietTask.calName, mContext));
         }
     }

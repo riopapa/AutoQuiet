@@ -95,7 +95,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         vibrate = quietTask.isVibrate();
         agenda = quietTask.agenda;
 
-        binding.gCal.setImageResource((agenda)? R.mipmap.calendar:R.mipmap.transparent);
+        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.transparent);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
         binding.timePickerFinish.setIs24HourView(true);

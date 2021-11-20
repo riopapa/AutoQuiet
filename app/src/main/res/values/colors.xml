@@ -5,8 +5,8 @@
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
-    <color name="notification_back">#A7FFEB</color>
-    <color name="colorNotification">#172670</color>
+    <color name="notification_back">#8F4073A5</color>
+    <color name="colorNotification">#81BFBB</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>

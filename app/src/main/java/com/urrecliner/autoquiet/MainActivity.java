@@ -38,10 +38,13 @@ import static com.urrecliner.autoquiet.Vars.stateCode;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.xSize;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
-
+    private static int cnt = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,11 @@ public class MainActivity extends AppCompatActivity  {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                Log.w("cnt","= "+cnt++);
+            }
+        }, 50, 60 * 60000);
     }
 
     void setVariables() {

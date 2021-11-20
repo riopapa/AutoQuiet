@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:contentDescription="@string/blank"
-            android:src="@mipmap/calendar" />
+            android:src="@drawable/calendar" />
 
         <EditText
             android:id="@+id/etSubject"

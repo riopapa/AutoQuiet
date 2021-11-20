@@ -1,7 +1,6 @@
 package com.urrecliner.autoquiet;
 
 import android.content.Intent;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         View viewLine;
-        TextView tvADate, tvADay, tvSTime, tvFTime, tvSubject, tvName, tvLoc, tvDesc;
+        TextView tvADate, tvADay, tvSTime, tvFTime, tvSubject, tvName, tvCalLeft, tvCalRight;
         ImageView ivRepeat;
 
         public ViewHolder(View itemView) {
@@ -47,8 +46,8 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             this.tvSubject = itemView.findViewById(R.id.calSubject);
             this.tvName = itemView.findViewById(R.id.calName);
             this.ivRepeat = itemView.findViewById(R.id.repeating);
-            this.tvLoc = itemView.findViewById(R.id.calLoc);
-            this.tvDesc = itemView.findViewById(R.id.calDesc);
+            this.tvCalLeft = itemView.findViewById(R.id.calLeft);
+            this.tvCalRight = itemView.findViewById(R.id.calRight);
             this.viewLine.setOnClickListener(v -> {
                 int idx = getBindingAdapterPosition();
                 Intent intent;
@@ -82,11 +81,11 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
         holder.tvSubject.setText(g.title);
         holder.tvName.setText(g.calName);
         holder.ivRepeat.setImageResource((g.repeat)? R.mipmap.repeating: R.mipmap.transparent);
-        holder.tvLoc.setText((g.location.length()>20)? g.location.substring(0,19):g.location);
+        holder.tvCalLeft.setText((g.location.length()>20)? g.location.substring(0,19):g.location);
         if (g.desc.length() == 0)
-            holder.tvDesc.setVisibility(View.GONE);
+            holder.tvCalRight.setVisibility(View.GONE);
         else
-            holder.tvDesc.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
+            holder.tvCalRight.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
         holder.tvSTime.setText(sdfHHMM.format(g.startTime));
         holder.tvFTime.setText(sdfHHMM.format(g.finishTime));
         int backColor = NameColor.get(g.calName, mContext);

@@ -92,7 +92,7 @@
                 android:contentDescription="repeating" />
         </LinearLayout>
         <TextView
-            android:id="@+id/calLoc"
+            android:id="@+id/calLeft"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -101,7 +101,7 @@
             android:text="location"
             />
         <TextView
-            android:id="@+id/calDesc"
+            android:id="@+id/calRight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

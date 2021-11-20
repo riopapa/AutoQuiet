@@ -94,7 +94,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:contentDescription="@string/blank"
-                android:src="@mipmap/calendar_mini" />
+                android:src="@drawable/calendar" />
             <TextView
                 android:id="@+id/rmdSubject"
                 android:layout_width="match_parent"
@@ -193,25 +193,25 @@
             android:gravity="center"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/calLoc"
+                android:id="@+id/calLeft"
                 android:layout_width="0dp"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="16dp"
-                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
                 android:text="location"
                 />
             <TextView
-                android:id="@+id/calDesc"
+                android:id="@+id/calRight"
                 android:layout_width="0dp"
                 android:layout_weight="5"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
+                android:gravity="left"
                 android:textSize="16dp"
-                android:textStyle="bold"
+                android:textColor="@color/colorOn"
                 />
         </LinearLayout>
     </LinearLayout>
