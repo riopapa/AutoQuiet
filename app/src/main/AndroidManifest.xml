@@ -44,12 +44,19 @@
             </intent-filter>
         </receiver>
         <service android:name=".NotificationService" />
-        <receiver android:name=".BootReceiver" android:exported="true" android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
+
     </application>
+
+
 </manifest>
+
+
+<!--<provider-->
+<!--android:name="com.weijiaxing.logviewer.LogcatFileProvider"-->
+<!--android:authorities="${applicationId}.logcat_fileprovider"-->
+<!--android:grantUriPermissions="true"-->
+<!--android:exported="false">-->
+<!--<meta-data-->
+<!--    android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--    android:resource="@xml/logcat_filepaths" />-->
+<!--</provider>-->

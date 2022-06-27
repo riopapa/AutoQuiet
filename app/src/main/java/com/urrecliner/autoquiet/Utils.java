@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Environment;
 import android.os.Handler;
@@ -136,7 +137,7 @@ public class Utils {
 
     void deleteOldLogFiles() {     // remove older than 5 days
 
-        String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 7*24*60*60*1000L);
+        String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 4*24*60*60*1000L);
         if (packageDir == null) packageDir = getPackageDirectory();
         File[] files = getCurrentFileList(packageDir);
         if (files == null)
@@ -154,7 +155,6 @@ public class Utils {
     private File[] getCurrentFileList(File fullPath) {
         return fullPath.listFiles();
     }
-
 
     public void saveQuietTasksToShared() {
 

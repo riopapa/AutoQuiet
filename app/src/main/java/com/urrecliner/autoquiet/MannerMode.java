@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.sharedManner;
+import static com.urrecliner.autoquiet.Vars.utils;
 
 class MannerMode {
 
@@ -16,7 +17,7 @@ class MannerMode {
 
     static void turn2Quiet(Context context, boolean vibrate) {
         beepStartQuiet();
-        vibratePhone(context);
+//        vibratePhone(context);
 
         AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
@@ -32,15 +33,15 @@ class MannerMode {
                 e.printStackTrace();
             }
             am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
         }
-
     }
 
     static void turn2Normal(Context context) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        vibratePhone(context);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, 15, AudioManager.FLAG_PLAY_SOUND);
         beepFinishQuiet();
     }
 

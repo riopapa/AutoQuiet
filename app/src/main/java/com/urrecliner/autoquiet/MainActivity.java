@@ -20,9 +20,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
 import com.urrecliner.autoquiet.utility.Permission;
+// import com.weijiaxing.logviewer.LogcatActivity;
+
 import static com.urrecliner.autoquiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
 import static com.urrecliner.autoquiet.Vars.STATE_BLANK;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity  {
         }
 
         setContentView(R.layout.activity_main);
+//        LogcatActivity.launch(MainActivity.this);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -194,11 +198,16 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        new ScheduleNextTask("Start setting Silent Time ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        new ScheduleNextTask("Start setting Silent Time ");
+        super.onUserLeaveHint();
     }
 }

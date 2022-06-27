@@ -17,7 +17,7 @@ import static com.urrecliner.autoquiet.Vars.utils;
 
 public class ScheduleNextTask {
     public ScheduleNextTask(String headInfo) {
-        utils.log("Schedule","Create next schedule "+headInfo);
+//        utils.log("Schedule","Create next schedule "+headInfo);
         long nextTime = System.currentTimeMillis() + (long)240*60*60*1000;
         int saveIdx = 0;
         String StartFinish = "S";

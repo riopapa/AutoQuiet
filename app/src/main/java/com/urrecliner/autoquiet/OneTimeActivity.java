@@ -27,7 +27,7 @@ public class OneTimeActivity extends AppCompatActivity {
 
     QuietTask quietTask;
     private String subject;
-    private int startHour, startMin, finishHour, finishMin;
+    private int startHour, startMin, finishHour, finishMin, fRepeatCount;
     private boolean vibrate;
     private int durationMin = 0;       // in minutes
     Calendar calendar;
@@ -56,6 +56,7 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTask = quietTasks.get(0);
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
+        fRepeatCount = quietTask.getfRepeatCount();
         durationMin = Integer.parseInt(sharedTimeInit);
         shortInterval = Integer.parseInt(sharedTimeShort);
         longInterval = Integer.parseInt(sharedTimeLong);
@@ -66,6 +67,7 @@ public class OneTimeActivity extends AppCompatActivity {
         calendar.add(Calendar.MINUTE, durationMin);
         finishHour = calendar.get(Calendar.HOUR_OF_DAY);
         finishMin = calendar.get(Calendar.MINUTE);
+
         binding.oneTimePicker.setIs24HourView(true);
         binding.oneTimePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
             if (timePicker_UpDown)
@@ -125,6 +127,19 @@ public class OneTimeActivity extends AppCompatActivity {
             durationMin += longInterval;
             adjustTimePicker();
         });
+
+        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.oneFinishRepeat.setOnClickListener(v -> {
+            if (fRepeatCount == 0)
+                fRepeatCount = 1;
+            else if (fRepeatCount == 1)
+                fRepeatCount = 11;
+            else
+                fRepeatCount = 0;
+            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            v.invalidate();
+        });
+
     }
 
     void adjustTimePicker() {
@@ -144,7 +159,7 @@ public class OneTimeActivity extends AppCompatActivity {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-                week, true, vibrate, 0, 0);    // onetime repeat is 0
+                week, true, vibrate, 0, fRepeatCount);    // onetime repeat is 0
         quietTasks.set(0, quietTask);
         mainRecycleViewAdapter.notifyItemChanged(0);
 

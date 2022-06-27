@@ -29,15 +29,6 @@ public class BootReceiver extends BroadcastReceiver {
         i.putExtra("stateCode", stateCode);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
-//
-//        context.startForegroundService(i);
-//        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-//        Intent mainIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-//        mainIntent.addFlags(mainIntent.FLAG_ACTIVITY_NEW_TASK);
-////        mainIntent.putExtra("stateCode", stateCode);
-//        PendingIntent alarmIntent = PendingIntent.getActivity(context, 0, mainIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        alarmMgr.set(AlarmManager.RTC, System.currentTimeMillis() + 20000, alarmIntent);
-//        new ScheduleNextTask("Booted Again");
 
     }
 }
