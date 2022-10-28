@@ -173,8 +173,8 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
         else
             holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
-        int sRepeat = quietTask.getsRepeatCount();
-        int fRepeat = quietTask.getfRepeatCount();
+        int sRepeat = quietTask.sRepeatCount;
+        int fRepeat = quietTask.fRepeatCount;
         holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.mipmap.speaking_off : (sRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.mipmap.speaking_off : (fRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null));

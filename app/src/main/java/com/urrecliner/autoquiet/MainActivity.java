@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -65,6 +68,15 @@ public class MainActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_main);
 //        LogcatActivity.launch(MainActivity.this);
+
+// If you have access to the external storage, do whatever you need
+        if (!Environment.isExternalStorageManager()){
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
+        }
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -126,13 +138,13 @@ public class MainActivity extends AppCompatActivity  {
 
             case STATE_ALARM:
                 stateCode = "@" + stateCode;
-                new ScheduleNextTask("Next Alarm Settled ");
+                new ScheduleNextTask("Next Alarm");
                 finish();
                 break;
 
             case STATE_BOOT:  // it means from receiver
                 stateCode = "@" + stateCode;
-                new ScheduleNextTask("Boot triggered new Alarm ");
+                new ScheduleNextTask("Booted");
                 finish();
                 break;
 
@@ -207,7 +219,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onUserLeaveHint() {
-        new ScheduleNextTask("Start setting Silent Time ");
+        new ScheduleNextTask("Set ");
         super.onUserLeaveHint();
     }
 }

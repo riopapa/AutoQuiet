@@ -29,13 +29,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static int loopCount, savedId;
     private static boolean savedAgenda;
     TextToSpeech textToSpeech;
-    boolean nowSpeaking = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (utils == null)
             utils = new Utils();
 
+        utils.log("Alarm Receive","onReceive ");
         Bundle args = intent.getBundleExtra("DATA");
         assert args != null;
         quietTask = (QuietTask) args.getSerializable("quietTask");
@@ -43,6 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
         loopCount = quietTask.getsRepeatCount();
+        utils.log("Alarm Receive",quietTask.subject+ " Case "+caseSFO);
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());
@@ -66,7 +67,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             default:
                 utils.log("Alarm Receive","Case Error " + caseSFO);
         }
-        new ScheduleNextTask("Next");
+        new ScheduleNextTask("Now");
     }
 
     void say_Started(String subject, boolean vibrate) {

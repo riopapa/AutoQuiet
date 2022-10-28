@@ -3,11 +3,8 @@ package com.urrecliner.autoquiet.utility;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract;
-import android.util.Log;
 
 import com.urrecliner.autoquiet.models.GCal;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

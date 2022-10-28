@@ -237,7 +237,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         utils.saveQuietTasksToShared();
 
         finish();
-        new ScheduleNextTask("Schedule "+ ((addNewQuiet) ? "Added" : "Updated"));
+        new ScheduleNextTask( ((addNewQuiet) ? "Added" : "Updated"));
         mainRecycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
