@@ -3,6 +3,7 @@ package com.urrecliner.autoquiet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.urrecliner.autoquiet.Vars.STATE_NEXT;
 import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
@@ -29,13 +31,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static int loopCount, savedId;
     private static boolean savedAgenda;
     TextToSpeech textToSpeech;
+    Context tContext;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (utils == null)
-            utils = new Utils();
-
-        utils.log("Alarm Receive","onReceive ");
+        tContext = context;
         Bundle args = intent.getBundleExtra("DATA");
         assert args != null;
         quietTask = (QuietTask) args.getSerializable("quietTask");
@@ -43,7 +43,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
         loopCount = quietTask.getsRepeatCount();
-        utils.log("Alarm Receive",quietTask.subject+ " Case "+caseSFO);
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());
@@ -52,14 +51,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "F":   // finish
                 utils.deleteOldLogFiles();
-                MannerMode.turn2Normal(context);
+                MannerMode.turn2Normal(tContext);
                 if (loopCount > 0) {    // 끝날 때는 여러번 울리기 없음
                     loopCount = 1;
                     say_Finished(quietTask.getSubject());
                 }
                 break;
             case "O":   // onetime
-                MannerMode.turn2Normal(context);
+                MannerMode.turn2Normal(tContext);
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 utils.saveQuietTasksToShared();
@@ -67,7 +66,16 @@ public class AlarmReceiver extends BroadcastReceiver {
             default:
                 utils.log("Alarm Receive","Case Error " + caseSFO);
         }
-        new ScheduleNextTask("Now");
+
+        PackageManager pm = context.getPackageManager();
+        Intent mainInt = pm.getLaunchIntentForPackage(context.getPackageName());
+        mainInt.putExtra("stateCode",STATE_NEXT);
+        context.startActivity(mainInt);
+//        new ScheduleNextTask("Now");
+//        if (utils == null)
+//            utils = new Utils(tContext);
+//        else
+//            utils.log("Alarm Receive",quietTask.subject+ " Case "+caseSFO);
     }
 
     void say_Started(String subject, boolean vibrate) {
@@ -76,7 +84,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    MannerMode.vibratePhone(mContext);
+                    MannerMode.vibratePhone(tContext);
                     utils.beepOnce(1);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
@@ -86,10 +94,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else {
                     speakTimer.cancel();
                     speakTimer.purge();
-                    MannerMode.turn2Quiet(mContext, vibrate);
+                    MannerMode.turn2Quiet(tContext, vibrate);
                     Intent notification = new Intent(mActivity, NotificationService.class);
                     notification.putExtra("operation", STOP_SPEAK);
-                    mContext.startService(notification);
+                    tContext.startService(notification);
                 }
             }
         }, 3000, 5000);
@@ -102,7 +110,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     utils.beepOnce(1);
-                    MannerMode.vibratePhone(mContext);
+                    MannerMode.vibratePhone(tContext);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
@@ -129,7 +137,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     void ready_TTS() {
-        textToSpeech = new TextToSpeech(mContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
+        textToSpeech = new TextToSpeech(tContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
         textToSpeech.setPitch(1.4f);
         textToSpeech.setSpeechRate(1.3f);
 

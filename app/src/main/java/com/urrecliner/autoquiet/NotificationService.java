@@ -32,10 +32,10 @@ public class NotificationService extends Service {
         super.onCreate();
         context = this;
 
-        if (null != mRemoteViews) {
-            mRemoteViews.removeAllViews(R.layout.notification_bar);
-            mRemoteViews = null;
-        }
+//        if (null != mRemoteViews) {
+//            mRemoteViews.removeAllViews(R.layout.notification_bar);
+//            mRemoteViews = null;
+//        }
         mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_bar);
     }
 

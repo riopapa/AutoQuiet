@@ -33,12 +33,11 @@ import static com.urrecliner.autoquiet.Vars.STATE_ADD_UPDATE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
 import static com.urrecliner.autoquiet.Vars.STATE_BLANK;
 import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
+import static com.urrecliner.autoquiet.Vars.STATE_NEXT;
 import static com.urrecliner.autoquiet.Vars.STATE_ONETIME;
-import static com.urrecliner.autoquiet.Vars.actionHandler;
 import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.stateCode;
 import static com.urrecliner.autoquiet.Vars.utils;
@@ -56,8 +55,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         mActivity = this;
         mContext = this.getApplicationContext();
-        utils = new Utils();
-        utils.log(logID, "Main start ");
+        setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
                     .getPackageName(), PackageManager.GET_PERMISSIONS);
@@ -65,8 +63,6 @@ public class MainActivity extends AppCompatActivity  {
         } catch (Exception e) {
             Log.e("Permission", "No Permission "+e.toString());
         }
-
-        setContentView(R.layout.activity_main);
 //        LogcatActivity.launch(MainActivity.this);
 
 // If you have access to the external storage, do whatever you need
@@ -77,34 +73,45 @@ public class MainActivity extends AppCompatActivity  {
             intent.setData(uri);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onResume() {
 
         Intent intent = getIntent();
         if (intent == null) {
             stateCode = "NULL";
+
         } else {
             stateCode = intent.getStringExtra("stateCode");
             if (stateCode == null)
                 stateCode = STATE_BLANK;
         }
-        utils.log(logID, stateCode);
-        utils.deleteOldLogFiles();
-        if (!stateCode.equals(STATE_BLANK))
-            return;
-        setVariables();
+        if (utils == null) {
+            setVariables();
+        }
+//        utils.log(logID, stateCode);
+//        if (!stateCode.equals(STATE_BLANK))
+//            return;
         actOnStateCode();
-        actionHandler = new Handler(Looper.getMainLooper()) { public void handleMessage(Message msg) { actOnStateCode(); }};
+//        actionHandler = new Handler(Looper.getMainLooper()) { public void handleMessage(Message msg) { actOnStateCode(); }};
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
-        new Timer().schedule(new TimerTask() {
-            public void run () {
-                Log.w("cnt","= "+cnt++);
-            }
-        }, 50, 60 * 60000);
+//        new Timer().schedule(new TimerTask() {
+//            public void run () {
+//                mContext = getApplicationContext();
+//                utils = new Utils(mContext);
+//                utils.log("cntx","= "+cnt++);
+//            }
+//        }, 50000, 20 * 60000);
+        super.onResume();
     }
 
     void setVariables() {
 
+        utils = new Utils(mContext);
+        utils.log(logID, "setVariables stateCode="+stateCode);
         utils.getPreference();
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
@@ -122,8 +129,9 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
-        utils.beepsInitiate();
-        utils.beepOnce(0); utils.beepOnce(1);
+        utils.deleteOldLogFiles();
+        utils.beepsInitiate(0);
+//        utils.beepOnce(0); utils.beepOnce(1);
     }
 
     void actOnStateCode() {
@@ -151,6 +159,13 @@ public class MainActivity extends AppCompatActivity  {
             case STATE_ADD_UPDATE:
                 stateCode = "@" + stateCode;
                 break;
+
+            case STATE_NEXT:
+                stateCode = "@" + stateCode;
+                new ScheduleNextTask("Next");
+                finish();
+                break;
+
             case STATE_BLANK:
                 break;
             default:
@@ -200,15 +215,10 @@ public class MainActivity extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mainRecycleViewAdapter.notifyDataSetChanged();
-    }
-
 
     @Override
     public void onBackPressed() {
+        new ScheduleNextTask("back ");
         super.onBackPressed();
     }
 
@@ -217,9 +227,9 @@ public class MainActivity extends AppCompatActivity  {
         super.onPause();
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        new ScheduleNextTask("Set ");
-        super.onUserLeaveHint();
-    }
+//    @Override
+//    protected void onUserLeaveHint() {
+//        new ScheduleNextTask("Hint ");
+//        super.onUserLeaveHint();
+//    }
 }

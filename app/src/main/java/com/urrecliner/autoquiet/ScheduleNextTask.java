@@ -18,7 +18,7 @@ import static com.urrecliner.autoquiet.Vars.utils;
 public class ScheduleNextTask {
     public ScheduleNextTask(String headInfo) {
 //        utils.log("Schedule","Create next schedule "+headInfo);
-        long nextTime = System.currentTimeMillis() + (long)240*60*60*1000;
+        long nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
         String StartFinish = "S";
         boolean[] week;
@@ -47,15 +47,13 @@ public class ScheduleNextTask {
         String msg = headInfo + " " + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log("schedule",msg);
-//        updateNotificationBar (, , StartFinish);
-//    }
-//    void updateNotificationBar(String dateTime, String subject, String startFinish) {
         Intent updateIntent = new Intent(mActivity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("dateTime", sdfTime.format(nextTime));
         updateIntent.putExtra("subject", quietTask.getSubject());
         updateIntent.putExtra("startFinish", StartFinish);
-        updateIntent.putExtra("loopCount", (StartFinish.equals("F") ? quietTask.getfRepeatCount() : quietTask.getsRepeatCount()));
+        updateIntent.putExtra("loopCount", (StartFinish.equals("F") ?
+                quietTask.getfRepeatCount() : quietTask.getsRepeatCount()));
         mActivity.startService(updateIntent);
     }
 }

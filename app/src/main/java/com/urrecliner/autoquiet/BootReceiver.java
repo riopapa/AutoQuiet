@@ -1,27 +1,23 @@
 package com.urrecliner.autoquiet;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
+import static com.urrecliner.autoquiet.Vars.mContext;
+import static com.urrecliner.autoquiet.Vars.stateCode;
+import static com.urrecliner.autoquiet.Vars.utils;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
-import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
-import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.stateCode;
-import static com.urrecliner.autoquiet.Vars.utils;
 
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        utils = new Utils();
+        utils = new Utils(context);
         mContext = context;
-        String logID = STATE_BOOT;
-        utils.log(logID, "Activated  BOOT ------------- " + intent.getAction());
+        utils.log(STATE_BOOT, "Activated  BOOT ------------- " + intent.getAction());
         stateCode = STATE_BOOT;
         Log.e("Booted",stateCode);
 

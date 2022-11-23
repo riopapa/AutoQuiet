@@ -62,6 +62,7 @@ class MannerMode {
             else
                 mpStart.start();
         }
+        mpStart.setOnCompletionListener(mediaPlayer -> mpStart.release());
     }
 
     private static void beepFinishQuiet(Context context) {
@@ -74,5 +75,6 @@ class MannerMode {
             else
                 mpFinish.start();
         }
+        mpFinish.setOnCompletionListener(mediaPlayer -> mpFinish.release());
     }
 }

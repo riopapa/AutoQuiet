@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -43,6 +44,11 @@ public class Utils {
 
     private final String PREFIX = "log_";
     private File packageDir = null;
+    Context uContext;
+
+    public Utils (Context context) {
+        uContext = context;
+    }
 
     private void append2file(String logFile, String textLine) {
 
@@ -220,7 +226,7 @@ public class Utils {
     };
     private final int[] soundNbr = new int[beepSound.length];
 
-    void beepsInitiate() {
+    void beepsInitiate(int soundId) {
 
         SoundPool.Builder builder;
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -231,17 +237,19 @@ public class Utils {
         builder = new SoundPool.Builder();
         builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
         soundPool = builder.build();
-        for (int i = 0; i < beepSound.length; i++) {
-            soundNbr[i] = soundPool.load(mContext, beepSound[i], 1);
-        }
+        soundPool.setOnLoadCompleteListener((soundPool, f1, f2) -> {
+            for (int i = 0; i < beepSound.length; i++) {
+                soundNbr[i] = soundPool.load(mContext, beepSound[i], 1);
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(() -> beepSound(soundId), 200);
+            }
+        });
     }
 
     void beepOnce(final int soundId) {
 
         if (soundPool == null) {
-            beepsInitiate();
-            Handler handler = new Handler();
-            handler.postDelayed(() -> beepSound(soundId), 100);
+            beepsInitiate(soundId);
         } else
             beepSound(soundId);
     }

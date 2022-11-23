@@ -121,6 +121,8 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             int qIdx = getBindingAdapterPosition();
+            if (qIdx >= quietTasks.size())
+                return true;
             quietTask = quietTasks.get(qIdx);
             Intent intent;
             if (qIdx != 0) {
