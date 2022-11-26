@@ -31,6 +31,8 @@ import java.util.List;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.sdfDate;
 import static com.urrecliner.autoquiet.Vars.sdfLogTime;
+import static com.urrecliner.autoquiet.Vars.sharedCode;
+import static com.urrecliner.autoquiet.Vars.sharedEditor;
 import static com.urrecliner.autoquiet.Vars.sharedManner;
 import static com.urrecliner.autoquiet.Vars.sharedPref;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
@@ -200,16 +202,16 @@ public class Utils {
 
     void getPreference() {
         sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        sharedEditor = sharedPref.edit();
         sharedTimeBefore = sharedPref.getString("timeBefore", "");
         if (sharedTimeBefore.equals("")) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("mannerBeep", true);
-            editor.putString("timeInit","60");
-            editor.putString("timeShort", "5");
-            editor.putString("timeLong", "20");
-            editor.putString("timeBefore", "2");
-            editor.apply();
-            editor.commit();
+            sharedEditor.putBoolean("mannerBeep", true);
+            sharedEditor.putString("timeInit","60");
+            sharedEditor.putString("timeShort", "5");
+            sharedEditor.putString("timeLong", "20");
+            sharedEditor.putString("timeBefore", "2");
+            sharedEditor.apply();
+            sharedEditor.commit();
         }
         sharedManner = sharedPref.getBoolean("mannerBeep", true);
         sharedTimeInit = sharedPref.getString("timeInit", "60");
@@ -217,6 +219,8 @@ public class Utils {
         sharedTimeLong = sharedPref.getString("timeLong", "20");
         sharedTimeBefore = sharedPref.getString("timeBefore", "10");
         sharedTimeAfter = sharedPref.getString("timeAfter", "-9");
+        if (!sharedCode.equals("Main"))
+            sharedCode = sharedPref.getString("sharedCode","BLANK");
     }
 
     private SoundPool soundPool = null;

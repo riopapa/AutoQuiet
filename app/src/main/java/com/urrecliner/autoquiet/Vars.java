@@ -2,7 +2,6 @@ package com.urrecliner.autoquiet;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 
 import com.urrecliner.autoquiet.models.GCal;
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -22,10 +21,11 @@ public class Vars {
     static MainRecycleViewAdapter mainRecycleViewAdapter;
     static GCalRecycleViewAdapter gCalRecyclerViewAdapter;
 
-    static String stateCode;
-
     static SharedPreferences sharedPref;
-    static String sharedTimeShort, sharedTimeLong, sharedTimeInit, sharedTimeBefore, sharedTimeAfter;
+    static SharedPreferences.Editor sharedEditor;
+    static String sharedTimeShort, sharedTimeLong, sharedTimeInit,
+            sharedTimeBefore, sharedTimeAfter, sharedCode;
+    final static String SHARED_CODE = "sharedCode";
     static boolean sharedManner = true;
 
     static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -40,9 +40,8 @@ public class Vars {
     static final String STATE_BLANK = "BLANK";
     static final String STATE_ALARM = "Alarm";
     static final String STATE_ONETIME = "OneTime";
+    static final String STATE_LOOP = "Loop";
     static final String STATE_BOOT = "Boot";
-    static final String STATE_ADD_UPDATE = "AddUpdate";
-    static final String STATE_NEXT = "Next";
     static final int INVOKE_ONETIME = 100;
     static final int STOP_SPEAK = 1022;
 

@@ -16,9 +16,10 @@ import static com.urrecliner.autoquiet.Vars.sdfTime;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 public class ScheduleNextTask {
+    long nextTime;
     public ScheduleNextTask(String headInfo) {
-//        utils.log("Schedule","Create next schedule "+headInfo);
-        long nextTime = System.currentTimeMillis() + 240*60*60*1000L;
+
+        nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
         String StartFinish = "S";
         boolean[] week;
@@ -44,16 +45,18 @@ public class ScheduleNextTask {
 
         quietTask = quietTasks.get(saveIdx);
         NextAlarm.request(quietTask, nextTime, StartFinish, mContext);
-        String msg = headInfo + " " + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime) + " " + StartFinish;
+        String msg = headInfo + " " + quietTask.getSubject() + "\n" + sdfDateTime.format(nextTime)
+                + " " + StartFinish;
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-        utils.log("schedule",msg);
+        utils.log("ScheduleNextTask",msg);
+        int loopCount = (StartFinish.equals("F") ? quietTask.fRepeatCount : quietTask.sRepeatCount);
+
         Intent updateIntent = new Intent(mActivity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("dateTime", sdfTime.format(nextTime));
         updateIntent.putExtra("subject", quietTask.getSubject());
         updateIntent.putExtra("startFinish", StartFinish);
-        updateIntent.putExtra("loopCount", (StartFinish.equals("F") ?
-                quietTask.getfRepeatCount() : quietTask.getsRepeatCount()));
+        updateIntent.putExtra("loopCount", loopCount);
         mActivity.startService(updateIntent);
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Insets;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,41 +16,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 
 import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
 import com.urrecliner.autoquiet.utility.Permission;
-// import com.weijiaxing.logviewer.LogcatActivity;
 
-import static com.urrecliner.autoquiet.Vars.STATE_ADD_UPDATE;
+import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
 import static com.urrecliner.autoquiet.Vars.STATE_BLANK;
 import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
-import static com.urrecliner.autoquiet.Vars.STATE_NEXT;
 import static com.urrecliner.autoquiet.Vars.STATE_ONETIME;
 import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.stateCode;
+import static com.urrecliner.autoquiet.Vars.sharedCode;
+import static com.urrecliner.autoquiet.Vars.sharedEditor;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.xSize;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
-    private static int cnt = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +57,8 @@ public class MainActivity extends AppCompatActivity  {
                     .getPackageName(), PackageManager.GET_PERMISSIONS);
             Permission.ask(this, this, info);
         } catch (Exception e) {
-            Log.e("Permission", "No Permission "+e.toString());
+            Log.e("Permission", "No Permission "+e);
         }
-//        LogcatActivity.launch(MainActivity.this);
 
 // If you have access to the external storage, do whatever you need
         if (!Environment.isExternalStorageManager()){
@@ -73,56 +68,37 @@ public class MainActivity extends AppCompatActivity  {
             intent.setData(uri);
             startActivity(intent);
         }
+        sharedCode = logID;
+        Log.w("autoQuiet","onCreated ----- "+sharedCode);
     }
 
     @Override
     public void onResume() {
 
-        Intent intent = getIntent();
-        if (intent == null) {
-            stateCode = "NULL";
+        super.onResume();
 
-        } else {
-            stateCode = intent.getStringExtra("stateCode");
-            if (stateCode == null)
-                stateCode = STATE_BLANK;
-        }
-        if (utils == null) {
-            setVariables();
-        }
-//        utils.log(logID, stateCode);
-//        if (!stateCode.equals(STATE_BLANK))
-//            return;
-        actOnStateCode();
-//        actionHandler = new Handler(Looper.getMainLooper()) { public void handleMessage(Message msg) { actOnStateCode(); }};
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
-//        new Timer().schedule(new TimerTask() {
-//            public void run () {
-//                mContext = getApplicationContext();
-//                utils = new Utils(mContext);
-//                utils.log("cntx","= "+cnt++);
-//            }
-//        }, 50000, 20 * 60000);
-        super.onResume();
+        setVariables();
+//        utils.log(logID, "main onResume statecode="+ sharedCode);
+        actOnStateCode();
     }
 
     void setVariables() {
 
         utils = new Utils(mContext);
-        utils.log(logID, "setVariables stateCode="+stateCode);
+        utils.log(logID, "setVariables started stateCode="+ sharedCode);
         utils.getPreference();
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
             new ClearQuiteTasks();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        xSize = size.x / 9;    //  (7 week + 2)
+        WindowMetrics windowMetrics = mActivity.getWindowManager().getCurrentWindowMetrics();
+        Insets insets = windowMetrics.getWindowInsets()
+                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+        xSize = (windowMetrics.getBounds().width() - insets.left - insets.right) / 9;
 
-        // get permission for silent mode
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
@@ -136,43 +112,33 @@ public class MainActivity extends AppCompatActivity  {
 
     void actOnStateCode() {
 
-        if (!stateCode.equals(STATE_BLANK))
-            utils.log(logID, "State=" + stateCode);
-        switch (stateCode) {
+        switch (sharedCode) {
+
             case STATE_ONETIME:
-                stateCode = "@" + stateCode;
                 finish();
+                break;
+
+            case STATE_BOOT:
+                new ScheduleNextTask("Next Alarm");
                 break;
 
             case STATE_ALARM:
-                stateCode = "@" + stateCode;
                 new ScheduleNextTask("Next Alarm");
-                finish();
-                break;
-
-            case STATE_BOOT:  // it means from receiver
-                stateCode = "@" + stateCode;
-                new ScheduleNextTask("Booted");
-                finish();
-                break;
-
-            case STATE_ADD_UPDATE:
-                stateCode = "@" + stateCode;
-                break;
-
-            case STATE_NEXT:
-                stateCode = "@" + stateCode;
-                new ScheduleNextTask("Next");
                 finish();
                 break;
 
             case STATE_BLANK:
                 break;
+
             default:
-                utils.log(logID,"Invalid statCode>"+stateCode);
+                utils.log(logID,"Invalid statCode>"+ sharedCode);
                 break;
         }
-        new ShowMainList();
+        if (!sharedCode.equals(STATE_ALARM) && !sharedCode.equals(STATE_BOOT))
+            new ShowMainList();
+        sharedCode = "@" + sharedCode;
+        sharedEditor.putString(SHARED_CODE, sharedCode);
+        sharedEditor.apply();
     }
 
     @Override

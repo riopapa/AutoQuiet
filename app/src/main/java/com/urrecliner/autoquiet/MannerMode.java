@@ -11,11 +11,16 @@ import android.os.Vibrator;
 
 class MannerMode {
 
-    private static MediaPlayer mpStart, mpFinish;
-
     static void turn2Quiet(Context context, boolean vibrate) {
-        beepStartQuiet(context);
-//        vibratePhone(context);
+
+        if (sharedManner) {
+            MediaPlayer mpStart = MediaPlayer.create(context, R.raw.manner_starting);
+            mpStart.setOnPreparedListener(MediaPlayer::start);
+            mpStart.setOnCompletionListener(mediaPlayer -> {
+                mediaPlayer.reset();
+                mediaPlayer.release();
+            });
+        }
 
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
@@ -41,40 +46,22 @@ class MannerMode {
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         int mx = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, mx-3, AudioManager.FLAG_PLAY_SOUND);
-        beepFinishQuiet(context);
-    }
-
-    static void vibratePhone(Context context) {
-//        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
-        long[] pattern = {0, 100, 300, 200, 300, 100, 200};
-        Vibrator v = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
-        assert v != null;
-        v.vibrate(VibrationEffect.createWaveform(pattern, -1));
-    }
-
-    private static void beepStartQuiet(Context context) {
 
         if (sharedManner) {
-            if (mpStart == null) {
-                mpStart = MediaPlayer.create(context, R.raw.manner_starting);
-                mpStart.setOnPreparedListener(MediaPlayer::start);
-            }
-            else
-                mpStart.start();
+            MediaPlayer mpFinish = MediaPlayer.create(context, R.raw.back2normal);
+            mpFinish.setOnPreparedListener(MediaPlayer::start);
+            mpFinish.setOnCompletionListener(mediaPlayer -> {
+                mediaPlayer.reset();
+                mediaPlayer.release();
+            });
         }
-        mpStart.setOnCompletionListener(mediaPlayer -> mpStart.release());
     }
 
-    private static void beepFinishQuiet(Context context) {
-
-        if (sharedManner) {
-            if (mpFinish == null) {
-                mpFinish = MediaPlayer.create(context, R.raw.back2normal);
-                mpFinish.setOnPreparedListener(MediaPlayer::start);
-            }
-            else
-                mpFinish.start();
-        }
-        mpFinish.setOnCompletionListener(mediaPlayer -> mpFinish.release());
-    }
+//    static void vibratePhone(Context context) {
+////        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
+//        long[] pattern = {0, 100, 300, 200, 300, 100, 200};
+//        Vibrator v = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+//        assert v != null;
+//        v.vibrate(VibrationEffect.createWaveform(pattern, -1));
+//    }
 }

@@ -1,8 +1,10 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
 import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
+import static com.urrecliner.autoquiet.Vars.STATE_LOOP;
 import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.stateCode;
+import static com.urrecliner.autoquiet.Vars.sharedCode;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 import android.content.BroadcastReceiver;
@@ -18,12 +20,12 @@ public class BootReceiver extends BroadcastReceiver {
         utils = new Utils(context);
         mContext = context;
         utils.log(STATE_BOOT, "Activated  BOOT ------------- " + intent.getAction());
-        stateCode = STATE_BOOT;
-        Log.e("Booted",stateCode);
+        sharedCode = STATE_BOOT;
+        Log.e("Booted", sharedCode);
 
         Intent i = new Intent(context, MainActivity.class);
-        i.putExtra("stateCode", stateCode);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        i.putExtra(SHARED_CODE, sharedCode);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
 
     }

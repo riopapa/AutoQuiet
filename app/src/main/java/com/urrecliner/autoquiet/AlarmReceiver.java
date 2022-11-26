@@ -3,7 +3,6 @@ package com.urrecliner.autoquiet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -18,12 +17,15 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.urrecliner.autoquiet.Vars.STATE_NEXT;
+import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
+import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
+import static com.urrecliner.autoquiet.Vars.STATE_LOOP;
 import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
 import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.quietTask;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sharedCode;
+import static com.urrecliner.autoquiet.Vars.sharedEditor;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -43,6 +45,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
         loopCount = quietTask.getsRepeatCount();
+        Log.w("onReceive", "caseSFO="+caseSFO);
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.getSubject(), quietTask.isVibrate());
@@ -67,15 +70,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 utils.log("Alarm Receive","Case Error " + caseSFO);
         }
 
-        PackageManager pm = context.getPackageManager();
-        Intent mainInt = pm.getLaunchIntentForPackage(context.getPackageName());
-        mainInt.putExtra("stateCode",STATE_NEXT);
-        context.startActivity(mainInt);
-//        new ScheduleNextTask("Now");
-//        if (utils == null)
-//            utils = new Utils(tContext);
-//        else
-//            utils.log("Alarm Receive",quietTask.subject+ " Case "+caseSFO);
+        sharedCode = STATE_ALARM;
+        sharedEditor.putString(SHARED_CODE, sharedCode);
+        sharedEditor.apply();
+        Intent mIntent = new Intent(tContext, MainActivity.class);
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        tContext.startActivity(mIntent);
+//        PackageManager pm = context.getPackageManager();
+//        Intent mainInt = pm.getLaunchIntentForPackage(context.getPackageName());
+//        mainInt.putExtra("stateCode",STATE_NEXT);
+//        context.startActivity(mainInt);
+
+
     }
 
     void say_Started(String subject, boolean vibrate) {
@@ -84,7 +90,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    MannerMode.vibratePhone(tContext);
                     utils.beepOnce(1);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
@@ -110,7 +115,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 if (loopCount-- > 0) {
                     utils.beepOnce(1);
-                    MannerMode.vibratePhone(tContext);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가

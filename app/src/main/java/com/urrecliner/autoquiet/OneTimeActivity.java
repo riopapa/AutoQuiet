@@ -20,7 +20,7 @@ import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
 import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
 import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
-import static com.urrecliner.autoquiet.Vars.stateCode;
+import static com.urrecliner.autoquiet.Vars.sharedCode;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 public class OneTimeActivity extends AppCompatActivity {
@@ -165,7 +165,7 @@ public class OneTimeActivity extends AppCompatActivity {
 
         utils.saveQuietTasksToShared();
         MannerMode.turn2Quiet(getApplicationContext(), vibrate);
-        stateCode = STATE_ONETIME;
+        sharedCode = STATE_ONETIME;
         if (mActivity == null)
             mActivity = new MainActivity();
         new ScheduleNextTask("One Time");
