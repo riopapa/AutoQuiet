@@ -88,7 +88,7 @@
                 android:layout_margin="4dp"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:src="@mipmap/repeating"
+                android:src="@drawable/repeat"
                 android:contentDescription="repeating" />
         </LinearLayout>
         <TextView

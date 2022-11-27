@@ -21,16 +21,15 @@ import static com.urrecliner.autoquiet.Vars.mContext;
 
 public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleViewAdapter.ViewHolder> {
 
-    private View swipeView;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
+        View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         View viewLine;
         TextView tvADate, tvADay, tvSTime, tvFTime, tvSubject, tvName, tvCalLeft, tvCalRight;
@@ -80,7 +79,7 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
         }
         holder.tvSubject.setText(g.title);
         holder.tvName.setText(g.calName);
-        holder.ivRepeat.setImageResource((g.repeat)? R.mipmap.repeating: R.mipmap.transparent);
+        holder.ivRepeat.setImageResource((g.repeat)? R.drawable.repeat: R.mipmap.speaking_noactive);
         holder.tvCalLeft.setText((g.location.length()>20)? g.location.substring(0,19):g.location);
         if (g.desc.length() == 0)
             holder.tvCalRight.setVisibility(View.GONE);

@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat;
 
 import static com.urrecliner.autoquiet.Vars.INVOKE_ONETIME;
 import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
-import static com.urrecliner.autoquiet.Vars.quietTask;
 
 public class NotificationService extends Service {
 
@@ -24,8 +23,7 @@ public class NotificationService extends Service {
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
     static boolean goOnSpeak = false;
-    int loopCount;
-    String sDateTime, sSubject, sStartFinish;
+    String start, sSubject, finish;
 
     @Override
     public void onCreate() {
@@ -61,12 +59,11 @@ public class NotificationService extends Service {
         }
         createNotification();
         if (isUpdate) {
-            sDateTime = intent.getStringExtra("dateTime");
+            start = intent.getStringExtra("start");
+            finish = intent.getStringExtra("finish");
             sSubject = intent.getStringExtra("subject");
-            sStartFinish = intent.getStringExtra("startFinish");
-            loopCount = intent.getIntExtra("loopCount", 0);
-            goOnSpeak = loopCount > 1;
-            updateRemoteViews(sDateTime, sSubject, sStartFinish);
+            int icon = intent.getIntExtra("icon", 0);
+            updateRemoteViews(sSubject, start, finish, icon);
             startForeground(100, mBuilder.build());
             return START_STICKY;
         }
@@ -80,11 +77,11 @@ public class NotificationService extends Service {
                 e.printStackTrace();
             }
         }
-        if (operation == STOP_SPEAK) {
-            AlarmReceiver.speak_off();
-            goOnSpeak = false;
-            updateRemoteViews(sDateTime, sSubject, sStartFinish);
-        }
+//        if (operation == STOP_SPEAK) {
+//            AlarmReceiver.speak_off();
+//            goOnSpeak = false;
+//            updateRemoteViews(sSubject, start, finish);
+//        }
         startForeground(100, mBuilder.build());
         return START_STICKY;
     }
@@ -121,19 +118,20 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    int [] smallIcons = { R.mipmap.phone_normal, R.mipmap.phone_vibrate, R.mipmap.phone_quiet};
+    int [] smallIcons = { R.drawable.phone_normal, R.drawable.phone_vibrate, R.drawable.phone_off};
 
-    void updateRemoteViews(String dateTime, String subject, String startFinish) {
+    void updateRemoteViews(String subject, String start, String finish, int icon) {
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
-        mRemoteViews.setTextViewText(R.id.dateTime, dateTime);
+        mRemoteViews.setTextViewText(R.id.start, start);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
-        mRemoteViews.setTextViewText(R.id.startFinish, startFinish.equals("S")? "시작":"끝남");
+        mRemoteViews.setTextViewText(R.id.finish, finish);
+        mRemoteViews.setImageViewResource(R.id.state_icon, smallIcons[icon]);
         mRemoteViews.setViewVisibility(R.id.no_speak, (goOnSpeak) ? View.VISIBLE:View.GONE);
-        int smallIcon = smallIcons[0];
-        if (!startFinish.equals("S")) {
-            smallIcon = smallIcons[(quietTask.isVibrate()) ? 1:2];
-        }
-        mBuilder.setSmallIcon(smallIcon);
+//        int smallIcon = smallIcons[icon];
+//        if (!finish.equals("S")) {
+//            smallIcon = smallIcons[(quietTask.vibrate) ? 1:2];
+//        }
+        mBuilder.setSmallIcon(smallIcons[icon]);
     }
 
     @Override

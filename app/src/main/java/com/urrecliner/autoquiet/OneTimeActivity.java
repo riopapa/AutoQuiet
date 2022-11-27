@@ -50,9 +50,6 @@ public class OneTimeActivity extends AppCompatActivity {
         actionBar.setIcon(R.mipmap.quiet_right_now) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
-//        Bundle data = getIntent().getExtras();
-//        assert data != null;
-//        silentInfo = (SilentInfo) data.getSerializable("silentInfo");
         quietTask = quietTasks.get(0);
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
@@ -98,10 +95,10 @@ public class OneTimeActivity extends AppCompatActivity {
         text = "▲"+sharedTimeLong+"분▲"; binding.plus30Min.setText(text);
     }
     void buttonSetting() {
-        binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+        binding.oneVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
         binding.oneVibrate.setOnClickListener(v -> {
             vibrate ^= true;
-            binding.oneVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+            binding.oneVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
             v.invalidate();
         });
         binding.minus10Min.setOnClickListener(v -> {
@@ -128,7 +125,7 @@ public class OneTimeActivity extends AppCompatActivity {
             adjustTimePicker();
         });
 
-        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.oneFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
                 fRepeatCount = 1;
@@ -136,7 +133,7 @@ public class OneTimeActivity extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 

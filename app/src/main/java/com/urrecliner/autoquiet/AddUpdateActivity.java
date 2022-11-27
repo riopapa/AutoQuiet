@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -31,7 +30,7 @@ import static com.urrecliner.autoquiet.Vars.addNewQuiet;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.quietUniq;
+import static com.urrecliner.autoquiet.Vars.quietUnique;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.weekName;
 import static com.urrecliner.autoquiet.Vars.xSize;
@@ -95,7 +94,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         vibrate = quietTask.isVibrate();
         agenda = quietTask.agenda;
 
-        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.transparent);
+        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
         binding.timePickerFinish.setIs24HourView(true);
@@ -119,10 +118,10 @@ public class AddUpdateActivity extends AppCompatActivity {
                 weekView[i].setText(weekName[i]);
             }
         }
-        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+        binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
         binding.avVibrate.setOnClickListener(v -> {
             vibrate ^= true;
-            binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+            binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
             v.invalidate();
         });
 
@@ -138,7 +137,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             });
             binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
         }
-        binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.mipmap.speaking_off: (sRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.iVstartRepeat.setOnClickListener(v -> {
             if (sRepeatCount == 0)
                 sRepeatCount = 1;
@@ -146,11 +145,11 @@ public class AddUpdateActivity extends AppCompatActivity {
                 sRepeatCount = 11;
             else
                 sRepeatCount = 0;
-            binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.mipmap.speaking_off: (sRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 
-        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.iVFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
                 fRepeatCount = 1;
@@ -158,7 +157,7 @@ public class AddUpdateActivity extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.mipmap.speaking_off: (fRepeatCount == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 
@@ -265,32 +264,28 @@ public class AddUpdateActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_save:
-                save_QuietTask();
-                break;
-            case R.id.action_delete:
+        if (id == R.id.action_save) {
+            save_QuietTask();
+        } else if (id == R.id.action_delete) {
+            quietTasks.remove(currIdx);
+            utils.saveQuietTasksToShared();
+            mainRecycleViewAdapter.notifyDataSetChanged();
+            cancel_QuietTask();
+        } else if (id == R.id.action_delete_multi) {
+            if (agenda) {
+                int delId = quietTask.calId;
+                for (int i = 0; i < quietTasks.size(); ) {
+                    if (quietTasks.get(i).calId == delId)
+                        quietTasks.remove(i);
+                    else
+                        i++;
+                }
+            } else
                 quietTasks.remove(currIdx);
-                utils.saveQuietTasksToShared();
-                mainRecycleViewAdapter.notifyDataSetChanged();
-                cancel_QuietTask();
-                break;
-            case R.id.action_delete_multi:
-                if (agenda) {
-                    int delId = quietTask.calId;
-                    for (int i = 0; i < quietTasks.size(); ) {
-                        if (quietTasks.get(i).calId == delId)
-                            quietTasks.remove(i);
-                        else
-                            i++;
-                    }
-                } else
-                    quietTasks.remove(currIdx);
-                utils.saveQuietTasksToShared();
-                mainRecycleViewAdapter.notifyDataSetChanged();
-                cancel_QuietTask();
-                break;
-            }
+            utils.saveQuietTasksToShared();
+            mainRecycleViewAdapter.notifyDataSetChanged();
+            cancel_QuietTask();
+        }
         finish();
         return false;
     }
@@ -300,7 +295,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUniq, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUnique, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
 //        pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 //        alarmManager.cancel(pendingIntent);

@@ -17,15 +17,11 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
-import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
-import static com.urrecliner.autoquiet.Vars.STATE_LOOP;
 import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
 import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.quietTask;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.sharedCode;
-import static com.urrecliner.autoquiet.Vars.sharedEditor;
+import static com.urrecliner.autoquiet.Vars.sounds;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -48,17 +44,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.w("onReceive", "caseSFO="+caseSFO);
         switch (caseSFO) {
             case "S":   // start?
-                say_Started(quietTask.getSubject(), quietTask.isVibrate());
+                say_Started(quietTask.subject, quietTask.vibrate);
                 savedId = quietTask.calId;
                 savedAgenda = quietTask.agenda;
                 break;
             case "F":   // finish
                 utils.deleteOldLogFiles();
                 MannerMode.turn2Normal(tContext);
-                if (loopCount > 0) {    // 끝날 때는 여러번 울리기 없음
+//                if (loopCount > 0) {    // 끝날 때는 여러번 울리기 없음
                     loopCount = 1;
-                    say_Finished(quietTask.getSubject());
-                }
+                    say_Finished(quietTask.subject);
+//                }
                 break;
             case "O":   // onetime
                 MannerMode.turn2Normal(tContext);
@@ -70,17 +66,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 utils.log("Alarm Receive","Case Error " + caseSFO);
         }
 
-        sharedCode = STATE_ALARM;
-        sharedEditor.putString(SHARED_CODE, sharedCode);
-        sharedEditor.apply();
-        Intent mIntent = new Intent(tContext, MainActivity.class);
-        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        tContext.startActivity(mIntent);
+        new ScheduleNextTask("after receive");
+//        sharedCode = STATE_ALARM;
+//        sharedEditor.putString(SHARED_CODE, sharedCode);
+//        sharedEditor.apply();
+//        Intent mIntent = new Intent(tContext, MainActivity.class);
+//        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        tContext.startActivity(mIntent);
 //        PackageManager pm = context.getPackageManager();
 //        Intent mainInt = pm.getLaunchIntentForPackage(context.getPackageName());
 //        mainInt.putExtra("stateCode",STATE_NEXT);
 //        context.startActivity(mainInt);
-
 
     }
 
@@ -90,7 +86,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    utils.beepOnce(1);
+                    sounds.beep(2);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
@@ -114,7 +110,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         speakTimer.schedule(new TimerTask() {
             public void run() {
                 if (loopCount-- > 0) {
-                    utils.beepOnce(1);
+                    sounds.beep(2);
                     String lastCode = subject.substring(subject.length()-1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
@@ -142,7 +138,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void ready_TTS() {
         textToSpeech = new TextToSpeech(tContext, status -> textToSpeech.setLanguage(Locale.getDefault()));
-        textToSpeech.setPitch(1.4f);
+        textToSpeech.setPitch(1.2f);
         textToSpeech.setSpeechRate(1.3f);
 
         textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -154,7 +150,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 textToSpeech.stop();
                 new Timer().schedule(new TimerTask() {
                     public void run () {
-                        utils.beepOnce(0);
+                        sounds.beep(1);
                     }
                 }, 1000);
             }
@@ -170,7 +166,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         return sdfTime.format(System.currentTimeMillis());
     }
 
-    static void speak_off() {
-        loopCount = -1;
-    }
+//    static void speak_off() {
+//        loopCount = -1;
+//    }
 }

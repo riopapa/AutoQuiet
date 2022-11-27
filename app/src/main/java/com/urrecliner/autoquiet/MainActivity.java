@@ -1,33 +1,5 @@
 package com.urrecliner.autoquiet;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Insets;
-import android.graphics.Point;
-import android.net.Uri;
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import android.os.Environment;
-import android.provider.Settings;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.WindowInsets;
-import android.view.WindowMetrics;
-
-import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
-import com.urrecliner.autoquiet.utility.Permission;
-
 import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
 import static com.urrecliner.autoquiet.Vars.STATE_ALARM;
 import static com.urrecliner.autoquiet.Vars.STATE_BLANK;
@@ -39,8 +11,34 @@ import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
 import static com.urrecliner.autoquiet.Vars.sharedCode;
 import static com.urrecliner.autoquiet.Vars.sharedEditor;
+import static com.urrecliner.autoquiet.Vars.sharedPref;
+import static com.urrecliner.autoquiet.Vars.sounds;
 import static com.urrecliner.autoquiet.Vars.utils;
 import static com.urrecliner.autoquiet.Vars.xSize;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Insets;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.urrecliner.autoquiet.utility.ClearQuiteTasks;
+import com.urrecliner.autoquiet.utility.Permission;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -75,14 +73,23 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
-        super.onResume();
-
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
         setVariables();
-//        utils.log(logID, "main onResume statecode="+ sharedCode);
-        actOnStateCode();
+        if (!sharedCode.equals(logID)) {
+            new ScheduleNextTask("Next Alarm");
+            finish();
+        } else {
+            new ShowMainList();
+//            sharedCode = STATE_ALARM;
+//            sharedEditor.putString(SHARED_CODE, sharedCode);
+//            sharedEditor.apply();
+        }
+
+//            actOnStateCode();
+        super.onResume();
+
     }
 
     void setVariables() {
@@ -90,6 +97,9 @@ public class MainActivity extends AppCompatActivity  {
         utils = new Utils(mContext);
         utils.log(logID, "setVariables started stateCode="+ sharedCode);
         utils.getPreference();
+        if (!sharedCode.equals(logID))
+            sharedCode = sharedPref.getString("sharedCode","BLANK");
+        sounds = new Sounds();
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
             new ClearQuiteTasks();
@@ -106,7 +116,7 @@ public class MainActivity extends AppCompatActivity  {
             startActivity(intent);
         }
         utils.deleteOldLogFiles();
-        utils.beepsInitiate(0);
+        sounds.initiate(1);
 //        utils.beepOnce(0); utils.beepOnce(1);
     }
 
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity  {
         }
         if (!sharedCode.equals(STATE_ALARM) && !sharedCode.equals(STATE_BOOT))
             new ShowMainList();
-        sharedCode = "@" + sharedCode;
+        sharedCode = STATE_ALARM;
         sharedEditor.putString(SHARED_CODE, sharedCode);
         sharedEditor.apply();
     }
@@ -169,18 +179,17 @@ public class MainActivity extends AppCompatActivity  {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.reset_title)
                     .setMessage(R.string.reset_table)
-                    .setIcon(R.mipmap.alert)
+                    .setIcon(R.drawable.danger)
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
                         new ClearQuiteTasks();
                         new ShowMainList();
                     })
-                    .setNegativeButton(android.R.string.no, null)
+                    .setNegativeButton(android.R.string.cancel, null)
                     .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onBackPressed() {

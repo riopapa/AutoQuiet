@@ -107,7 +107,7 @@
             android:layout_gravity="center"
             android:scaleX="0.8"
             android:scaleY="0.8"
-            android:src="@mipmap/phone_vibrate"
+            android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
 
         <TextView
@@ -124,7 +124,7 @@
             android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
-            android:src="@mipmap/speaking_on"
+            android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
 
     </LinearLayout>

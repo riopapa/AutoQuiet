@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@mipmap/phone_vibrate"
+            android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <LinearLayout
             android:layout_width="60dp"
@@ -39,7 +39,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@mipmap/speaking_on"
+            android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
         <ImageView
             android:id="@+id/lv_finishRepeat"
@@ -49,7 +49,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@mipmap/speaking_on"
+            android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
         </LinearLayout>
     </LinearLayout>

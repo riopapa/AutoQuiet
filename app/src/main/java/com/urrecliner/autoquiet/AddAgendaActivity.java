@@ -63,14 +63,14 @@ public class AddAgendaActivity extends AppCompatActivity {
         binding.aDesc.setText(gCal.desc);
         binding.aRepeat.setText((gCal.repeat)? gCal.rule:"");
 
-        binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+        binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
         binding.avVibrate.setOnClickListener(v -> {
             vibrate ^= true;
-            binding.avVibrate.setImageResource((vibrate)? R.mipmap.phone_vibrate :R.mipmap.phone_quiet);
+            binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
             v.invalidate();
         });
 
-        binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.mipmap.speaking_off: (sRepeatTime == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.aStartRepeat.setOnClickListener(v -> {
             if (sRepeatTime == 0)
                 sRepeatTime = 1;
@@ -78,11 +78,11 @@ public class AddAgendaActivity extends AppCompatActivity {
                 sRepeatTime = 11;
             else
                 sRepeatTime = 0;
-            binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.mipmap.speaking_off: (sRepeatTime == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 
-        binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.mipmap.speaking_off: (fRepeatTime == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.aFinishRepeat.setOnClickListener(v -> {
             if (fRepeatTime == 0)
                 fRepeatTime = 1;
@@ -90,7 +90,7 @@ public class AddAgendaActivity extends AppCompatActivity {
                 fRepeatTime = 11;
             else
                 fRepeatTime = 0;
-            binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.mipmap.speaking_off: (fRepeatTime == 1)? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+            binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 

@@ -38,7 +38,7 @@
             android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
-            android:src="@mipmap/add"
+            android:src="@drawable/add"
             android:contentDescription="@string/blank" />
 
     </LinearLayout>
@@ -126,7 +126,7 @@
             android:id="@+id/avVibrate"
             android:layout_width="40dp"
             android:layout_height="48dp"
-            android:src="@mipmap/phone_vibrate"
+            android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <TextView
             android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
             android:id="@+id/aStartRepeat"
             android:layout_width="28dp"
             android:layout_height="32dp"
-            android:src="@mipmap/speaking_on"
+            android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
 
         <TextView
@@ -152,7 +152,7 @@
             android:id="@+id/aFinishRepeat"
             android:layout_width="28dp"
             android:layout_height="32dp"
-            android:src="@mipmap/speaking_on"
+            android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
 
     </LinearLayout>

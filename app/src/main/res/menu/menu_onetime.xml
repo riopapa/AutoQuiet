@@ -6,7 +6,7 @@
         android:id="@+id/action_save"
         android:orderInCategory="100"
         android:title="@string/action_add"
-        android:icon="@mipmap/check_mark"
+        android:icon="@drawable/check"
         app:showAsAction="ifRoom" />
 
 </menu>

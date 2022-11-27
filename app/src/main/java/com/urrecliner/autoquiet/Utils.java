@@ -1,15 +1,23 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.Vars.mContext;
+import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sdfDate;
+import static com.urrecliner.autoquiet.Vars.sdfLogTime;
+import static com.urrecliner.autoquiet.Vars.sharedEditor;
+import static com.urrecliner.autoquiet.Vars.sharedManner;
+import static com.urrecliner.autoquiet.Vars.sharedPref;
+import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
+import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
+import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
+import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
+import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
@@ -25,22 +33,9 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.sdfDate;
-import static com.urrecliner.autoquiet.Vars.sdfLogTime;
-import static com.urrecliner.autoquiet.Vars.sharedCode;
-import static com.urrecliner.autoquiet.Vars.sharedEditor;
-import static com.urrecliner.autoquiet.Vars.sharedManner;
-import static com.urrecliner.autoquiet.Vars.sharedPref;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
-import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
-import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
-import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
-import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
 
 public class Utils {
 
@@ -91,7 +86,7 @@ public class Utils {
                 }
             }
         } catch (Exception e) {
-            Log.e("creating Directory error", directory.toString() + "_" + e.toString());
+            Log.e("creating Directory error", directory + "_" + e);
         }
         return directory;
     }
@@ -112,7 +107,7 @@ public class Utils {
         String log = logTrace() + " {"+ tag + "} " + text;
         Log.w(tag , log);
         if (packageDir == null) packageDir = getPackageDirectory();
-        String logFile = packageDir.toString() + "/" + PREFIX + sdfDate.format(new Date())+".txt";
+        String logFile = packageDir + "/" + PREFIX + sdfDate.format(new Date())+".txt";
         append2file(logFile, sdfLogTime.format(new Date())+" " +log);
     }
 //
@@ -174,7 +169,7 @@ public class Utils {
                 quietTasks.set(i, q);
             }
         }
-        quietTasks.sort((arg0, arg1) -> Long.compare(arg0.calStartDate, arg1.calStartDate));
+        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calStartDate));
 
         sharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
@@ -219,46 +214,6 @@ public class Utils {
         sharedTimeLong = sharedPref.getString("timeLong", "20");
         sharedTimeBefore = sharedPref.getString("timeBefore", "10");
         sharedTimeAfter = sharedPref.getString("timeAfter", "-9");
-        if (!sharedCode.equals("Main"))
-            sharedCode = sharedPref.getString("sharedCode","BLANK");
-    }
-
-    private SoundPool soundPool = null;
-    private final int[] beepSound = {
-            R.raw.say_notification,
-            R.raw.leading_sound                   //  event button pressed
-    };
-    private final int[] soundNbr = new int[beepSound.length];
-
-    void beepsInitiate(int soundId) {
-
-        SoundPool.Builder builder;
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-
-        builder = new SoundPool.Builder();
-        builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
-        soundPool = builder.build();
-        soundPool.setOnLoadCompleteListener((soundPool, f1, f2) -> {
-            for (int i = 0; i < beepSound.length; i++) {
-                soundNbr[i] = soundPool.load(mContext, beepSound[i], 1);
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(() -> beepSound(soundId), 200);
-            }
-        });
-    }
-
-    void beepOnce(final int soundId) {
-
-        if (soundPool == null) {
-            beepsInitiate(soundId);
-        } else
-            beepSound(soundId);
-    }
-    private void beepSound(int soundId) {
-        soundPool.play(soundNbr[soundId], .5f, .5f, 1, 0, 1f);
     }
 
 }

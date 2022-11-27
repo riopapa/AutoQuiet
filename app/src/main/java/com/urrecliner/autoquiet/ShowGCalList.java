@@ -1,18 +1,14 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.Vars.gCalRecyclerViewAdapter;
+
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.utility.MyItemTouchHelper;
 import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
-
-import static com.urrecliner.autoquiet.Vars.gCalRecyclerViewAdapter;
-import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.mContext;
 
 public class ShowGCalList {
     public ShowGCalList(Context context, Activity activity) {

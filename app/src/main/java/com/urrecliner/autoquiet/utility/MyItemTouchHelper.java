@@ -43,7 +43,6 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         return true;
     }
 
-
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);

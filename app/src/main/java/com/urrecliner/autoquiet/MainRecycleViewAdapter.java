@@ -172,17 +172,17 @@ public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleView
         holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
         if (vibrate)
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_vibrate : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
         else
-            holder.lvVibrate.setImageResource((active) ? R.mipmap.phone_quiet : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
         int sRepeat = quietTask.sRepeatCount;
         int fRepeat = quietTask.fRepeatCount;
-        holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.mipmap.speaking_off : (sRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
-        holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.mipmap.speaking_off : (fRepeat == 1) ? R.mipmap.speaking_on : R.mipmap.speak_repeat);
+        holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
+        holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(mContext.getResources(), R.color.itemNormalFill, null));
 
         if (!gCalendar) {
-            holder.lvgCal.setImageResource(R.mipmap.transparent);
+            holder.lvgCal.setImageResource(R.mipmap.speaking_noactive);
             holder.llCalInfo.setVisibility(View.GONE);
             holder.llStartFinishTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);

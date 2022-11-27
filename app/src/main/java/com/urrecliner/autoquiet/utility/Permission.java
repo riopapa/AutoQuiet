@@ -54,5 +54,6 @@ public class Permission extends AppCompatActivity {
                 alertDialog.show();
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

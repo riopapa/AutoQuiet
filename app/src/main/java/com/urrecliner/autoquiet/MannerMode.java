@@ -1,13 +1,10 @@
 package com.urrecliner.autoquiet;
 
-import static android.content.Context.VIBRATOR_SERVICE;
 import static com.urrecliner.autoquiet.Vars.sharedManner;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 
 class MannerMode {
 

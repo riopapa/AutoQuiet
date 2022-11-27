@@ -2,7 +2,6 @@ package com.urrecliner.autoquiet;
 
 import static com.urrecliner.autoquiet.Vars.SHARED_CODE;
 import static com.urrecliner.autoquiet.Vars.STATE_BOOT;
-import static com.urrecliner.autoquiet.Vars.STATE_LOOP;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.sharedCode;
 import static com.urrecliner.autoquiet.Vars.utils;
