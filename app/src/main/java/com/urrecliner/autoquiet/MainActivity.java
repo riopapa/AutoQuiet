@@ -43,12 +43,17 @@ import com.urrecliner.autoquiet.utility.Permission;
 public class MainActivity extends AppCompatActivity  {
 
     private static final String logID = "Main";
+    private static Context mainContext;
+    public static Context getContext() {
+        return mainContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
         mContext = this.getApplicationContext();
+        mainContext = mContext;
         setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
@@ -73,6 +78,8 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
 
+        super.onResume();
+        Log.w("Main","onResume is called");
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
@@ -88,17 +95,15 @@ public class MainActivity extends AppCompatActivity  {
         }
 
 //            actOnStateCode();
-        super.onResume();
-
     }
 
     void setVariables() {
 
         utils = new Utils(mContext);
-        utils.log(logID, "setVariables started stateCode="+ sharedCode);
+        utils.log(logID, "setVariables started stateCode=" + sharedCode);
         utils.getPreference();
         if (!sharedCode.equals(logID))
-            sharedCode = sharedPref.getString("sharedCode","BLANK");
+            sharedCode = sharedPref.getString("sharedCode", "BLANK");
         sounds = new Sounds();
         quietTasks = utils.readQuietTasksFromShared();
         if (quietTasks.size() == 0)
@@ -116,8 +121,6 @@ public class MainActivity extends AppCompatActivity  {
             startActivity(intent);
         }
         utils.deleteOldLogFiles();
-        sounds.initiate(1);
-//        utils.beepOnce(0); utils.beepOnce(1);
     }
 
     void actOnStateCode() {

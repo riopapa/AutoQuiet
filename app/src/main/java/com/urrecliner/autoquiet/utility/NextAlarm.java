@@ -12,18 +12,20 @@ import com.urrecliner.autoquiet.models.QuietTask;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 public class NextAlarm {
-    public static void request(QuietTask quietTask, long nextTime, String StartFinish, Context context) {
+
+    public static int request(QuietTask quietTask, long nextTime, String StartFinish, Context context) {
         String logID = "NextAlarm";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);
         Bundle args = new Bundle();
         args.putSerializable("quietTask", quietTask);
+        int task = (int) System.currentTimeMillis() & 0xffff;
 
         intent.putExtra("DATA",args);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time
-        int uniqueId = 123456; // (int) System.currentTimeMillis() & 0xffff;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, uniqueId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.putExtra("task",task); // unique task number
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.isActive()) {
             alarmManager.cancel(pendingIntent);
             utils.log(logID,StartFinish+" TASK Canceled : "+ quietTask.getSubject());
@@ -31,5 +33,6 @@ public class NextAlarm {
         else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }
+        return task;
     }
 }

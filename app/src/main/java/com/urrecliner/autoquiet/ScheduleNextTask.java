@@ -4,9 +4,11 @@ import static com.urrecliner.autoquiet.Vars.mActivity;
 import static com.urrecliner.autoquiet.Vars.mContext;
 import static com.urrecliner.autoquiet.Vars.quietTask;
 import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sharedEditor;
 import static com.urrecliner.autoquiet.Vars.utils;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,14 +17,28 @@ import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.CalculateNext;
 import com.urrecliner.autoquiet.utility.NextAlarm;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ScheduleNextTask {
     long nextTime;
+    Timer timer = null;
+    TimerTask timerTask = null;
+    static int count, icon;
+    static String timeInfo, soonOrUntill, subject;
+    final int period = 140 * 60 * 1000;
+    static long lastTime = 0;
     public ScheduleNextTask(String headInfo) {
 
+//        if (timer != null)
+//            timer.cancel();
+//        if (timerTask != null)
+//            timerTask.cancel();
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
-        int saveIdx = 0, icon = 0;
+        int saveIdx = 0;
         String startFinish = "";
         boolean[] week;
+        quietTasks = utils.readQuietTasksFromShared();
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qTaskNext = quietTasks.get(idx);
             if (qTaskNext.isActive()) {
@@ -45,22 +61,50 @@ public class ScheduleNextTask {
             }
         }
         quietTask = quietTasks.get(saveIdx);
-//        int loopCount = 1;
-        String start = " "+getHourMin(quietTask.startHour, quietTask.startMin);
-        String finish = "~"+getHourMin(quietTask.finishHour, quietTask.finishMin);
-        NextAlarm.request(quietTask, nextTime, startFinish, mContext);
-        String msg = headInfo + " " + quietTask.subject + "\n" + start + finish
-                + " " + startFinish;
+        subject = quietTask.subject;
+        if (startFinish.equals("S")) {
+            timeInfo = getHourMin(quietTask.startHour, quietTask.startMin);
+            soonOrUntill = "예정";
+        }
+        else {
+            timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
+            soonOrUntill = "까지";
+        }
+        int taskNbr = NextAlarm.request(quietTask, nextTime- 30000, startFinish, mContext);
+        sharedEditor.putInt("task", taskNbr);
+        sharedEditor.apply();
+        String msg = headInfo + " " + subject + "\n" + timeInfo
+                + " " + soonOrUntill + " " + startFinish;
         Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
         utils.log("ScheduleNextTask",msg);
-//        int loopCount = (startFinish.equals("F") ? quietTask.fRepeatCount : quietTask.sRepeatCount);
+        count = 0;
+        updateNaviBar(0);
+//        timer = new Timer();
+//        timerTask = new TimerTask() {
+//            @Override
+//            public void run () {
+//                long nowTime = System.currentTimeMillis();
+//                long deltaTime = nowTime - lastTime;
+//                if (deltaTime > 10000) {
+//                    lastTime = nowTime;
+//                    updateNaviBar(deltaTime);
+//                } else {
+//                    Log.w("TimerTask","Ignore quick Update TimerTask");
+//                }
+//            }
+//        };
+//        timer.schedule(timerTask, period, period);
+    }
+
+    private void updateNaviBar(long deltaTime) {
+        String s = timeInfo+" " +count++ + ") " + subject+ " "+ soonOrUntill;
+        Log.w("bar "+deltaTime, s);
         Intent updateIntent = new Intent(mActivity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
-        updateIntent.putExtra("start", start);
-        updateIntent.putExtra("finish", finish);
-        updateIntent.putExtra("subject", quietTask.subject);
+        updateIntent.putExtra("start", timeInfo);
+        updateIntent.putExtra("finish", soonOrUntill);
+        updateIntent.putExtra("subject", subject);
         updateIntent.putExtra("icon", icon);
-//        updateIntent.putExtra("loopCount", loopCount);
         mActivity.startService(updateIntent);
     }
 

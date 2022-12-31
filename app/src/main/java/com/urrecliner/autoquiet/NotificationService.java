@@ -30,11 +30,8 @@ public class NotificationService extends Service {
         super.onCreate();
         context = this;
 
-//        if (null != mRemoteViews) {
-//            mRemoteViews.removeAllViews(R.layout.notification_bar);
-//            mRemoteViews = null;
-//        }
         mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_bar);
+        Log.w("notiSVC","NotificationService onCreate()");
     }
 
     @Override
@@ -127,10 +124,6 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.finish, finish);
         mRemoteViews.setImageViewResource(R.id.state_icon, smallIcons[icon]);
         mRemoteViews.setViewVisibility(R.id.no_speak, (goOnSpeak) ? View.VISIBLE:View.GONE);
-//        int smallIcon = smallIcons[icon];
-//        if (!finish.equals("S")) {
-//            smallIcon = smallIcons[(quietTask.vibrate) ? 1:2];
-//        }
         mBuilder.setSmallIcon(smallIcons[icon]);
     }
 

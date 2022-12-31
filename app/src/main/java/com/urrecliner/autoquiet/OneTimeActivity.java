@@ -94,6 +94,7 @@ public class OneTimeActivity extends AppCompatActivity {
         text = "▼"+sharedTimeLong+"분▼"; binding.minus30Min.setText(text);
         text = "▲"+sharedTimeLong+"분▲"; binding.plus30Min.setText(text);
     }
+
     void buttonSetting() {
         binding.oneVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
         binding.oneVibrate.setOnClickListener(v -> {

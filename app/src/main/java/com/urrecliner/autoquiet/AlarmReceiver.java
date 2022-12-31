@@ -1,5 +1,12 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
+import static com.urrecliner.autoquiet.Vars.mActivity;
+import static com.urrecliner.autoquiet.Vars.quietTask;
+import static com.urrecliner.autoquiet.Vars.quietTasks;
+import static com.urrecliner.autoquiet.Vars.sounds;
+import static com.urrecliner.autoquiet.Vars.utils;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,13 +24,6 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.urrecliner.autoquiet.Vars.STOP_SPEAK;
-import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.quietTask;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.sounds;
-import static com.urrecliner.autoquiet.Vars.utils;
-
 public class AlarmReceiver extends BroadcastReceiver {
 
     private static int loopCount, savedId;
@@ -40,8 +40,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         assert quietTask != null;
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         assert caseSFO != null;
+//        int dataTask = Objects.requireNonNull(intent.getExtras()).getInt("task");
+//        int sharedTask = sharedPref.getInt("task",-1);
+//        String s = "dataTask="+dataTask+", sharedTask="+sharedTask;
+//        if (dataTask != sharedTask) {
+//            s = caseSFO+" task different "+s+"  "+quietTask.subject;
+//            Log.w("task pass",s);
+//            Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
+//            return;
+//        }
         loopCount = quietTask.getsRepeatCount();
-        Log.w("onReceive", "caseSFO="+caseSFO);
+//        Log.w("onReceive", "caseSFO="+caseSFO);
         switch (caseSFO) {
             case "S":   // start?
                 say_Started(quietTask.subject, quietTask.vibrate);
@@ -66,6 +75,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 utils.log("Alarm Receive","Case Error " + caseSFO);
         }
 
+        utils = new Utils(MainActivity.getContext());
         new ScheduleNextTask("after receive");
 //        sharedCode = STATE_ALARM;
 //        sharedEditor.putString(SHARED_CODE, sharedCode);
@@ -165,8 +175,4 @@ public class AlarmReceiver extends BroadcastReceiver {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(System.currentTimeMillis());
     }
-
-//    static void speak_off() {
-//        loopCount = -1;
-//    }
 }
