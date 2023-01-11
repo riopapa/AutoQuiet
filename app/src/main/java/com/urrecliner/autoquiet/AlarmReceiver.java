@@ -89,6 +89,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void say_Finished(String subject) {
         ready_TTS();
+        String lastCode = subject.substring(subject.length()-1);
+        String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+        String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
+                + ((lastNFKD.length() == 2) ? "가": "이") +" 끝났습니다";
+        textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
         Timer speakTimer = new Timer();
         speakTimer.schedule(new TimerTask() {
             public void run() {
