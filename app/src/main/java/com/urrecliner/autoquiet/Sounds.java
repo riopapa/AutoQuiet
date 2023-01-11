@@ -10,7 +10,7 @@ public class Sounds {
 
     private final int[] beepSound = {
             R.raw.say_notification,
-            R.raw.say_notification,
+            R.raw.manner_starting,
             R.raw.leading_sound                   //  event button pressed
     };
 

@@ -28,11 +28,17 @@ public class AlarmReceiver extends BroadcastReceiver {
     ArrayList<QuietTask> quietTasks;
     static Context context;
     static Activity activity;
+    long lastTime;
     Vars vars;
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         this.activity = MainActivity.pActivity;
+        if (System.currentTimeMillis() < lastTime + 20000) {
+            Log.e("Receive","Duplicated");
+            return;
+        }
+        lastTime = System.currentTimeMillis();
         vars = new VarsGetPut().get(context);
         quietTasks = new QuietTaskGetPut().get(context);
         Bundle args = intent.getBundleExtra("DATA");
@@ -84,35 +90,29 @@ public class AlarmReceiver extends BroadcastReceiver {
                 notification.putExtra("operation", vars.STOP_SPEAK);
                 context.startService(notification);
             }
-        }, 3000, 5000);
+        }, 3000);
     }
 
     void say_Finished(String subject) {
         ready_TTS();
+        new Sounds().beep(context, 0);
         String lastCode = subject.substring(subject.length()-1);
         String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
         String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
                 + ((lastNFKD.length() == 2) ? "가": "이") +" 끝났습니다";
         textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
-        Timer speakTimer = new Timer();
-        speakTimer.schedule(new TimerTask() {
-            public void run() {
-                speakTimer.cancel();
-                speakTimer.purge();
-                if (savedAgenda) { // delete if agenda based
-                    for (int i = 0; i < quietTasks.size(); i++) {
-                        Log.w("id "+i, savedId+" vs "+quietTasks.get(i).calId+quietTasks.get(i).subject
-                                +quietTasks.get(i).finishHour+quietTasks.get(i).finishMin);
-                        if (quietTasks.get(i).calId == savedId) {
-                            Log.w("remove", quietTasks.get(i).subject);
-                            quietTasks.remove(i);
-                            new QuietTaskGetPut().put(quietTasks);
-                            break;
-                        }
-                    }
+        if (savedAgenda) { // delete if agenda based
+            for (int i = 0; i < quietTasks.size(); i++) {
+                Log.w("id " + i, savedId + " vs " + quietTasks.get(i).calId + quietTasks.get(i).subject
+                        + quietTasks.get(i).finishHour + quietTasks.get(i).finishMin);
+                if (quietTasks.get(i).calId == savedId) {
+                    Log.w("remove", quietTasks.get(i).subject);
+                    quietTasks.remove(i);
+                    new QuietTaskGetPut().put(quietTasks);
+                    break;
                 }
             }
-        }, 2000, 6000);
+        }
     }
 
     void ready_TTS() {
@@ -129,6 +129,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 textToSpeech.stop();
                 new Timer().schedule(new TimerTask() {
                     public void run () {
+                        Log.w("TTS","Done");
                         new Sounds().beep(context, 1);
                     }
                 }, 1000);
@@ -137,6 +138,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void onError(String utteranceId) { }
         });
+
     }
 
     String nowTimeToString() {
