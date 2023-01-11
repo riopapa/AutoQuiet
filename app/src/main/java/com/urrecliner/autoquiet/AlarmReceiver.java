@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         lastTime = System.currentTimeMillis();
         vars = new VarsGetPut().get(context);
         quietTasks = new QuietTaskGetPut().get(context);
-        Bundle args = intent.getBundleExtra("DATA");
+//        Bundle args = intent.getBundleExtra("DATA");
         int caseIdx = Objects.requireNonNull(intent.getExtras()).getInt("caseIdx");
         String caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         QuietTask quietTask = quietTasks.get(caseIdx);
