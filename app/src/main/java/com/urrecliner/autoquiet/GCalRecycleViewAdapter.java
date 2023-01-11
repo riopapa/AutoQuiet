@@ -1,5 +1,6 @@
 package com.urrecliner.autoquiet;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +12,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.models.GCal;
+import com.urrecliner.autoquiet.utility.GetAgenda;
 import com.urrecliner.autoquiet.utility.NameColor;
+import com.urrecliner.autoquiet.utility.VarsGetPut;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
-
-import static com.urrecliner.autoquiet.Vars.gCals;
-import static com.urrecliner.autoquiet.Vars.mContext;
 
 public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleViewAdapter.ViewHolder> {
 
+    static Vars vars;
+    static Context context;
+    ArrayList<GCal> gCals;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        context = MainActivity.pContext;
+        vars = new VarsGetPut().get(context);
+        gCals = new GetAgenda().get(context);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
     }
@@ -50,10 +57,10 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             this.viewLine.setOnClickListener(v -> {
                 int idx = getBindingAdapterPosition();
                 Intent intent;
-                intent = new Intent(mContext, AddAgendaActivity.class);
+                intent = new Intent(context, AddAgendaActivity.class);
                 intent.putExtra("idx",idx);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             });
         }
     }
@@ -87,7 +94,7 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
             holder.tvCalRight.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
         holder.tvSTime.setText(sdfHHMM.format(g.startTime));
         holder.tvFTime.setText(sdfHHMM.format(g.finishTime));
-        int backColor = NameColor.get(g.calName, mContext);
+        int backColor = NameColor.get(g.calName, context);
         holder.viewLine.setBackgroundColor(backColor);
     }
 

@@ -21,22 +21,16 @@ import androidx.core.content.ContextCompat;
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.NameColor;
+import com.urrecliner.autoquiet.utility.VarsGetPut;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.urrecliner.autoquiet.Vars.addNewQuiet;
-import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.quietUnique;
-import static com.urrecliner.autoquiet.Vars.utils;
-import static com.urrecliner.autoquiet.Vars.weekName;
-import static com.urrecliner.autoquiet.Vars.xSize;
-
 public class AddUpdateActivity extends AppCompatActivity {
 
+    Vars vars;
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
     private boolean active;
@@ -45,43 +39,48 @@ public class AddUpdateActivity extends AppCompatActivity {
     private TextView[] weekView = new TextView[7];
     private boolean vibrate, agenda;
     private QuietTask quietTask;
+    private ArrayList<QuietTask> quietTasks;
     private int currIdx;
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        
         super.onCreate(savedInstanceState);
+        context = this;
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        quietTasks = new QuietTaskGetPut().get(this);
+        vars = new VarsGetPut().get(context);
         Intent intent = getIntent();
         currIdx = intent.getExtras().getInt("idx",-1);
-        if (addNewQuiet)
+        if (vars.addNewQuiet)
             quietTask = getQuietTaskDefault();
         else
             quietTask = quietTasks.get(currIdx);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle((addNewQuiet) ? R.string.add_table :R.string.update_table);
+        actionBar.setTitle((vars.addNewQuiet) ? R.string.add_table :R.string.update_table);
         actionBar.setIcon(R.mipmap.let_me_quiet_mini);
 //        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1; weekView[2] = binding.avWeek2;
-        weekView[3] = binding.avWeek3; weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5;
+        weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1;
+        weekView[2] = binding.avWeek2; weekView[3] = binding.avWeek3;
+        weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5;
         weekView[6] = binding.avWeek6;
-        colorOn = ContextCompat.getColor(mContext, R.color.colorOn);
-        colorOnBack = ContextCompat.getColor(mContext, R.color.colorOnBack);
-        colorOffBack = ContextCompat.getColor(mContext, R.color.itemNormalFill);
-        BGColorOff = ContextCompat.getColor(mContext, R.color.BackGroundActiveOff);
-        BGColorOn = ContextCompat.getColor(mContext, R.color.BackGroundActiveOn);
+        colorOn = ContextCompat.getColor(context, R.color.colorOn);
+        colorOnBack = ContextCompat.getColor(context, R.color.colorOnBack);
+        colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
+        BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
+        BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
         build_QuietTask();
     }
 
     void build_QuietTask() {
 
+        final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
         subject = quietTask.getSubject();
         startHour = quietTask.getStartHour();
         startMin = quietTask.getStartMin();
@@ -103,14 +102,14 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (subject == null)
             subject = getString(R.string.no_subject);
         binding.etSubject.setText(subject);
-        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName, mContext));
+        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName, context));
         if (agenda)
             binding.weekFlag.setVisibility(View.GONE);
         else {
             binding.weekFlag.setVisibility(View.VISIBLE);
             for (int i = 0; i < 7; i++) {
                 weekView[i].setId(i);
-                weekView[i].setWidth(xSize);
+                weekView[i].setWidth(vars.xSize);
                 weekView[i].setGravity(Gravity.CENTER);
                 weekView[i].setTextColor(colorOn);
                 weekView[i].setBackgroundColor((week[i]) ? colorOnBack : colorOffBack);
@@ -228,16 +227,16 @@ public class AddUpdateActivity extends AppCompatActivity {
         } else {
             quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                     week, active, vibrate, sRepeatCount, fRepeatCount);
-            if (addNewQuiet)
+            if (vars.addNewQuiet)
                 quietTasks.add(quietTask);
             else
                 quietTasks.set(currIdx, quietTask);
         }
-        utils.saveQuietTasksToShared();
+        new QuietTaskGetPut().put(quietTasks);
 
         finish();
-        new ScheduleNextTask( ((addNewQuiet) ? "Added" : "Updated"));
-        mainRecycleViewAdapter.notifyItemChanged(currIdx, quietTask);
+        new ScheduleNextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
+        MainActivity.mainRecycleViewAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
     @Override
@@ -249,7 +248,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_add, menu);
-        if (addNewQuiet) {
+        if (vars.addNewQuiet) {
             menu.findItem(R.id.action_delete).setEnabled(false);
             menu.findItem(R.id.action_delete).getIcon().setAlpha(80);
         }
@@ -268,8 +267,8 @@ public class AddUpdateActivity extends AppCompatActivity {
             save_QuietTask();
         } else if (id == R.id.action_delete) {
             quietTasks.remove(currIdx);
-            utils.saveQuietTasksToShared();
-            mainRecycleViewAdapter.notifyDataSetChanged();
+            new QuietTaskGetPut().put(quietTasks);
+            MainActivity.mainRecycleViewAdapter.notifyDataSetChanged();
             cancel_QuietTask();
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
@@ -282,8 +281,8 @@ public class AddUpdateActivity extends AppCompatActivity {
                 }
             } else
                 quietTasks.remove(currIdx);
-            utils.saveQuietTasksToShared();
-            mainRecycleViewAdapter.notifyDataSetChanged();
+            new QuietTaskGetPut().put(quietTasks);
+            MainActivity.mainRecycleViewAdapter.notifyDataSetChanged();
             cancel_QuietTask();
         }
         finish();
@@ -295,7 +294,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUnique, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, vars.quietUnique, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
 //        pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 //        alarmManager.cancel(pendingIntent);

@@ -1,5 +1,6 @@
 package com.urrecliner.autoquiet;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,22 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.urrecliner.autoquiet.databinding.ActivityOneTimeBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
+import com.urrecliner.autoquiet.utility.VarsGetPut;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-
-import static com.urrecliner.autoquiet.Vars.STATE_ONETIME;
-import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.mainRecycleViewAdapter;
-import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
-import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
-import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
-import static com.urrecliner.autoquiet.Vars.sharedCode;
-import static com.urrecliner.autoquiet.Vars.utils;
 
 public class OneTimeActivity extends AppCompatActivity {
 
     QuietTask quietTask;
+    ArrayList<QuietTask> quietTasks;
     private String subject;
     private int startHour, startMin, finishHour, finishMin, fRepeatCount;
     private boolean vibrate;
@@ -34,15 +28,17 @@ public class OneTimeActivity extends AppCompatActivity {
     boolean timePicker_UpDown = false;
     ActivityOneTimeBinding binding;
     int shortInterval, longInterval;
-
+    Vars vars;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        vars = new VarsGetPut().get(this);
         Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         getApplicationContext().sendBroadcast(closeIntent);
         super.onCreate(savedInstanceState);
         binding = ActivityOneTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         ActionBar actionBar;
         actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -50,13 +46,14 @@ public class OneTimeActivity extends AppCompatActivity {
         actionBar.setIcon(R.mipmap.quiet_right_now) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
+        quietTasks = new QuietTaskGetPut().get(this);
         quietTask = quietTasks.get(0);
         subject = quietTask.getSubject();
         vibrate = quietTask.isVibrate();
         fRepeatCount = quietTask.getfRepeatCount();
-        durationMin = Integer.parseInt(sharedTimeInit);
-        shortInterval = Integer.parseInt(sharedTimeShort);
-        longInterval = Integer.parseInt(sharedTimeLong);
+        durationMin = Integer.parseInt(vars.sharedTimeInit);
+        shortInterval = Integer.parseInt(vars.sharedTimeShort);
+        longInterval = Integer.parseInt(vars.sharedTimeLong);
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
         startHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -89,10 +86,10 @@ public class OneTimeActivity extends AppCompatActivity {
 
     void buildScreen() {
         String text;
-        text = "▼"+sharedTimeShort+"분▼"; binding.minus10Min.setText(text);
-        text = "▲"+sharedTimeShort+"분▲"; binding.plus10Min.setText(text);
-        text = "▼"+sharedTimeLong+"분▼"; binding.minus30Min.setText(text);
-        text = "▲"+sharedTimeLong+"분▲"; binding.plus30Min.setText(text);
+        text = "▼"+vars.sharedTimeShort+"분▼"; binding.minus10Min.setText(text);
+        text = "▲"+vars.sharedTimeShort+"분▲"; binding.plus10Min.setText(text);
+        text = "▼"+vars.sharedTimeLong+"분▼"; binding.minus30Min.setText(text);
+        text = "▲"+vars.sharedTimeLong+"분▲"; binding.plus30Min.setText(text);
     }
 
     void buttonSetting() {
@@ -158,15 +155,14 @@ public class OneTimeActivity extends AppCompatActivity {
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                 week, true, vibrate, 0, fRepeatCount);    // onetime repeat is 0
-        quietTasks.set(0, quietTask);
-        mainRecycleViewAdapter.notifyItemChanged(0);
 
-        utils.saveQuietTasksToShared();
-        MannerMode.turn2Quiet(getApplicationContext(), vibrate);
-        sharedCode = STATE_ONETIME;
-        if (mActivity == null)
-            mActivity = new MainActivity();
-        new ScheduleNextTask("One Time");
+        quietTasks.set(0, quietTask);
+        MainActivity.mainRecycleViewAdapter.notifyItemChanged(0);
+
+        new QuietTaskGetPut().put(quietTasks);
+        MannerMode.turn2Quiet(this, vars.sharedManner, vibrate);
+        new ScheduleNextTask(this,"One Time");
+        new VarsGetPut().put(vars);
     }
 
     @Override

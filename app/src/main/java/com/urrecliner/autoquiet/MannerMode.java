@@ -1,14 +1,12 @@
 package com.urrecliner.autoquiet;
 
-import static com.urrecliner.autoquiet.Vars.sharedManner;
-
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 class MannerMode {
 
-    static void turn2Quiet(Context context, boolean vibrate) {
+    static void turn2Quiet(Context context, boolean sharedManner, boolean vibrate) {
 
         if (sharedManner) {
             MediaPlayer mpStart = MediaPlayer.create(context, R.raw.manner_starting);
@@ -37,7 +35,7 @@ class MannerMode {
         }
     }
 
-    static void turn2Normal(Context context) {
+    static void turn2Normal(boolean sharedManner, Context context) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
@@ -53,12 +51,4 @@ class MannerMode {
             });
         }
     }
-
-//    static void vibratePhone(Context context) {
-////        long[] pattern = {0, 100, 1000, 300, 200, 100, 500, 200, 100};
-//        long[] pattern = {0, 100, 300, 200, 300, 100, 200};
-//        Vibrator v = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
-//        assert v != null;
-//        v.vibrate(VibrationEffect.createWaveform(pattern, -1));
-//    }
 }

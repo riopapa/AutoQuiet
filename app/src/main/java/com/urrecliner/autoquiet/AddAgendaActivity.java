@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,33 +11,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.urrecliner.autoquiet.databinding.ActivityAddAgendaBinding;
 import com.urrecliner.autoquiet.models.GCal;
 import com.urrecliner.autoquiet.models.QuietTask;
+import com.urrecliner.autoquiet.utility.GetAgenda;
 import com.urrecliner.autoquiet.utility.NameColor;
+import com.urrecliner.autoquiet.utility.VarsGetPut;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
-
-import static com.urrecliner.autoquiet.Vars.gCals;
-import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
-import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
-import static com.urrecliner.autoquiet.Vars.utils;
 
 public class AddAgendaActivity extends AppCompatActivity {
 
+    Vars vars;
     private int sRepeatTime = 1, fRepeatTime = 1;
     private boolean vibrate = true;
     private GCal gCal;
+    private ArrayList<GCal> gCals;
     private ActivityAddAgendaBinding binding;
     private String mTitle;
-
+    Context context;
+    private ArrayList<QuietTask> quietTasks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         binding = ActivityAddAgendaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        context = this;
+        quietTasks = new QuietTaskGetPut().get(this);
+        vars = new VarsGetPut().get(this);
+        gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);
         gCal = gCals.get(currIdx);
@@ -48,17 +48,17 @@ public class AddAgendaActivity extends AppCompatActivity {
 
     void show_OneAgenda() {
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE) ", Locale.getDefault());
-        SimpleDateFormat sdfHourMin = new SimpleDateFormat("HH:mm ", Locale.getDefault());
+        final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE) ", Locale.getDefault());
+        final SimpleDateFormat sdfHourMin = new SimpleDateFormat("HH:mm ", Locale.getDefault());
         binding.aTitle.setText(gCal.title);
         mTitle = gCal.title;
 
-        binding.aTitle.setBackgroundColor(NameColor.get(gCal.calName, mContext));
+        binding.aTitle.setBackgroundColor(NameColor.get(gCal.calName, context));
         String s = sdfDate.format(gCal.startTime)+ sdfHourMin.format(gCal.startTime)
                 +" ~ "+ sdfHourMin.format(gCal.finishTime);
         binding.aDate.setText(s);
         binding.acalName.setText(gCal.calName);
-        binding.acalName.setBackgroundColor(NameColor.get(gCal.calName, mContext));
+        binding.acalName.setBackgroundColor(NameColor.get(gCal.calName, context));
         binding.aLocation.setText(gCal.location);
         binding.aDesc.setText(gCal.desc);
         binding.aRepeat.setText((gCal.repeat)? gCal.rule:"");
@@ -101,13 +101,13 @@ public class AddAgendaActivity extends AppCompatActivity {
         binding.aBefore.setMinValue(0);
         binding.aBefore.setWrapSelectorWheel(false);
         binding.aBefore.setDisplayedValues(dispName);
-        binding.aBefore.setValue(Integer.parseInt(sharedTimeBefore)+10);
+        binding.aBefore.setValue(Integer.parseInt(vars.sharedTimeBefore)+10);
         binding.aBefore.setTextSize(60);
         binding.aAfter.setMaxValue(20);
         binding.aAfter.setMinValue(0);
         binding.aAfter.setWrapSelectorWheel(false);
         binding.aAfter.setDisplayedValues(dispName);
-        binding.aAfter.setValue(Integer.parseInt(sharedTimeAfter)+10);
+        binding.aAfter.setValue(Integer.parseInt(vars.sharedTimeAfter)+10);
         binding.aAfter.setTextSize(60);
         binding.aAdd.setOnClickListener(v -> {
             mTitle = binding.aTitle.getText().toString();
@@ -140,8 +140,9 @@ public class AddAgendaActivity extends AppCompatActivity {
                 quietTasks.add(q);
             }
         }
-        Toast.makeText(mContext, sb, Toast.LENGTH_LONG).show();
-        utils.saveQuietTasksToShared();
+        Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
+        new QuietTaskGetPut().put(quietTasks);
+        new VarsGetPut().put(vars);
         finish();
     }
 }

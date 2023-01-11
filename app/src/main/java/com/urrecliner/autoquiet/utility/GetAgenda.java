@@ -3,24 +3,25 @@ package com.urrecliner.autoquiet.utility;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract;
-
+import android.util.Log;
 import com.urrecliner.autoquiet.models.GCal;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.urrecliner.autoquiet.Vars.gCals;
-import static com.urrecliner.autoquiet.Vars.utils;
-import static com.urrecliner.autoquiet.Vars.ONE_DAY;
-
 public class GetAgenda {
+
+    static final long ONE_DAY = 24*60*60*1000;
 
     static long TimeRangeFrom, TimeRangeTo, TimeTODAY;
     static int bySetPos = -1;
 
-    public static void get(Context context) {
+    public ArrayList<GCal> get(Context context) {
+
+        ArrayList<GCal> gCals = new ArrayList<>();
 
         // 반복 설정이 있는 것을 고려 calendar 를 360일전 부터 다음 달 까지 읽어 옴
         TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
@@ -104,9 +105,10 @@ public class GetAgenda {
                 }
             }
         }
+        return gCals;
     }
 
-    static ArrayList <startFinishTime> calcRepeat(String title, long startDateTime,
+    ArrayList <startFinishTime> calcRepeat(String title, long startDateTime,
                                                   String ruleStr, String durStr) {
 
 //        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
@@ -142,7 +144,7 @@ public class GetAgenda {
         return startFinishTimes;
     }
 
-    private static void repeatMonthly(String ruleStr, ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, boolean weekBased, long lDateTime) {
+    private void repeatMonthly(String ruleStr, ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, boolean weekBased, long lDateTime) {
         if (weekBased) {
             if (bySetPos == -1)
                 bySetPos = getKeywordValue(ruleStr, "BYSETPOS",-1);
@@ -175,7 +177,7 @@ public class GetAgenda {
         }
     }
 
-    private static void repeatWeekly(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+    private void repeatWeekly(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
         if (weekDays[0]) {
             for (int i = 0; i < count;    ) {
                 if (lDateTime > untilTime)
@@ -200,7 +202,7 @@ public class GetAgenda {
         }
     }
 
-    private static void repeatDaily(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+    private void repeatDaily(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
         if (weekDays[0]) {  // week constraint
             for (int i = 1; i < count;    ) {
                 if (lDateTime > untilTime)
@@ -223,7 +225,7 @@ public class GetAgenda {
         }
     }
 
-    private static boolean[] getByDay(String ruleStr) {
+    private boolean[] getByDay(String ruleStr) {
         int pos = ruleStr.indexOf("BYDAY");
         boolean [] weekDays = new boolean[8];
         if (pos > 0) {
@@ -253,7 +255,7 @@ public class GetAgenda {
         return weekDays;
     }
 
-    private static long getUntilTime(String ruleStr) {
+    private long getUntilTime(String ruleStr) {
         SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
         long untilTime = TimeRangeTo; // limited 2 months max
@@ -272,7 +274,7 @@ public class GetAgenda {
         return untilTime;
     }
 
-    private static int getKeywordValue(String ruleStr, String keyword, int init) {
+    private int getKeywordValue(String ruleStr, String keyword, int init) {
         int count = init;
         int pos = ruleStr.indexOf(keyword);
         if (pos > 0) {
@@ -285,14 +287,14 @@ public class GetAgenda {
         return count;
     }
 
-    private static long getDurationMinutes(String durStr) {
+    private long getDurationMinutes(String durStr) {
         long durMin = -1;
         if (durStr.startsWith("P")) {
              durMin = Long.parseLong(durStr.substring(1, durStr.length()-1));
             if (durStr.endsWith("S"))
                 durMin *= 1000;
         } else {
-            utils.log("Error ","Duration format error ["+ durStr +"]");
+            Log.e("Error ","Duration format error ["+ durStr +"]");
         }
         return durMin;
     }

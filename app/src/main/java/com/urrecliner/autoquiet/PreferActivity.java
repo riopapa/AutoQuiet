@@ -6,18 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import static com.urrecliner.autoquiet.Vars.sharedManner;
-import static com.urrecliner.autoquiet.Vars.sharedTimeAfter;
-import static com.urrecliner.autoquiet.Vars.sharedTimeBefore;
-import static com.urrecliner.autoquiet.Vars.sharedTimeInit;
-import static com.urrecliner.autoquiet.Vars.sharedTimeLong;
-import static com.urrecliner.autoquiet.Vars.sharedTimeShort;
-import static com.urrecliner.autoquiet.Vars.utils;
+import com.urrecliner.autoquiet.utility.VarsGetPut;
 
 public class PreferActivity extends AppCompatActivity {
 
+    static Vars vars;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        vars = new VarsGetPut().get(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         if (savedInstanceState == null) {
@@ -30,7 +27,8 @@ public class PreferActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        utils.getPreference();
+//        vars.utils.getPreference();
+        new VarsGetPut().put(vars);
         super.onDestroy();
     }
 
@@ -52,55 +50,55 @@ public class PreferActivity extends AppCompatActivity {
 
             pTimeShort = findPreference(TIME_SHORT);
             assert pTimeShort != null;
-            pTimeShort.setSummary(String.format(fTimeShort, sharedTimeShort));
+            pTimeShort.setSummary(String.format(fTimeShort, vars.sharedTimeShort));
             pTimeShort.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedTimeShort = newValue.toString();
-                pTimeShort.setSummary(String.format(fTimeShort, sharedTimeShort));
+                vars.sharedTimeShort = newValue.toString();
+                pTimeShort.setSummary(String.format(fTimeShort, vars.sharedTimeShort));
                 return true;
             });
 
             pTimeLong = findPreference(TIME_LONG);
             assert pTimeLong != null;
-            pTimeLong.setSummary(String.format(fTimeShort, sharedTimeLong));
+            pTimeLong.setSummary(String.format(fTimeShort, vars.sharedTimeLong));
             pTimeLong.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedTimeLong = newValue.toString();
-                pTimeLong.setSummary(String.format(fTimeLong, sharedTimeLong));
+                vars.sharedTimeLong = newValue.toString();
+                pTimeLong.setSummary(String.format(fTimeLong, vars.sharedTimeLong));
                 return true;
             });
 
             pMannerBeep = findPreference(MANNER_BEEP);
             assert pMannerBeep != null;
-            pMannerBeep.setSummary(sharedManner ? "[조용히 하기]가 끝나면 소리가 남 " : "조용히 하기가 끝나도 소라기 나지 않음");
+            pMannerBeep.setSummary(vars.sharedManner ? "[조용히 하기]가 끝나면 소리가 남 " : "조용히 하기가 끝나도 소라기 나지 않음");
             pMannerBeep.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedManner = Boolean.parseBoolean(newValue.toString());
-                pMannerBeep.setSummary(sharedManner ? "[조용히 하기]가 끝나면 소리가 남 " : "조용히 하기가 끝나도 소라기 나지 않음");
+                vars.sharedManner = Boolean.parseBoolean(newValue.toString());
+                pMannerBeep.setSummary(vars.sharedManner ? "[조용히 하기]가 끝나면 소리가 남 " : "조용히 하기가 끝나도 소라기 나지 않음");
                 return true;
             });
 
             pTimeInit = findPreference(TIME_INIT);
             assert pTimeInit != null;
-            pTimeInit.setSummary(String.format(fTimeInit, sharedTimeInit));
+            pTimeInit.setSummary(String.format(fTimeInit, vars.sharedTimeInit));
             pTimeInit.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedTimeInit = newValue.toString();
-                pTimeInit.setSummary(String.format(fTimeInit, sharedTimeInit));
+                vars.sharedTimeInit = newValue.toString();
+                pTimeInit.setSummary(String.format(fTimeInit, vars.sharedTimeInit));
                 return true;
             });
 
             pTimeBefore = findPreference(TIME_BEFORE);
             assert pTimeBefore != null;
-            pTimeBefore.setSummary(String.format(fTimeBefore, sharedTimeBefore));
+            pTimeBefore.setSummary(String.format(fTimeBefore, vars.sharedTimeBefore));
             pTimeBefore.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedTimeBefore = newValue.toString();
-                pTimeBefore.setSummary(String.format(fTimeBefore, sharedTimeBefore));
+                vars.sharedTimeBefore = newValue.toString();
+                pTimeBefore.setSummary(String.format(fTimeBefore, vars.sharedTimeBefore));
                 return true;
             });
 
             pTimeAfter = findPreference(TIME_AFTER);
             assert pTimeAfter != null;
-            pTimeAfter.setSummary(String.format(fTimeAfter, sharedTimeAfter));
+            pTimeAfter.setSummary(String.format(fTimeAfter, vars.sharedTimeAfter));
             pTimeAfter.setOnPreferenceChangeListener((preference, newValue) -> {
-                sharedTimeAfter = newValue.toString();
-                pTimeAfter.setSummary(String.format(fTimeAfter, sharedTimeAfter));
+                vars.sharedTimeAfter = newValue.toString();
+                pTimeAfter.setSummary(String.format(fTimeAfter, vars.sharedTimeAfter));
                 return true;
             });
         }

@@ -7,13 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.urrecliner.autoquiet.AlarmReceiver;
+import com.urrecliner.autoquiet.Utils;
+import com.urrecliner.autoquiet.Vars;
 import com.urrecliner.autoquiet.models.QuietTask;
-
-import static com.urrecliner.autoquiet.Vars.utils;
 
 public class NextAlarm {
 
-    public static int request(QuietTask quietTask, long nextTime, String StartFinish, Context context) {
+    public static int request(Context context, QuietTask quietTask,
+                              long nextTime, String StartFinish, int caseIdx) {
         String logID = "NextAlarm";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
@@ -24,11 +25,12 @@ public class NextAlarm {
 
         intent.putExtra("DATA",args);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time
+        intent.putExtra("caseIdx",caseIdx);
         intent.putExtra("task",task); // unique task number
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.isActive()) {
             alarmManager.cancel(pendingIntent);
-            utils.log(logID,StartFinish+" TASK Canceled : "+ quietTask.getSubject());
+            new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.getSubject());
         }
         else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);

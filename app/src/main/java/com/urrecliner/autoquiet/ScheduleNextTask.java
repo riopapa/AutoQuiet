@@ -1,12 +1,7 @@
 package com.urrecliner.autoquiet;
 
-import static com.urrecliner.autoquiet.Vars.mActivity;
-import static com.urrecliner.autoquiet.Vars.mContext;
-import static com.urrecliner.autoquiet.Vars.quietTask;
-import static com.urrecliner.autoquiet.Vars.quietTasks;
-import static com.urrecliner.autoquiet.Vars.sharedEditor;
-import static com.urrecliner.autoquiet.Vars.utils;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,6 +12,7 @@ import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.CalculateNext;
 import com.urrecliner.autoquiet.utility.NextAlarm;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,17 +24,14 @@ public class ScheduleNextTask {
     static String timeInfo, soonOrUntill, subject;
     final int period = 140 * 60 * 1000;
     static long lastTime = 0;
-    public ScheduleNextTask(String headInfo) {
 
-//        if (timer != null)
-//            timer.cancel();
-//        if (timerTask != null)
-//            timerTask.cancel();
+    public ScheduleNextTask(Context context, String headInfo) {
+
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
         String startFinish = "";
         boolean[] week;
-        quietTasks = utils.readQuietTasksFromShared();
+        ArrayList<QuietTask> quietTasks = new QuietTaskGetPut().get(context);
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qTaskNext = quietTasks.get(idx);
             if (qTaskNext.isActive()) {
@@ -60,7 +53,7 @@ public class ScheduleNextTask {
                 }
             }
         }
-        quietTask = quietTasks.get(saveIdx);
+        QuietTask quietTask = quietTasks.get(saveIdx);
         subject = quietTask.subject;
         if (startFinish.equals("S")) {
             timeInfo = getHourMin(quietTask.startHour, quietTask.startMin);
@@ -70,42 +63,24 @@ public class ScheduleNextTask {
             timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
             soonOrUntill = "까지";
         }
-        int taskNbr = NextAlarm.request(quietTask, nextTime- 30000, startFinish, mContext);
-        sharedEditor.putInt("task", taskNbr);
-        sharedEditor.apply();
+        int taskNbr = new NextAlarm().request(context, quietTask, nextTime- 30000, startFinish, saveIdx);
         String msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
-        Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-        utils.log("ScheduleNextTask",msg);
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        new Utils(context).log("ScheduleNextTask",msg);
         count = 0;
-        updateNaviBar(0);
-//        timer = new Timer();
-//        timerTask = new TimerTask() {
-//            @Override
-//            public void run () {
-//                long nowTime = System.currentTimeMillis();
-//                long deltaTime = nowTime - lastTime;
-//                if (deltaTime > 10000) {
-//                    lastTime = nowTime;
-//                    updateNaviBar(deltaTime);
-//                } else {
-//                    Log.w("TimerTask","Ignore quick Update TimerTask");
-//                }
-//            }
-//        };
-//        timer.schedule(timerTask, period, period);
-    }
-
-    private void updateNaviBar(long deltaTime) {
         String s = timeInfo+" " +count++ + ") " + subject+ " "+ soonOrUntill;
-        Log.w("bar "+deltaTime, s);
-        Intent updateIntent = new Intent(mActivity, NotificationService.class);
+        Log.w("bar ", s);
+        Activity activity = MainActivity.pActivity;
+        if (activity == null)
+            Log.w("Activity"," si null");
+        Intent updateIntent = new Intent(activity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("start", timeInfo);
         updateIntent.putExtra("finish", soonOrUntill);
         updateIntent.putExtra("subject", subject);
         updateIntent.putExtra("icon", icon);
-        mActivity.startService(updateIntent);
+        activity.startService(updateIntent);
     }
 
     @NonNull
