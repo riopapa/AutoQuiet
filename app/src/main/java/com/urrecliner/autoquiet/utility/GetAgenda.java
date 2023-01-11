@@ -105,6 +105,7 @@ public class GetAgenda {
                 }
             }
         }
+        gCals.sort((arg0, arg1) -> Long.compare(arg0.startTime, arg1.startTime));
         return gCals;
     }
 

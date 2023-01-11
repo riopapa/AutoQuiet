@@ -2,6 +2,7 @@ package com.urrecliner.autoquiet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
 
         context = MainActivity.pContext;
         vars = new VarsGetPut().get(context);
-        gCals = new GetAgenda().get(context);
+//        gCals = new GetAgenda().get(context);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
     }
@@ -87,7 +88,8 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         holder.tvSubject.setText(g.title);
         holder.tvName.setText(g.calName);
         holder.ivRepeat.setImageResource((g.repeat)? R.drawable.repeat: R.mipmap.speaking_noactive);
-        holder.tvCalLeft.setText((g.location.length()>20)? g.location.substring(0,19):g.location);
+        holder.tvCalLeft.setText((g.location.length()>20)?
+                g.location.substring(0,19):g.location);
         if (g.desc.length() == 0)
             holder.tvCalRight.setVisibility(View.GONE);
         else
@@ -96,13 +98,18 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         holder.tvFTime.setText(sdfHHMM.format(g.finishTime));
         int backColor = NameColor.get(g.calName, context);
         holder.viewLine.setBackgroundColor(backColor);
+        holder.tvSubject.setSingleLine(true);
+        holder.tvSubject.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        holder.tvSubject.setSelected(true);
+
     }
 
     @Override
     public int getItemCount() {
-        if (gCals == null)
+        if (gCals == null) {
             gCals = new GetAgenda().get(MainActivity.pContext);
-
+            gCals.sort((arg0, arg1) -> Long.compare(arg0.startTime, arg1.startTime));
+        }
         return gCals.size();
     }
 }

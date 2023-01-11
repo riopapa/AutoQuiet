@@ -57,7 +57,7 @@ public class NextTask {
             timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
             soonOrUntill = "까지";
         }
-        int taskNbr = new NextAlarm().request(context, quietTask, nextTime- 30000, startFinish, saveIdx);
+        new NextAlarm().request(context, quietTask, nextTime- 30000, startFinish, saveIdx);
         String msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
