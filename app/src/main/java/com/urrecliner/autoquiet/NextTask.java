@@ -13,19 +13,13 @@ import com.urrecliner.autoquiet.utility.CalculateNext;
 import com.urrecliner.autoquiet.utility.NextAlarm;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class ScheduleNextTask {
+public class NextTask {
     long nextTime;
-    Timer timer = null;
-    TimerTask timerTask = null;
     static int count, icon;
     static String timeInfo, soonOrUntill, subject;
-    final int period = 140 * 60 * 1000;
-    static long lastTime = 0;
 
-    public ScheduleNextTask(Context context, String headInfo) {
+    public NextTask(Context context, String headInfo) {
 
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
@@ -67,7 +61,7 @@ public class ScheduleNextTask {
         String msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        new Utils(context).log("ScheduleNextTask",msg);
+        new Utils(context).log("NextTask",msg);
         count = 0;
         String s = timeInfo+" " +count++ + ") " + subject+ " "+ soonOrUntill;
         Log.w("bar ", s);

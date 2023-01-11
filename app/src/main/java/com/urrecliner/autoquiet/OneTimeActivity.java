@@ -1,6 +1,5 @@
 package com.urrecliner.autoquiet;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -157,11 +156,11 @@ public class OneTimeActivity extends AppCompatActivity {
                 week, true, vibrate, 0, fRepeatCount);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);
-        MainActivity.mainRecycleViewAdapter.notifyItemChanged(0);
+        MainActivity.mainRecycleAdapter.notifyItemChanged(0);
 
         new QuietTaskGetPut().put(quietTasks);
         MannerMode.turn2Quiet(this, vars.sharedManner, vibrate);
-        new ScheduleNextTask(this,"One Time");
+        new NextTask(this,"One Time");
         new VarsGetPut().put(vars);
     }
 

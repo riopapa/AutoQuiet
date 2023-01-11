@@ -1,7 +1,6 @@
 package com.urrecliner.autoquiet;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.models.GCal;
 import com.urrecliner.autoquiet.utility.GetAgenda;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
 import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
 
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class GCalShowActivity extends AppCompatActivity  {
         agendaRecyclerView.setLayoutManager(gCalLinearLayoutManager);
         VerticalSpacingItemDecorator gCalItemDecorator = new VerticalSpacingItemDecorator(10);
         agendaRecyclerView.addItemDecoration(gCalItemDecorator);
-        GCalRecycleViewAdapter gCalRecyclerViewAdapter = new GCalRecycleViewAdapter();
+        GCalRecycleAdapter gCalRecyclerViewAdapter = new GCalRecycleAdapter();
         agendaRecyclerView.setAdapter(gCalRecyclerViewAdapter);
     }
 }

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity  {
     public static Activity pActivity;
     public Vars vars;
     boolean created = false;
-    public static MainRecycleViewAdapter mainRecycleViewAdapter;
+    public static MainRecycleAdapter mainRecycleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +98,7 @@ public class MainActivity extends AppCompatActivity  {
         ArrayList<QuietTask> quietTasks = new QuietTaskGetPut().get(pContext);
         if (quietTasks.size() == 0)
             new ClearAllTasks(getApplicationContext());
-//        if (created) {
-//            created = false;
             showMainList();
-//        } else {
-//            new ScheduleNextTask(pContext, "Next Alarm");
-//            finish();
-//        }
     }
 
     @Override
@@ -159,18 +153,18 @@ public class MainActivity extends AppCompatActivity  {
         VerticalSpacingItemDecorator mainItemDecorator = new VerticalSpacingItemDecorator(14);
         mainRecyclerView.addItemDecoration(mainItemDecorator);
 
-        mainRecycleViewAdapter = new MainRecycleViewAdapter();
-        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleViewAdapter, pContext);
+        mainRecycleAdapter = new MainRecycleAdapter();
+        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
-        mainRecycleViewAdapter.setTouchHelper(mainItemTouchHelper);
+        mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
         new VarsGetPut().put(vars);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
-        mainRecyclerView.setAdapter(mainRecycleViewAdapter);
+        mainRecyclerView.setAdapter(mainRecycleAdapter);
     }
 
     @Override
     public void onBackPressed() {
-        new ScheduleNextTask(pContext, "back ");
+        new NextTask(pContext, "back ");
         super.onBackPressed();
     }
 

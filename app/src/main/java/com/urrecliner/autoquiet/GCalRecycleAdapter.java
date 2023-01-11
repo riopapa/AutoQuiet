@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleViewAdapter.ViewHolder> {
+public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.ViewHolder> {
 
     static Vars vars;
     static Context context;
@@ -100,6 +100,9 @@ public class GCalRecycleViewAdapter extends RecyclerView.Adapter<GCalRecycleView
 
     @Override
     public int getItemCount() {
+        if (gCals == null)
+            gCals = new GetAgenda().get(MainActivity.pContext);
+
         return gCals.size();
     }
 }

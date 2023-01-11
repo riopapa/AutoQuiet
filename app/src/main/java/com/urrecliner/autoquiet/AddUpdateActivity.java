@@ -235,8 +235,8 @@ public class AddUpdateActivity extends AppCompatActivity {
         new QuietTaskGetPut().put(quietTasks);
 
         finish();
-        new ScheduleNextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
-        MainActivity.mainRecycleViewAdapter.notifyItemChanged(currIdx, quietTask);
+        new NextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
+        MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
     @Override
@@ -268,7 +268,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         } else if (id == R.id.action_delete) {
             quietTasks.remove(currIdx);
             new QuietTaskGetPut().put(quietTasks);
-            MainActivity.mainRecycleViewAdapter.notifyDataSetChanged();
+            MainActivity.mainRecycleAdapter.notifyDataSetChanged();
             cancel_QuietTask();
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
@@ -282,7 +282,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             } else
                 quietTasks.remove(currIdx);
             new QuietTaskGetPut().put(quietTasks);
-            MainActivity.mainRecycleViewAdapter.notifyDataSetChanged();
+            MainActivity.mainRecycleAdapter.notifyDataSetChanged();
             cancel_QuietTask();
         }
         finish();

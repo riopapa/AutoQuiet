@@ -2,7 +2,6 @@ package com.urrecliner.autoquiet;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.GestureDetector;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.ItemTouchHelperAdapter;
 import com.urrecliner.autoquiet.utility.NameColor;
@@ -31,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleViewAdapter.ViewHolder>
+public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder>
         implements ItemTouchHelperAdapter {
 
     private ItemTouchHelper mTouchHelper;

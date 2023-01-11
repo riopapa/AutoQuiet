@@ -28,13 +28,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     ArrayList<QuietTask> quietTasks;
     static Context context;
     static Activity activity;
-    long lastTime;
+    long lastTime = 0;
     Vars vars;
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         this.activity = MainActivity.pActivity;
-        if (System.currentTimeMillis() < lastTime + 20000) {
+        if (System.currentTimeMillis() < lastTime + 30000) {
             Log.e("Receive","Duplicated");
             return;
         }
@@ -67,24 +67,22 @@ public class AlarmReceiver extends BroadcastReceiver {
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
-        new ScheduleNextTask(context,"after receive");
+        new NextTask(context,"reNew");
         new VarsGetPut().put(vars);
     }
 
     void say_Started(Activity activity, String subject, boolean vibrate) {
         ready_TTS();
         new Sounds().beep(context, 2);
-        String lastCode = subject.substring(subject.length()-1);
-        String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-        String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
-                + ((lastNFKD.length() == 2) ? "가": "이") +" 시작됩니다";
-        textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
 
-        Timer speakTimer = new Timer();
-        speakTimer.schedule(new TimerTask() {
-            public void run() {
-                speakTimer.cancel();
-                speakTimer.purge();
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                String lastCode = subject.substring(subject.length()-1);
+                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                String s = nowTimeToString(System.currentTimeMillis()) + " 입니다. " + subject
+                        + ((lastNFKD.length() == 2) ? "가": "이") +" 시작됩니다";
+                // 받침이 있으면 이, 없으면 가
+                textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
                 MannerMode.turn2Quiet(context, vars.sharedManner, vibrate);
                 Intent notification = new Intent(activity, NotificationService.class);
                 notification.putExtra("operation", vars.STOP_SPEAK);
@@ -96,23 +94,29 @@ public class AlarmReceiver extends BroadcastReceiver {
     void say_Finished(String subject) {
         ready_TTS();
         new Sounds().beep(context, 0);
-        String lastCode = subject.substring(subject.length()-1);
-        String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-        String s = nowTimeToString() + " 입니다. " + subject // 받침이 있으면 이, 없으면 가
-                + ((lastNFKD.length() == 2) ? "가": "이") +" 끝났습니다";
-        textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
-        if (savedAgenda) { // delete if agenda based
-            for (int i = 0; i < quietTasks.size(); i++) {
-                Log.w("id " + i, savedId + " vs " + quietTasks.get(i).calId + quietTasks.get(i).subject
-                        + quietTasks.get(i).finishHour + quietTasks.get(i).finishMin);
-                if (quietTasks.get(i).calId == savedId) {
-                    Log.w("remove", quietTasks.get(i).subject);
-                    quietTasks.remove(i);
-                    new QuietTaskGetPut().put(quietTasks);
-                    break;
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                String lastCode = subject.substring(subject.length()-1);
+                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                String s = nowTimeToString(System.currentTimeMillis()) + " 입니다. " + subject
+                        + ((lastNFKD.length() == 2) ? "가": "이") +" 끝났습니다";
+                // 받침이 있으면 이, 없으면 가
+
+                textToSpeech.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+                if (savedAgenda) { // delete if agenda based
+                    for (int i = 0; i < quietTasks.size(); i++) {
+                        Log.w("id " + i, savedId + " vs " + quietTasks.get(i).calId + quietTasks.get(i).subject
+                                + quietTasks.get(i).finishHour + quietTasks.get(i).finishMin);
+                        if (quietTasks.get(i).calId == savedId) {
+                            Log.w("remove", quietTasks.get(i).subject);
+                            quietTasks.remove(i);
+                            new QuietTaskGetPut().put(quietTasks);
+                            break;
+                        }
+                    }
                 }
             }
-        }
+        }, 3000);
     }
 
     void ready_TTS() {
@@ -138,11 +142,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void onError(String utteranceId) { }
         });
-
     }
 
-    String nowTimeToString() {
+    String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdfTime.format(System.currentTimeMillis());
+        return sdfTime.format(time);
     }
 }

@@ -24,6 +24,7 @@ public class NotificationService extends Service {
     String start, sSubject, finish;
     static Vars vars;
     static Context context;
+    final int INVOKE_ONETIME = 100;
 
     @Override
     public void onCreate() {
@@ -64,7 +65,7 @@ public class NotificationService extends Service {
             startForeground(100, mBuilder.build());
             return START_STICKY;
         }
-        if (operation == vars.INVOKE_ONETIME) {
+        if (operation == INVOKE_ONETIME) {
             Intent oIntent = new Intent(context, OneTimeActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, oIntent, 0);
             try {
@@ -98,7 +99,7 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(context, 0, mainIntent, 0));
 
         Intent stopOneTime = new Intent(this, NotificationService.class);
-        stopOneTime.putExtra("operation", vars.INVOKE_ONETIME);
+        stopOneTime.putExtra("operation", INVOKE_ONETIME);
         PendingIntent pi = PendingIntent.getService(context, 2, stopOneTime, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
