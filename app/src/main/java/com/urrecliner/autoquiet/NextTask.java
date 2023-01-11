@@ -64,10 +64,9 @@ public class NextTask {
         new Utils(context).log("NextTask",msg);
         count = 0;
         String s = timeInfo+" " +count++ + ") " + subject+ " "+ soonOrUntill;
-        Log.w("bar ", s);
         Activity activity = MainActivity.pActivity;
         if (activity == null)
-            Log.w("Activity"," si null");
+            Log.e("Activity"," si null");
         Intent updateIntent = new Intent(activity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("start", timeInfo);

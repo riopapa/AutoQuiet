@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-        new NextTask(pContext, "back ");
+//        new NextTask(pContext, "back ");
         super.onBackPressed();
     }
 
