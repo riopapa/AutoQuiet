@@ -23,10 +23,10 @@ public class GetAgenda {
 
         ArrayList<GCal> gCals = new ArrayList<>();
 
-        // 반복 설정이 있는 것을 고려 calendar 를 360일전 부터 다음 달 까지 읽어 옴
-        TimeRangeFrom = System.currentTimeMillis() - 360*ONE_DAY;
+        // 반복 설정이 있는 것을 고려 calendar 를 400일전 부터 다음 달 까지 읽어 옴
+        TimeRangeFrom = System.currentTimeMillis() - 400*ONE_DAY;
         TimeRangeTo = System.currentTimeMillis() + (long) 50*ONE_DAY;
-        TimeTODAY = System.currentTimeMillis() - 4*60*60*1000; //  지금부터 4 시간전 꺼는 무시
+        TimeTODAY = System.currentTimeMillis() - 24*60*60*1000; // 어제 이후만 list Up
 
         String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + TimeRangeFrom + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + TimeRangeTo + " ))";
         Cursor cursor = context.getContentResolver().query(
@@ -88,7 +88,8 @@ public class GetAgenda {
             else {
                 ArrayList<startFinishTime> startFinishTimes = calcRepeat (eTitle, eStart, eRule, eDuration);
                 for (int i = 0; i < startFinishTimes.size() ; i++) {
-                    if (startFinishTimes.get(i).sTime > TimeTODAY && startFinishTimes.get(i).sTime < TimeRangeTo) {
+                    if (startFinishTimes.get(i).sTime > TimeTODAY &&
+                            startFinishTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
                         g.id = eID;
                         g.title = eTitle;

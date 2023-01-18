@@ -11,6 +11,4 @@ public class Vars {
     public int quietUnique = 123456;
     public final int STOP_SPEAK = 1022;
 
-    final String logID = "vars";
-
 }

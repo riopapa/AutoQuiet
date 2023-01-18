@@ -47,9 +47,9 @@ public class OneTimeActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true) ;
         quietTasks = new QuietTaskGetPut().get(this);
         quietTask = quietTasks.get(0);
-        subject = quietTask.getSubject();
-        vibrate = quietTask.isVibrate();
-        fRepeatCount = quietTask.getfRepeatCount();
+        subject = quietTask.subject;
+        vibrate = quietTask.vibrate;
+        fRepeatCount = quietTask.fRepeatCount;
         durationMin = Integer.parseInt(vars.sharedTimeInit);
         shortInterval = Integer.parseInt(vars.sharedTimeShort);
         longInterval = Integer.parseInt(vars.sharedTimeLong);
@@ -158,9 +158,9 @@ public class OneTimeActivity extends AppCompatActivity {
         quietTasks.set(0, quietTask);
         MainActivity.mainRecycleAdapter.notifyItemChanged(0);
 
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "Swipe "+quietTask.subject);
         MannerMode.turn2Quiet(this, vars.sharedManner, vibrate);
-        new NextTask(this,"One Time");
+//        new NextTask(this,"One Time");
         new VarsGetPut().put(vars);
     }
 

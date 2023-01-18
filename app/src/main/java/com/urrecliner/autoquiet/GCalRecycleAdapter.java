@@ -106,10 +106,9 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
 
     @Override
     public int getItemCount() {
-        if (gCals == null) {
+//        if (gCals == null) {
             gCals = new GetAgenda().get(MainActivity.pContext);
-            gCals.sort((arg0, arg1) -> Long.compare(arg0.startTime, arg1.startTime));
-        }
+//        }
         return gCals.size();
     }
 }

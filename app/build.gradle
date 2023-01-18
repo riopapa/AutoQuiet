@@ -7,8 +7,8 @@ android {
 
     defaultConfig {
         applicationId "com.urrecliner.autoquiet"
-        minSdkVersion 30
-        targetSdkVersion 30
+        minSdkVersion 29 // android 10:29, 11:30, 12:31
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -42,11 +42,11 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'joda-time:joda-time:2.10.10'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

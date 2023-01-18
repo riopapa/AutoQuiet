@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class QuietTaskGetPut {
-    public void put(ArrayList<QuietTask> quietTasks) {
+    public void put(ArrayList<QuietTask> quietTasks, Context context, String info) {
 
         for (int i = 0; i < quietTasks.size(); i++) {
             QuietTask q = quietTasks.get(i);
@@ -33,6 +33,7 @@ public class QuietTaskGetPut {
         String json = gson.toJson(quietTasks);
         prefsEditor.putString("silentInfo", json);
         prefsEditor.apply();
+        new NextTask(context, info);
     }
 
     ArrayList<QuietTask> get(Context context) {

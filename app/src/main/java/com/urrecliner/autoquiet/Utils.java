@@ -18,8 +18,8 @@ import java.util.Locale;
 public class Utils {
 
     private final String PREFIX = "log_";
-    private File packageDir = null;
-    private Context context;
+    private File packageDir;
+    private final Context context;
 
     public Utils(Context context) {
         this.context = context;

@@ -8,16 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Insets;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowInsets;
-import android.view.WindowMetrics;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -25,14 +24,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.utility.ClearAllTasks;
 import com.urrecliner.autoquiet.utility.MyItemTouchHelper;
 import com.urrecliner.autoquiet.utility.Permission;
 import com.urrecliner.autoquiet.utility.VarsGetPut;
 import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -61,12 +57,14 @@ public class MainActivity extends AppCompatActivity  {
         }
 
 // If you have access to the external storage, do whatever you need
-        if (!Environment.isExternalStorageManager()){
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-            intent.setData(uri);
-            startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
@@ -76,14 +74,14 @@ public class MainActivity extends AppCompatActivity  {
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
-        WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
-        Insets insets = windowMetrics.getWindowInsets()
-                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
-        vars.xSize = (windowMetrics.getBounds().width() - insets.left - insets.right) / 9;
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        vars.xSize = metrics.widthPixels / 9;
         new VarsGetPut().put(vars);
     }
 
@@ -94,11 +92,8 @@ public class MainActivity extends AppCompatActivity  {
         vars = new VarsGetPut().get(pContext);
 //        vars.utils = new Utils(pContext);
         Log.w("Main", "onResume is called");
+        showMainList();
 
-        ArrayList<QuietTask> quietTasks = new QuietTaskGetPut().get(pContext);
-        if (quietTasks.size() == 0)
-            new ClearAllTasks(getApplicationContext());
-            showMainList();
     }
 
     @Override
@@ -146,8 +141,9 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void showMainList() {
+
         RecyclerView mainRecyclerView = ((Activity) MainActivity.pContext).findViewById(R.id.mainRecycler);
-        LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(((Activity) MainActivity.pContext));
+        LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(MainActivity.pContext);
         mainRecyclerView.setLayoutManager(mainLinearLayoutManager);
 
         VerticalSpacingItemDecorator mainItemDecorator = new VerticalSpacingItemDecorator(14);
@@ -170,6 +166,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onPause() {
+//        new NextTask(pContext, "onPause()");
         super.onPause();
     }
 }

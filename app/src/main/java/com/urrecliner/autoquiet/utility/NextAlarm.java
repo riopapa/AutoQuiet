@@ -8,13 +8,12 @@ import android.os.Bundle;
 
 import com.urrecliner.autoquiet.AlarmReceiver;
 import com.urrecliner.autoquiet.Utils;
-import com.urrecliner.autoquiet.Vars;
 import com.urrecliner.autoquiet.models.QuietTask;
 
 public class NextAlarm {
 
-    public static int request(Context context, QuietTask quietTask,
-                              long nextTime, String StartFinish, int caseIdx) {
+    public void request(Context context, QuietTask quietTask,
+                        long nextTime, String StartFinish, int caseIdx) {
         String logID = "NextAlarm";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
@@ -28,13 +27,12 @@ public class NextAlarm {
         intent.putExtra("caseIdx",caseIdx);
         intent.putExtra("task",task); // unique task number
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (!quietTask.isActive()) {
+        if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
-            new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.getSubject());
+            new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.subject);
         }
         else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }
-        return task;
     }
 }

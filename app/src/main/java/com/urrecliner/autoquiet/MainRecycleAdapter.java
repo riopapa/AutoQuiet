@@ -168,15 +168,15 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         quietTask = quietTasks.get(position);
         boolean gCalendar = quietTask.agenda;
-        boolean active = quietTask.isActive();
-        boolean vibrate = quietTask.isVibrate();
+        boolean active = quietTask.active;
+        boolean vibrate = quietTask.vibrate;
 
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
-        String txt = buildHourMin(quietTask.getStartHour(), quietTask.getStartMin());
+        String txt = buildHourMin(quietTask.startHour, quietTask.startMin);
         holder.tvStartTime.setText(txt);
-        txt = buildHourMin(quietTask.getFinishHour(), quietTask.getFinishMin());
+        txt = buildHourMin(quietTask.finishHour, quietTask.finishMin);
         holder.tvFinishTime.setText(txt);
         holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
@@ -212,7 +212,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 holder.tvStartTime.setText(txt);
                 holder.tvFinishTime.setText(txt);
             } else {
-                boolean[] week = quietTask.getWeek();
+                boolean[] week = quietTask.week;
                 for (int i = 0; i < 7; i++) {
                     tViewWeek[i].setTextColor(active ? colorActive : colorOff);
                     if (active)
@@ -272,7 +272,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(quietTask);
             quietTasks.add(toPosition, quietTask);
             notifyItemMoved(fromPosition, toPosition);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().put(quietTasks, context, "Moved "+quietTask.subject);
         } else {
             if (topLine++ < 0)
                 Toast.makeText(context,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
@@ -287,13 +287,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTask = quietTasks.get(position);
             quietTasks.remove(position);
             notifyItemRemoved(position);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().put(quietTasks, context, "Swipe "+quietTask.subject);
             Snackbar snackbar = Snackbar
                     .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
                 quietTasks.add(position, quietTask);
                 notifyItemInserted(position);
-                new QuietTaskGetPut().put(quietTasks);
+                new QuietTaskGetPut().put(quietTasks, context, "recover "+quietTask.subject);
             });
 
             snackbar.setActionTextColor(Color.YELLOW);

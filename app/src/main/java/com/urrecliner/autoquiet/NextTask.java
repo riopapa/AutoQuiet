@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class NextTask {
     long nextTime;
-    static int count, icon;
+    static int icon;
     static String timeInfo, soonOrUntill, subject;
 
     public NextTask(Context context, String headInfo) {
@@ -28,7 +28,7 @@ public class NextTask {
         ArrayList<QuietTask> quietTasks = new QuietTaskGetPut().get(context);
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qTaskNext = quietTasks.get(idx);
-            if (qTaskNext.isActive()) {
+            if (qTaskNext.active) {
                 week = qTaskNext.week;
                 long nextStart = CalculateNext.calc(false, qTaskNext.startHour, qTaskNext.startMin, week, 0);
                 if (nextStart < nextTime) {
@@ -57,13 +57,11 @@ public class NextTask {
             timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
             soonOrUntill = "까지";
         }
-        new NextAlarm().request(context, quietTask, nextTime- 30000, startFinish, saveIdx);
+        new NextAlarm().request(context, quietTask, nextTime - 30000, startFinish, saveIdx);
         String msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         new Utils(context).log("NextTask",msg);
-        count = 0;
-        String s = timeInfo+" " +count++ + ") " + subject+ " "+ soonOrUntill;
         Activity activity = MainActivity.pActivity;
         if (activity == null)
             Log.e("Activity"," si null");
@@ -73,7 +71,7 @@ public class NextTask {
         updateIntent.putExtra("finish", soonOrUntill);
         updateIntent.putExtra("subject", subject);
         updateIntent.putExtra("icon", icon);
-        activity.startService(updateIntent);
+        activity.startForegroundService(updateIntent);
     }
 
     @NonNull

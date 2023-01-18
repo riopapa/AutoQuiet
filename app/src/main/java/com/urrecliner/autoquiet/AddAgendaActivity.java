@@ -141,7 +141,7 @@ public class AddAgendaActivity extends AppCompatActivity {
             }
         }
         Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().put(quietTasks, context, "AddAgenda");
         new VarsGetPut().put(vars);
         finish();
     }

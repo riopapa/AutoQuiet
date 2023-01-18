@@ -4,14 +4,12 @@ import android.content.Context;
 
 import com.urrecliner.autoquiet.QuietTaskGetPut;
 import com.urrecliner.autoquiet.R;
-import com.urrecliner.autoquiet.Vars;
 import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
 public class ClearAllTasks {
 
-    Vars vars;
     public ClearAllTasks(Context context) {
 
         boolean [] week;
@@ -29,7 +27,7 @@ public class ClearAllTasks {
         week = new boolean[]{true, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(context.getString(R.string.Sunday_Church), 9, 30, 16, 30, week, true, true, 0, 0));
 
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().put(quietTasks, context, "Cleared");
     }
 
 }

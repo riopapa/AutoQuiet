@@ -22,17 +22,17 @@ public class NotificationService extends Service {
     private RemoteViews mRemoteViews;
     static boolean goOnSpeak = false;
     String start, sSubject, finish;
-    static Vars vars;
-    static Context context;
+    Vars vars;
+    Context context;
     final int INVOKE_ONETIME = 100;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = MainActivity.pContext;
+        context = this; // MainActivity.pContext;
         vars = new VarsGetPut().get(context);
-        mRemoteViews = new RemoteViews(MainActivity.pContext.getPackageName(), R.layout.notification_bar);
-        Log.w("notiSVC","NotificationService onCreate()");
+        mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_bar);
+        Log.w("notiSVC","onCreate()");
     }
 
     @Override

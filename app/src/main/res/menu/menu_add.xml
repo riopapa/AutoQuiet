@@ -5,7 +5,7 @@
         android:id="@+id/action_delete_multi"
         android:orderInCategory="100"
         android:title="@string/action_delete"
-        android:icon="@mipmap/delete_multi"
+        android:icon="@drawable/delete_multi"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_delete"
@@ -17,7 +17,7 @@
         android:id="@+id/action_save"
         android:orderInCategory="100"
         android:title="@string/action_add"
-        android:icon="@drawable/check"
+        android:icon="@drawable/save"
         app:showAsAction="always" />
 
 </menu>

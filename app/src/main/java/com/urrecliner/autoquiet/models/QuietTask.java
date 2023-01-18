@@ -15,7 +15,7 @@ public class QuietTask implements Serializable {
     public boolean[] week = {true, true, true, true, true, true, true};
     public int sRepeatCount, fRepeatCount;
 
-    public long calStartDate, calFinishDate;    // 통상으로 만들어지면 callStartDate = index가 됨 sort 목적임
+    public long calStartDate, calFinishDate;    // 통상으로 만들어지면 callStartDate = index 가 됨 sort 목적임
     public int calId;
     public String calDesc;
     public String calLocation;
@@ -65,23 +65,6 @@ public class QuietTask implements Serializable {
         this.week = new boolean[7];
         this.week[weekNbr] = true;
     }
-
-    public String getSubject() { return subject;}
-    public int getStartHour() {return startHour;}
-    public int getStartMin() {return startMin;}
-    public int getFinishHour(){
-        return finishHour;
-    }
-    public int getFinishMin() {
-        return finishMin;
-    }
-    public boolean isActive() {
-        return active;
-    }
-    public boolean isVibrate() { return vibrate;}
-    public boolean[] getWeek() { return week;}
-    public int getsRepeatCount() { return sRepeatCount;}
-    public int getfRepeatCount() { return fRepeatCount;}
 
     public void setSubject(String subject) { this.subject = subject; }
     public void setActive(boolean TorF) { this.active = TorF; }

@@ -81,16 +81,16 @@ public class AddUpdateActivity extends AppCompatActivity {
     void build_QuietTask() {
 
         final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
-        subject = quietTask.getSubject();
-        startHour = quietTask.getStartHour();
-        startMin = quietTask.getStartMin();
-        finishHour = quietTask.getFinishHour();
-        finishMin = quietTask.getFinishMin();
-        active = quietTask.isActive();
-        sRepeatCount = quietTask.getsRepeatCount();
-        fRepeatCount = quietTask.getfRepeatCount();
-        week = quietTask.getWeek();
-        vibrate = quietTask.isVibrate();
+        subject = quietTask.subject;
+        startHour = quietTask.startHour;
+        startMin = quietTask.startMin;
+        finishHour = quietTask.finishHour;
+        finishMin = quietTask.finishMin;
+        active = quietTask.active;
+        sRepeatCount = quietTask.sRepeatCount;
+        fRepeatCount = quietTask.fRepeatCount;
+        week = quietTask.week;
+        vibrate = quietTask.vibrate;
         agenda = quietTask.agenda;
 
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
@@ -232,10 +232,10 @@ public class AddUpdateActivity extends AppCompatActivity {
             else
                 quietTasks.set(currIdx, quietTask);
         }
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().put(quietTasks, context, "Add/Update");
 
         finish();
-        new NextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
+//        new NextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
         MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx, quietTask);
     }
 
@@ -266,23 +266,26 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (id == R.id.action_save) {
             save_QuietTask();
         } else if (id == R.id.action_delete) {
+            new QuietTaskGetPut().put(quietTasks, context, "del "+quietTask.subject);
             quietTasks.remove(currIdx);
-            new QuietTaskGetPut().put(quietTasks);
-            MainActivity.mainRecycleAdapter.notifyDataSetChanged();
+            MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx);
             cancel_QuietTask();
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
                 int delId = quietTask.calId;
                 for (int i = 0; i < quietTasks.size(); ) {
-                    if (quietTasks.get(i).calId == delId)
+                    if (quietTasks.get(i).calId == delId) {
                         quietTasks.remove(i);
+                        MainActivity.mainRecycleAdapter.notifyItemChanged(i);
+                    }
                     else
                         i++;
                 }
-            } else
+            } else {
                 quietTasks.remove(currIdx);
-            new QuietTaskGetPut().put(quietTasks);
-            MainActivity.mainRecycleAdapter.notifyDataSetChanged();
+                MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx);
+            }
+            new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
             cancel_QuietTask();
         }
         finish();
@@ -296,8 +299,6 @@ public class AddUpdateActivity extends AppCompatActivity {
         Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, vars.quietUnique, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-//        pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, quietUniq +1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        alarmManager.cancel(pendingIntent);
     }
 
     @Override
