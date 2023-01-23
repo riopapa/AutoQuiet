@@ -1,4 +1,4 @@
-package com.urrecliner.autoquiet.utility;
+package com.urrecliner.autoquiet.Sub;
 
 public interface ItemTouchHelperAdapter {
 

@@ -1,12 +1,14 @@
-package com.urrecliner.autoquiet;
+package com.urrecliner.autoquiet.Sub;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-class MannerMode {
+import com.urrecliner.autoquiet.R;
 
-    static void turn2Quiet(Context context, boolean sharedManner, boolean vibrate) {
+public class MannerMode {
+
+    public void turn2Quiet(Context context, boolean sharedManner, boolean vibrate) {
 
         if (sharedManner) {
             MediaPlayer mpStart = MediaPlayer.create(context, R.raw.manner_starting);
@@ -35,7 +37,7 @@ class MannerMode {
         }
     }
 
-    static void turn2Normal(boolean sharedManner, Context context) {
+    public void turn2Normal(boolean sharedManner, Context context) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);

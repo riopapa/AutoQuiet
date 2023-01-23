@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.MannerMode;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -26,43 +29,40 @@ public class AlarmReceiver extends BroadcastReceiver {
     ArrayList<QuietTask> quietTasks;
     QuietTask quietTask;
     Context context;
-    Activity activity;
-    long lastTime = 0;
+    static long lastTime = 0;
     String caseSFO;
     Vars vars;
+    final int STOP_SPEAK = 1022;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        this.activity = MainActivity.pActivity;
-//        Log.w("onReceive", "received");
         if (lastTime == 0)
             lastTime = System.currentTimeMillis() - 1000;
+        Bundle args = intent.getBundleExtra("DATA");
+        quietTask = (QuietTask) args.getSerializable("quietTask");
+        quietTasks = new QuietTaskGetPut().get(context);
+        caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
+        Log.w("OnReceive "+caseSFO,"received Task =" + quietTask.subject);
         if (System.currentTimeMillis() < lastTime ) {
-            Log.e("Receive","Duplicated");
+            Log.e("Receive","// Duplicated, ignore //");
             return;
         }
         lastTime = System.currentTimeMillis() + 100*1000;
-//        Log.w("time","lastTime =" + sdfHourMin.format(lastTime));
         vars = new VarsGetPut().get(context);
-        quietTasks = new QuietTaskGetPut().get(context);
         readyTTS();
-//        Bundle args = intent.getBundleExtra("DATA");
-        int caseIdx = Objects.requireNonNull(intent.getExtras()).getInt("caseIdx");
-        caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
-        quietTask = quietTasks.get(caseIdx);
+
         assert caseSFO != null;
         switch (caseSFO) {
             case "S":   // start?
-                say_Started(activity, quietTask.subject);
+                say_Started(MainActivity.pActivity, quietTask.subject);
                 break;
             case "F":   // finish
-                new Utils(context).deleteOldLogFiles();
-                MannerMode.turn2Normal(vars.sharedManner, context);
+                new MannerMode().turn2Normal(vars.sharedManner, context);
                 say_Finished(quietTask.subject);
                 break;
             case "O":   // onetime
-                MannerMode.turn2Normal(vars.sharedManner, context);
+                new MannerMode().turn2Normal(vars.sharedManner, context);
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 new QuietTaskGetPut().put(quietTasks, context, "OneTime");
@@ -70,7 +70,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
-        new NextTask(context,"reNew");
+//        new NextTask(context,"reNew");
         new VarsGetPut().put(vars);
     }
 
@@ -84,11 +84,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                         + ((lastNFKD.length() == 2) ? "가": "이") +" 시작됩니다";
                 // 받침이 있으면 이, 없으면 가
                 myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
-                Intent notification = new Intent(activity, NotificationService.class);
-                notification.putExtra("operation", vars.STOP_SPEAK);
-                context.startForegroundService(notification);
+                new NextTask(context, quietTasks, "say_Started()");
             }
         }, 2000);   // after beep
+        Intent notification = new Intent(activity, NotificationService.class);
+        notification.putExtra("operation", STOP_SPEAK);
+        context.startForegroundService(notification);
     }
 
     void say_Finished(String subject) {
@@ -112,6 +113,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
                 }
+                new NextTask(context, quietTasks, "say_Finished()");
+                MainActivity.created = true;
+                new Utils(context).deleteOldLogFiles();
             }
         }, 3000);
     }
@@ -145,11 +149,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     public void run () {
                         new Sounds().beep(context, 1);
                         if (caseSFO.equals("S")) {
-                            MannerMode.turn2Quiet(context, vars.sharedManner, quietTask.vibrate);
+                            new MannerMode().turn2Quiet(context, vars.sharedManner, quietTask.vibrate);
                         }
                         myTTS.stop();
                     }
-                }, 1000);
+                }, 1500);
             }
 
             @Override
@@ -158,7 +162,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         int result = myTTS.setLanguage(Locale.getDefault());
         if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            Toast.makeText(activity, "Not supported Language", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.pActivity, "Not supported Language", Toast.LENGTH_SHORT).show();
         } else {
             myTTS.setPitch(1.2f);
             myTTS.setSpeechRate(1.3f);

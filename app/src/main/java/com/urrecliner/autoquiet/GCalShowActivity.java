@@ -9,7 +9,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
+import com.urrecliner.autoquiet.Sub.VerticalSpacingItemDecorator;
 
 public class GCalShowActivity extends AppCompatActivity  {
 

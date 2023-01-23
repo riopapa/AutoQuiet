@@ -1,4 +1,4 @@
-package com.urrecliner.autoquiet.utility;
+package com.urrecliner.autoquiet.Sub;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,10 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.urrecliner.autoquiet.MainActivity;
 import com.urrecliner.autoquiet.Vars;
-import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 
 public class VarsGetPut {

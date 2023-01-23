@@ -1,5 +1,7 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.MainActivity.vars;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.urrecliner.autoquiet.databinding.ActivityAddAgendaBinding;
 import com.urrecliner.autoquiet.models.GCal;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.GetAgenda;
-import com.urrecliner.autoquiet.utility.NameColor;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.GetAgenda;
+import com.urrecliner.autoquiet.Sub.NameColor;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import java.util.Locale;
 
 public class AddAgendaActivity extends AppCompatActivity {
 
-    Vars vars;
     private int sRepeatTime = 1, fRepeatTime = 1;
     private boolean vibrate = true;
     private GCal gCal;
@@ -38,7 +39,6 @@ public class AddAgendaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         context = this;
         quietTasks = new QuietTaskGetPut().get(this);
-        vars = new VarsGetPut().get(this);
         gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);

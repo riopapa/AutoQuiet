@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,19 +23,24 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.utility.ClearAllTasks;
-import com.urrecliner.autoquiet.utility.MyItemTouchHelper;
-import com.urrecliner.autoquiet.utility.Permission;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
-import com.urrecliner.autoquiet.utility.VerticalSpacingItemDecorator;
+import com.urrecliner.autoquiet.Sub.ClearAllTasks;
+import com.urrecliner.autoquiet.Sub.MyItemTouchHelper;
+import com.urrecliner.autoquiet.Sub.Permission;
+import com.urrecliner.autoquiet.Sub.SharedPrefer;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.VerticalSpacingItemDecorator;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity  {
 
     public static Context pContext;
     public static Activity pActivity;
-    public Vars vars;
-    boolean created = false;
+    public static Vars vars;
+    static boolean created = false;
     public static MainRecycleAdapter mainRecycleAdapter;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +74,6 @@ public class MainActivity extends AppCompatActivity  {
             Log.w("Permission","Required for READ_CALENDAR");
         }
         Log.w("autoQuiet","onCreated ----- ");
-        created = true;
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
@@ -78,22 +81,31 @@ public class MainActivity extends AppCompatActivity  {
             startActivity(intent);
         }
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        vars.xSize = metrics.widthPixels / 9;
         new VarsGetPut().put(vars);
+        final Activity fActivity = pActivity;
+        final Context fContext = pContext;
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run () {;
+                pActivity = fActivity;
+                pContext = fContext;
+                Log.w("MainActivity","pActivity count = "+count++);
+            }
+        };
+        timer.schedule(timerTask, 30*60000, 30*60000);
+
     }
 
     @Override
     public void onResume() {
 
         super.onResume();
+        created = false;
         vars = new VarsGetPut().get(pContext);
-//        vars.utils = new Utils(pContext);
         Log.w("Main", "onResume is called");
+        new Utils(pContext).deleteOldLogFiles();
         showMainList();
-
     }
 
     @Override
@@ -114,15 +126,17 @@ public class MainActivity extends AppCompatActivity  {
             intent.putExtra("idx", -1);
             startActivity(intent);
             return true;
-        }
-        else if (menuItem == R.id.action_calendar) {
+
+        } else if (menuItem == R.id.action_calendar) {
             new VarsGetPut().put(vars);
             startActivity(new Intent(MainActivity.this, GCalShowActivity.class));
             return true;
+
         } else if (menuItem == R.id.action_setting) {
             new VarsGetPut().put(vars);
             startActivity(new Intent(this, PreferActivity.class));
             return true;
+
         } else if (menuItem == R.id.action_reset) {
             new VarsGetPut().put(vars);
             new AlertDialog.Builder(this)
@@ -160,13 +174,14 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-//        new NextTask(pContext, "back ");
+        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"back ");
         super.onBackPressed();
     }
 
     @Override
-    protected void onPause() {
-//        new NextTask(pContext, "onPause()");
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+//        if (!created)
+//            new NextTask(pContext, quiet"onStop()");
     }
 }

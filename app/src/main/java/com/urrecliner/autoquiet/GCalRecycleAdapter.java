@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.models.GCal;
-import com.urrecliner.autoquiet.utility.GetAgenda;
-import com.urrecliner.autoquiet.utility.NameColor;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.GetAgenda;
+import com.urrecliner.autoquiet.Sub.NameColor;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

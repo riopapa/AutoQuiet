@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.urrecliner.autoquiet.databinding.ActivityOneTimeBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.MannerMode;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -159,7 +160,7 @@ public class OneTimeActivity extends AppCompatActivity {
         MainActivity.mainRecycleAdapter.notifyItemChanged(0);
 
         new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "Swipe "+quietTask.subject);
-        MannerMode.turn2Quiet(this, vars.sharedManner, vibrate);
+        new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
 //        new NextTask(this,"One Time");
         new VarsGetPut().put(vars);
     }

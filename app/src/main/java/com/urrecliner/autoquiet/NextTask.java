@@ -3,14 +3,13 @@ package com.urrecliner.autoquiet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.CalculateNext;
-import com.urrecliner.autoquiet.utility.NextAlarm;
+import com.urrecliner.autoquiet.Sub.CalculateNext;
+import com.urrecliner.autoquiet.Sub.NextAlarm;
 
 import java.util.ArrayList;
 
@@ -19,13 +18,12 @@ public class NextTask {
     static int icon;
     static String timeInfo, soonOrUntill, subject;
 
-    public NextTask(Context context, String headInfo) {
+    public NextTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
         String startFinish = "";
         boolean[] week;
-        ArrayList<QuietTask> quietTasks = new QuietTaskGetPut().get(context);
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qTaskNext = quietTasks.get(idx);
             if (qTaskNext.active) {
@@ -57,14 +55,13 @@ public class NextTask {
             timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
             soonOrUntill = "까지";
         }
-        new NextAlarm().request(context, quietTask, nextTime - 30000, startFinish, saveIdx);
+        new NextAlarm().request(context, quietTask, nextTime - 30000, startFinish);
         String msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         new Utils(context).log("NextTask",msg);
-        Activity activity = MainActivity.pActivity;
-        if (activity == null)
-            Log.e("Activity"," si null");
+        Activity activity;
+        activity = (Activity) context;
+
         Intent updateIntent = new Intent(activity, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("start", timeInfo);
@@ -72,6 +69,14 @@ public class NextTask {
         updateIntent.putExtra("subject", subject);
         updateIntent.putExtra("icon", icon);
         activity.startForegroundService(updateIntent);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+        });
+//
     }
 
     @NonNull

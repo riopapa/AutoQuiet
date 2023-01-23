@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 
-import com.urrecliner.autoquiet.utility.VarsGetPut;
-
 public class NotificationService extends Service {
 
     NotificationCompat.Builder mBuilder = null;
@@ -22,17 +20,15 @@ public class NotificationService extends Service {
     private RemoteViews mRemoteViews;
     static boolean goOnSpeak = false;
     String start, sSubject, finish;
-    Vars vars;
     Context context;
     final int INVOKE_ONETIME = 100;
+    final int STOP_SPEAK = 1022;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this; // MainActivity.pContext;
-        vars = new VarsGetPut().get(context);
+        context = this;
         mRemoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_bar);
-        Log.w("notiSVC","onCreate()");
     }
 
     @Override
@@ -43,19 +39,15 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        int operation = -1;
+        createNotification();
+
         boolean isUpdate;
-        try {
-            operation = intent.getIntExtra("operation", -1);
-        } catch (Exception e) {
-            Log.e("operation", e.toString());
-        }
         try {
             isUpdate = intent.getBooleanExtra("isUpdate", false);
         } catch (Exception e) {
             return START_STICKY;
         }
-        createNotification();
+
         if (isUpdate) {
             start = intent.getStringExtra("start");
             finish = intent.getStringExtra("finish");
@@ -64,6 +56,13 @@ public class NotificationService extends Service {
             updateRemoteViews(sSubject, start, finish, icon);
             startForeground(100, mBuilder.build());
             return START_STICKY;
+        }
+
+        int operation = -1;
+        try {
+            operation = intent.getIntExtra("operation", -1);
+        } catch (Exception e) {
+            Log.e("operation", e.toString());
         }
         if (operation == INVOKE_ONETIME) {
             Intent oIntent = new Intent(context, OneTimeActivity.class);
@@ -105,7 +104,7 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
 
         Intent stopSpeak = new Intent(this, NotificationService.class);
-        stopSpeak.putExtra("operation", vars.STOP_SPEAK);
+        stopSpeak.putExtra("operation", STOP_SPEAK);
         PendingIntent ps = PendingIntent.getService(context, 3, stopSpeak, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);

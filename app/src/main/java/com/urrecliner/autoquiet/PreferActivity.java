@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 public class PreferActivity extends AppCompatActivity {
 

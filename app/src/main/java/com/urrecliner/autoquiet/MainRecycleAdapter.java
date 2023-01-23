@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.ItemTouchHelperAdapter;
-import com.urrecliner.autoquiet.utility.NameColor;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
+import com.urrecliner.autoquiet.Sub.NameColor;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

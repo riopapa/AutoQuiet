@@ -1,11 +1,14 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.MainActivity.vars;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +23,8 @@ import androidx.core.content.ContextCompat;
 
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.utility.NameColor;
-import com.urrecliner.autoquiet.utility.VarsGetPut;
+import com.urrecliner.autoquiet.Sub.NameColor;
+import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,13 +33,12 @@ import java.util.Locale;
 
 public class AddUpdateActivity extends AppCompatActivity {
 
-    Vars vars;
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
     private boolean active;
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
-    private TextView[] weekView = new TextView[7];
+    private final TextView[] weekView = new TextView[7];
     private boolean vibrate, agenda;
     private QuietTask quietTask;
     private ArrayList<QuietTask> quietTasks;
@@ -44,6 +46,8 @@ public class AddUpdateActivity extends AppCompatActivity {
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
+    private int xSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
@@ -52,11 +56,10 @@ public class AddUpdateActivity extends AppCompatActivity {
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         quietTasks = new QuietTaskGetPut().get(this);
-        vars = new VarsGetPut().get(context);
         Intent intent = getIntent();
         currIdx = intent.getExtras().getInt("idx",-1);
         if (vars.addNewQuiet)
-            quietTask = getQuietTaskDefault();
+            quietTask = new QuietTaskDefault().get();
         else
             quietTask = quietTasks.get(currIdx);
 
@@ -76,6 +79,11 @@ public class AddUpdateActivity extends AppCompatActivity {
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
         build_QuietTask();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        xSize = metrics.widthPixels / 9;
+
     }
 
     void build_QuietTask() {
@@ -109,7 +117,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             binding.weekFlag.setVisibility(View.VISIBLE);
             for (int i = 0; i < 7; i++) {
                 weekView[i].setId(i);
-                weekView[i].setWidth(vars.xSize);
+                weekView[i].setWidth(xSize);
                 weekView[i].setGravity(Gravity.CENTER);
                 weekView[i].setTextColor(colorOn);
                 weekView[i].setBackgroundColor((week[i]) ? colorOnBack : colorOffBack);
@@ -119,7 +127,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         }
         binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
         binding.avVibrate.setOnClickListener(v -> {
-            vibrate ^= true;
+            vibrate = !vibrate;
             binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
             v.invalidate();
         });
@@ -129,7 +137,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         else {
             binding.swActive.setChecked(active);
             binding.swActive.setOnClickListener(v -> {
-                active ^= true;
+                active = !active;
                 binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
                 binding.swActive.setChecked(active);
                 v.invalidate();
@@ -171,19 +179,6 @@ public class AddUpdateActivity extends AppCompatActivity {
             tv.setText(s);
         } else
             tv.setText("");
-    }
-
-    QuietTask getQuietTaskDefault() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, 10);
-        int hStart = calendar.get(Calendar.HOUR_OF_DAY);
-        int mStart = calendar.get(Calendar.MINUTE);
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
-        boolean [] week = new boolean[]{false, true, true, true, true, true, false};
-        return new QuietTask(getString(R.string.action_add), hStart, mStart, hFinish, mStart,
-                week, true, true, 1, 0);
     }
 
     public void toggleWeek(View v) {
@@ -297,7 +292,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, vars.quietUnique, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, 23456, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
     }
 

@@ -1,10 +1,12 @@
-package com.urrecliner.autoquiet;
+package com.urrecliner.autoquiet.Sub;
 
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Looper;
+
+import com.urrecliner.autoquiet.R;
 
 public class Sounds {
 
@@ -14,7 +16,7 @@ public class Sounds {
             R.raw.leading_sound                   //  event button pressed
     };
 
-    void beep(Context context, int soundId) {
+    public void beep(Context context, int soundId) {
 
         SoundPool.Builder builder;
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
