@@ -39,8 +39,11 @@ public class MainActivity extends AppCompatActivity  {
     public static Activity pActivity;
     public static Vars vars;
     static boolean created = false;
-    public static MainRecycleAdapter mainRecycleAdapter;
+    public MainRecycleAdapter mainRecycleAdapter;
     int count;
+    Timer timer = null;
+    TimerTask timerTask = null;
+    long timeSaved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,31 +84,35 @@ public class MainActivity extends AppCompatActivity  {
             startActivity(intent);
         }
 
-        new VarsGetPut().put(vars);
-        final Activity fActivity = pActivity;
-        final Context fContext = pContext;
-        Timer timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run () {;
-                pActivity = fActivity;
-                pContext = fContext;
-                Log.w("MainActivity","pActivity count = "+count++);
-            }
-        };
-        timer.schedule(timerTask, 30*60000, 30*60000);
-
+        new VarsGetPut().put(vars, pContext);
+        timeSaved = System.currentTimeMillis();
     }
 
     @Override
     public void onResume() {
 
-        super.onResume();
         created = false;
         vars = new VarsGetPut().get(pContext);
         Log.w("Main", "onResume is called");
         new Utils(pContext).deleteOldLogFiles();
         showMainList();
+        count = 0;
+
+        if (timer != null)
+            timer.cancel();
+        if (timerTask != null)
+            timerTask.cancel();
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run () {
+                Log.w("MainActivity" +count++, "timeGap = "+((System.currentTimeMillis() - timeSaved)/1000));
+                timeSaved = System.currentTimeMillis();
+            }
+        };
+        timer.schedule(timerTask, 20*60000, 20*60000);
+        super.onResume();
+
     }
 
     @Override
@@ -121,24 +128,25 @@ public class MainActivity extends AppCompatActivity  {
         int menuItem = item.getItemId();
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
-            new VarsGetPut().put(vars);
-            intent = new Intent(MainActivity.this, AddUpdateActivity.class);
+            new VarsGetPut().put(vars, pContext);
+            intent = new Intent(this, AddUpdateActivity.class);
             intent.putExtra("idx", -1);
-            startActivity(intent);
+            startActivityForResult(intent, 11);
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
-            new VarsGetPut().put(vars);
-            startActivity(new Intent(MainActivity.this, GCalShowActivity.class));
+            new VarsGetPut().put(vars, pContext);
+            intent = new Intent(this, GCalShowActivity.class);
+            startActivityForResult(intent, 22);
             return true;
 
         } else if (menuItem == R.id.action_setting) {
-            new VarsGetPut().put(vars);
-            startActivity(new Intent(this, PreferActivity.class));
+            new VarsGetPut().put(vars, pContext);
+            startActivityForResult(new Intent(this, PreferActivity.class),33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
-            new VarsGetPut().put(vars);
+            new VarsGetPut().put(vars, pContext);
             new AlertDialog.Builder(this)
                     .setTitle(R.string.reset_title)
                     .setMessage(R.string.reset_table)
@@ -154,6 +162,14 @@ public class MainActivity extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mainRecycleAdapter.notifyDataSetChanged();
+    }
+
+
     private void showMainList() {
 
         RecyclerView mainRecyclerView = ((Activity) MainActivity.pContext).findViewById(R.id.mainRecycler);
@@ -167,7 +183,7 @@ public class MainActivity extends AppCompatActivity  {
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
-        new VarsGetPut().put(vars);
+        new VarsGetPut().put(vars, pContext);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
     }

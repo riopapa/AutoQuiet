@@ -38,7 +38,7 @@ public class AddUpdateActivity extends AppCompatActivity {
     private boolean active;
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
-    private final TextView[] weekView = new TextView[7];
+    private TextView[] weekView = new TextView[7];
     private boolean vibrate, agenda;
     private QuietTask quietTask;
     private ArrayList<QuietTask> quietTasks;
@@ -62,6 +62,9 @@ public class AddUpdateActivity extends AppCompatActivity {
             quietTask = new QuietTaskDefault().get();
         else
             quietTask = quietTasks.get(currIdx);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        xSize = metrics.widthPixels / 9;
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle((vars.addNewQuiet) ? R.string.add_table :R.string.update_table);
@@ -79,10 +82,6 @@ public class AddUpdateActivity extends AppCompatActivity {
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
         build_QuietTask();
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        xSize = metrics.widthPixels / 9;
 
     }
 
@@ -125,10 +124,15 @@ public class AddUpdateActivity extends AppCompatActivity {
                 weekView[i].setText(weekName[i]);
             }
         }
-        binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
-        binding.avVibrate.setOnClickListener(v -> {
+        binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
+        binding.tVVibrate.setOnClickListener(v -> {
             vibrate = !vibrate;
-            binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
+            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
+            v.invalidate();
+        });
+        binding.iVVibrate.setOnClickListener(v -> {
+            vibrate = !vibrate;
+            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
             v.invalidate();
         });
 
@@ -144,18 +148,39 @@ public class AddUpdateActivity extends AppCompatActivity {
             });
             binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
         }
-        binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
-        binding.iVstartRepeat.setOnClickListener(v -> {
+
+        binding.tVStartRepeat.setOnClickListener(v -> {
             if (sRepeatCount == 0)
                 sRepeatCount = 1;
             else if (sRepeatCount == 1)
                 sRepeatCount = 11;
             else
                 sRepeatCount = 0;
-            binding.iVstartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            v.invalidate();
+        });
+        binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.iVStartRepeat.setOnClickListener(v -> {
+            if (sRepeatCount == 0)
+                sRepeatCount = 1;
+            else if (sRepeatCount == 1)
+                sRepeatCount = 11;
+            else
+                sRepeatCount = 0;
+            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
 
+        binding.tVFinishRepeat.setOnClickListener(v -> {
+            if (fRepeatCount == 0)
+                fRepeatCount = 1;
+            else if (fRepeatCount == 1)
+                fRepeatCount = 11;
+            else
+                fRepeatCount = 0;
+            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            v.invalidate();
+        });
         binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.iVFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
@@ -231,8 +256,7 @@ public class AddUpdateActivity extends AppCompatActivity {
 
         finish();
 //        new NextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
-        MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx, quietTask);
-    }
+        }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -263,7 +287,6 @@ public class AddUpdateActivity extends AppCompatActivity {
         } else if (id == R.id.action_delete) {
             new QuietTaskGetPut().put(quietTasks, context, "del "+quietTask.subject);
             quietTasks.remove(currIdx);
-            MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx);
             cancel_QuietTask();
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
@@ -271,14 +294,12 @@ public class AddUpdateActivity extends AppCompatActivity {
                 for (int i = 0; i < quietTasks.size(); ) {
                     if (quietTasks.get(i).calId == delId) {
                         quietTasks.remove(i);
-                        MainActivity.mainRecycleAdapter.notifyItemChanged(i);
                     }
                     else
                         i++;
                 }
             } else {
                 quietTasks.remove(currIdx);
-                MainActivity.mainRecycleAdapter.notifyItemChanged(currIdx);
             }
             new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
             cancel_QuietTask();

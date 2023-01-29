@@ -123,7 +123,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/avVibrate"
+            android:id="@+id/iVVibrate"
             android:layout_width="40dp"
             android:layout_height="48dp"
             android:src="@drawable/phone_vibrate"

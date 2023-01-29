@@ -3,6 +3,8 @@ package com.urrecliner.autoquiet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 public class NextTask {
     long nextTime;
     static int icon;
-    static String timeInfo, soonOrUntill, subject;
+    static String timeInfoS, timeInfoF, timeInfo, soonOrUntill, subject, msg;
 
     public NextTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
@@ -47,39 +49,39 @@ public class NextTask {
         }
         QuietTask quietTask = quietTasks.get(saveIdx);
         subject = quietTask.subject;
-        if (startFinish.equals("S")) {
-            timeInfo = getHourMin(quietTask.startHour, quietTask.startMin);
+        timeInfoS = getHourMin(quietTask.startHour, quietTask.startMin);
+        timeInfoF = getHourMin(quietTask.finishHour, quietTask.finishMin);
+        if  (startFinish.equals("S")) {
+            timeInfo = timeInfoS;
             soonOrUntill = "예정";
-        }
-        else {
-            timeInfo = getHourMin(quietTask.finishHour, quietTask.finishMin);
+        } else {
+            timeInfo = timeInfoF;
             soonOrUntill = "까지";
         }
-        new NextAlarm().request(context, quietTask, nextTime - 30000, startFinish);
-        String msg = headInfo + " " + subject + "\n" + timeInfo
+        new NextAlarm().request(context, quietTask, nextTime, startFinish);
+        msg = headInfo + " " + subject + "\n" + timeInfo
                 + " " + soonOrUntill + " " + startFinish;
-        new Utils(context).log("NextTask",msg);
-        Activity activity;
-        activity = (Activity) context;
+        if  (startFinish.equals("S"))
+            msg += " ~ " + timeInfoF;
 
-        Intent updateIntent = new Intent(activity, NotificationService.class);
+        new Utils(context).log("NextTask",msg);
+
+        Intent updateIntent = new Intent(context, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("start", timeInfo);
         updateIntent.putExtra("finish", soonOrUntill);
         updateIntent.putExtra("subject", subject);
         updateIntent.putExtra("icon", icon);
-        activity.startForegroundService(updateIntent);
+        context.startForegroundService(updateIntent);
 
-        activity.runOnUiThread(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         });
-//
     }
 
-    @NonNull
     private String getHourMin(int hour, int min) {
         String hh = "0"+ hour;
         hh = hh.substring(hh.length()-2);

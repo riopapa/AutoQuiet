@@ -95,6 +95,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 if (qIdx != 0) {
                     vars.addNewQuiet = false;
                     intent = new Intent(context, AddUpdateActivity.class);
+                    intent.putExtra("idx",qIdx);
                 } else {
                     intent = new Intent(context, OneTimeActivity.class);
                 }
@@ -183,7 +184,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         if (vibrate)
             holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
         else
-            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_off : R.mipmap.speaking_noactive);
         int sRepeat = quietTask.sRepeatCount;
         int fRepeat = quietTask.fRepeatCount;
         holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);

@@ -23,9 +23,9 @@ public class VarsGetPut {
         return gson.fromJson(json, type);
     }
 
-    public void put(Vars vars) {
+    public void put(Vars vars, Context context) {
         SharedPreferences sharedPref
-                = android.preference.PreferenceManager.getDefaultSharedPreferences(MainActivity.pContext);
+                = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(vars);

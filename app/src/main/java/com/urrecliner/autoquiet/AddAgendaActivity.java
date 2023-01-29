@@ -63,10 +63,10 @@ public class AddAgendaActivity extends AppCompatActivity {
         binding.aDesc.setText(gCal.desc);
         binding.aRepeat.setText((gCal.repeat)? gCal.rule:"");
 
-        binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
-        binding.avVibrate.setOnClickListener(v -> {
+        binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
+        binding.iVVibrate.setOnClickListener(v -> {
             vibrate ^= true;
-            binding.avVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
+            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
             v.invalidate();
         });
 
@@ -142,7 +142,7 @@ public class AddAgendaActivity extends AppCompatActivity {
         }
         Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
         new QuietTaskGetPut().put(quietTasks, context, "AddAgenda");
-        new VarsGetPut().put(vars);
+        new VarsGetPut().put(vars, context);
         finish();
     }
 }

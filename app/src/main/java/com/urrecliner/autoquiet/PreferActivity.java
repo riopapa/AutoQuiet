@@ -28,7 +28,7 @@ public class PreferActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 //        vars.utils.getPreference();
-        new VarsGetPut().put(vars);
+        new VarsGetPut().put(vars, getApplicationContext());
         super.onDestroy();
     }
 

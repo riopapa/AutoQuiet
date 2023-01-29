@@ -157,12 +157,10 @@ public class OneTimeActivity extends AppCompatActivity {
                 week, true, vibrate, 0, fRepeatCount);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);
-        MainActivity.mainRecycleAdapter.notifyItemChanged(0);
-
         new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "Swipe "+quietTask.subject);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
 //        new NextTask(this,"One Time");
-        new VarsGetPut().put(vars);
+        new VarsGetPut().put(vars, getApplicationContext());
     }
 
     @Override

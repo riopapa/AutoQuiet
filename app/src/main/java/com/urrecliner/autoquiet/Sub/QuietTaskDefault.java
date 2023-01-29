@@ -15,7 +15,7 @@ public class QuietTaskDefault {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         int hFinish = calendar.get(Calendar.HOUR_OF_DAY);
         boolean [] week = new boolean[]{false, true, true, true, true, true, false};
-        return new QuietTask("추가", hStart, mStart, hFinish, mStart,
+        return new QuietTask("추가할 제목", hStart, mStart, hFinish, mStart,
                 week, true, true, 1, 0);
     }
 }

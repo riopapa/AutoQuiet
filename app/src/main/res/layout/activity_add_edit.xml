@@ -101,6 +101,7 @@
         android:gravity="center"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/tVVibrate"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -111,13 +112,14 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/avVibrate"
+            android:id="@+id/iVVibrate"
             android:layout_margin="16dp"
             android:layout_width="60dp"
             android:layout_height="48dp"
             android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <TextView
+            android:id="@+id/tVStartRepeat"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -127,7 +129,7 @@
             android:padding="2dp"
             android:textSize="18sp" />
         <ImageView
-            android:id="@+id/iVstartRepeat"
+            android:id="@+id/iVStartRepeat"
             android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
@@ -135,6 +137,7 @@
             android:contentDescription="@string/blank" />
 
         <TextView
+            android:id="@+id/tVFinishRepeat"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_height="wrap_content"
