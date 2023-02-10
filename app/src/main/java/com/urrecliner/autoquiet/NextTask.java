@@ -37,35 +37,42 @@ public class NextTask {
                     startFinish = "S";
                     icon = 0;
                 }
-
-                long nextFinish = CalculateNext.calc(true, qTaskNext.finishHour, qTaskNext.finishMin, week, (qTaskNext.startHour> qTaskNext.finishHour) ? (long)24*60*60*1000 : 0);
-                if (nextFinish < nextTime) {
-                    nextTime = nextFinish;
-                    saveIdx = idx;
-                    startFinish = (idx == 0) ? "O":"F";
-                    icon = (qTaskNext.vibrate) ? 1:2;
+                if (qTaskNext.finishHour != 99) {
+                    long nextFinish = CalculateNext.calc(true, qTaskNext.finishHour, qTaskNext.finishMin, week, (qTaskNext.startHour > qTaskNext.finishHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+                    if (nextFinish < nextTime) {
+                        nextTime = nextFinish;
+                        saveIdx = idx;
+                        startFinish = (idx == 0) ? "O" : "F";
+                        icon = (qTaskNext.vibrate) ? 1 : 2;
+                    }
                 }
             }
         }
         QuietTask quietTask = quietTasks.get(saveIdx);
+        new NextAlarm().request(context, quietTask, nextTime, startFinish);
+
         subject = quietTask.subject;
         timeInfoS = getHourMin(quietTask.startHour, quietTask.startMin);
-        timeInfoF = getHourMin(quietTask.finishHour, quietTask.finishMin);
-        if  (startFinish.equals("S")) {
-            timeInfo = timeInfoS;
-            soonOrUntill = "예정";
+        if (quietTask.finishHour == 99) {
+            timeInfoF = "";
+            soonOrUntill = "";
+            msg = headInfo + " " + subject;
         } else {
-            timeInfo = timeInfoF;
-            soonOrUntill = "까지";
+            timeInfoF = getHourMin(quietTask.finishHour, quietTask.finishMin);
+            if  (startFinish.equals("S")) {
+                timeInfo = timeInfoS;
+                soonOrUntill = "예정";
+            } else {
+                timeInfo = timeInfoF;
+                soonOrUntill = "까지";
+            }
+            msg = headInfo + " " + subject + "\n" + timeInfo
+                    + " " + soonOrUntill + " " + startFinish;
+            if  (startFinish.equals("S"))
+                msg += " ~ " + timeInfoF;
         }
-        new NextAlarm().request(context, quietTask, nextTime, startFinish);
-        msg = headInfo + " " + subject + "\n" + timeInfo
-                + " " + soonOrUntill + " " + startFinish;
-        if  (startFinish.equals("S"))
-            msg += " ~ " + timeInfoF;
 
         new Utils(context).log("NextTask",msg);
-
         Intent updateIntent = new Intent(context, NotificationService.class);
         updateIntent.putExtra("isUpdate", true);
         updateIntent.putExtra("start", timeInfo);

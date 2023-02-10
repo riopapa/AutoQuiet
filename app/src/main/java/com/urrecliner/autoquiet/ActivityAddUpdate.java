@@ -1,6 +1,6 @@
 package com.urrecliner.autoquiet;
 
-import static com.urrecliner.autoquiet.MainActivity.vars;
+import static com.urrecliner.autoquiet.ActivityMain.vars;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddUpdateActivity extends AppCompatActivity {
+public class ActivityAddUpdate extends AppCompatActivity {
 
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
-    private boolean active;
+    private boolean active, finishShow;
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
@@ -93,6 +93,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         startMin = quietTask.startMin;
         finishHour = quietTask.finishHour;
         finishMin = quietTask.finishMin;
+        finishShow = quietTask.finishHour != 99;
         active = quietTask.active;
         sRepeatCount = quietTask.sRepeatCount;
         fRepeatCount = quietTask.fRepeatCount;
@@ -103,8 +104,14 @@ public class AddUpdateActivity extends AppCompatActivity {
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
+        binding.finishShow.setChecked(finishShow);
         binding.timePickerFinish.setIs24HourView(true);
-        binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+        if (finishShow) {
+            binding.timePickerFinish.setVisibility(View.VISIBLE);
+            binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+        } else {
+            binding.timePickerFinish.setVisibility(View.INVISIBLE);
+        }
 
         if (subject == null)
             subject = getString(R.string.no_subject);
@@ -136,6 +143,21 @@ public class AddUpdateActivity extends AppCompatActivity {
             v.invalidate();
         });
 
+        binding.finishShow.setOnClickListener(v -> {
+            finishShow = !finishShow;
+            binding.finishShow.setChecked(finishShow);
+            if (finishShow) {
+                binding.timePickerFinish.setVisibility(View.VISIBLE);
+                if (finishHour == 99)
+                    finishHour = startHour;
+                binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+            } else {
+                finishHour = 99;
+                binding.timePickerFinish.setVisibility(View.INVISIBLE);
+            }
+            binding.timePickerFinish.invalidate();
+        });
+
         if (agenda)
             binding.swActive.setVisibility(View.GONE);
         else {
@@ -159,6 +181,7 @@ public class AddUpdateActivity extends AppCompatActivity {
             binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
+
         binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
         binding.iVStartRepeat.setOnClickListener(v -> {
             if (sRepeatCount == 0)
@@ -229,7 +252,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         if (subject.length() == 0)
             subject = getString(R.string.no_subject);
         startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
-        finishHour = binding.timePickerFinish.getHour(); finishMin = binding.timePickerFinish.getMinute();
+        finishHour = (finishShow)? binding.timePickerFinish.getHour(): 99; finishMin = binding.timePickerFinish.getMinute();
 
         if (agenda) {
             Calendar c = Calendar.getInstance();
@@ -284,10 +307,18 @@ public class AddUpdateActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_save) {
             save_QuietTask();
+
         } else if (id == R.id.action_delete) {
             new QuietTaskGetPut().put(quietTasks, context, "del "+quietTask.subject);
             quietTasks.remove(currIdx);
             cancel_QuietTask();
+
+        } else if (id == R.id.action_copy) {
+            quietTask.subject = quietTask.subject + "2";
+            quietTasks.add(currIdx, quietTask);
+            new QuietTaskGetPut().put(quietTasks, context, "copy "+quietTask.subject);
+            finish();
+
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
                 int delId = quietTask.calId;
@@ -313,7 +344,7 @@ public class AddUpdateActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(com.urrecliner.autoquiet.AddUpdateActivity.this, 23456, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ActivityAddUpdate.this, 23456, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
     }
 

@@ -27,13 +27,13 @@ public class QuietTaskGetPut {
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calStartDate));
         SharedPreferences sharedPref = androidx.preference.
-                PreferenceManager.getDefaultSharedPreferences(MainActivity.pContext);
+                PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);
         prefsEditor.putString("silentInfo", json);
         prefsEditor.apply();
-        MainActivity.created = true;
+        ActivityMain.created = true;
 //        new NextTask(context, quietTasks, info);
     }
 

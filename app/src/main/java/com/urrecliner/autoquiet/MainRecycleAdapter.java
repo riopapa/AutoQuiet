@@ -46,7 +46,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        vars = new VarsGetPut().get(MainActivity.pContext);
+        vars = new VarsGetPut().get(ActivityMain.pContext);
         colorOn = ResourcesCompat.getColor(context.getResources(), R.color.colorOn, null);
         colorInactiveBack = ResourcesCompat.getColor(context.getResources(), R.color.colorInactiveBack, null);
         colorOnBack = ResourcesCompat.getColor(context.getResources(), R.color.colorOnBack, null);
@@ -60,8 +60,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
+            GestureDetector.OnGestureListener {
 
         View viewLine;
         ImageView lvVibrate, lvStartRepeat, lvFinishRepeat, lvgCal;
@@ -94,10 +93,10 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 Intent intent;
                 if (qIdx != 0) {
                     vars.addNewQuiet = false;
-                    intent = new Intent(context, AddUpdateActivity.class);
+                    intent = new Intent(context, ActivityAddUpdate.class);
                     intent.putExtra("idx",qIdx);
                 } else {
-                    intent = new Intent(context, OneTimeActivity.class);
+                    intent = new Intent(context, ActivityOneTime.class);
                 }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Gson gson = new Gson();
@@ -137,9 +136,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             Intent intent;
             if (qIdx != 0) {
                 vars.addNewQuiet = false;
-                intent = new Intent(context, AddUpdateActivity.class);
+                intent = new Intent(context, ActivityAddUpdate.class);
             } else {
-                intent = new Intent(context, OneTimeActivity.class);
+                intent = new Intent(context, ActivityOneTime.class);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("idx",qIdx);
@@ -171,24 +170,31 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         boolean gCalendar = quietTask.agenda;
         boolean active = quietTask.active;
         boolean vibrate = quietTask.vibrate;
+        boolean finishShow = quietTask.finishHour != 99;
 
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
         String txt = buildHourMin(quietTask.startHour, quietTask.startMin);
         holder.tvStartTime.setText(txt);
-        txt = buildHourMin(quietTask.finishHour, quietTask.finishMin);
+        txt = (finishShow) ? buildHourMin(quietTask.finishHour, quietTask.finishMin) : "";
         holder.tvFinishTime.setText(txt);
         holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
-        if (vibrate)
-            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
-        else
-            holder.lvVibrate.setImageResource((active) ? R.drawable.phone_off : R.mipmap.speaking_noactive);
-        int sRepeat = quietTask.sRepeatCount;
-        int fRepeat = quietTask.fRepeatCount;
-        holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
-        holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
+        if (finishShow) {
+            if (vibrate)
+                holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
+            else
+                holder.lvVibrate.setImageResource((active) ? R.drawable.phone_off : R.mipmap.speaking_noactive);
+            int sRepeat = quietTask.sRepeatCount;
+            int fRepeat = quietTask.fRepeatCount;
+            holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
+            holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
+        } else {
+            holder.lvVibrate.setImageResource(R.mipmap.speaking_noactive);
+            holder.lvStartRepeat.setImageResource(R.mipmap.speaking_noactive);
+            holder.lvFinishRepeat.setImageResource(R.mipmap.speaking_noactive);
+        }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
         if (!gCalendar) {
@@ -260,8 +266,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public int getItemCount() {
         if (quietTasks == null) {
-            context = MainActivity.pContext;
-            quietTasks = new QuietTaskGetPut().get(MainActivity.pContext);
+            context = ActivityMain.pContext;
+            quietTasks = new QuietTaskGetPut().get(ActivityMain.pContext);
         }
         return quietTasks.size();
     }

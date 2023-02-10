@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
-public class PreferActivity extends AppCompatActivity {
+public class ActivityPrefer extends AppCompatActivity {
 
     static Vars vars;
     @Override

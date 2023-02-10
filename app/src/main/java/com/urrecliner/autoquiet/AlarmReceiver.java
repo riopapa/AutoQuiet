@@ -1,12 +1,9 @@
 package com.urrecliner.autoquiet;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
@@ -69,6 +66,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 new QuietTaskGetPut().put(quietTasks, context, "OneTime");
+                new NextTask(context, quietTasks, "After oneTime");
                 break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
@@ -79,22 +77,34 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void say_Started(QuietTask quietTask) {
 
+        boolean finishShow = quietTask.finishHour != 99;
         new Sounds().beep(context, 2);
         new Timer().schedule(new TimerTask() {
             public void run () {
-                if (quietTask.sRepeatCount > 0) {
-                    String subject = quietTask.subject;
-                    String lastCode = subject.substring(subject.length() - 1);
-                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                    String s = nowTimeToString(System.currentTimeMillis()) + " 입니다. " + subject
-                            + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
-                    // 받침이 있으면 이, 없으면 가
-                    myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
-                }
-                new NextTask(context, quietTasks, "say_Started()");
+            if (quietTask.sRepeatCount > 0) {
+                String subject = quietTask.subject;
+                String lastCode = subject.substring(subject.length() - 1);
+                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                String s = nowTimeToString(System.currentTimeMillis()) + " 입니다. ";
+                if (finishShow)
+                    s += subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
+                else
+                    s += subject + " 를 확인하세요";
+                // 받침이 있으면 이, 없으면 가
+                myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
+            }
+            new NextTask(context, quietTasks, "say_Started()");
 
             }
         }, 2000);   // after beep
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                new Sounds().beep(context, 1);
+                if (caseSFO.equals("S") && finishShow) {
+                    new MannerMode().turn2Quiet(context, vars.sharedManner, quietTask.vibrate);
+                }
+            }
+        }, 6000);
 
         Intent notification = new Intent(context, NotificationService.class);
         notification.putExtra("operation", STOP_SPEAK);
@@ -125,7 +135,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                 }
                 new NextTask(context, quietTasks, "say_Finished()");
-                MainActivity.created = true;
+                ActivityMain.created = true;
                 new Utils(context).deleteOldLogFiles();
             }
         }, 3000);
@@ -140,10 +150,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         });
     }
-
-    private void toasting(String msg) {
-    }
-//
 
     String TTSId = "";
 
@@ -160,15 +166,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void onDone(String utteranceId) {
                 if (myTTS.isSpeaking())
                     return;
-                new Timer().schedule(new TimerTask() {
-                    public void run () {
-                        new Sounds().beep(context, 1);
-                        if (caseSFO.equals("S")) {
-                            new MannerMode().turn2Quiet(context, vars.sharedManner, quietTask.vibrate);
-                        }
-                        myTTS.stop();
-                    }
-                }, 1500);
+                myTTS.stop();
             }
 
             @Override

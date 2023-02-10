@@ -32,6 +32,12 @@
             android:layout_margin="4dp"
             android:padding="4dp"
             android:textSize="24sp" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/finish_show"
+            android:layout_width="32sp"
+            android:layout_height="32sp"
+            />
     </LinearLayout>
     <LinearLayout
         android:gravity="center"

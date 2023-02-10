@@ -1,6 +1,6 @@
 package com.urrecliner.autoquiet;
 
-import static com.urrecliner.autoquiet.MainActivity.vars;
+import static com.urrecliner.autoquiet.ActivityMain.vars;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class AddAgendaActivity extends AppCompatActivity {
+public class ActivityAddAgenda extends AppCompatActivity {
 
     private int sRepeatTime = 1, fRepeatTime = 1;
     private boolean vibrate = true;

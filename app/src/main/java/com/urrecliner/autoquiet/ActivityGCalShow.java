@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.Sub.VerticalSpacingItemDecorator;
 
-public class GCalShowActivity extends AppCompatActivity  {
+public class ActivityGCalShow extends AppCompatActivity  {
 
 
     @Override

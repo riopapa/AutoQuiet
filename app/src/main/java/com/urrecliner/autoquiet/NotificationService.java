@@ -65,7 +65,7 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
         if (operation == INVOKE_ONETIME) {
-            Intent oIntent = new Intent(context, OneTimeActivity.class);
+            Intent oIntent = new Intent(context, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, oIntent, 0);
             try {
                 pendingIntent.send();
@@ -94,7 +94,7 @@ public class NotificationService extends Service {
                     .setOngoing(true);
         }
 
-        Intent mainIntent = new Intent(context, MainActivity.class);
+        Intent mainIntent = new Intent(context, ActivityMain.class);
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(context, 0, mainIntent, 0));
 
         Intent stopOneTime = new Intent(this, NotificationService.class);

@@ -35,7 +35,6 @@ public class QuietTask implements Serializable {
         this.fRepeatCount = fRepeatCount;
         this.agenda = false;
         System.arraycopy(week, 0, this.week, 0, 7);
-
     }
     
     // QuietTask from calendar

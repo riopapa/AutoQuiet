@@ -33,7 +33,7 @@ import com.urrecliner.autoquiet.Sub.VerticalSpacingItemDecorator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity  {
+public class ActivityMain extends AppCompatActivity  {
 
     public static Context pContext;
     public static Activity pActivity;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity  {
         timerTask = new TimerTask() {
             @Override
             public void run () {
-                Log.w("MainActivity" +count++, "timeGap = "+((System.currentTimeMillis() - timeSaved)/1000));
+                Log.w("Main " +count++, "timeGap = "+((System.currentTimeMillis() - timeSaved)/1000));
                 timeSaved = System.currentTimeMillis();
             }
         };
@@ -129,20 +129,20 @@ public class MainActivity extends AppCompatActivity  {
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
             new VarsGetPut().put(vars, pContext);
-            intent = new Intent(this, AddUpdateActivity.class);
+            intent = new Intent(this, ActivityAddUpdate.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
             new VarsGetPut().put(vars, pContext);
-            intent = new Intent(this, GCalShowActivity.class);
+            intent = new Intent(this, ActivityGCalShow.class);
             startActivityForResult(intent, 22);
             return true;
 
         } else if (menuItem == R.id.action_setting) {
             new VarsGetPut().put(vars, pContext);
-            startActivityForResult(new Intent(this, PreferActivity.class),33);
+            startActivityForResult(new Intent(this, ActivityPrefer.class),33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
@@ -169,15 +169,14 @@ public class MainActivity extends AppCompatActivity  {
         mainRecycleAdapter.notifyDataSetChanged();
     }
 
-
     private void showMainList() {
 
-        RecyclerView mainRecyclerView = ((Activity) MainActivity.pContext).findViewById(R.id.mainRecycler);
-        LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(MainActivity.pContext);
-        mainRecyclerView.setLayoutManager(mainLinearLayoutManager);
+        RecyclerView mainRecyclerView = findViewById(R.id.mainRecycler);
+//        LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(MainActivity.pContext);
+//        mainRecyclerView.setLayoutManager(mainLinearLayoutManager);
 
-        VerticalSpacingItemDecorator mainItemDecorator = new VerticalSpacingItemDecorator(14);
-        mainRecyclerView.addItemDecoration(mainItemDecorator);
+//        VerticalSpacingItemDecorator mainItemDecorator = new VerticalSpacingItemDecorator(14);
+//        mainRecyclerView.addItemDecoration(mainItemDecorator);
 
         mainRecycleAdapter = new MainRecycleAdapter();
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
@@ -186,6 +185,7 @@ public class MainActivity extends AppCompatActivity  {
         new VarsGetPut().put(vars, pContext);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
+        mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
 
     @Override

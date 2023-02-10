@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/one_reminder"
-    android:layout_margin="0dp"
-    android:orientation="horizontal">
+    android:layout_margin="1dp"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <!--  alert, speak  -->
     <LinearLayout
@@ -201,7 +202,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/colorAccent"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:text="location"
                 />
             <TextView
@@ -210,8 +211,8 @@
                 android:layout_weight="5"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="left"
-                android:textSize="16dp"
+                android:gravity="start"
+                android:textSize="16sp"
                 android:textColor="@color/colorOn"
                 />
         </LinearLayout>

@@ -30,7 +30,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        context = MainActivity.pContext;
+        context = ActivityMain.pContext;
         vars = new VarsGetPut().get(context);
 //        gCals = new GetAgenda().get(context);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
@@ -58,7 +58,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
             this.viewLine.setOnClickListener(v -> {
                 int idx = getBindingAdapterPosition();
                 Intent intent;
-                intent = new Intent(context, AddAgendaActivity.class);
+                intent = new Intent(context, ActivityAddAgenda.class);
                 intent.putExtra("idx",idx);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -107,7 +107,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
     @Override
     public int getItemCount() {
 //        if (gCals == null) {
-            gCals = new GetAgenda().get(MainActivity.pContext);
+            gCals = new GetAgenda().get(ActivityMain.pContext);
 //        }
         return gCals.size();
     }

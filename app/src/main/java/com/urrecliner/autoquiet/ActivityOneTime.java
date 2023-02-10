@@ -16,7 +16,7 @@ import com.urrecliner.autoquiet.Sub.VarsGetPut;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class OneTimeActivity extends AppCompatActivity {
+public class ActivityOneTime extends AppCompatActivity {
 
     QuietTask quietTask;
     ArrayList<QuietTask> quietTasks;
