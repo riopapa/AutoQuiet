@@ -35,7 +35,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
 
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
-    private boolean active, finishShow;
+    private boolean active, finish99;
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
@@ -93,7 +93,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
         startMin = quietTask.startMin;
         finishHour = quietTask.finishHour;
         finishMin = quietTask.finishMin;
-        finishShow = quietTask.finishHour != 99;
+        finish99 = quietTask.finishHour == 99;
         active = quietTask.active;
         sRepeatCount = quietTask.sRepeatCount;
         fRepeatCount = quietTask.fRepeatCount;
@@ -104,9 +104,9 @@ public class ActivityAddUpdate extends AppCompatActivity {
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
-        binding.finishShow.setChecked(finishShow);
+        binding.finish99.setChecked(finish99);
         binding.timePickerFinish.setIs24HourView(true);
-        if (finishShow) {
+        if (!finish99) {
             binding.timePickerFinish.setVisibility(View.VISIBLE);
             binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
         } else {
@@ -131,29 +131,30 @@ public class ActivityAddUpdate extends AppCompatActivity {
                 weekView[i].setText(weekName[i]);
             }
         }
-        binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
-        binding.tVVibrate.setOnClickListener(v -> {
-            vibrate = !vibrate;
-            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
-            v.invalidate();
-        });
-        binding.iVVibrate.setOnClickListener(v -> {
-            vibrate = !vibrate;
-            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_vibrate : R.drawable.phone_off);
-            v.invalidate();
-        });
+        if (!finish99) {
+            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+            binding.tVVibrate.setOnClickListener(v -> {
+                vibrate = !vibrate;
+                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+                v.invalidate();
+            });
+        } else {
+            binding.iVVibrate.setImageResource(R.drawable.alarm);
+        }
 
-        binding.finishShow.setOnClickListener(v -> {
-            finishShow = !finishShow;
-            binding.finishShow.setChecked(finishShow);
-            if (finishShow) {
+        binding.finish99.setOnClickListener(v -> {
+            finish99 = !finish99;
+            binding.finish99.setChecked(finish99);
+            if (!finish99) {
                 binding.timePickerFinish.setVisibility(View.VISIBLE);
                 if (finishHour == 99)
                     finishHour = startHour;
                 binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
             } else {
                 finishHour = 99;
                 binding.timePickerFinish.setVisibility(View.INVISIBLE);
+                binding.iVVibrate.setImageResource(R.drawable.alarm);
             }
             binding.timePickerFinish.invalidate();
         });
@@ -251,8 +252,10 @@ public class ActivityAddUpdate extends AppCompatActivity {
         subject = binding.etSubject.getText().toString();
         if (subject.length() == 0)
             subject = getString(R.string.no_subject);
-        startHour = binding.timePickerStart.getHour(); startMin = binding.timePickerStart.getMinute();
-        finishHour = (finishShow)? binding.timePickerFinish.getHour(): 99; finishMin = binding.timePickerFinish.getMinute();
+        startHour = binding.timePickerStart.getHour();
+        startMin = binding.timePickerStart.getMinute();
+        finishHour = (finish99)? 99:binding.timePickerFinish.getHour();
+        finishMin = binding.timePickerFinish.getMinute();
 
         if (agenda) {
             Calendar c = Calendar.getInstance();

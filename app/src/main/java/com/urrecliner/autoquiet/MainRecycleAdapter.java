@@ -170,18 +170,18 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         boolean gCalendar = quietTask.agenda;
         boolean active = quietTask.active;
         boolean vibrate = quietTask.vibrate;
-        boolean finishShow = quietTask.finishHour != 99;
+        boolean finish99 = quietTask.finishHour == 99;
 
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
         String txt = buildHourMin(quietTask.startHour, quietTask.startMin);
         holder.tvStartTime.setText(txt);
-        txt = (finishShow) ? buildHourMin(quietTask.finishHour, quietTask.finishMin) : "";
+        txt = (finish99) ? "":buildHourMin(quietTask.finishHour, quietTask.finishMin);
         holder.tvFinishTime.setText(txt);
         holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
-        if (finishShow) {
+        if (!finish99) {
             if (vibrate)
                 holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
             else
@@ -191,7 +191,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
             holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
         } else {
-            holder.lvVibrate.setImageResource(R.mipmap.speaking_noactive);
+            holder.lvVibrate.setImageResource(R.drawable.alarm);
             holder.lvStartRepeat.setImageResource(R.mipmap.speaking_noactive);
             holder.lvFinishRepeat.setImageResource(R.mipmap.speaking_noactive);
         }

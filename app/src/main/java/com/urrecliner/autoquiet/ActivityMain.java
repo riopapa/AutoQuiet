@@ -190,7 +190,7 @@ public class ActivityMain extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
-        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"back ");
+        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
         super.onBackPressed();
     }
 

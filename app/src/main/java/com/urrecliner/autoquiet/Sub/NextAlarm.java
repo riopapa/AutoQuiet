@@ -13,7 +13,7 @@ import com.urrecliner.autoquiet.models.QuietTask;
 public class NextAlarm {
 
     public void request(Context context, QuietTask quietTask,
-                        long nextTime, String StartFinish) {
+                        long nextTime, String StartFinish, int loop) {
         String logID = "NextAlarm";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
@@ -21,6 +21,8 @@ public class NextAlarm {
         Bundle args = new Bundle();
         args.putSerializable("quietTask", quietTask);
         intent.putExtra("DATA",args);
+        intent.putExtra("loop", loop);
+        intent.putExtra("isUpdate", true);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.active) {

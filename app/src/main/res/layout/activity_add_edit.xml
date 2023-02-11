@@ -34,7 +34,7 @@
             android:textSize="24sp" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/finish_show"
+            android:id="@+id/finish_99"
             android:layout_width="32sp"
             android:layout_height="32sp"
             />

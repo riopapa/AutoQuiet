@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class NextTask {
     long nextTime;
-    static int icon;
+    static int icon, loop;
     static String timeInfoS, timeInfoF, timeInfo, soonOrUntill, subject, msg;
 
     public NextTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
@@ -49,15 +49,12 @@ public class NextTask {
             }
         }
         QuietTask quietTask = quietTasks.get(saveIdx);
-        new NextAlarm().request(context, quietTask, nextTime, startFinish);
-
+        loop = (quietTask.finishHour == 99) ? 3 : 0; // if alarm repeat 3 times
+        new NextAlarm().request(context, quietTask, nextTime, startFinish, loop);
         subject = quietTask.subject;
         timeInfoS = getHourMin(quietTask.startHour, quietTask.startMin);
-        if (quietTask.finishHour == 99) {
-            timeInfoF = "";
-            soonOrUntill = "";
-            msg = headInfo + " " + subject;
-        } else {
+        boolean finish99 = quietTask.finishHour == 99;
+        if (!finish99) {
             timeInfoF = getHourMin(quietTask.finishHour, quietTask.finishMin);
             if  (startFinish.equals("S")) {
                 timeInfo = timeInfoS;
@@ -70,16 +67,22 @@ public class NextTask {
                     + " " + soonOrUntill + " " + startFinish;
             if  (startFinish.equals("S"))
                 msg += " ~ " + timeInfoF;
+        } else {
+            timeInfo = timeInfoS;
+            soonOrUntill = "알림";
+            msg = headInfo + "\n" + timeInfo + " " + subject;
+            icon = 3;
         }
 
         new Utils(context).log("NextTask",msg);
-        Intent updateIntent = new Intent(context, NotificationService.class);
-        updateIntent.putExtra("isUpdate", true);
-        updateIntent.putExtra("start", timeInfo);
-        updateIntent.putExtra("finish", soonOrUntill);
-        updateIntent.putExtra("subject", subject);
-        updateIntent.putExtra("icon", icon);
-        context.startForegroundService(updateIntent);
+        Intent uIntent = new Intent(context, NotificationService.class);
+        uIntent.putExtra("start", timeInfo);
+        uIntent.putExtra("finish", soonOrUntill);
+        uIntent.putExtra("subject", subject);
+        uIntent.putExtra("isUpdate", true);
+        uIntent.putExtra("finish99", false);
+        uIntent.putExtra("icon", icon);
+        context.startForegroundService(uIntent);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -90,10 +93,6 @@ public class NextTask {
     }
 
     private String getHourMin(int hour, int min) {
-        String hh = "0"+ hour;
-        hh = hh.substring(hh.length()-2);
-        String mm = "0"+min;
-        mm = mm.substring(mm.length()-2);
-        return hh + ":" + mm;
+        return (""+ (100+hour)).substring(1) + ":" + (""+(100+min)).substring(1);
     }
 }
