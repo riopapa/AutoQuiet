@@ -99,10 +99,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                     intent = new Intent(context, ActivityOneTime.class);
                 }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                Gson gson = new Gson();
-//                String json = gson.toJson(vars);
-//                sharedEditor.putString("MyObject", json);
-
                 context.startActivity(intent);
             });
             this.llWeekFlag = itemView.findViewById(R.id.weekFlag);

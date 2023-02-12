@@ -39,7 +39,7 @@ public class ActivityMain extends AppCompatActivity  {
     public static Activity pActivity;
     public static Vars vars;
     static boolean created = false;
-    public MainRecycleAdapter mainRecycleAdapter;
+    public static MainRecycleAdapter mainRecycleAdapter;
     int count;
     Timer timer = null;
     TimerTask timerTask = null;
