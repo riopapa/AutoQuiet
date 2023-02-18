@@ -4,14 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.core.content.res.ResourcesCompat;
 
 import com.urrecliner.autoquiet.R;
 
-public class IconAlarm {
+public class IconTime {
     public Bitmap make(Context context, String string) {
         Paint paint;
         paint = new Paint();

@@ -28,7 +28,6 @@ import com.urrecliner.autoquiet.Sub.MyItemTouchHelper;
 import com.urrecliner.autoquiet.Sub.Permission;
 import com.urrecliner.autoquiet.Sub.SharedPrefer;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
-import com.urrecliner.autoquiet.Sub.VerticalSpacingItemDecorator;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -110,7 +109,7 @@ public class ActivityMain extends AppCompatActivity  {
                 timeSaved = System.currentTimeMillis();
             }
         };
-        timer.schedule(timerTask, 20*60000, 20*60000);
+        timer.schedule(timerTask, 27*60000, 27*60000);
         super.onResume();
 
     }

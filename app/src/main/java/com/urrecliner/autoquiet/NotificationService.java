@@ -6,19 +6,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.graphics.drawable.IconCompat;
-
-import com.urrecliner.autoquiet.Sub.IconAlarm;
 
 public class NotificationService extends Service {
 
@@ -123,8 +116,8 @@ public class NotificationService extends Service {
     void updateRemoteViews() {
 
         mBuilder.setSmallIcon(smallIcons[icon]);
-//        if (icon == 3) {
-//            Bitmap bitmap = new IconAlarm().make(this, start);
+//        if (icon == 3) {  // make drawable bitmap icon
+//            Bitmap bitmap = new IconTime().make(this, start);
 //            IconCompat smallIcon = IconCompat.createWithBitmap(bitmap);
 //            mBuilder.setSmallIcon(smallIcon);
 //        }
@@ -140,27 +133,5 @@ public class NotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
     }
 }
