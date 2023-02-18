@@ -45,7 +45,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
-    private int xSize;
+    private int xSize, numPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,17 +100,33 @@ public class ActivityAddUpdate extends AppCompatActivity {
         vibrate = quietTask.vibrate;
         agenda = quietTask.agenda;
 
+        findViewById(R.id.num0).setOnClickListener(this::click_Number);
+        findViewById(R.id.num1).setOnClickListener(this::click_Number);
+        findViewById(R.id.num2).setOnClickListener(this::click_Number);
+        findViewById(R.id.num3).setOnClickListener(this::click_Number);
+        findViewById(R.id.num4).setOnClickListener(this::click_Number);
+        findViewById(R.id.num5).setOnClickListener(this::click_Number);
+        findViewById(R.id.num6).setOnClickListener(this::click_Number);
+        findViewById(R.id.num7).setOnClickListener(this::click_Number);
+        findViewById(R.id.num8).setOnClickListener(this::click_Number);
+        findViewById(R.id.num9).setOnClickListener(this::click_Number);
+        findViewById(R.id.numBack).setOnClickListener(view -> {
+            if (numPos > 1) {
+                numPos--;
+                set_TimeForm();
+            }
+        });
+        findViewById(R.id.numOK).setOnClickListener(view -> {
+            save_QuietTask();
+            mainRecycleAdapter.notifyDataSetChanged();
+            finish();
+        });
+
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
         binding.timePickerStart.setIs24HourView(true);
-        binding.timePickerStart.setHour(startHour); binding.timePickerStart.setMinute(startMin);
-        binding.finish99.setChecked(finish99);
         binding.timePickerFinish.setIs24HourView(true);
-        if (!finish99) {
-            binding.timePickerFinish.setVisibility(View.VISIBLE);
-            binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
-        } else {
-            binding.timePickerFinish.setVisibility(View.INVISIBLE);
-        }
+        numPos = 1;
+        set_TimeForm();
 
         if (subject == null)
             subject = getString(R.string.no_subject);
@@ -130,32 +146,12 @@ public class ActivityAddUpdate extends AppCompatActivity {
                 weekView[i].setText(weekName[i]);
             }
         }
-        if (!finish99) {
-            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
-            binding.tVVibrate.setOnClickListener(v -> {
-                vibrate = !vibrate;
-                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
-                v.invalidate();
-            });
-        } else {
-            binding.iVVibrate.setImageResource(R.drawable.alarm);
-        }
 
         binding.finish99.setOnClickListener(v -> {
             finish99 = !finish99;
             binding.finish99.setChecked(finish99);
-            if (!finish99) {
-                binding.timePickerFinish.setVisibility(View.VISIBLE);
-                if (finishHour == 99)
-                    finishHour = startHour;
-                binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
-                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
-            } else {
-                finishHour = 99;
-                binding.timePickerFinish.setVisibility(View.INVISIBLE);
-                binding.iVVibrate.setImageResource(R.drawable.alarm);
-            }
-            binding.timePickerFinish.invalidate();
+            numPos = 1;
+            set_TimeForm();
         });
 
         if (agenda)
@@ -229,12 +225,80 @@ public class ActivityAddUpdate extends AppCompatActivity {
             tv.setText("");
     }
 
+    private void set_TimeForm() {
+        binding.timePickerStart.setHour(startHour);
+        binding.timePickerStart.setMinute(startMin);
+        binding.finish99.setChecked(finish99);
+        if (!finish99) {    // normal start, finish
+            binding.numDateTime.setVisibility(View.GONE);
+            binding.timePickerStart.setVisibility(View.VISIBLE);
+            binding.timePickerFinish.setVisibility(View.VISIBLE);
+            binding.timePickerFinish.setHour(finishHour);
+            binding.timePickerFinish.setMinute(finishMin);
+            if (finishHour == 99)
+                finishHour = startHour;
+            binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+            binding.tVVibrate.setOnClickListener(v -> {
+                vibrate = !vibrate;
+                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+                v.invalidate();
+            });
+
+        } else {
+            binding.numDateTime.setVisibility(View.VISIBLE);
+            binding.timePickerStart.setVisibility(View.GONE);
+            binding.timePickerFinish.setVisibility(View.GONE);
+            binding.iVVibrate.setImageResource(R.drawable.alarm);
+            set_NumPadTime();
+        }
+    }
+
+    private void set_NumPadTime() {
+        String s = (startHour > 9) ? ""+startHour: "0"+startHour;
+        String s1 = s.substring(0,1); String s2 = s.substring(1);
+        binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
+        binding.numHH2.setText(s2); binding.numHH2.setBackgroundColor(0x00bbbbbb);
+        s = (startMin > 9) ? ""+startMin: "0"+startMin;
+        s1 = s.substring(0,1); s2 = s.substring(1);
+        binding.numMM1.setText(s1); binding.numMM1.setBackgroundColor(0x00bbbbbb);
+        binding.numMM2.setText(s2); binding.numMM2.setBackgroundColor(0x00bbbbbb);
+        if (numPos == 1) binding.numHH1.setBackgroundColor(0xffbbbbbb);
+        if (numPos == 2) binding.numHH2.setBackgroundColor(0xffbbbbbb);
+        if (numPos == 3) binding.numMM1.setBackgroundColor(0xffbbbbbb);
+        if (numPos == 4) binding.numMM2.setBackgroundColor(0xffbbbbbb);
+    }
+
     public void toggleWeek(View v) {
         int i = v.getId();
         week[i] ^= true;
         weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);
         weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD: Typeface.NORMAL);
         v.invalidate();
+    }
+
+    private void click_Number(View v) {
+        int num = Integer.parseInt(v.getTag().toString());
+        if (numPos == 1) {
+            int hour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
+            if (hour < 25)
+                startHour = hour;
+        } else if (numPos == 2) {
+            int hour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
+            if (hour < 25)
+                startHour = hour;
+        } else if (numPos == 3) {
+            int min = num * 10 + Integer.parseInt(binding.numMM2.getText().toString());
+            if (min < 60)
+                startMin = min;
+        } else {
+            int min = Integer.parseInt(binding.numMM1.getText().toString()) * 10 + num;
+            if (min < 60)
+                startMin = min;
+        }
+        if (numPos < 4)
+            numPos++;
+        set_TimeForm();
     }
 
     private void save_QuietTask() {
@@ -340,19 +404,9 @@ public class ActivityAddUpdate extends AppCompatActivity {
             new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
             mainRecycleAdapter.notifyDataSetChanged();
             finish();
-//            cancel_QuietTask();
         }
         return false;
     }
-
-//    private void cancel_QuietTask() {
-//
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        assert alarmManager != null;
-//        Intent intent = new Intent(this, com.urrecliner.autoquiet.AlarmReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(ActivityAddUpdate.this, 23456, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        alarmManager.cancel(pendingIntent);
-//    }
 
     @Override
     protected void onPause() {

@@ -7,6 +7,7 @@
     <color name="black">#000000</color>
     <color name="notification_back">#8F194673</color>
     <color name="colorNotification">#81BFBB</color>
+    <color name="num_button">#042B28</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>
