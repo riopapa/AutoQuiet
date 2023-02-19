@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
 import com.urrecliner.autoquiet.databinding.ActivityAddEditBinding;
@@ -100,16 +102,16 @@ public class ActivityAddUpdate extends AppCompatActivity {
         vibrate = quietTask.vibrate;
         agenda = quietTask.agenda;
 
-        findViewById(R.id.num0).setOnClickListener(this::click_Number);
-        findViewById(R.id.num1).setOnClickListener(this::click_Number);
-        findViewById(R.id.num2).setOnClickListener(this::click_Number);
-        findViewById(R.id.num3).setOnClickListener(this::click_Number);
-        findViewById(R.id.num4).setOnClickListener(this::click_Number);
-        findViewById(R.id.num5).setOnClickListener(this::click_Number);
-        findViewById(R.id.num6).setOnClickListener(this::click_Number);
-        findViewById(R.id.num7).setOnClickListener(this::click_Number);
-        findViewById(R.id.num8).setOnClickListener(this::click_Number);
-        findViewById(R.id.num9).setOnClickListener(this::click_Number);
+        findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num2).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num3).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num4).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num5).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num6).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num7).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num8).setOnClickListener(this::number_Clicked);
+        findViewById(R.id.num9).setOnClickListener(this::number_Clicked);
         findViewById(R.id.numBack).setOnClickListener(view -> {
             if (numPos > 1) {
                 numPos--;
@@ -250,11 +252,11 @@ public class ActivityAddUpdate extends AppCompatActivity {
             binding.timePickerStart.setVisibility(View.GONE);
             binding.timePickerFinish.setVisibility(View.GONE);
             binding.iVVibrate.setImageResource(R.drawable.alarm);
-            set_NumPadTime();
+            show_ResultTime();
         }
     }
 
-    private void set_NumPadTime() {
+    private void show_ResultTime() {
         String s = (startHour > 9) ? ""+startHour: "0"+startHour;
         String s1 = s.substring(0,1); String s2 = s.substring(1);
         binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
@@ -277,7 +279,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
         v.invalidate();
     }
 
-    private void click_Number(View v) {
+    private void number_Clicked(View v) {
         int num = Integer.parseInt(v.getTag().toString());
         if (numPos == 1) {
             int hour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
@@ -320,6 +322,22 @@ public class ActivityAddUpdate extends AppCompatActivity {
         finishHour = (finish99)? 99:binding.timePickerFinish.getHour();
         finishMin = binding.timePickerFinish.getMinute();
 
+        if (finish99) { // if time is passed then adjust week number automatically
+            long nowTime = System.currentTimeMillis();
+            long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
+            long TimeDiff = nextTime - nowTime;
+            if (TimeDiff > 25 * 60 * 60 * 1000) {
+                week = new boolean[7];
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(nowTime);
+                int weekNo = c.get(Calendar.DAY_OF_WEEK);   // 1: Sunday
+                if (weekNo < 7)
+                    week[weekNo] = true;
+                else
+                    week[0] = true;
+            }
+        }
+
         if (agenda) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(quietTask.calStartDate);
@@ -342,8 +360,6 @@ public class ActivityAddUpdate extends AppCompatActivity {
                 quietTasks.set(currIdx, quietTask);
         }
         new QuietTaskGetPut().put(quietTasks, context, "Add/Update");
-
-    //        new NextTask(context, ((vars.addNewQuiet) ? "Added" : "Updated"));
         }
 
     @Override

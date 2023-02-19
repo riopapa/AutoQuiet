@@ -34,7 +34,6 @@ public class QuietTaskGetPut {
         prefsEditor.putString("silentInfo", json);
         prefsEditor.apply();
         ActivityMain.created = true;
-//        new NextTask(context, quietTasks, info);
     }
 
     ArrayList<QuietTask> get(Context context) {
