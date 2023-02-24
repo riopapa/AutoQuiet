@@ -1,17 +1,15 @@
 package com.urrecliner.autoquiet;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
+import com.urrecliner.autoquiet.Sub.IsScreen;
 import com.urrecliner.autoquiet.Sub.NextAlarm;
+import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
@@ -87,7 +85,8 @@ public class NextTask {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                if (IsScreen.On(context))
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -95,4 +94,5 @@ public class NextTask {
     private String getHourMin(int hour, int min) {
         return (""+ (100+hour)).substring(1) + ":" + (""+(100+min)).substring(1);
     }
+
 }

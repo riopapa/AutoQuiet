@@ -5,7 +5,7 @@ import android.hardware.display.DisplayManager;
 import android.view.Display;
 
 public class IsScreen {
-    public boolean On(Context context) {
+    public static boolean On(Context context) {
         DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         boolean screenOn = false;
         for (Display display : dm.getDisplays()) {

@@ -9,6 +9,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.urrecliner.autoquiet.Sub.IsScreen;
 import com.urrecliner.autoquiet.Sub.NextAlarm;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -82,17 +83,20 @@ public class AlarmReceiver extends BroadcastReceiver {
                 say = nowTimeToString(System.currentTimeMillis()) + " 입니다. ";
                 if (!finish99) {
                     say += subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
-                } else
-                    say += subject + " 를 확인하세요, " + subject + " 를 확인하세요";
-                if (finish99) {     // repeat saying several times
+                    if (quietTask.sRepeatCount > 0)
+                        myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+                    new NextTask(context, quietTasks, "say_Started()");
+                } else {
                     if (loop > 0) {
                         loop--;
-                        long nextTime = System.currentTimeMillis() + 60 * 2 * 1000;
+                        say += subject + " 를 확인하세요, " +
+                            ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+                        long nextTime = System.currentTimeMillis() + 90 * 1000;
                         new NextAlarm().request(context, quietTask, nextTime,
                                 "S", loop);   // loop 0 : no more
                         Intent uIntent = new Intent(context, NotificationService.class);
                         uIntent.putExtra("start", nowTimeToString(nextTime));
-                        uIntent.putExtra("finish", "다시" + loop);
+                        uIntent.putExtra("finish", "다시");
                         uIntent.putExtra("finish99", true);
                         uIntent.putExtra("subject", quietTask.subject);
                         uIntent.putExtra("icon", 3);
@@ -101,13 +105,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
                     } else
                         new NextTask(context, quietTasks, "finish99ed");
-                } else {
-                    if (quietTask.sRepeatCount > 0)
-                        myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-                    new NextTask(context, quietTasks, "say_Started()");
                 }
             }
-        }, 2200);   // after beep
+        }, 2500);   // after beep
 
         new Timer().schedule(new TimerTask() {
             public void run () {

@@ -326,7 +326,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
             long nowTime = System.currentTimeMillis();
             long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
             long TimeDiff = nextTime - nowTime;
-            if (TimeDiff > 25 * 60 * 60 * 1000) {
+            if (TimeDiff > 48 * 60 * 60 * 1000) {
                 week = new boolean[7];
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(nowTime);

@@ -24,7 +24,7 @@ public class NotificationService extends Service {
     boolean finish99 = false;
     Context context;
 
-    final int INVOKE_ONETIME = 100;
+    final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 1044;
 
     @Override
@@ -61,7 +61,7 @@ public class NotificationService extends Service {
         } catch (Exception e) {
             Log.e("operation", e.toString());
         }
-        if (operation == INVOKE_ONETIME) {
+        if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(context, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, oIntent, 0);
             try {
@@ -70,10 +70,10 @@ public class NotificationService extends Service {
                 e.printStackTrace();
             }
         } else if (operation == STOP_SPEAK) {
-            Log.w("operation","STOP_SPEAK");
+//            Log.w("operation","STOP_SPEAK");
             finish99 = false;
             updateRemoteViews();
-            new NextTask(this, new QuietTaskGetPut().get(this),"stopped  ");
+            new NextTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
         }
         startForeground(100, mBuilder.build()); // ??
         return START_STICKY;
@@ -98,15 +98,15 @@ public class NotificationService extends Service {
         Intent mainIntent = new Intent(context, ActivityMain.class);
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(context, 0, mainIntent, 0));
 
-        Intent stopOneTime = new Intent(this, NotificationService.class);
-        stopOneTime.putExtra("operation", INVOKE_ONETIME);
-        PendingIntent pi = PendingIntent.getService(context, 2, stopOneTime, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent rightNowI = new Intent(this, NotificationService.class);
+        rightNowI.putExtra("operation", RIGHT_NOW);
+        PendingIntent pi = PendingIntent.getService(context, 2, rightNowI, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
 
-        Intent stopSpeak = new Intent(this, NotificationService.class);
-        stopSpeak.putExtra("operation", STOP_SPEAK);
-        PendingIntent ps = PendingIntent.getService(context, 3, stopSpeak, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent stopTalkI = new Intent(this, NotificationService.class);
+        stopTalkI.putExtra("operation", STOP_SPEAK);
+        PendingIntent ps = PendingIntent.getService(context, 3, stopTalkI, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
@@ -117,8 +117,8 @@ public class NotificationService extends Service {
 
         mBuilder.setSmallIcon(smallIcons[icon]);
 //        if (icon == 3) {  // make drawable bitmap icon
-//            Bitmap bitmap = new IconTime().make(this, start);
-//            IconCompat smallIcon = IconCompat.createWithBitmap(bitmap);
+//            Bitmap bitmap = new IconTime().make(this, start); // now time -> bitmap
+//            IconCompat smallIcon = IconCompat.createWithBitmap(bitmap); // bitmap -> icon
 //            mBuilder.setSmallIcon(smallIcon);
 //        }
         mRemoteViews.setImageViewResource(R.id.state_icon, smallIcons[icon]);

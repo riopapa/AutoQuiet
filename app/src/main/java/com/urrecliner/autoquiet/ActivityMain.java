@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
+import com.urrecliner.autoquiet.Sub.IsScreen;
 import com.urrecliner.autoquiet.Sub.MyItemTouchHelper;
 import com.urrecliner.autoquiet.Sub.Permission;
 import com.urrecliner.autoquiet.Sub.SharedPrefer;
@@ -85,6 +86,7 @@ public class ActivityMain extends AppCompatActivity  {
 
         new VarsGetPut().put(vars, pContext);
         timeSaved = System.currentTimeMillis();
+
     }
 
     @Override
@@ -111,7 +113,7 @@ public class ActivityMain extends AppCompatActivity  {
         };
         timer.schedule(timerTask, 27*60000, 27*60000);
         super.onResume();
-
+        new Utils(pContext).log("Screen Check","Screen is "+ IsScreen.On(pContext));
     }
 
     @Override
