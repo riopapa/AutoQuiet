@@ -154,7 +154,7 @@ public class ActivityOneTime extends AppCompatActivity {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-                week, true, vibrate, 0, fRepeatCount);    // onetime repeat is 0
+                week, true, vibrate, 0, fRepeatCount, false);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);
         new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "Swipe "+quietTask.subject);

@@ -93,7 +93,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 Intent intent;
                 if (qIdx != 0) {
                     vars.addNewQuiet = false;
-                    intent = new Intent(context, ActivityAddUpdate.class);
+                    intent = new Intent(context, ActivityAddEdit.class);
                     intent.putExtra("idx",qIdx);
                 } else {
                     intent = new Intent(context, ActivityOneTime.class);
@@ -132,7 +132,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             Intent intent;
             if (qIdx != 0) {
                 vars.addNewQuiet = false;
-                intent = new Intent(context, ActivityAddUpdate.class);
+                intent = new Intent(context, ActivityAddEdit.class);
             } else {
                 intent = new Intent(context, ActivityOneTime.class);
             }

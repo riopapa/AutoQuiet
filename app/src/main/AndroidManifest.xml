@@ -36,7 +36,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityAddUpdate" />
+        <activity android:name=".ActivityAddEdit" />
         <activity android:name=".ActivityAddAgenda" />
         <activity android:name=".ActivityGCalShow" />
         <activity android:name=".ActivityOneTime" />

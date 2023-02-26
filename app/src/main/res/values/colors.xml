@@ -11,8 +11,8 @@
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>
-    <color name="itemSelectBorder">#798E8E</color>
-    <color name="itemSelectFill">#B2C59D</color>
+    <color name="itemSelectBorder">#B4D1D1</color>
+    <color name="itemSelectFill">#CAD3C0</color>
 
     <color name="itemAgendaFill">#CAF1A3</color>
 

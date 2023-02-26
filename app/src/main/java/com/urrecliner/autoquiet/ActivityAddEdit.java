@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ActivityAddUpdate extends AppCompatActivity {
+public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
     private int startHour, startMin, finishHour, finishMin;
@@ -40,7 +39,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
-    private boolean vibrate, agenda;
+    private boolean vibrate, agenda, sayDate;
     private QuietTask quietTask;
     private ArrayList<QuietTask> quietTasks;
     private int currIdx;
@@ -98,6 +97,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
         active = quietTask.active;
         sRepeatCount = quietTask.sRepeatCount;
         fRepeatCount = quietTask.fRepeatCount;
+        sayDate = quietTask.sayDate;
         week = quietTask.week;
         vibrate = quietTask.vibrate;
         agenda = quietTask.agenda;
@@ -120,7 +120,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
         });
         findViewById(R.id.numOK).setOnClickListener(view -> {
             save_QuietTask();
-            mainRecycleAdapter.notifyDataSetChanged();
+            mainRecycleAdapter.notifyItemChanged(currIdx);
             finish();
         });
 
@@ -213,6 +213,12 @@ public class ActivityAddUpdate extends AppCompatActivity {
             binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
             v.invalidate();
         });
+        binding.sayDate.setChecked(sayDate);    // sayDate is only for finish Time
+        binding.sayDate.setOnClickListener(v -> {
+            sayDate = !sayDate;
+            binding.sayDate.setChecked(sayDate);
+            v.invalidate();
+        });
 
         TextView tv = findViewById(R.id.dateDesc);
         if (agenda) {
@@ -241,6 +247,11 @@ public class ActivityAddUpdate extends AppCompatActivity {
                 finishHour = startHour;
             binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
             binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+            binding.iVVibrate.setOnClickListener(v -> {
+                vibrate = !vibrate;
+                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+                v.invalidate();
+            });
             binding.tVVibrate.setOnClickListener(v -> {
                 vibrate = !vibrate;
                 binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
@@ -353,7 +364,7 @@ public class ActivityAddUpdate extends AppCompatActivity {
             quietTasks.set(currIdx, quietNew);
         } else {
             quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-                    week, active, vibrate, sRepeatCount, fRepeatCount);
+                    week, active, vibrate, sRepeatCount, fRepeatCount, sayDate);
             if (vars.addNewQuiet)
                 quietTasks.add(quietTask);
             else
@@ -388,20 +399,22 @@ public class ActivityAddUpdate extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_save) {
             save_QuietTask();
-            mainRecycleAdapter.notifyDataSetChanged();
-            finish();
+            mainRecycleAdapter.notifyItemChanged(currIdx);
+            Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.action_delete) {
             quietTasks.remove(currIdx);
+            mainRecycleAdapter.notifyItemRemoved(currIdx);
             new QuietTaskGetPut().put(quietTasks, context, "del "+quietTask.subject);
-            mainRecycleAdapter.notifyDataSetChanged();
             finish();
 
         } else if (id == R.id.action_copy) {
-            QuietTask qtNew = new QuietTask(quietTask.subject + "c", quietTask.startHour, quietTask.startMin, quietTask.finishHour, quietTask.finishMin, quietTask.week, quietTask.active, quietTask.vibrate, quietTask.sRepeatCount, quietTask.fRepeatCount);
+            QuietTask qtNew = new QuietTask(quietTask.subject + "c", quietTask.startHour, quietTask.startMin, quietTask.finishHour, quietTask.finishMin, quietTask.week, quietTask.active, quietTask.vibrate, quietTask.sRepeatCount, quietTask.fRepeatCount, quietTask.sayDate);
             quietTasks.add(currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks, context, "copy "+quietTask.subject);
-            mainRecycleAdapter.notifyDataSetChanged();
+            mainRecycleAdapter.notifyItemChanged(currIdx-1);
+            mainRecycleAdapter.notifyItemChanged(currIdx);
+            mainRecycleAdapter.notifyItemChanged(currIdx+1);
             finish();
 
         } else if (id == R.id.action_delete_multi) {
@@ -410,12 +423,14 @@ public class ActivityAddUpdate extends AppCompatActivity {
                 for (int i = 0; i < quietTasks.size(); ) {
                     if (quietTasks.get(i).calId == delId) {
                         quietTasks.remove(i);
+                        mainRecycleAdapter.notifyItemRemoved(i);
                     }
                     else
                         i++;
                 }
             } else {
                 quietTasks.remove(currIdx);
+                mainRecycleAdapter.notifyItemRemoved(currIdx);
             }
             new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
             mainRecycleAdapter.notifyDataSetChanged();

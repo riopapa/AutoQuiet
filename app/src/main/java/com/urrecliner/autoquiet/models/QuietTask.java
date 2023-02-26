@@ -11,10 +11,9 @@ public class QuietTask implements Serializable {
 
     public String subject;
     public int startHour, startMin, finishHour, finishMin;
-    public boolean active, vibrate;
+    public boolean active, vibrate, sayDate;
     public boolean[] week = {true, true, true, true, true, true, true};
     public int sRepeatCount, fRepeatCount;
-
     public long calStartDate, calFinishDate;    // 통상으로 만들어지면 callStartDate = index 가 됨 sort 목적임
     public int calId;
     public String calDesc;
@@ -23,7 +22,7 @@ public class QuietTask implements Serializable {
     public boolean calTaskRepeat;
 
     // normal QuietTask
-    public QuietTask(String subject, int startHour, int startMin, int finishHour, int finishMin, boolean[] week, boolean active, boolean vibrate, int sRepeatCount, int fRepeatCount) {
+    public QuietTask(String subject, int startHour, int startMin, int finishHour, int finishMin, boolean[] week, boolean active, boolean vibrate, int sRepeatCount, int fRepeatCount, boolean sayDate) {
         this.subject = subject;
         this.startHour = startHour;
         this.startMin = startMin;
@@ -34,6 +33,7 @@ public class QuietTask implements Serializable {
         this.sRepeatCount = sRepeatCount;
         this.fRepeatCount = fRepeatCount;
         this.agenda = false;
+        this.sayDate = sayDate;
         System.arraycopy(week, 0, this.week, 0, 7);
     }
     
@@ -63,6 +63,7 @@ public class QuietTask implements Serializable {
         int weekNbr = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         this.week = new boolean[7];
         this.week[weekNbr] = true;
+        this.sayDate = true;
     }
 
     public void setSubject(String subject) { this.subject = subject; }

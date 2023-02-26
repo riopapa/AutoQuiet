@@ -130,7 +130,7 @@ public class ActivityMain extends AppCompatActivity  {
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
             new VarsGetPut().put(vars, pContext);
-            intent = new Intent(this, ActivityAddUpdate.class);
+            intent = new Intent(this, ActivityAddEdit.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
             return true;

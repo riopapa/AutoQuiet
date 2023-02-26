@@ -17,6 +17,6 @@ public class QuietTaskDefault {
         boolean [] week = new boolean[7];
         week[calendar.get(Calendar.DAY_OF_WEEK) - 1] = true;
         return new QuietTask("추가할 제목", hStart, mStart, hFinish, mStart,
-                week, true, true, 1, 1);
+                week, true, true, 1, 1, false);
     }
 }
