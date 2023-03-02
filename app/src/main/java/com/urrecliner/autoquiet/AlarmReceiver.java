@@ -91,7 +91,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         loop--;
                         say += subject + " 를 확인하세요, " +
                             ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
-                        long nextTime = System.currentTimeMillis() + 90 * 1000;
+                        long nextTime = System.currentTimeMillis() + 50 * 1000;
                         new NextAlarm().request(context, quietTask, nextTime,
                                 "S", loop);   // loop 0 : no more
                         Intent uIntent = new Intent(context, NotificationService.class);

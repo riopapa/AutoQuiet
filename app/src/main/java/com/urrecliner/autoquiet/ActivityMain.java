@@ -85,7 +85,6 @@ public class ActivityMain extends AppCompatActivity  {
         }
 
         new VarsGetPut().put(vars, pContext);
-        timeSaved = System.currentTimeMillis();
 
     }
 
@@ -99,6 +98,7 @@ public class ActivityMain extends AppCompatActivity  {
         showMainList();
         count = 0;
 
+        timeSaved = System.currentTimeMillis();
         if (timer != null)
             timer.cancel();
         if (timerTask != null)
@@ -107,13 +107,12 @@ public class ActivityMain extends AppCompatActivity  {
         timerTask = new TimerTask() {
             @Override
             public void run () {
-                Log.w("Main " +count++, "timeGap = "+((System.currentTimeMillis() - timeSaved)/1000));
+                Log.w("Main", count++ + ") timeGap = "+((System.currentTimeMillis() - timeSaved)/1000)+" secs");
                 timeSaved = System.currentTimeMillis();
             }
         };
         timer.schedule(timerTask, 27*60000, 27*60000);
         super.onResume();
-        new Utils(pContext).log("Screen Check","Screen is "+ IsScreen.On(pContext));
     }
 
     @Override
