@@ -43,8 +43,11 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         createNotification();
-
-        start = intent.getStringExtra("start");
+        try {
+            start = intent.getStringExtra("start");
+        } catch (Exception e) {
+            return START_STICKY;
+        }
         finish = intent.getStringExtra("finish");
         finish99 = intent.getBooleanExtra("finish99", false);
         subject = intent.getStringExtra("subject");

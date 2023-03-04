@@ -401,6 +401,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             save_QuietTask();
             mainRecycleAdapter.notifyItemChanged(currIdx);
             Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
+            finish();
 
         } else if (id == R.id.action_delete) {
             quietTasks.remove(currIdx);

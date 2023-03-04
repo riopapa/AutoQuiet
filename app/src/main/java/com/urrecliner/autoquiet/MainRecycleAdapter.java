@@ -54,7 +54,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         colorActive = ResourcesCompat.getColor(context.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(context.getResources(), R.color.colorTransparent, null);
 
-        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_line, parent, false);
+        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_line, parent, false);
 
         return new ViewHolder(swipeView);
     }
@@ -64,7 +64,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         View viewLine;
         ImageView lvVibrate, lvStartRepeat, lvFinishRepeat, lvgCal;
-        TextView rmdSubject, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
+        TextView rmdSubject, rmdDate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvStartTime, tvFinishTime, tvCalRight, tvCalLeft;
         LinearLayout llCalInfo, llStartFinishTime, llWeekFlag;
         GestureDetector mGestureDetector;
@@ -77,6 +77,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             this.lvFinishRepeat = itemView.findViewById(R.id.lv_finishRepeat);
             this.lvgCal = itemView.findViewById(R.id.gCal);
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
+            this.rmdDate = itemView.findViewById(R.id.rmdDate);
             this.ltWeek0 = itemView.findViewById(R.id.lt_week0);
             this.ltWeek1 = itemView.findViewById(R.id.lt_week1);
             this.ltWeek2 = itemView.findViewById(R.id.lt_week2);
@@ -171,6 +172,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
+        holder.rmdDate.setVisibility((quietTask.sayDate)? View.VISIBLE : View.GONE);
+        holder.rmdDate.setTextColor((active) ? colorOn : colorOff);
+
         String txt = buildHourMin(quietTask.startHour, quietTask.startMin);
         holder.tvStartTime.setText(txt);
         txt = (finish99) ? "":buildHourMin(quietTask.finishHour, quietTask.finishMin);
@@ -229,6 +233,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvgCal.setImageResource(R.drawable.calendar);
             holder.llCalInfo.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.GONE);
+            holder.rmdDate.setVisibility(View.GONE);
             final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
             if (quietTask.calDesc.equals("") && quietTask.calLocation.equals("")) {
                 holder.tvCalLeft.setText(sdfDate.format(quietTask.calStartDate));
@@ -244,8 +249,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 String s = sdfDate.format(quietTask.calStartDate) + " ⋙";
                 holder.tvCalRight.setText(s);
             }
-//            holder.tvCalLeft.setTextColor(colorOn);
-//            holder.tvCalRight.setTextColor(colorOn);
             holder.tvCalRight.setSingleLine(true);
             holder.tvCalRight.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             holder.tvCalRight.setSelected(true);

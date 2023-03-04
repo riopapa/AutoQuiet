@@ -131,7 +131,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     String subject = quietTask.subject;
                     String lastCode = subject.substring(subject.length() - 1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                    String s = (quietTask.sayDate)? nowDateToString(System.currentTimeMillis()):nowTimeToString(System.currentTimeMillis());
+                    String s = (quietTask.sayDate)? "지금은 " + nowDateToString(System.currentTimeMillis()):
+                            nowTimeToString(System.currentTimeMillis());
                     s +=  " 입니다. " + subject
                             + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
                     // 받침이 있으면 이, 없으면 가
@@ -196,8 +197,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     String nowDateToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat("지금은 MM 월 d 일 EEE 요일  HH:mm", Locale.getDefault());
-        return sdfTime.format(time);
+        final SimpleDateFormat sdfTime = new SimpleDateFormat(" MM 월 d 일 EEE 요일  HH:mm ", Locale.getDefault());
+        String s = sdfTime.format(time);
+        return s + s;
     }
     String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());

@@ -19,17 +19,14 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/lv_vibrate"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginStart="2dp"
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <LinearLayout
             android:layout_width="60dp"
-            android:layout_height="28dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
             android:orientation="horizontal">
         <ImageView
@@ -64,7 +61,7 @@
         <TextView
             android:id="@+id/rmdStartTime"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/hh_mm"
             android:textSize="@dimen/week_time"
             android:textStyle="bold"
@@ -82,7 +79,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="10"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,26 +89,37 @@
             <ImageView
                 android:id="@+id/gCal"
                 android:layout_margin="4dp"
-                android:layout_width="16dp"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:contentDescription="@string/blank"
                 android:src="@drawable/calendar" />
+
             <TextView
                 android:id="@+id/rmdSubject"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="7"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="@string/subject"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center"/>
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/rmdDate"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="날짜"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/weekFlag"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="4dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
             <TextView
@@ -123,6 +131,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_0"
+                android:gravity="fill"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/lt_week1"
@@ -133,6 +142,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_1"
+                android:gravity="fill"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/lt_week2"
@@ -143,6 +153,7 @@
                 android:layout_margin="@dimen/week_margin"
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
+                android:gravity="fill"
                 android:text="@string/week_2" />
             <TextView
                 android:id="@+id/lt_week3"
@@ -153,6 +164,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_3"
+                android:gravity="center"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/lt_week4"
@@ -163,6 +175,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_4"
+                android:gravity="center"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/lt_week5"
@@ -173,6 +186,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_5"
+                android:gravity="center"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/lt_week6"
@@ -183,6 +197,7 @@
                 android:paddingStart="@dimen/week_padding"
                 android:paddingEnd="@dimen/week_padding"
                 android:text="@string/week_6"
+                android:gravity="center"
                 android:layout_gravity="center_vertical"/>
         </LinearLayout>
 <!--  location, desc  -->
@@ -212,6 +227,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="start"
+                android:text="date"
                 android:textSize="16sp"
                 android:textColor="@color/colorOn"
                 />
