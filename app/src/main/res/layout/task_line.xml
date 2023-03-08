@@ -25,6 +25,7 @@
             android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <LinearLayout
+            android:id="@+id/llStartFinish"
             android:layout_width="60dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
@@ -56,7 +57,7 @@
         android:id="@+id/startFinishTime"
         android:layout_width="54sp"
         android:gravity="center_vertical"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
             android:id="@+id/rmdStartTime"
@@ -65,7 +66,7 @@
             android:text="@string/hh_mm"
             android:textSize="@dimen/week_time"
             android:textStyle="bold"
-            android:gravity="center"/>
+            android:gravity="center_horizontal"/>
         <TextView
             android:id="@+id/rmdFinishTime"
             android:layout_width="match_parent"
@@ -73,7 +74,7 @@
             android:text="@string/hh_mm"
             android:textSize="@dimen/week_time"
             android:textStyle="bold"
-            android:gravity="center"/>
+            android:gravity="center_horizontal"/>
     </LinearLayout>
     <!-- subject, week flag -->
     <LinearLayout

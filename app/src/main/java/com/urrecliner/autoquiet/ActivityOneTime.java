@@ -123,7 +123,7 @@ public class ActivityOneTime extends AppCompatActivity {
             adjustTimePicker();
         });
 
-        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
         binding.oneFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
                 fRepeatCount = 1;
@@ -131,7 +131,7 @@ public class ActivityOneTime extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
@@ -157,7 +157,7 @@ public class ActivityOneTime extends AppCompatActivity {
                 week, true, vibrate, 0, fRepeatCount, false);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);
-        new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "Swipe "+quietTask.subject);
+        new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "One "+quietTask.subject);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
 //        new NextTask(this,"One Time");
         new VarsGetPut().put(vars, getApplicationContext());

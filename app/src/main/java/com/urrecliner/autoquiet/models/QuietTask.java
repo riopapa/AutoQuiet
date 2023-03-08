@@ -13,7 +13,7 @@ public class QuietTask implements Serializable {
     public int startHour, startMin, finishHour, finishMin;
     public boolean active, vibrate, sayDate;
     public boolean[] week = {true, true, true, true, true, true, true};
-    public int sRepeatCount, fRepeatCount;
+    public int sRepeatCount, fRepeatCount;  // 0 : not Active, 1: bell only, > 1: talk subject
     public long calStartDate, calFinishDate;    // 통상으로 만들어지면 callStartDate = index 가 됨 sort 목적임
     public int calId;
     public String calDesc;

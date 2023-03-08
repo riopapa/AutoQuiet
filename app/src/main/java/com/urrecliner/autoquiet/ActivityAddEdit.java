@@ -40,7 +40,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
     private boolean vibrate, agenda, sayDate;
-    private QuietTask quietTask;
+    private QuietTask qT;
     private ArrayList<QuietTask> quietTasks;
     private int currIdx;
     private ActivityAddEditBinding binding;
@@ -58,10 +58,10 @@ public class ActivityAddEdit extends AppCompatActivity {
         quietTasks = new QuietTaskGetPut().get(this);
         Intent intent = getIntent();
         currIdx = intent.getExtras().getInt("idx",-1);
-        if (vars.addNewQuiet)
-            quietTask = new QuietTaskDefault().get();
+        if (currIdx == -1)
+            qT = new QuietTaskDefault().get();
         else
-            quietTask = quietTasks.get(currIdx);
+            qT = quietTasks.get(currIdx);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         xSize = metrics.widthPixels / 9;
@@ -88,19 +88,19 @@ public class ActivityAddEdit extends AppCompatActivity {
     void build_QuietTask() {
 
         final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
-        subject = quietTask.subject;
-        startHour = quietTask.startHour;
-        startMin = quietTask.startMin;
-        finishHour = quietTask.finishHour;
-        finishMin = quietTask.finishMin;
-        finish99 = quietTask.finishHour == 99;
-        active = quietTask.active;
-        sRepeatCount = quietTask.sRepeatCount;
-        fRepeatCount = quietTask.fRepeatCount;
-        sayDate = quietTask.sayDate;
-        week = quietTask.week;
-        vibrate = quietTask.vibrate;
-        agenda = quietTask.agenda;
+        subject = qT.subject;
+        startHour = qT.startHour;
+        startMin = qT.startMin;
+        finishHour = qT.finishHour;
+        finishMin = qT.finishMin;
+        finish99 = qT.finishHour == 99;
+        active = qT.active;
+        sRepeatCount = qT.sRepeatCount;
+        fRepeatCount = qT.fRepeatCount;
+        sayDate = qT.sayDate;
+        week = qT.week;
+        vibrate = qT.vibrate;
+        agenda = qT.agenda;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
@@ -119,8 +119,11 @@ public class ActivityAddEdit extends AppCompatActivity {
             }
         });
         findViewById(R.id.numOK).setOnClickListener(view -> {
-            save_QuietTask();
-            mainRecycleAdapter.notifyItemChanged(currIdx);
+            if (currIdx >= 0) {
+                save_QuietTask();
+                mainRecycleAdapter.notifyItemChanged(currIdx);
+            } else
+                quietTasks.add(qT);
             finish();
         });
 
@@ -130,10 +133,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         numPos = 1;
         set_TimeForm();
 
-        if (subject == null)
-            subject = getString(R.string.no_subject);
         binding.etSubject.setText(subject);
-        binding.etSubject.setBackgroundColor(NameColor.get(quietTask.calName, context));
+        binding.etSubject.setBackgroundColor(NameColor.get(qT.calName, context));
         if (agenda)
             binding.weekFlag.setVisibility(View.GONE);
         else {
@@ -173,14 +174,14 @@ public class ActivityAddEdit extends AppCompatActivity {
             if (sRepeatCount == 0)
                 sRepeatCount = 1;
             else if (sRepeatCount == 1)
-                sRepeatCount = 11;
+                sRepeatCount = 9;
             else
                 sRepeatCount = 0;
-            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
-        binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
         binding.iVStartRepeat.setOnClickListener(v -> {
             if (sRepeatCount == 0)
                 sRepeatCount = 1;
@@ -188,7 +189,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 sRepeatCount = 11;
             else
                 sRepeatCount = 0;
-            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
@@ -199,10 +200,10 @@ public class ActivityAddEdit extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
-        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
         binding.iVFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
                 fRepeatCount = 1;
@@ -210,7 +211,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
         binding.sayDate.setChecked(sayDate);    // sayDate is only for finish Time
@@ -223,11 +224,11 @@ public class ActivityAddEdit extends AppCompatActivity {
         TextView tv = findViewById(R.id.dateDesc);
         if (agenda) {
             SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
-            String s = sdfDate.format(quietTask.calStartDate);
-            if (!quietTask.calLocation.equals(""))
-                s += "\n" + quietTask.calLocation;
-            if (!quietTask.calDesc.equals(""))
-                s += "\n" + quietTask.calDesc;
+            String s = sdfDate.format(qT.calStartDate);
+            if (!qT.calLocation.equals(""))
+                s += "\n" + qT.calLocation;
+            if (!qT.calDesc.equals(""))
+                s += "\n" + qT.calDesc;
             tv.setText(s);
         } else
             tv.setText("");
@@ -336,8 +337,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (finish99) { // if time is passed then adjust week number automatically
             long nowTime = System.currentTimeMillis();
             long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
-            long TimeDiff = nextTime - nowTime;
-            if (TimeDiff > 48 * 60 * 60 * 1000) {
+            if ((nextTime - nowTime) > 24 * 60 * 60 * 1000) {
                 week = new boolean[7];
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(nowTime);
@@ -351,7 +351,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         if (agenda) {
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(quietTask.calStartDate);
+            c.setTimeInMillis(qT.calStartDate);
             c.set(Calendar.HOUR_OF_DAY, startHour);
             c.set(Calendar.MINUTE, startMin);
             long startDate = c.getTimeInMillis();
@@ -359,16 +359,16 @@ public class ActivityAddEdit extends AppCompatActivity {
             c.set(Calendar.MINUTE, finishMin);
             long finishDate = c.getTimeInMillis();
             QuietTask quietNew = new QuietTask(subject, startDate, finishDate,
-                    quietTask.calId, quietTask.calName, quietTask.calDesc, quietTask.calLocation,
+                    qT.calId, qT.calName, qT.calDesc, qT.calLocation,
                     true, vibrate, sRepeatCount, fRepeatCount, true);
             quietTasks.set(currIdx, quietNew);
         } else {
-            quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
+            qT = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                     week, active, vibrate, sRepeatCount, fRepeatCount, sayDate);
             if (vars.addNewQuiet)
-                quietTasks.add(quietTask);
+                quietTasks.add(qT);
             else
-                quietTasks.set(currIdx, quietTask);
+                quietTasks.set(currIdx, qT);
         }
         new QuietTaskGetPut().put(quietTasks, context, "Add/Update");
         }
@@ -398,21 +398,30 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            save_QuietTask();
-            mainRecycleAdapter.notifyItemChanged(currIdx);
-            Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
-            finish();
+            if (currIdx >= 0) {
+                save_QuietTask();
+                mainRecycleAdapter.notifyItemChanged(currIdx);
+                Toast.makeText(this, qT.subject+" Task Saved", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                quietTasks.add(qT);
+                Toast.makeText(this, qT.subject+" Task Added", Toast.LENGTH_SHORT).show();
+                finish();
+            }
 
         } else if (id == R.id.action_delete) {
             quietTasks.remove(currIdx);
             mainRecycleAdapter.notifyItemRemoved(currIdx);
-            new QuietTaskGetPut().put(quietTasks, context, "del "+quietTask.subject);
+            new QuietTaskGetPut().put(quietTasks, context, "del "+ qT.subject);
             finish();
 
         } else if (id == R.id.action_copy) {
-            QuietTask qtNew = new QuietTask(quietTask.subject + "c", quietTask.startHour, quietTask.startMin, quietTask.finishHour, quietTask.finishMin, quietTask.week, quietTask.active, quietTask.vibrate, quietTask.sRepeatCount, quietTask.fRepeatCount, quietTask.sayDate);
+            QuietTask qtNew = new QuietTask(qT.subject + "c",
+                    qT.startHour, qT.startMin, qT.finishHour, qT.finishMin,
+                    qT.week, qT.active, qT.vibrate,
+                    qT.sRepeatCount, qT.fRepeatCount, qT.sayDate);
             quietTasks.add(currIdx, qtNew);
-            new QuietTaskGetPut().put(quietTasks, context, "copy "+quietTask.subject);
+            new QuietTaskGetPut().put(quietTasks, context, "copy "+ qT.subject);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
             mainRecycleAdapter.notifyItemChanged(currIdx);
             mainRecycleAdapter.notifyItemChanged(currIdx+1);
@@ -420,7 +429,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         } else if (id == R.id.action_delete_multi) {
             if (agenda) {
-                int delId = quietTask.calId;
+                int delId = qT.calId;
                 for (int i = 0; i < quietTasks.size(); ) {
                     if (quietTasks.get(i).calId == delId) {
                         quietTasks.remove(i);

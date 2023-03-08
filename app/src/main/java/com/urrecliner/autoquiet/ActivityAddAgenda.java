@@ -70,7 +70,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
         binding.aStartRepeat.setOnClickListener(v -> {
             if (sRepeatTime == 0)
                 sRepeatTime = 1;
@@ -78,11 +78,11 @@ public class ActivityAddAgenda extends AppCompatActivity {
                 sRepeatTime = 11;
             else
                 sRepeatTime = 0;
-            binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
-        binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+        binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
         binding.aFinishRepeat.setOnClickListener(v -> {
             if (fRepeatTime == 0)
                 fRepeatTime = 1;
@@ -90,7 +90,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
                 fRepeatTime = 11;
             else
                 fRepeatTime = 0;
-            binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.speak_on : R.mipmap.speak_repeat);
+            binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 

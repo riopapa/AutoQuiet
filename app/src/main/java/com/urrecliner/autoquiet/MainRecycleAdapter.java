@@ -66,13 +66,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         ImageView lvVibrate, lvStartRepeat, lvFinishRepeat, lvgCal;
         TextView rmdSubject, rmdDate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvStartTime, tvFinishTime, tvCalRight, tvCalLeft;
-        LinearLayout llCalInfo, llStartFinishTime, llWeekFlag;
+        LinearLayout llCalInfo, llStartFinish, llStartFinishTime, llWeekFlag;
         GestureDetector mGestureDetector;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.viewLine = itemView.findViewById(R.id.one_reminder);
             this.lvVibrate = itemView.findViewById(R.id.lv_vibrate);
+            this.llStartFinish = itemView.findViewById(R.id.llStartFinish);
             this.lvStartRepeat = itemView.findViewById(R.id.lv_startRepeat);
             this.lvFinishRepeat = itemView.findViewById(R.id.lv_finishRepeat);
             this.lvgCal = itemView.findViewById(R.id.gCal);
@@ -126,13 +127,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
+            vars.addNewQuiet = false;
+            new VarsGetPut().put(vars, context);
             int qIdx = getBindingAdapterPosition();
-            if (qIdx >= quietTasks.size())
-                return true;
-            quietTask = quietTasks.get(qIdx);
+//            if (qIdx >= quietTasks.size())
+//                return true;
+//            quietTask = quietTasks.get(qIdx);
             Intent intent;
             if (qIdx != 0) {
-                vars.addNewQuiet = false;
                 intent = new Intent(context, ActivityAddEdit.class);
             } else {
                 intent = new Intent(context, ActivityOneTime.class);
@@ -188,12 +190,12 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 holder.lvVibrate.setImageResource((active) ? R.drawable.phone_off : R.mipmap.speaking_noactive);
             int sRepeat = quietTask.sRepeatCount;
             int fRepeat = quietTask.fRepeatCount;
-            holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
-            holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.speak_on : R.mipmap.speak_repeat);
+            holder.llStartFinish.setVisibility(View.VISIBLE);
+            holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
+            holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
         } else {
             holder.lvVibrate.setImageResource(R.drawable.alarm);
-            holder.lvStartRepeat.setImageResource(R.mipmap.speaking_noactive);
-            holder.lvFinishRepeat.setImageResource(R.mipmap.speaking_noactive);
+            holder.llStartFinish.setVisibility(View.GONE);
         }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
@@ -217,7 +219,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 }
                 txt = "";
                 holder.tvStartTime.setText(txt);
-                holder.tvFinishTime.setText(txt);
             } else {
                 boolean[] week = quietTask.week;
                 for (int i = 0; i < 7; i++) {

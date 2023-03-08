@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.urrecliner.autoquiet.Sub.IsScreen;
 import com.urrecliner.autoquiet.Sub.NextAlarm;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -48,17 +46,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         readyTTS();
 
         assert caseSFO != null;
+        boolean beep = vars.sharedManner && (quietTask.fRepeatCount == 1);
 
         switch (caseSFO) {
             case "S":   // start?
-                say_Started(quietTask);
+                say_Started();
                 break;
             case "F":   // finish
-                new MannerMode().turn2Normal(vars.sharedManner, context);
-                say_Finished(quietTask);
+                new MannerMode().turn2Normal(beep, context);
+                say_Finished();
                 break;
             case "O":   // onetime
-                new MannerMode().turn2Normal(vars.sharedManner, context);
+                new MannerMode().turn2Normal(beep, context);
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 new QuietTaskGetPut().put(quietTasks, context, "OneTime");
@@ -70,78 +69,101 @@ public class AlarmReceiver extends BroadcastReceiver {
         new VarsGetPut().put(vars, context);
     }
 
-    void say_Started(QuietTask quietTask) {
+    void say_Started() {
 
         boolean finish99 = quietTask.finishHour == 99;
-        new Sounds().beep(context, 2);
         new Timer().schedule(new TimerTask() {
-            public void run () {
-                String say = "";
-                String subject = quietTask.subject;
-                String lastCode = subject.substring(subject.length() - 1);
-                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                say = nowTimeToString(System.currentTimeMillis()) + " 입니다. ";
-                if (!finish99) {
-                    say += subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
-                    if (quietTask.sRepeatCount > 0)
-                        myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-                    new NextTask(context, quietTasks, "say_Started()");
-                } else {
-                    if (loop > 0) {
-                        loop--;
-                        say += subject + " 를 확인하세요, " +
-                            ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
-                        long nextTime = System.currentTimeMillis() + 50 * 1000;
-                        new NextAlarm().request(context, quietTask, nextTime,
-                                "S", loop);   // loop 0 : no more
-                        Intent uIntent = new Intent(context, NotificationService.class);
-                        uIntent.putExtra("start", nowTimeToString(nextTime));
-                        uIntent.putExtra("finish", "다시");
-                        uIntent.putExtra("finish99", true);
-                        uIntent.putExtra("subject", quietTask.subject);
-                        uIntent.putExtra("icon", 3);
-                        uIntent.putExtra("isUpdate", true);
-                        context.startForegroundService(uIntent);
-                        myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-                    } else
-                        new NextTask(context, quietTasks, "finish99ed");
+            public void run() {
+                if (finish99)
+                    say_Started99();
+                else {
+                    say_StartedNormal();
                 }
             }
-        }, 2500);   // after beep
-
-        new Timer().schedule(new TimerTask() {
-            public void run () {
-                new Sounds().beep(context, 1);
-                if (caseSFO.equals("S") && !finish99) {
-                    new MannerMode().turn2Quiet(context, vars.sharedManner, quietTask.vibrate);
-                }
-            }
-        }, 6000);
+        }, 1500);   // after beep
 
         Intent notification = new Intent(context, NotificationService.class);
         notification.putExtra("operation", STOP_SPEAK);
         context.startForegroundService(notification);
     }
 
-    void say_Finished(QuietTask quietTask) {
-        new Sounds().beep(context, 0);
-        new Timer().schedule(new TimerTask() {
-            public void run () {
-                if (quietTask.sRepeatCount > 0) {
+    private void say_Started99() {
+        String subject = quietTask.subject;
+        if (loop > 0) {
+            loop--;
+            String say = subject + " 를 확인하세요, " +
+                ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+            myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+            long nextTime = System.currentTimeMillis() + 50 * 1000;
+            new NextAlarm().request(context, quietTask, nextTime,
+                    "S", loop);   // loop 0 : no more
+            Intent uIntent = new Intent(context, NotificationService.class);
+            uIntent.putExtra("start", nowTimeToString(nextTime));
+            uIntent.putExtra("finish", "다시");
+            uIntent.putExtra("finish99", true);
+            uIntent.putExtra("subject", quietTask.subject);
+            uIntent.putExtra("icon", 3);
+            uIntent.putExtra("isUpdate", true);
+            context.startForegroundService(uIntent);
+        } else {
+            if (quietTask.fRepeatCount > 1) {
+                String lastCode = subject.substring(subject.length() - 1);
+                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                String say = subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
+                myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+            } else {
+                new Sounds().beep(context, Sounds.BEEP.ALARM);
+            }
+            new NextTask(context, quietTasks, "finish99ed");
+        }
+    }
+
+    private void say_StartedNormal() {
+        if (quietTask.sRepeatCount > 1) {
+            new Sounds().beep(context, Sounds.BEEP.MANNER);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
                     String subject = quietTask.subject;
                     String lastCode = subject.substring(subject.length() - 1);
                     String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                    String s = (quietTask.sayDate)? "지금은 " + nowDateToString(System.currentTimeMillis()):
+                    String say = subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
+                    myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+                }
+            }, 3000);
+        } else if (quietTask.sRepeatCount == 1){
+            new Sounds().beep(context, Sounds.BEEP.ALARM);
+        }
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                boolean beep = vars.sharedManner && (quietTask.sRepeatCount > 1);
+                new MannerMode().turn2Quiet(context, beep, quietTask.vibrate);
+            }
+        }, 6000);
+        new NextTask(context, quietTasks, "say_Started()");
+    }
+
+    void say_Finished() {
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                if (quietTask.fRepeatCount > 1) {
+                    new Sounds().beep(context, Sounds.BEEP.NOTY);
+                    String subject = quietTask.subject;
+                    String lastCode = subject.substring(subject.length() - 1);
+                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
+                    String s = (quietTask.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) :
                             nowTimeToString(System.currentTimeMillis());
-                    s +=  " 입니다. " + subject
+                    s += " 입니다. " + subject
                             + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
                     // 받침이 있으면 이, 없으면 가
                     myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+                } else if (quietTask.fRepeatCount == 1) {
+                    new Sounds().beep(context, Sounds.BEEP.ALARM);
                 }
                 if (quietTask.agenda) { // delete if agenda based
                     for (int i = 0; i < quietTasks.size(); i++) {
                         if (quietTasks.get(i).calId == quietTask.calId) {
-                            Log.w("remove", quietTasks.get(i).subject);
                             quietTasks.remove(i);
                             new QuietTaskGetPut().put(quietTasks, context,"Del "+quietTask.subject);
                             break;
