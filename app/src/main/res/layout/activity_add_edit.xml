@@ -334,18 +334,6 @@
                 android:text=""
                 />
             <TextView
-                android:id="@+id/num0"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="0"
-                android:tag="0"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
-            <TextView
                 android:id="@+id/numBack"
                 android:background="@drawable/button_number"
                 android:layout_margin="2dp"
@@ -359,14 +347,26 @@
                 android:layout_height="wrap_content"
                 />
             <TextView
-                android:id="@+id/numOK"
+                android:id="@+id/num0"
+                android:background="@drawable/button_number"
+                android:layout_margin="2dp"
+                android:textSize="32sp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:text="0"
+                android:tag="0"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/numFore"
                 android:background="@drawable/button_number"
                 android:layout_margin="2dp"
                 android:textSize="32sp"
                 android:textColor="#1733D1"
                 android:gravity="center"
                 android:layout_width="0dp"
-                android:text="ok"
+                android:text="→"
                 android:tag="o"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"

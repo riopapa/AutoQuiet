@@ -12,6 +12,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -118,13 +120,12 @@ public class ActivityAddEdit extends AppCompatActivity {
                 set_TimeForm();
             }
         });
-        findViewById(R.id.numOK).setOnClickListener(view -> {
-            if (currIdx >= 0) {
-                save_QuietTask();
-                mainRecycleAdapter.notifyItemChanged(currIdx);
+        findViewById(R.id.numFore).setOnClickListener(view -> {
+            if (numPos < 4) {
+                numPos++;
             } else
-                quietTasks.add(qT);
-            finish();
+                numPos = 1;
+            set_TimeForm();
         });
 
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
@@ -232,6 +233,23 @@ public class ActivityAddEdit extends AppCompatActivity {
             tv.setText(s);
         } else
             tv.setText("");
+
+        binding.numHH1.setOnClickListener(v -> {
+            numPos = 1;
+            blink_Number();
+        });
+        binding.numHH2.setOnClickListener(v -> {
+            numPos = 2;
+            blink_Number();
+        });
+        binding.numMM1.setOnClickListener(v -> {
+            numPos = 3;
+            blink_Number();
+        });
+        binding.numMM2.setOnClickListener(v -> {
+            numPos = 4;
+            blink_Number();
+        });
     }
 
     private void set_TimeForm() {
@@ -267,6 +285,27 @@ public class ActivityAddEdit extends AppCompatActivity {
             show_ResultTime();
         }
     }
+    private void blink_Number() {
+        TextView tv;
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(100); //You can manage the blinking time with this parameter
+        anim.setStartOffset(100);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+
+        tv = binding.numHH1;
+        if (numPos == 1) tv.startAnimation(anim);
+        else tv.clearAnimation();
+        tv = binding.numHH2;
+        if (numPos == 2) tv.startAnimation(anim);
+        else tv.clearAnimation();
+        tv = binding.numMM1;
+        if (numPos == 3) tv.startAnimation(anim);
+        else tv.clearAnimation();
+        tv = binding.numMM2;
+        if (numPos == 4) tv.startAnimation(anim);
+        else tv.clearAnimation();
+    }
 
     private void show_ResultTime() {
         String s = (startHour > 9) ? ""+startHour: "0"+startHour;
@@ -281,6 +320,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (numPos == 2) binding.numHH2.setBackgroundColor(0xffbbbbbb);
         if (numPos == 3) binding.numMM1.setBackgroundColor(0xffbbbbbb);
         if (numPos == 4) binding.numMM2.setBackgroundColor(0xffbbbbbb);
+        blink_Number();
     }
 
     public void toggleWeek(View v) {
@@ -365,7 +405,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         } else {
             qT = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                     week, active, vibrate, sRepeatCount, fRepeatCount, sayDate);
-            if (vars.addNewQuiet)
+            if (currIdx == -1)
                 quietTasks.add(qT);
             else
                 quietTasks.set(currIdx, qT);
@@ -398,22 +438,16 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            if (currIdx >= 0) {
-                save_QuietTask();
-                mainRecycleAdapter.notifyItemChanged(currIdx);
-                Toast.makeText(this, qT.subject+" Task Saved", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                quietTasks.add(qT);
-                Toast.makeText(this, qT.subject+" Task Added", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            finish();
+            save_QuietTask();
+            mainRecycleAdapter.notifyItemChanged(currIdx);
+            Toast.makeText(this, qT.subject+ ((currIdx == -1)? " Added": " Saved"), Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.action_delete) {
+            finish();
             quietTasks.remove(currIdx);
             mainRecycleAdapter.notifyItemRemoved(currIdx);
             new QuietTaskGetPut().put(quietTasks, context, "del "+ qT.subject);
-            finish();
 
         } else if (id == R.id.action_copy) {
             QuietTask qtNew = new QuietTask(qT.subject + "c",
