@@ -112,7 +112,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 String say = subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             } else {
-                new Sounds().beep(context, Sounds.BEEP.ALARM);
+                new Sounds().beep(context, Sounds.BEEP.INFO);
             }
             new NextTask(context, quietTasks, "finish99ed");
         }
@@ -120,7 +120,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void say_StartedNormal() {
         if (quietTask.sRepeatCount > 1) {
-            new Sounds().beep(context, Sounds.BEEP.MANNER);
+            new Sounds().beep(context, Sounds.BEEP.NOTY);
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -132,7 +132,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
             }, 3000);
         } else if (quietTask.sRepeatCount == 1){
-            new Sounds().beep(context, Sounds.BEEP.ALARM);
+            new Sounds().beep(context, Sounds.BEEP.INFO);
         }
         new Timer().schedule(new TimerTask() {
             @Override

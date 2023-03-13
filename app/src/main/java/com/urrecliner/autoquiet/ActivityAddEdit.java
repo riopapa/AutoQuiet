@@ -236,34 +236,34 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         binding.numHH1.setOnClickListener(v -> {
             numPos = 1;
-            blink_Number();
+            show_ResultTime();
         });
         binding.numHH2.setOnClickListener(v -> {
             numPos = 2;
-            blink_Number();
+            show_ResultTime();
         });
         binding.numMM1.setOnClickListener(v -> {
             numPos = 3;
-            blink_Number();
+            show_ResultTime();
         });
         binding.numMM2.setOnClickListener(v -> {
             numPos = 4;
-            blink_Number();
+            show_ResultTime();
         });
     }
 
     private void set_TimeForm() {
-        binding.timePickerStart.setHour(startHour);
-        binding.timePickerStart.setMinute(startMin);
         binding.finish99.setChecked(finish99);
         if (!finish99) {    // normal start, finish
-            binding.numDateTime.setVisibility(View.GONE);
-            binding.timePickerStart.setVisibility(View.VISIBLE);
-            binding.timePickerFinish.setVisibility(View.VISIBLE);
-            binding.timePickerFinish.setHour(finishHour);
-            binding.timePickerFinish.setMinute(finishMin);
             if (finishHour == 99)
                 finishHour = startHour;
+            binding.timePickerStart.setVisibility(View.VISIBLE);
+            binding.timePickerFinish.setVisibility(View.VISIBLE);
+            binding.timePickerStart.setHour(startHour);
+            binding.timePickerStart.setMinute(startMin);
+            binding.numDateTime.setVisibility(View.GONE);
+            binding.timePickerFinish.setHour(finishHour);
+            binding.timePickerFinish.setMinute(finishMin);
             binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
             binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
             binding.iVVibrate.setOnClickListener(v -> {
@@ -285,27 +285,6 @@ public class ActivityAddEdit extends AppCompatActivity {
             show_ResultTime();
         }
     }
-    private void blink_Number() {
-        TextView tv;
-        Animation anim = new AlphaAnimation(0.0f, 1.0f);
-        anim.setDuration(100); //You can manage the blinking time with this parameter
-        anim.setStartOffset(100);
-        anim.setRepeatMode(Animation.REVERSE);
-        anim.setRepeatCount(Animation.INFINITE);
-
-        tv = binding.numHH1;
-        if (numPos == 1) tv.startAnimation(anim);
-        else tv.clearAnimation();
-        tv = binding.numHH2;
-        if (numPos == 2) tv.startAnimation(anim);
-        else tv.clearAnimation();
-        tv = binding.numMM1;
-        if (numPos == 3) tv.startAnimation(anim);
-        else tv.clearAnimation();
-        tv = binding.numMM2;
-        if (numPos == 4) tv.startAnimation(anim);
-        else tv.clearAnimation();
-    }
 
     private void show_ResultTime() {
         String s = (startHour > 9) ? ""+startHour: "0"+startHour;
@@ -316,11 +295,27 @@ public class ActivityAddEdit extends AppCompatActivity {
         s1 = s.substring(0,1); s2 = s.substring(1);
         binding.numMM1.setText(s1); binding.numMM1.setBackgroundColor(0x00bbbbbb);
         binding.numMM2.setText(s2); binding.numMM2.setBackgroundColor(0x00bbbbbb);
-        if (numPos == 1) binding.numHH1.setBackgroundColor(0xffbbbbbb);
-        if (numPos == 2) binding.numHH2.setBackgroundColor(0xffbbbbbb);
-        if (numPos == 3) binding.numMM1.setBackgroundColor(0xffbbbbbb);
-        if (numPos == 4) binding.numMM2.setBackgroundColor(0xffbbbbbb);
-        blink_Number();
+
+        TextView tv;
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(100); //You can manage the blinking time with this parameter
+        anim.setStartOffset(100);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+
+        tv = binding.numHH1;
+        if (numPos == 1) { tv.startAnimation(anim); tv.setBackgroundColor(0xffbbbbbb);}
+        else tv.clearAnimation();
+        tv = binding.numHH2;
+        if (numPos == 2) { tv.startAnimation(anim); tv.setBackgroundColor(0xffbbbbbb);}
+        else tv.clearAnimation();
+        tv = binding.numMM1;
+        if (numPos == 3) { tv.startAnimation(anim); tv.setBackgroundColor(0xffbbbbbb);}
+        else tv.clearAnimation();
+        tv = binding.numMM2;
+        if (numPos == 4) { tv.startAnimation(anim); tv.setBackgroundColor(0xffbbbbbb);}
+        else tv.clearAnimation();
+
     }
 
     public void toggleWeek(View v) {
@@ -377,7 +372,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (finish99) { // if time is passed then adjust week number automatically
             long nowTime = System.currentTimeMillis();
             long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
-            if ((nextTime - nowTime) > 24 * 60 * 60 * 1000) {
+            if ((nextTime - nowTime) > 48 * 60 * 60 * 1000) {
                 week = new boolean[7];
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(nowTime);
@@ -462,6 +457,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
 
         } else if (id == R.id.action_delete_multi) {
+            finish();
             if (agenda) {
                 int delId = qT.calId;
                 for (int i = 0; i < quietTasks.size(); ) {
@@ -477,8 +473,6 @@ public class ActivityAddEdit extends AppCompatActivity {
                 mainRecycleAdapter.notifyItemRemoved(currIdx);
             }
             new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
-            mainRecycleAdapter.notifyDataSetChanged();
-            finish();
         }
         return false;
     }
