@@ -332,6 +332,8 @@ public class ActivityAddEdit extends AppCompatActivity {
             int hour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
             if (hour < 25)
                 startHour = hour;
+            else
+                startHour = num * 10;
         } else if (numPos == 2) {
             int hour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
             if (hour < 25)
@@ -341,9 +343,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             if (min < 60)
                 startMin = min;
         } else {
-            int min = Integer.parseInt(binding.numMM1.getText().toString()) * 10 + num;
-            if (min < 60)
-                startMin = min;
+            startMin = Integer.parseInt(binding.numMM1.getText().toString()) * 10 + num;
         }
         if (numPos < 4)
             numPos++;
