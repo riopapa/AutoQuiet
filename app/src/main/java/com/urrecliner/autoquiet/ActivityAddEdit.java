@@ -364,12 +364,17 @@ public class ActivityAddEdit extends AppCompatActivity {
         subject = binding.etSubject.getText().toString();
         if (subject.length() == 0)
             subject = getString(R.string.no_subject);
-        startHour = binding.timePickerStart.getHour();
-        startMin = binding.timePickerStart.getMinute();
-        finishHour = (finish99)? 99:binding.timePickerFinish.getHour();
-        finishMin = binding.timePickerFinish.getMinute();
+        if (!finish99) {
+            startHour = binding.timePickerStart.getHour();
+            startMin = binding.timePickerStart.getMinute();
+            finishHour = (finish99) ? 99 : binding.timePickerFinish.getHour();
+            finishMin = binding.timePickerFinish.getMinute();
+        } else {
+            startHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
+                    + Integer.parseInt(binding.numHH2.getText().toString());
+            startMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
+                    + Integer.parseInt(binding.numMM2.getText().toString());
 
-        if (finish99) { // if time is passed then adjust week number automatically
             long nowTime = System.currentTimeMillis();
             long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
             if ((nextTime - nowTime) > 48 * 60 * 60 * 1000) {
