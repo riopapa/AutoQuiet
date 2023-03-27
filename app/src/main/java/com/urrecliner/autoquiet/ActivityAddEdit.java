@@ -352,11 +352,11 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void save_QuietTask() {
 
-        boolean any = false;
+        int any = 0;
         for (int i = 0; i < 7; i++) {
-            any |= week[i];
+            if (week[i]) any++;
         }
-        if (!any) {
+        if (any == 0) {
             Toast.makeText(getBaseContext(), R.string.at_least_one_day_selected, Toast.LENGTH_LONG).show();
             return;
         }
@@ -377,16 +377,17 @@ public class ActivityAddEdit extends AppCompatActivity {
 
             long nowTime = System.currentTimeMillis();
             long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
-            if ((nextTime - nowTime) > 48 * 60 * 60 * 1000) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(nowTime);
+            int nowWeek = c.get(Calendar.DAY_OF_WEEK) + 7;
+            c.setTimeInMillis(nextTime);
+            int nextWeek = c.get(Calendar.DAY_OF_WEEK) + 7;
+            if ((nextWeek - nowWeek) == -1 || (nextWeek - nowWeek) > 5) { // if next time is too far
                 week = new boolean[7];
-                Calendar c = Calendar.getInstance();
-                c.setTimeInMillis(nowTime);
-                int weekNo = c.get(Calendar.DAY_OF_WEEK);   // 1: Sunday
-                if (weekNo < 7)
-                    week[weekNo] = true;
-                else
-                    week[0] = true;
+                nowWeek -= 8;
+                week[nowWeek] = true;
             }
+            finishHour = 99;
         }
 
         if (agenda) {
@@ -450,8 +451,8 @@ public class ActivityAddEdit extends AppCompatActivity {
             new QuietTaskGetPut().put(quietTasks, context, "del "+ qT.subject);
 
         } else if (id == R.id.action_copy) {
-            QuietTask qtNew = new QuietTask(qT.subject + "c",
-                    qT.startHour, qT.startMin, qT.finishHour, qT.finishMin,
+            QuietTask qtNew = new QuietTask(qT.subject,
+                    qT.startHour, qT.startMin + 1, qT.finishHour, qT.finishMin + 1,
                     qT.week, qT.active, qT.vibrate,
                     qT.sRepeatCount, qT.fRepeatCount, qT.sayDate);
             quietTasks.add(currIdx, qtNew);

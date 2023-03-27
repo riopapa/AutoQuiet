@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
 import com.urrecliner.autoquiet.Sub.NameColor;
@@ -268,6 +269,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         if (quietTasks == null) {
             context = ActivityMain.pContext;
             quietTasks = new QuietTaskGetPut().get(ActivityMain.pContext);
+            if (quietTasks == null)
+                new ClearAllTasks(context);
         }
         return quietTasks.size();
     }

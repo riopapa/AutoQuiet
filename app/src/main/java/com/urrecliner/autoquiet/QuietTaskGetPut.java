@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;
@@ -44,6 +45,7 @@ public class QuietTaskGetPut {
         String json = sharedPref.getString("silentInfo", "");
         if (json.isEmpty()) {
             list = new ArrayList<>();
+            new ClearAllTasks(context);
         } else {
             Type type = new TypeToken<List<QuietTask>>() {
             }.getType();
