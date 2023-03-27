@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2C6862</color>
+    <color name="colorPrimary">#61A69F</color>
     <color name="colorTimer">#CEECE8</color>
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
     <color name="notification_back">#8F2A5B8C</color>
-    <color name="colorNotification">#81BFBB</color>
+    <color name="colorNotification">#CEE3E1</color>
     <color name="num_button">#042B28</color>
 
     <color name="itemNormalBorder">#788887</color>
@@ -17,7 +17,7 @@
     <color name="itemAgendaFill">#CAF1A3</color>
 
     <color name="colorMain">#AAE1A3</color>
-    <color name="colorClockDark">#064E48</color>
+    <color name="colorClockDark">#0D9186</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>
     <color name="colorOnBack">#05B3A1</color>
