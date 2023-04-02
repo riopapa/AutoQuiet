@@ -51,10 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:timePickerMode="spinner"
-            android:visibility="gone"
             android:theme="@style/NumberPickerStyle"
             android:headerTimeTextAppearance="@style/TextAppearance.AppCompat.Display2"
-            android:layerType="software" />
+            tools:animateLayoutChanges="@tools:sample/date/hhmm" />
 
         <TimePicker
             android:id="@+id/timePickerFinish"
@@ -62,7 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:timePickerMode="spinner"
-            android:visibility="gone"
             android:theme="@style/NumberPickerStyle"
             android:headerTimeTextAppearance="@style/TextAppearance.AppCompat.Display2"
             tools:animateLayoutChanges="@tools:sample/date/hhmm" />

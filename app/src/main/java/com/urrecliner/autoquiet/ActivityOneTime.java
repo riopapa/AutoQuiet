@@ -21,7 +21,7 @@ public class ActivityOneTime extends AppCompatActivity {
     QuietTask quietTask;
     ArrayList<QuietTask> quietTasks;
     private String subject;
-    private int startHour, startMin, finishHour, finishMin, fRepeatCount;
+    private int startHour, startMin, finishHour, finishMin, fRepeatCount; // 0: silent 1: bell 2: talk
     private boolean vibrate;
     private int durationMin = 0;       // in minutes
     Calendar calendar;

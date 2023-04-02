@@ -370,39 +370,11 @@ public class ActivityAddEdit extends AppCompatActivity {
             finishHour = (finish99) ? 99 : binding.timePickerFinish.getHour();
             finishMin = binding.timePickerFinish.getMinute();
         } else {
-            startHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
-                    + Integer.parseInt(binding.numHH2.getText().toString());
-            startMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
-                    + Integer.parseInt(binding.numMM2.getText().toString());
-
-            long nowTime = System.currentTimeMillis();
-            long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(nowTime);
-            int nowWeek = c.get(Calendar.DAY_OF_WEEK) + 7;
-            c.setTimeInMillis(nextTime);
-            int nextWeek = c.get(Calendar.DAY_OF_WEEK) + 7;
-            if ((nextWeek - nowWeek) == -1 || (nextWeek - nowWeek) > 5) { // if next time is too far
-                week = new boolean[7];
-                nowWeek -= 8;
-                week[nowWeek] = true;
-            }
-            finishHour = 99;
+            updateOneAlert();
         }
 
         if (agenda) {
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(qT.calStartDate);
-            c.set(Calendar.HOUR_OF_DAY, startHour);
-            c.set(Calendar.MINUTE, startMin);
-            long startDate = c.getTimeInMillis();
-            c.set(Calendar.HOUR_OF_DAY, finishHour);
-            c.set(Calendar.MINUTE, finishMin);
-            long finishDate = c.getTimeInMillis();
-            QuietTask quietNew = new QuietTask(subject, startDate, finishDate,
-                    qT.calId, qT.calName, qT.calDesc, qT.calLocation,
-                    true, vibrate, sRepeatCount, fRepeatCount, true);
-            quietTasks.set(currIdx, quietNew);
+            updateAgenda();
         } else {
             qT = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
                     week, active, vibrate, sRepeatCount, fRepeatCount, sayDate);
@@ -412,7 +384,48 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.set(currIdx, qT);
         }
         new QuietTaskGetPut().put(quietTasks, context, "Add/Update");
+    }
+
+    private void updateOneAlert() {
+        startHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
+                + Integer.parseInt(binding.numHH2.getText().toString());
+        startMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
+                + Integer.parseInt(binding.numMM2.getText().toString());
+
+        long nowTime = System.currentTimeMillis();
+        long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(nowTime);
+        int nowDays = c.get(Calendar.DAY_OF_YEAR);
+        int nowHour = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
+        c.setTimeInMillis(nextTime);
+        int nextDays = c.get(Calendar.DAY_OF_YEAR);
+        int nextHour = startHour * 60 + startMin;
+        if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHour > nextHour)) {
+            week = new boolean[7];
+            int weekDay = c.get(Calendar.DAY_OF_WEEK);
+            if (weekDay < 7)
+                week[weekDay] = true;
+            else
+                week[0] = true;
         }
+        finishHour = 99;
+    }
+
+    private void updateAgenda() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(qT.calStartDate);
+        c.set(Calendar.HOUR_OF_DAY, startHour);
+        c.set(Calendar.MINUTE, startMin);
+        long startDate = c.getTimeInMillis();
+        c.set(Calendar.HOUR_OF_DAY, finishHour);
+        c.set(Calendar.MINUTE, finishMin);
+        long finishDate = c.getTimeInMillis();
+        QuietTask qAgenda = new QuietTask(subject, startDate, finishDate,
+                qT.calId, qT.calName, qT.calDesc, qT.calLocation,
+                true, vibrate, sRepeatCount, fRepeatCount, true);
+        quietTasks.set(currIdx, qAgenda);
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
