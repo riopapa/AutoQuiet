@@ -408,6 +408,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 week[weekDay] = true;
             else
                 week[0] = true;
+            Toast.makeText(context, "Week Number changed to Tomorrow",Toast.LENGTH_SHORT).show();
         }
         finishHour = 99;
     }

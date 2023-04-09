@@ -107,9 +107,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             context.startForegroundService(uIntent);
         } else {
             if (quietTask.fRepeatCount > 1) {
-                String lastCode = subject.substring(subject.length() - 1);
-                String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                String say = subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
+                String say = addPostPosition(subject) + "끝났습니다";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             } else {
                 new Sounds().beep(context, Sounds.BEEP.INFO);
@@ -125,9 +123,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 @Override
                 public void run() {
                     String subject = quietTask.subject;
-                    String lastCode = subject.substring(subject.length() - 1);
-                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
-                    String say = subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 시작됩니다";
+                    String say = addPostPosition(subject) + "시작됩니다";
                     myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
                 }
             }, 3000);
@@ -144,18 +140,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         new NextTask(context, quietTasks, "say_Started()");
     }
 
+    String addPostPosition(String s) {
+        String lastNFKD = Normalizer.normalize(s.substring(s.length() - 1), Normalizer.Form.NFKD);
+        return s + ((lastNFKD.length() == 2) ? "가 " : "이 ");
+    }
+
     void say_Finished() {
         new Timer().schedule(new TimerTask() {
             public void run () {
                 if (quietTask.fRepeatCount > 1) {
                     new Sounds().beep(context, Sounds.BEEP.NOTY);
                     String subject = quietTask.subject;
-                    String lastCode = subject.substring(subject.length() - 1);
-                    String lastNFKD = Normalizer.normalize(lastCode, Normalizer.Form.NFKD);
                     String d = (quietTask.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
                     String t = nowTimeToString(System.currentTimeMillis());
                     String s = d + t +  " 입니다. ";
-                    s += subject + ((lastNFKD.length() == 2) ? "가" : "이") + " 끝났습니다";
+                    s += addPostPosition(subject) + "끝났습니다";
                     // 받침이 있으면 이, 없으면 가
                     myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
                 } else if (quietTask.fRepeatCount == 1) {
@@ -220,7 +219,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     String nowDateToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault());
-        String s = sdfTime.format(time);
+        final SimpleDateFormat sdfWeek = new SimpleDateFormat(" EEEE ", Locale.US);
+        String s = sdfTime.format(time) + sdfWeek.format(time);
         return s + s;
     }
     String nowTimeToString(long time) {

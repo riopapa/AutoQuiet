@@ -73,7 +73,6 @@ public class NotificationService extends Service {
                 e.printStackTrace();
             }
         } else if (operation == STOP_SPEAK) {
-//            Log.w("operation","STOP_SPEAK");
             finish99 = false;
             updateRemoteViews();
             new NextTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
@@ -129,7 +128,7 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.finish, finish);
         mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
-        mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.speak_on);
+        mRemoteViews.setImageViewResource(R.id.no_speak, R.mipmap.stop_stop);
         mRemoteViews.setViewVisibility(R.id.no_speak, (finish99) ? View.VISIBLE:View.GONE);
     }
 
