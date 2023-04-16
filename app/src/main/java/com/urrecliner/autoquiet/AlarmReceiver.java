@@ -94,7 +94,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             String say = subject + " 를 확인하세요, " +
                 ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-            long nextTime = System.currentTimeMillis() + 50 * 1000;
+            long nextTime = System.currentTimeMillis() + 70 * 1000;
             new NextAlarm().request(context, quietTask, nextTime,
                     "S", loop);   // loop 0 : no more
             Intent uIntent = new Intent(context, NotificationService.class);
@@ -170,7 +170,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                 }
                 new NextTask(context, quietTasks, "say_Finished()");
-                ActivityMain.created = true;
                 new Utils(context).deleteOldLogFiles();
             }
         }, 3000);

@@ -40,7 +40,6 @@ public class ActivityMain extends AppCompatActivity  {
     public static Context pContext;
     public static Activity pActivity;
     public static Vars vars;
-    static boolean created = false;
     public static MainRecycleAdapter mainRecycleAdapter;
     int count;
     Timer timer = null;
@@ -88,12 +87,13 @@ public class ActivityMain extends AppCompatActivity  {
 
         new VarsGetPut().put(vars, pContext);
 
+        new NotificationStart(pContext);
+
     }
 
     @Override
     public void onResume() {
 
-        created = false;
         vars = new VarsGetPut().get(pContext);
         Log.w("Main", "onResume is called");
         new Utils(pContext).deleteOldLogFiles();
@@ -164,7 +164,6 @@ public class ActivityMain extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,11 +173,6 @@ public class ActivityMain extends AppCompatActivity  {
     private void showMainList() {
 
         RecyclerView mainRecyclerView = findViewById(R.id.mainRecycler);
-//        LinearLayoutManager mainLinearLayoutManager = new LinearLayoutManager(MainActivity.pContext);
-//        mainRecyclerView.setLayoutManager(mainLinearLayoutManager);
-
-//        VerticalSpacingItemDecorator mainItemDecorator = new VerticalSpacingItemDecorator(14);
-//        mainRecyclerView.addItemDecoration(mainItemDecorator);
 
         mainRecycleAdapter = new MainRecycleAdapter();
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
@@ -199,7 +193,5 @@ public class ActivityMain extends AppCompatActivity  {
     @Override
     protected void onStop() {
         super.onStop();
-//        if (!created)
-//            new NextTask(pContext, quiet"onStop()");
     }
 }

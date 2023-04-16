@@ -27,6 +27,12 @@ public class NotificationService extends Service {
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 1044;
 
+    public NotificationService() {
+    }
+    public NotificationService(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
