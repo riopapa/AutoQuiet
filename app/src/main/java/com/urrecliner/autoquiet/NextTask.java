@@ -73,14 +73,14 @@ public class NextTask {
         }
 
         new Utils(context).log("NextTask",msg);
-        Intent uIntent = new Intent(context, NotificationService.class);
-        uIntent.putExtra("start", timeInfo);
-        uIntent.putExtra("finish", soonOrUntill);
-        uIntent.putExtra("subject", subject);
-        uIntent.putExtra("isUpdate", true);
-        uIntent.putExtra("finish99", false);
-        uIntent.putExtra("icon", icon);
-        context.startForegroundService(uIntent);
+        Intent intent = new Intent(context, NotificationService.class);
+        intent.putExtra("start", timeInfo);
+        intent.putExtra("finish", soonOrUntill);
+        intent.putExtra("subject", subject);
+        intent.putExtra("isUpdate", true);
+        intent.putExtra("finish99", false);
+        intent.putExtra("icon", icon);
+        context.startForegroundService(intent);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

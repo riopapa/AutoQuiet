@@ -33,8 +33,8 @@ public class ActivityOneTime extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         vars = new VarsGetPut().get(this);
-        Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        getApplicationContext().sendBroadcast(closeIntent);
+        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        getApplicationContext().sendBroadcast(intent);
         super.onCreate(savedInstanceState);
         binding = ActivityOneTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -160,7 +160,8 @@ public class ActivityOneTime extends AppCompatActivity {
         new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "One "+quietTask.subject);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
 //        new NextTask(this,"One Time");
-        new VarsGetPut().put(vars, getApplicationContext());
+//        new VarsGetPut().put(vars, getApplicationContext());
+        new NextTask(this, quietTasks, "Quit RightNow");
     }
 
     @Override

@@ -58,11 +58,21 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "O":   // onetime
                 new MannerMode().turn2Normal(beep, context);
+                if (quietTask.fRepeatCount > 1) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
+                                        " 입니다. 무음모드가 종료되었습니다";
+                            myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+                        }
+                    }, 3000);
+                }
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
                 new QuietTaskGetPut().put(quietTasks, context, "OneTime");
                 new NextTask(context, quietTasks, "After oneTime");
-                break;
+            break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
