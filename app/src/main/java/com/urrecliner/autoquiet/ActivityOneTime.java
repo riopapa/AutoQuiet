@@ -157,7 +157,7 @@ public class ActivityOneTime extends AppCompatActivity {
                 week, true, vibrate, 0, fRepeatCount, false);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);
-        new QuietTaskGetPut().put(quietTasks, getApplicationContext(), "One "+quietTask.subject);
+        new QuietTaskGetPut().put(quietTasks);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
 //        new NextTask(this,"One Time");
 //        new VarsGetPut().put(vars, getApplicationContext());

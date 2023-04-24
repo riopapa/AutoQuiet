@@ -131,9 +131,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             vars.addNewQuiet = false;
             new VarsGetPut().put(vars, context);
             int qIdx = getBindingAdapterPosition();
-//            if (qIdx >= quietTasks.size())
-//                return true;
-//            quietTask = quietTasks.get(qIdx);
             Intent intent;
             if (qIdx != 0) {
                 intent = new Intent(context, ActivityAddEdit.class);
@@ -282,7 +279,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(quietTask);
             quietTasks.add(toPosition, quietTask);
             notifyItemMoved(fromPosition, toPosition);
-            new QuietTaskGetPut().put(quietTasks, context, "Moved "+quietTask.subject);
+            new QuietTaskGetPut().put(quietTasks);
         } else {
             if (topLine++ < 0)
                 Toast.makeText(context,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
@@ -297,13 +294,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTask = quietTasks.get(position);
             quietTasks.remove(position);
             notifyItemRemoved(position);
-            new QuietTaskGetPut().put(quietTasks, context, "Swipe "+quietTask.subject);
+            new QuietTaskGetPut().put(quietTasks);
             Snackbar snackbar = Snackbar
                     .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
                 quietTasks.add(position, quietTask);
                 notifyItemInserted(position);
-                new QuietTaskGetPut().put(quietTasks, context, "recover "+quietTask.subject);
+                new QuietTaskGetPut().put(quietTasks);
             });
 
             snackbar.setActionTextColor(Color.YELLOW);

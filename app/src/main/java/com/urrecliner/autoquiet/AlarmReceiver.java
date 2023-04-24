@@ -70,7 +70,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
                 quietTask.setActive(false);
                 quietTasks.set(0, quietTask);
-                new QuietTaskGetPut().put(quietTasks, context, "OneTime");
+                new QuietTaskGetPut().put(quietTasks);
                 new NextTask(context, quietTasks, "After oneTime");
             break;
             default:
@@ -174,7 +174,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     for (int i = 0; i < quietTasks.size(); i++) {
                         if (quietTasks.get(i).calId == quietTask.calId) {
                             quietTasks.remove(i);
-                            new QuietTaskGetPut().put(quietTasks, context,"Del "+quietTask.subject);
+                            new QuietTaskGetPut().put(quietTasks);
                             break;
                         }
                     }

@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class QuietTaskGetPut {
-    public void put(ArrayList<QuietTask> quietTasks, Context context, String info) {
+    public void put(ArrayList<QuietTask> quietTasks) {
 
         for (int i = 0; i < quietTasks.size(); i++) {
             QuietTask q = quietTasks.get(i);

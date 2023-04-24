@@ -383,7 +383,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             else
                 quietTasks.set(currIdx, qT);
         }
-        new QuietTaskGetPut().put(quietTasks, context, "Add/Update");
+        new QuietTaskGetPut().put(quietTasks);
     }
 
     private void updateOneAlert() {
@@ -462,7 +462,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
             quietTasks.remove(currIdx);
             mainRecycleAdapter.notifyItemRemoved(currIdx);
-            new QuietTaskGetPut().put(quietTasks, context, "del "+ qT.subject);
+            new QuietTaskGetPut().put(quietTasks);
 
         } else if (id == R.id.action_copy) {
             QuietTask qtNew = new QuietTask(qT.subject,
@@ -470,7 +470,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                     qT.week, qT.active, qT.vibrate,
                     qT.sRepeatCount, qT.fRepeatCount, qT.sayDate);
             quietTasks.add(currIdx, qtNew);
-            new QuietTaskGetPut().put(quietTasks, context, "copy "+ qT.subject);
+            new QuietTaskGetPut().put(quietTasks);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
             mainRecycleAdapter.notifyItemChanged(currIdx);
             mainRecycleAdapter.notifyItemChanged(currIdx+1);
@@ -492,7 +492,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.remove(currIdx);
                 mainRecycleAdapter.notifyItemRemoved(currIdx);
             }
-            new QuietTaskGetPut().put(quietTasks, context, "del "+subject);
+            new QuietTaskGetPut().put(quietTasks);
         }
         return false;
     }

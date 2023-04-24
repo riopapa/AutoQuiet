@@ -27,7 +27,7 @@ public class ClearAllTasks {
         week = new boolean[]{true, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(context.getString(R.string.Sunday_Church), 9, 30, 16, 30, week, true, true, 0, 3, false));
 
-        new QuietTaskGetPut().put(quietTasks, context, "Cleared");
+        new QuietTaskGetPut().put(quietTasks);
     }
 
 }
