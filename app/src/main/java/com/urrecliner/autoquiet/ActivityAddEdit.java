@@ -128,7 +128,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             set_TimeForm();
         });
 
-        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.mipmap.speaking_noactive);
+        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.drawable.transperent);
         binding.timePickerStart.setIs24HourView(true);
         binding.timePickerFinish.setIs24HourView(true);
         numPos = 1;

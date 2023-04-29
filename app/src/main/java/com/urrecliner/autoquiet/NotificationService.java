@@ -133,7 +133,7 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.start, start);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.finish, finish);
-        mRemoteViews.setImageViewResource(R.id.stopNow, R.mipmap.quiet_right_now);
+        mRemoteViews.setImageViewResource(R.id.stopNow, R.drawable.no_disturb);
         mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
         mRemoteViews.setViewVisibility(R.id.no_speak, (finish99) ? View.VISIBLE:View.GONE);
     }

@@ -183,9 +183,11 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
         if (!finish99) {
             if (vibrate)
-                holder.lvVibrate.setImageResource((active) ? R.drawable.phone_vibrate : R.mipmap.speaking_noactive);
+                holder.lvVibrate.setImageResource(
+                        (active) ? R.drawable.phone_vibrate :R.drawable.transperent);
             else
-                holder.lvVibrate.setImageResource((active) ? R.drawable.phone_off : R.mipmap.speaking_noactive);
+                holder.lvVibrate.setImageResource(
+                        (active) ? R.drawable.phone_off : R.drawable.transperent);
             int sRepeat = quietTask.sRepeatCount;
             int fRepeat = quietTask.fRepeatCount;
             holder.llStartFinish.setVisibility(View.VISIBLE);
@@ -198,7 +200,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
         if (!gCalendar) {
-            holder.lvgCal.setImageResource(R.mipmap.speaking_noactive);
+            holder.lvgCal.setImageResource(R.drawable.transperent);
             holder.llCalInfo.setVisibility(View.GONE);
             holder.llStartFinishTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);

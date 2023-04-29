@@ -24,12 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
-import com.urrecliner.autoquiet.Sub.IsScreen;
-import com.urrecliner.autoquiet.Sub.MannerMode;
 import com.urrecliner.autoquiet.Sub.MyItemTouchHelper;
 import com.urrecliner.autoquiet.Sub.Permission;
 import com.urrecliner.autoquiet.Sub.SharedPrefer;
-import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.util.Timer;

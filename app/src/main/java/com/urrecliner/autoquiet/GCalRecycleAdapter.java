@@ -87,7 +87,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         }
         holder.tvSubject.setText(g.title);
         holder.tvName.setText(g.calName);
-        holder.ivRepeat.setImageResource((g.repeat)? R.drawable.repeat: R.mipmap.speaking_noactive);
+        holder.ivRepeat.setImageResource((g.repeat)? R.drawable.repeat: R.drawable.transperent);
         holder.tvCalLeft.setText((g.location.length()>20)?
                 g.location.substring(0,19):g.location);
         if (g.desc.length() == 0)

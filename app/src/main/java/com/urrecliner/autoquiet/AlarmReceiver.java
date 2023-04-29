@@ -3,6 +3,7 @@ package com.urrecliner.autoquiet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -101,9 +102,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         String subject = quietTask.subject;
         if (loop > 0) {
             loop--;
-            String say = subject + " 를 확인하세요, " +
-                ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+            String say = "";
+            if (isQuiet()) {
+                say = subject;
+                loop = 0;
+            } else {
+                say = subject + " 를 확인하세요, " +
+                        ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+            }
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+
             long nextTime = System.currentTimeMillis() + 70 * 1000;
             new NextAlarm().request(context, quietTask, nextTime,
                     "S", loop);   // loop 0 : no more
@@ -236,4 +244,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
+
+    boolean isQuiet() {
+        AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
+                mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
+    }
+
 }

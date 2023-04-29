@@ -43,7 +43,7 @@ public class ActivityOneTime extends AppCompatActivity {
         actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle(getResources().getString(R.string.Quiet_Once));
-        actionBar.setIcon(R.mipmap.quiet_right_now) ;
+        actionBar.setIcon(R.drawable.no_disturb) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
         quietTasks = new QuietTaskGetPut().get(this);
