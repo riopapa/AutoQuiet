@@ -4,12 +4,10 @@
         android:width="24dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="#FFFFFF"
+          android:strokeColor="#FFFFFF"
+          android:strokeWidth="1"
           android:pathData="M6,19c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2
-          L18,8L6,7v12z
-          M7.46,10.88l1.41,-1.41
-          L13,13l2.12,-2.12 1.41,1.41
-          L13.41,14l2.12,2.12 -1.41,1.41
-          L12,16l-2.12,2.12 -1.41,-1.41
-          L11,14l-2.12,-2.12z
-          M15.5,4l-1,-1h-5l-1,1L5,4v2h14L19,4z"/>
+          L18,10L6,9v7z
+          M15.5,4l-1,-1h-6l-1,1
+          L5,4v2h14L19,4z"/>
 </vector>
