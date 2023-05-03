@@ -36,8 +36,8 @@ import java.util.Locale;
 public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
-    private int startHour, startMin, finishHour, finishMin;
-    private boolean active, finish99;
+    private int startHour, startMin, finishHour, finishMin, sHour;
+    private boolean active, finish99, am;
     private int sRepeatCount, fRepeatCount;
     private boolean[] week = new boolean[7];
     private TextView[] weekView = new TextView[7];
@@ -103,6 +103,10 @@ public class ActivityAddEdit extends AppCompatActivity {
         week = qT.week;
         vibrate = qT.vibrate;
         agenda = qT.agenda;
+        sHour = startHour;
+        am = startHour < 12;
+        if (!am)
+            sHour = startHour - 12;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
@@ -233,6 +237,10 @@ public class ActivityAddEdit extends AppCompatActivity {
             tv.setText(s);
         } else
             tv.setText("");
+        binding.amPm.setOnClickListener(v -> {
+            am = !am;
+            show_ResultTime();
+        });
 
         binding.numHH1.setOnClickListener(v -> {
             numPos = 1;
@@ -287,7 +295,8 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void show_ResultTime() {
-        String s = (startHour > 9) ? ""+startHour: "0"+startHour;
+        binding.amPm.setText(am ? "오전":"오후");
+        String s = (sHour > 9) ? ""+sHour: "0"+sHour;
         String s1 = s.substring(0,1); String s2 = s.substring(1);
         binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
         binding.numHH2.setText(s2); binding.numHH2.setBackgroundColor(0x00bbbbbb);
@@ -315,7 +324,6 @@ public class ActivityAddEdit extends AppCompatActivity {
         tv = binding.numMM2;
         if (numPos == 4) { tv.startAnimation(anim); tv.setBackgroundColor(0xffbbbbbb);}
         else tv.clearAnimation();
-
     }
 
     public void toggleWeek(View v) {
@@ -329,15 +337,9 @@ public class ActivityAddEdit extends AppCompatActivity {
     private void number_Clicked(View v) {
         int num = Integer.parseInt(v.getTag().toString());
         if (numPos == 1) {
-            int hour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
-            if (hour < 25)
-                startHour = hour;
-            else
-                startHour = num * 10;
+            sHour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
         } else if (numPos == 2) {
-            int hour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
-            if (hour < 25)
-                startHour = hour;
+            sHour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
         } else if (numPos == 3) {
             int min = num * 10 + Integer.parseInt(binding.numMM2.getText().toString());
             if (min < 60)
@@ -388,7 +390,8 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void updateOneAlert() {
         startHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
-                + Integer.parseInt(binding.numHH2.getText().toString());
+                + Integer.parseInt(binding.numHH2.getText().toString())
+                + ((am) ? 0:12);
         startMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
                 + Integer.parseInt(binding.numMM2.getText().toString());
 
