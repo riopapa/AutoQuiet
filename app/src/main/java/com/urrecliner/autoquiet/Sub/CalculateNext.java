@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class CalculateNext {
 
-    public static long calc(boolean finish, int hour, int min, boolean[] week, long add24Hour) {
+    public static long calc(boolean end, int hour, int min, boolean[] week, long add24Hour) {
         Calendar nextDay = Calendar.getInstance();
         nextDay.set(Calendar.HOUR_OF_DAY, hour);
         nextDay.set(Calendar.MINUTE, min);
@@ -20,7 +20,7 @@ public class CalculateNext {
                 nextEvent = nextDay.getTimeInMillis();
                 if ((nextEvent+add24Hour) > nowTime)
                     break;
-                if (finish) {
+                if (end) {
                     nextEvent += 24*60*60000;
                     break;
                 }

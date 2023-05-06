@@ -36,11 +36,11 @@ import java.util.Locale;
 public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
-    private int startHour, startMin, finishHour, finishMin, sHour;
-    private boolean active, finish99, am;
-    private int sRepeatCount, fRepeatCount;
+    private int begHour, begMin, endHour, endMin, sHour;
+    private boolean active, end99, am;
+    private int begLoop, endLoop;
     private boolean[] week = new boolean[7];
-    private TextView[] weekView = new TextView[7];
+    private final TextView[] weekView = new TextView[7];
     private boolean vibrate, agenda, sayDate;
     private QuietTask qT;
     private ArrayList<QuietTask> quietTasks;
@@ -91,22 +91,22 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
         subject = qT.subject;
-        startHour = qT.startHour;
-        startMin = qT.startMin;
-        finishHour = qT.finishHour;
-        finishMin = qT.finishMin;
-        finish99 = qT.finishHour == 99;
+        begHour = qT.begHour;
+        begMin = qT.begMin;
+        endHour = qT.endHour;
+        endMin = qT.endMin;
+        end99 = qT.endHour == 99;
         active = qT.active;
-        sRepeatCount = qT.sRepeatCount;
-        fRepeatCount = qT.fRepeatCount;
+        begLoop = qT.begLoop;
+        endLoop = qT.endLoop;
         sayDate = qT.sayDate;
         week = qT.week;
         vibrate = qT.vibrate;
         agenda = qT.agenda;
-        sHour = startHour;
-        am = startHour < 12;
+        sHour = begHour;
+        am = begHour < 12;
         if (!am)
-            sHour = startHour - 12;
+            sHour = begHour - 12;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
@@ -133,8 +133,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         });
 
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.drawable.transperent);
-        binding.timePickerStart.setIs24HourView(true);
-        binding.timePickerFinish.setIs24HourView(true);
+        binding.timePickerBeg.setIs24HourView(true);
+        binding.timePickerEnd.setIs24HourView(true);
         numPos = 1;
         set_TimeForm();
 
@@ -155,11 +155,12 @@ public class ActivityAddEdit extends AppCompatActivity {
             }
         }
 
-        binding.finish99.setOnClickListener(v -> {
-            finish99 = !finish99;
-            binding.finish99.setChecked(finish99);
+        binding.end99.setOnClickListener(v -> {
+            end99 = !end99;
+            binding.end99.setChecked(end99);
             numPos = 1;
             set_TimeForm();
+            show_Info();
         });
 
         if (agenda)
@@ -175,68 +176,72 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
         }
 
-        binding.tVStartRepeat.setOnClickListener(v -> {
-            if (sRepeatCount == 0)
-                sRepeatCount = 1;
-            else if (sRepeatCount == 1)
-                sRepeatCount = 9;
+        binding.tvBegLoop.setOnClickListener(v -> {
+            if (begLoop == 0)
+                begLoop = 1;
+            else if (begLoop == 1)
+                begLoop = 9;
             else
-                sRepeatCount = 0;
-            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                begLoop = 0;
+            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
+            show_Info();
         });
 
-        binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
-        binding.iVStartRepeat.setOnClickListener(v -> {
-            if (sRepeatCount == 0)
-                sRepeatCount = 1;
-            else if (sRepeatCount == 1)
-                sRepeatCount = 11;
+        binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.ivBegLoop.setOnClickListener(v -> {
+            if (begLoop == 0)
+                begLoop = 1;
+            else if (begLoop == 1)
+                begLoop = 11;
             else
-                sRepeatCount = 0;
-            binding.iVStartRepeat.setImageResource((sRepeatCount == 0)? R.drawable.speak_off: (sRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                begLoop = 0;
+            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
+            show_Info();
         });
 
-        binding.tVFinishRepeat.setOnClickListener(v -> {
-            if (fRepeatCount == 0)
-                fRepeatCount = 1;
-            else if (fRepeatCount == 1)
-                fRepeatCount = 11;
+        binding.tvEndLoop.setOnClickListener(v -> {
+            if (endLoop == 0)
+                endLoop = 1;
+            else if (endLoop == 1)
+                endLoop = 11;
             else
-                fRepeatCount = 0;
-            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                endLoop = 0;
+            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
+            show_Info();
         });
-        binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
-        binding.iVFinishRepeat.setOnClickListener(v -> {
-            if (fRepeatCount == 0)
-                fRepeatCount = 1;
-            else if (fRepeatCount == 1)
-                fRepeatCount = 11;
+        binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.ivEndLoop.setOnClickListener(v -> {
+            if (endLoop == 0)
+                endLoop = 1;
+            else if (endLoop == 1)
+                endLoop = 11;
             else
-                fRepeatCount = 0;
-            binding.iVFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                endLoop = 0;
+            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
+            show_Info();
         });
-        binding.sayDate.setChecked(sayDate);    // sayDate is only for finish Time
+        binding.sayDate.setChecked(sayDate);    // sayDate is only for end Time
         binding.sayDate.setOnClickListener(v -> {
             sayDate = !sayDate;
             binding.sayDate.setChecked(sayDate);
             v.invalidate();
         });
 
-        TextView tv = findViewById(R.id.dateDesc);
         if (agenda) {
             SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
-            String s = sdfDate.format(qT.calStartDate);
+            String s = sdfDate.format(qT.calBegDate);
             if (!qT.calLocation.equals(""))
                 s += "\n" + qT.calLocation;
             if (!qT.calDesc.equals(""))
                 s += "\n" + qT.calDesc;
-            tv.setText(s);
+            binding.dateDesc.setText(s);
         } else
-            tv.setText("");
+            show_Info();
+
         binding.amPm.setOnClickListener(v -> {
             am = !am;
             show_ResultTime();
@@ -260,19 +265,38 @@ public class ActivityAddEdit extends AppCompatActivity {
         });
     }
 
+    private void show_Info() {
+            /*
+        loop    begLoop     endLoop     action
+        0                   0           beep only
+        0                   1           say task ended
+        1-3                 1           say task once
+        1-3                 11          say task info loop times
+     */
+        String s = "";
+        if (end99) {
+            if (endLoop == 1)
+                s = "한 번만 알려주고 비활성화됨";
+            else if (endLoop > 1)
+                s = "여러번 알려줌";
+            else
+                s = "삐이 소리만 남";
+        }
+        binding.dateDesc.setText(s);
+    }
     private void set_TimeForm() {
-        binding.finish99.setChecked(finish99);
-        if (!finish99) {    // normal start, finish
-            if (finishHour == 99)
-                finishHour = startHour;
-            binding.timePickerStart.setVisibility(View.VISIBLE);
-            binding.timePickerFinish.setVisibility(View.VISIBLE);
-            binding.timePickerStart.setHour(startHour);
-            binding.timePickerStart.setMinute(startMin);
+        binding.end99.setChecked(end99);
+        if (!end99) {    // normal beg, end
+            if (endHour == 99)
+                endHour = begHour;
+            binding.timePickerBeg.setVisibility(View.VISIBLE);
+            binding.timePickerEnd.setVisibility(View.VISIBLE);
+            binding.timePickerBeg.setHour(begHour);
+            binding.timePickerBeg.setMinute(begMin);
             binding.numDateTime.setVisibility(View.GONE);
-            binding.timePickerFinish.setHour(finishHour);
-            binding.timePickerFinish.setMinute(finishMin);
-            binding.timePickerFinish.setHour(finishHour); binding.timePickerFinish.setMinute(finishMin);
+            binding.timePickerEnd.setHour(endHour);
+            binding.timePickerEnd.setMinute(endMin);
+            binding.timePickerEnd.setHour(endHour); binding.timePickerEnd.setMinute(endMin);
             binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
             binding.iVVibrate.setOnClickListener(v -> {
                 vibrate = !vibrate;
@@ -287,8 +311,8 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         } else {
             binding.numDateTime.setVisibility(View.VISIBLE);
-            binding.timePickerStart.setVisibility(View.GONE);
-            binding.timePickerFinish.setVisibility(View.GONE);
+            binding.timePickerBeg.setVisibility(View.GONE);
+            binding.timePickerEnd.setVisibility(View.GONE);
             binding.iVVibrate.setImageResource(R.drawable.alarm);
             show_ResultTime();
         }
@@ -300,7 +324,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         String s1 = s.substring(0,1); String s2 = s.substring(1);
         binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
         binding.numHH2.setText(s2); binding.numHH2.setBackgroundColor(0x00bbbbbb);
-        s = (startMin > 9) ? ""+startMin: "0"+startMin;
+        s = (begMin > 9) ? ""+ begMin : "0"+ begMin;
         s1 = s.substring(0,1); s2 = s.substring(1);
         binding.numMM1.setText(s1); binding.numMM1.setBackgroundColor(0x00bbbbbb);
         binding.numMM2.setText(s2); binding.numMM2.setBackgroundColor(0x00bbbbbb);
@@ -337,15 +361,19 @@ public class ActivityAddEdit extends AppCompatActivity {
     private void number_Clicked(View v) {
         int num = Integer.parseInt(v.getTag().toString());
         if (numPos == 1) {
-            sHour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
+            if (num > 1)
+                sHour = num;
+            else
+                sHour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
+
         } else if (numPos == 2) {
             sHour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
         } else if (numPos == 3) {
             int min = num * 10 + Integer.parseInt(binding.numMM2.getText().toString());
             if (min < 60)
-                startMin = min;
+                begMin = min;
         } else {
-            startMin = Integer.parseInt(binding.numMM1.getText().toString()) * 10 + num;
+            begMin = Integer.parseInt(binding.numMM1.getText().toString()) * 10 + num;
         }
         if (numPos < 4)
             numPos++;
@@ -366,11 +394,11 @@ public class ActivityAddEdit extends AppCompatActivity {
         subject = binding.etSubject.getText().toString();
         if (subject.length() == 0)
             subject = getString(R.string.no_subject);
-        if (!finish99) {
-            startHour = binding.timePickerStart.getHour();
-            startMin = binding.timePickerStart.getMinute();
-            finishHour = (finish99) ? 99 : binding.timePickerFinish.getHour();
-            finishMin = binding.timePickerFinish.getMinute();
+        if (!end99) {
+            begHour = binding.timePickerBeg.getHour();
+            begMin = binding.timePickerBeg.getMinute();
+            endHour = (end99) ? 99 : binding.timePickerEnd.getHour();
+            endMin = binding.timePickerEnd.getMinute();
         } else {
             updateOneAlert();
         }
@@ -378,8 +406,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (agenda) {
             updateAgenda();
         } else {
-            qT = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
-                    week, active, vibrate, sRepeatCount, fRepeatCount, sayDate);
+            qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
+                    week, active, vibrate, begLoop, endLoop, sayDate);
             if (currIdx == -1)
                 quietTasks.add(qT);
             else
@@ -389,21 +417,21 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void updateOneAlert() {
-        startHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
+        begHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
                 + Integer.parseInt(binding.numHH2.getText().toString())
                 + ((am) ? 0:12);
-        startMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
+        begMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
                 + Integer.parseInt(binding.numMM2.getText().toString());
 
         long nowTime = System.currentTimeMillis();
-        long nextTime = CalculateNext.calc(false, startHour, startMin, week, 0);
+        long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(nowTime);
         int nowDays = c.get(Calendar.DAY_OF_YEAR);
         int nowHour = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
         c.setTimeInMillis(nextTime);
         int nextDays = c.get(Calendar.DAY_OF_YEAR);
-        int nextHour = startHour * 60 + startMin;
+        int nextHour = begHour * 60 + begMin;
         if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHour > nextHour)) {
             week = new boolean[7];
             int weekDay = c.get(Calendar.DAY_OF_WEEK);
@@ -413,21 +441,21 @@ public class ActivityAddEdit extends AppCompatActivity {
                 week[0] = true;
             Toast.makeText(context, "Week Number changed to Tomorrow",Toast.LENGTH_SHORT).show();
         }
-        finishHour = 99;
+        endHour = 99;
     }
 
     private void updateAgenda() {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(qT.calStartDate);
-        c.set(Calendar.HOUR_OF_DAY, startHour);
-        c.set(Calendar.MINUTE, startMin);
-        long startDate = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, finishHour);
-        c.set(Calendar.MINUTE, finishMin);
-        long finishDate = c.getTimeInMillis();
-        QuietTask qAgenda = new QuietTask(subject, startDate, finishDate,
+        c.setTimeInMillis(qT.calBegDate);
+        c.set(Calendar.HOUR_OF_DAY, begHour);
+        c.set(Calendar.MINUTE, begMin);
+        long begDate = c.getTimeInMillis();
+        c.set(Calendar.HOUR_OF_DAY, endHour);
+        c.set(Calendar.MINUTE, endMin);
+        long endDate = c.getTimeInMillis();
+        QuietTask qAgenda = new QuietTask(subject, begDate, endDate,
                 qT.calId, qT.calName, qT.calDesc, qT.calLocation,
-                true, vibrate, sRepeatCount, fRepeatCount, true);
+                true, vibrate, begLoop, endLoop, true);
         quietTasks.set(currIdx, qAgenda);
     }
 
@@ -469,9 +497,9 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         } else if (id == R.id.action_copy) {
             QuietTask qtNew = new QuietTask(qT.subject,
-                    qT.startHour, qT.startMin + 1, qT.finishHour, qT.finishMin + 1,
+                    qT.begHour, qT.begMin + 1, qT.endHour, qT.endMin + 1,
                     qT.week, qT.active, qT.vibrate,
-                    qT.sRepeatCount, qT.fRepeatCount, qT.sayDate);
+                    qT.begLoop, qT.endLoop, qT.sayDate);
             quietTasks.add(currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);

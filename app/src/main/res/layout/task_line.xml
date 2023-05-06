@@ -23,13 +23,13 @@
             android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
         <LinearLayout
-            android:id="@+id/llStartFinish"
+            android:id="@+id/llBegEnd"
             android:layout_width="60dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:orientation="horizontal">
         <ImageView
-            android:id="@+id/lv_startRepeat"
+            android:id="@+id/lvBegLoop"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginStart="0dp"
@@ -39,7 +39,7 @@
             android:src="@drawable/speak_on"
             android:contentDescription="@string/blank" />
         <ImageView
-            android:id="@+id/lv_finishRepeat"
+            android:id="@+id/lvEndLoop"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginStart="2dp"
@@ -52,13 +52,13 @@
     </LinearLayout>
     <!--  hour, min  -->
     <LinearLayout
-        android:id="@+id/startFinishTime"
+        android:id="@+id/begEndTime"
         android:layout_width="54sp"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/rmdStartTime"
+            android:id="@+id/rmdBegTime"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/hh_mm"
@@ -66,7 +66,7 @@
             android:textStyle="bold"
             android:gravity="center_horizontal"/>
         <TextView
-            android:id="@+id/rmdFinishTime"
+            android:id="@+id/rmdEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/hh_mm"

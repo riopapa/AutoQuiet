@@ -61,8 +61,8 @@ public class GetAgenda {
             if (cursor.getInt(6) == 1)
                 continue;
             String eDesc = cursor.getString(2);
-            long eStart = cursor.getLong(3);
-            long eFinish = cursor.getLong(4);
+            long eBeg = cursor.getLong(3);
+            long eEnd = cursor.getLong(4);
             String eLocation = cursor.getString(5);
 //            boolean eAllay = (cursor.getInt(6) == 1);
             String eCalName = cursor.getString(7);
@@ -70,13 +70,13 @@ public class GetAgenda {
             String eRule = cursor.getString(9);
             String eDuration = cursor.getString(10);
             if (eRule == null) {
-                if (eStart > TimeTODAY && eStart < TimeRangeTo) {
+                if (eBeg > TimeTODAY && eBeg < TimeRangeTo) {
                     GCal gCal =new GCal();
                     gCal.id       = eID;
                     gCal.title    = eTitle;
                     gCal.desc     = (eDesc == null)? "":eDesc;
-                    gCal.startTime =eStart;
-                    gCal.finishTime =eFinish;
+                    gCal.begTime =eBeg;
+                    gCal.endTime =eEnd;
                     gCal.location =(eLocation == null)? "":eLocation;
                     gCal.calName = eCalName;
                     gCal.timeZone =eZone;
@@ -86,16 +86,16 @@ public class GetAgenda {
                 }
             }
             else {
-                ArrayList<startFinishTime> startFinishTimes = calcRepeat (eTitle, eStart, eRule, eDuration);
-                for (int i = 0; i < startFinishTimes.size() ; i++) {
-                    if (startFinishTimes.get(i).sTime > TimeTODAY &&
-                            startFinishTimes.get(i).sTime < TimeRangeTo) {
+                ArrayList<begEndTime> begEndTimes = calcRepeat (eTitle, eBeg, eRule, eDuration);
+                for (int i = 0; i < begEndTimes.size() ; i++) {
+                    if (begEndTimes.get(i).sTime > TimeTODAY &&
+                            begEndTimes.get(i).sTime < TimeRangeTo) {
                         GCal g = new GCal();
                         g.id = eID;
                         g.title = eTitle;
                         g.desc = (eDesc == null)? "":eDesc;
-                        g.startTime = startFinishTimes.get(i).sTime;
-                        g.finishTime = startFinishTimes.get(i).fTime;
+                        g.begTime = begEndTimes.get(i).sTime;
+                        g.endTime = begEndTimes.get(i).fTime;
                         g.location = (eLocation == null)? "":eLocation;
                         g.calName = eCalName;
                         g.timeZone = eZone;
@@ -106,17 +106,17 @@ public class GetAgenda {
                 }
             }
         }
-        gCals.sort((arg0, arg1) -> Long.compare(arg0.startTime, arg1.startTime));
+        gCals.sort((arg0, arg1) -> Long.compare(arg0.begTime, arg1.begTime));
         return gCals;
     }
 
-    ArrayList <startFinishTime> calcRepeat(String title, long startDateTime,
-                                                  String ruleStr, String durStr) {
+    ArrayList <begEndTime> calcRepeat(String title, long startDateTime,
+                                      String ruleStr, String durStr) {
 
 //        SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
 //        String startYMD = sdf.format(startDateTime);
 //        Log.w("calc "+title,startYMD+ ", rule="+ruleStr+", dur="+durStr);
-        ArrayList<startFinishTime> startFinishTimes = new ArrayList<>();
+        ArrayList<begEndTime> begEndTimes = new ArrayList<>();
         long durMin, untilTime;
         int count, interval;
         boolean [] weekDays; // 0: BYDAY YES/NO, sun = 1, sat = 7;
@@ -126,7 +126,7 @@ public class GetAgenda {
         weekly = ruleStr.contains("WEEKLY");
         monthly = ruleStr.contains("MONTHLY");
         if (ruleStr.contains("YEARLY"))
-            return startFinishTimes;
+            return begEndTimes;
 
         durMin = getDurationMinutes(durStr);
         count = getKeywordValue(ruleStr,"COUNT",9999);
@@ -135,18 +135,18 @@ public class GetAgenda {
         weekDays = getByDay(ruleStr);         // default to false
 
         if (daily)
-            repeatDaily(startFinishTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
+            repeatDaily(begEndTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
 
         if (weekly)
-            repeatWeekly(startFinishTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
+            repeatWeekly(begEndTimes, durMin, untilTime, count, interval, weekDays, startDateTime);
 
         if (monthly)
-            repeatMonthly(ruleStr, startFinishTimes, durMin, untilTime, count, weekDays[0], startDateTime);
+            repeatMonthly(ruleStr, begEndTimes, durMin, untilTime, count, weekDays[0], startDateTime);
 
-        return startFinishTimes;
+        return begEndTimes;
     }
 
-    private void repeatMonthly(String ruleStr, ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, boolean weekBased, long lDateTime) {
+    private void repeatMonthly(String ruleStr, ArrayList<begEndTime> begEndTimes, long durMin, long untilTime, int count, boolean weekBased, long lDateTime) {
         if (weekBased) {
             if (bySetPos == -1)
                 bySetPos = getKeywordValue(ruleStr, "BYSETPOS",-1);
@@ -156,7 +156,7 @@ public class GetAgenda {
             for (int i = 0; i < count; i++) {
                 if (lDateTime > untilTime)
                     break;
-                startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                 c.add(Calendar.MONTH,1);
                 c.set(Calendar.DATE,1);
                 while (c.get(Calendar.DAY_OF_WEEK) != weekNbr)
@@ -169,7 +169,7 @@ public class GetAgenda {
                 if (lDateTime > untilTime)
                     break;
                 if (lDateTime > TimeTODAY) {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                 }
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(lDateTime);
@@ -179,7 +179,7 @@ public class GetAgenda {
         }
     }
 
-    private void repeatWeekly(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+    private void repeatWeekly(ArrayList<begEndTime> begEndTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
         if (weekDays[0]) {
             for (int i = 0; i < count;    ) {
                 if (lDateTime > untilTime)
@@ -187,7 +187,7 @@ public class GetAgenda {
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(lDateTime);
                 if (weekDays[c.get(Calendar.DAY_OF_WEEK)]) {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                     i++;
                 }
                 lDateTime += interval * ONE_DAY;
@@ -197,14 +197,14 @@ public class GetAgenda {
                 if (lDateTime > untilTime)
                     break;
                 if (lDateTime > TimeTODAY) {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                 }
                 lDateTime += interval * ONE_DAY * 7;
             }
         }
     }
 
-    private void repeatDaily(ArrayList<startFinishTime> startFinishTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
+    private void repeatDaily(ArrayList<begEndTime> begEndTimes, long durMin, long untilTime, int count, int interval, boolean[] weekDays, long lDateTime) {
         if (weekDays[0]) {  // week constraint
             for (int i = 1; i < count;    ) {
                 if (lDateTime > untilTime)
@@ -212,7 +212,7 @@ public class GetAgenda {
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(lDateTime);
                 if (weekDays[c.get(Calendar.DAY_OF_WEEK)]) {
-                    startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                    begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                     i++;
                 }
                 lDateTime += interval * ONE_DAY;
@@ -221,7 +221,7 @@ public class GetAgenda {
             for (int i = 0; i < count; i++) {
                 if (lDateTime > untilTime)
                     break;
-                startFinishTimes.add(new startFinishTime(lDateTime, lDateTime + durMin));
+                begEndTimes.add(new begEndTime(lDateTime, lDateTime + durMin));
                 lDateTime += interval * ONE_DAY;
             }
         }
@@ -301,11 +301,11 @@ public class GetAgenda {
         return durMin;
     }
 
-    static class startFinishTime {
+    static class begEndTime {
         long sTime;
         long fTime;
 
-        public startFinishTime(long sTime, long fTime) {
+        public begEndTime(long sTime, long fTime) {
             this.sTime = sTime;
             this.fTime = fTime;
         }

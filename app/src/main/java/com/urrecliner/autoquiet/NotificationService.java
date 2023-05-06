@@ -19,9 +19,9 @@ public class NotificationService extends Service {
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
-    String start, subject, finish;
+    String beg, subject, end;
     int icon;
-    boolean finish99 = false;
+    boolean end99 = false;
     Context context;
 
     final int RIGHT_NOW = 100;
@@ -50,12 +50,12 @@ public class NotificationService extends Service {
 
         createNotification();
         try {
-            start = intent.getStringExtra("start");
+            beg = intent.getStringExtra("beg");
         } catch (Exception e) {
             return START_STICKY;
         }
-        finish = intent.getStringExtra("finish");
-        finish99 = intent.getBooleanExtra("finish99", false);
+        end = intent.getStringExtra("end");
+        end99 = intent.getBooleanExtra("end99", false);
         subject = intent.getStringExtra("subject");
         icon = intent.getIntExtra("icon", 0);
         updateRemoteViews();
@@ -79,7 +79,7 @@ public class NotificationService extends Service {
                 e.printStackTrace();
             }
         } else if (operation == STOP_SPEAK) {
-            finish99 = false;
+            end99 = false;
             updateRemoteViews();
             new NextTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
         }
@@ -125,17 +125,17 @@ public class NotificationService extends Service {
 
         mBuilder.setSmallIcon(smallIcons[icon]);
 //        if (icon == 3) {  // make drawable bitmap icon
-//            Bitmap bitmap = new IconTime().make(this, start); // now time -> bitmap
+//            Bitmap bitmap = new IconTime().make(this, beg); // now time -> bitmap
 //            IconCompat smallIcon = IconCompat.createWithBitmap(bitmap); // bitmap -> icon
 //            mBuilder.setSmallIcon(smallIcon);
 //        }
         mRemoteViews.setImageViewResource(R.id.state_icon, smallIcons[icon]);
-        mRemoteViews.setTextViewText(R.id.start, start);
+        mRemoteViews.setTextViewText(R.id.beg_time, beg);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
-        mRemoteViews.setTextViewText(R.id.finish, finish);
+        mRemoteViews.setTextViewText(R.id.end_time, end);
         mRemoteViews.setImageViewResource(R.id.stopNow, R.drawable.no_disturb);
         mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
-        mRemoteViews.setViewVisibility(R.id.no_speak, (finish99) ? View.VISIBLE:View.GONE);
+        mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
     }
 
     @Override

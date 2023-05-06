@@ -21,7 +21,7 @@ public class ActivityOneTime extends AppCompatActivity {
     QuietTask quietTask;
     ArrayList<QuietTask> quietTasks;
     private String subject;
-    private int startHour, startMin, finishHour, finishMin, fRepeatCount; // 0: silent 1: bell 2: talk
+    private int begHour, begMin, endHour, endMin, fRepeatCount; // 0: silent 1: bell 2: talk
     private boolean vibrate;
     private int durationMin = 0;       // in minutes
     Calendar calendar;
@@ -50,24 +50,24 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTask = quietTasks.get(0);
         subject = quietTask.subject;
         vibrate = quietTask.vibrate;
-        fRepeatCount = quietTask.fRepeatCount;
+        fRepeatCount = quietTask.endLoop;
         durationMin = Integer.parseInt(vars.sharedTimeInit);
         shortInterval = Integer.parseInt(vars.sharedTimeShort);
         longInterval = Integer.parseInt(vars.sharedTimeLong);
         calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND,0);
-        startHour = calendar.get(Calendar.HOUR_OF_DAY);
-        startMin = calendar.get(Calendar.MINUTE);
+        begHour = calendar.get(Calendar.HOUR_OF_DAY);
+        begMin = calendar.get(Calendar.MINUTE);
         calendar.add(Calendar.MINUTE, durationMin);
-        finishHour = calendar.get(Calendar.HOUR_OF_DAY);
-        finishMin = calendar.get(Calendar.MINUTE);
+        endHour = calendar.get(Calendar.HOUR_OF_DAY);
+        endMin = calendar.get(Calendar.MINUTE);
 
         binding.oneTimePicker.setIs24HourView(true);
         binding.oneTimePicker.setOnTimeChangedListener((timePicker, hour, min) -> {
             if (timePicker_UpDown)
                 return;
-            finishHour = hour; finishMin = min;
-            durationMin = (finishHour - startHour) * 60 + finishMin - startMin;
+            endHour = hour; endMin = min;
+            durationMin = (endHour - begHour) * 60 + endMin - begMin;
             binding.oneDuration.setText(durationText());
         });
         buildScreen();
@@ -138,13 +138,13 @@ public class ActivityOneTime extends AppCompatActivity {
     }
 
     void adjustTimePicker() {
-        int time = startHour * 60 + startMin + durationMin;
-        finishHour = time / 60; finishMin = time % 60;
-        if (finishHour >= 24)
-            finishHour -= 24;
+        int time = begHour * 60 + begMin + durationMin;
+        endHour = time / 60; endMin = time % 60;
+        if (endHour >= 24)
+            endHour -= 24;
         timePicker_UpDown = true;  // to prevent double TimeChanged action
-        binding.oneTimePicker.setHour(finishHour);
-        binding.oneTimePicker.setMinute(finishMin);
+        binding.oneTimePicker.setHour(endHour);
+        binding.oneTimePicker.setMinute(endMin);
         binding.oneDuration.setText(durationText());
         timePicker_UpDown = false;
         binding.oneTimePicker.invalidate();
@@ -153,7 +153,7 @@ public class ActivityOneTime extends AppCompatActivity {
     private void saveOneTime() {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
-        quietTask = new QuietTask(subject, startHour, startMin, finishHour, finishMin,
+        quietTask = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, true, vibrate, 0, fRepeatCount, false);    // onetime repeat is 0
 
         quietTasks.set(0, quietTask);

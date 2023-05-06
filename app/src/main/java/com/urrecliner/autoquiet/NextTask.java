@@ -22,39 +22,40 @@ public class NextTask {
 
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
-        String startFinish = "";
+        String begEnd = "";
         boolean[] week;
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qTaskNext = quietTasks.get(idx);
             if (qTaskNext.active) {
                 week = qTaskNext.week;
-                long nextStart = CalculateNext.calc(false, qTaskNext.startHour, qTaskNext.startMin, week, 0);
+                long nextStart = CalculateNext.calc(false, qTaskNext.begHour, qTaskNext.begMin, week, 0);
                 if (nextStart < nextTime) {
                     nextTime = nextStart;
                     saveIdx = idx;
-                    startFinish = "S";
+                    begEnd = "S";
                     icon = 0;
                 }
-                if (qTaskNext.finishHour != 99) {
-                    long nextFinish = CalculateNext.calc(true, qTaskNext.finishHour, qTaskNext.finishMin, week, (qTaskNext.startHour > qTaskNext.finishHour) ? (long) 24 * 60 * 60 * 1000 : 0);
-                    if (nextFinish < nextTime) {
-                        nextTime = nextFinish;
+                if (qTaskNext.endHour != 99) {
+                    long nextEnd = CalculateNext.calc(true, qTaskNext.endHour, qTaskNext.endMin, week, (qTaskNext.begHour > qTaskNext.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+                    if (nextEnd < nextTime) {
+                        nextTime = nextEnd;
                         saveIdx = idx;
-                        startFinish = (idx == 0) ? "O" : "F";
+                        begEnd = (idx == 0) ? "O" : "F";
                         icon = (qTaskNext.vibrate) ? 1 : 2;
                     }
                 }
             }
         }
-        QuietTask quietTask = quietTasks.get(saveIdx);
-        loop = (quietTask.finishHour == 99) ? 3 : 0; // if alarm repeat 3 times
-        new NextAlarm().request(context, quietTask, nextTime, startFinish, loop);
-        subject = quietTask.subject;
-        timeInfoS = getHourMin(quietTask.startHour, quietTask.startMin);
-        boolean finish99 = quietTask.finishHour == 99;
-        if (!finish99) {
-            timeInfoF = getHourMin(quietTask.finishHour, quietTask.finishMin);
-            if  (startFinish.equals("S")) {
+        QuietTask qT = quietTasks.get(saveIdx);
+        // if endHour == 99 then it means alarm, if endLoop > 1 then repeat 3 times
+        loop = (qT.endHour == 99 && qT.endLoop > 1) ? 3 : 0; // if alarm repeat 3 times
+        new NextAlarm().request(context, qT, nextTime, begEnd, loop);
+        subject = qT.subject;
+        timeInfoS = getHourMin(qT.begHour, qT.begMin);
+        boolean end99 = qT.endHour == 99;
+        if (!end99) {
+            timeInfoF = getHourMin(qT.endHour, qT.endMin);
+            if  (begEnd.equals("S")) {
                 timeInfo = timeInfoS;
                 soonOrUntill = "예정";
             } else {
@@ -62,8 +63,8 @@ public class NextTask {
                 soonOrUntill = "까지";
             }
             msg = headInfo + " " + subject + "\n" + timeInfo
-                    + " " + soonOrUntill + " " + startFinish;
-            if  (startFinish.equals("S"))
+                    + " " + soonOrUntill + " " + begEnd;
+            if  (begEnd.equals("S"))
                 msg += " ~ " + timeInfoF;
         } else {
             timeInfo = timeInfoS;
@@ -74,11 +75,11 @@ public class NextTask {
 
         new Utils(context).log("NextTask",msg);
         Intent intent = new Intent(context, NotificationService.class);
-        intent.putExtra("start", timeInfo);
-        intent.putExtra("finish", soonOrUntill);
+        intent.putExtra("beg", timeInfo);
+        intent.putExtra("end", soonOrUntill);
         intent.putExtra("subject", subject);
         intent.putExtra("isUpdate", true);
-        intent.putExtra("finish99", false);
+        intent.putExtra("end99", false);
         intent.putExtra("icon", icon);
         context.startForegroundService(intent);
 

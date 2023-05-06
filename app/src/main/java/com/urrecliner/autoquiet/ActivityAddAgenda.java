@@ -54,8 +54,8 @@ public class ActivityAddAgenda extends AppCompatActivity {
         mTitle = gCal.title;
 
         binding.aTitle.setBackgroundColor(NameColor.get(gCal.calName, context));
-        String s = sdfDate.format(gCal.startTime)+ sdfHourMin.format(gCal.startTime)
-                +" ~ "+ sdfHourMin.format(gCal.finishTime);
+        String s = sdfDate.format(gCal.begTime)+ sdfHourMin.format(gCal.begTime)
+                +" ~ "+ sdfHourMin.format(gCal.endTime);
         binding.aDate.setText(s);
         binding.acalName.setText(gCal.calName);
         binding.acalName.setBackgroundColor(NameColor.get(gCal.calName, context));
@@ -130,13 +130,13 @@ public class ActivityAddAgenda extends AppCompatActivity {
         SimpleDateFormat sdfDateHour = new SimpleDateFormat("MM-dd(EEE) HH:mm", Locale.getDefault());
         StringBuilder sb  = new StringBuilder();
         sb.append("Following Tasks Added");
-        int qId = (int) (gCal.startTime & 0x7ffffff);
+        int qId = (int) (gCal.begTime & 0x7ffffff);
         for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
             if (gCals.get(i).id == id) {
                 GCal gC = gCals.get(i);
-                QuietTask q = new QuietTask(mTitle, gC.startTime + (long) before * 60 * 1000, gC.finishTime + (long) after * 60 * 1000,
+                QuietTask q = new QuietTask(mTitle, gC.begTime + (long) before * 60 * 1000, gC.endTime + (long) after * 60 * 1000,
                         qId, gC.calName, gC.desc, gC.location, true, vibrate, sRepeatTime, fRepeatTime, gC.repeat);
-                sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calStartDate));
+                sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calBegDate));
                 quietTasks.add(q);
             }
         }

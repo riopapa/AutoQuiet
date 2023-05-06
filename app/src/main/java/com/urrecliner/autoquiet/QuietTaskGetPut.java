@@ -22,11 +22,11 @@ public class QuietTaskGetPut {
             QuietTask q = quietTasks.get(i);
             if (!q.agenda) {
                 q.calId = 1000 + i;
-                q.calStartDate = 10000 + i;
+                q.calBegDate = 10000 + i;
                 quietTasks.set(i, q);
             }
         }
-        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calStartDate));
+        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calBegDate));
         SharedPreferences sharedPref = androidx.preference.
                 PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();

@@ -40,7 +40,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         View viewLine;
-        TextView tvADate, tvADay, tvSTime, tvFTime, tvSubject, tvName, tvCalLeft, tvCalRight;
+        TextView tvADate, tvADay, tvBegTime, tvEndTime, tvSubject, tvName, tvCalLeft, tvCalRight;
         ImageView ivRepeat;
 
         public ViewHolder(View itemView) {
@@ -48,8 +48,8 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
             this.viewLine = itemView.findViewById(R.id.one_Gcal);
             this.tvADate = itemView.findViewById(R.id.aDate);
             this.tvADay = itemView.findViewById(R.id.aDay);
-            this.tvSTime = itemView.findViewById(R.id.aSTime);
-            this.tvFTime = itemView.findViewById(R.id.aFTime);
+            this.tvBegTime = itemView.findViewById(R.id.aBegTime);
+            this.tvEndTime = itemView.findViewById(R.id.aEndTime);
             this.tvSubject = itemView.findViewById(R.id.calSubject);
             this.tvName = itemView.findViewById(R.id.calName);
             this.ivRepeat = itemView.findViewById(R.id.repeating);
@@ -76,14 +76,14 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         GCal g = gCals.get(position);
         GCal g0 = null;
         if (position > 0) g0= gCals.get(position-1);
-        String s = sdfDate.format(g.startTime);
-        if (position> 0 && s.equals(sdfDate.format(g0.startTime))) {
+        String s = sdfDate.format(g.begTime);
+        if (position> 0 && s.equals(sdfDate.format(g0.begTime))) {
             holder.tvADate.setText("");
             holder.tvADay.setText("");
         }
         else {
-            holder.tvADate.setText(sdfDate.format(g.startTime));
-            holder.tvADay.setText(sdfDay.format(g.startTime));
+            holder.tvADate.setText(sdfDate.format(g.begTime));
+            holder.tvADay.setText(sdfDay.format(g.begTime));
         }
         holder.tvSubject.setText(g.title);
         holder.tvName.setText(g.calName);
@@ -94,8 +94,8 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
             holder.tvCalRight.setVisibility(View.GONE);
         else
             holder.tvCalRight.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
-        holder.tvSTime.setText(sdfHHMM.format(g.startTime));
-        holder.tvFTime.setText(sdfHHMM.format(g.finishTime));
+        holder.tvBegTime.setText(sdfHHMM.format(g.begTime));
+        holder.tvEndTime.setText(sdfHHMM.format(g.endTime));
         int backColor = NameColor.get(g.calName, context);
         holder.viewLine.setBackgroundColor(backColor);
         holder.tvSubject.setSingleLine(true);

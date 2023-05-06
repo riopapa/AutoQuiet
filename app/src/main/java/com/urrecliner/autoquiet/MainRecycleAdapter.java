@@ -64,19 +64,19 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             GestureDetector.OnGestureListener {
 
         View viewLine;
-        ImageView lvVibrate, lvStartRepeat, lvFinishRepeat, lvgCal;
+        ImageView lvVibrate, lvBegLoop, lvEndLoop, lvgCal;
         TextView rmdSubject, rmdDate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
-                tvStartTime, tvFinishTime, tvCalRight, tvCalLeft;
-        LinearLayout llCalInfo, llStartFinish, llStartFinishTime, llWeekFlag;
+                tvBegTime, tvEndTime, tvCalRight, tvCalLeft;
+        LinearLayout llCalInfo, llBegEndLoop, llBegEndTime, llWeekFlag;
         GestureDetector mGestureDetector;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.viewLine = itemView.findViewById(R.id.one_reminder);
             this.lvVibrate = itemView.findViewById(R.id.lv_vibrate);
-            this.llStartFinish = itemView.findViewById(R.id.llStartFinish);
-            this.lvStartRepeat = itemView.findViewById(R.id.lv_startRepeat);
-            this.lvFinishRepeat = itemView.findViewById(R.id.lv_finishRepeat);
+            this.llBegEndLoop = itemView.findViewById(R.id.llBegEnd);
+            this.lvBegLoop = itemView.findViewById(R.id.lvBegLoop);
+            this.lvEndLoop = itemView.findViewById(R.id.lvEndLoop);
             this.lvgCal = itemView.findViewById(R.id.gCal);
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
             this.rmdDate = itemView.findViewById(R.id.rmdDate);
@@ -87,9 +87,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             this.ltWeek4 = itemView.findViewById(R.id.lt_week4);
             this.ltWeek5 = itemView.findViewById(R.id.lt_week5);
             this.ltWeek6 = itemView.findViewById(R.id.lt_week6);
-            this.llStartFinishTime = itemView.findViewById(R.id.startFinishTime);
-            this.tvStartTime = itemView.findViewById(R.id.rmdStartTime);
-            this.tvFinishTime = itemView.findViewById(R.id.rmdFinishTime);
+            this.llBegEndTime = itemView.findViewById(R.id.begEndTime);
+            this.tvBegTime = itemView.findViewById(R.id.rmdBegTime);
+            this.tvEndTime = itemView.findViewById(R.id.rmdEndTime);
             this.viewLine.setOnClickListener(v -> {
                 int qIdx = getBindingAdapterPosition();
                 quietTask = quietTasks.get(qIdx);
@@ -167,7 +167,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         boolean gCalendar = quietTask.agenda;
         boolean active = quietTask.active;
         boolean vibrate = quietTask.vibrate;
-        boolean finish99 = quietTask.finishHour == 99;
+        boolean end99 = quietTask.endHour == 99;
 
         holder.rmdSubject.setText(quietTask.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
@@ -175,34 +175,36 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.rmdDate.setVisibility((quietTask.sayDate)? View.VISIBLE : View.GONE);
         holder.rmdDate.setTextColor((active) ? colorOn : colorOff);
 
-        String txt = buildHourMin(quietTask.startHour, quietTask.startMin);
-        holder.tvStartTime.setText(txt);
-        txt = (finish99) ? "":buildHourMin(quietTask.finishHour, quietTask.finishMin);
-        holder.tvFinishTime.setText(txt);
-        holder.tvStartTime.setTextColor((active) ? colorOn : colorOff);
-        holder.tvFinishTime.setTextColor((active) ? colorOn : colorOff);
-        if (!finish99) {
+        String txt = buildHourMin(quietTask.begHour, quietTask.begMin);
+        holder.tvBegTime.setText(txt);
+        txt = (end99) ? "":buildHourMin(quietTask.endHour, quietTask.endMin);
+        holder.tvEndTime.setText(txt);
+        holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
+        holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
+        if (!end99) {
             if (vibrate)
                 holder.lvVibrate.setImageResource(
                         (active) ? R.drawable.phone_vibrate :R.drawable.transperent);
             else
                 holder.lvVibrate.setImageResource(
                         (active) ? R.drawable.phone_off : R.drawable.transperent);
-            int sRepeat = quietTask.sRepeatCount;
-            int fRepeat = quietTask.fRepeatCount;
-            holder.llStartFinish.setVisibility(View.VISIBLE);
-            holder.lvStartRepeat.setImageResource((sRepeat == 0) ? R.drawable.speak_off : (sRepeat == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
-            holder.lvFinishRepeat.setImageResource((fRepeat == 0) ? R.drawable.speak_off : (fRepeat == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
+            int begLoop = quietTask.begLoop;
+            int endLoop = quietTask.endLoop;
+            holder.lvBegLoop.setVisibility(View.VISIBLE);
+            holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
+            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
         } else {
             holder.lvVibrate.setImageResource(R.drawable.alarm);
-            holder.llStartFinish.setVisibility(View.GONE);
+            holder.lvBegLoop.setVisibility(View.INVISIBLE);
+            int endLoop = quietTask.endLoop;
+            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
         }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
         if (!gCalendar) {
             holder.lvgCal.setImageResource(R.drawable.transperent);
             holder.llCalInfo.setVisibility(View.GONE);
-            holder.llStartFinishTime.setVisibility(View.VISIBLE);
+            holder.llBegEndTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);
             TextView[] tViewWeek = new TextView[7];
             tViewWeek[0] = holder.ltWeek0;
@@ -218,7 +220,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                     tViewWeek[i].setBackgroundColor(colorOffBack);
                 }
                 txt = "";
-                holder.tvStartTime.setText(txt);
+                holder.tvBegTime.setText(txt);
             } else {
                 boolean[] week = quietTask.week;
                 for (int i = 0; i < 7; i++) {
@@ -237,17 +239,17 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.rmdDate.setVisibility(View.GONE);
             final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
             if (quietTask.calDesc.equals("") && quietTask.calLocation.equals("")) {
-                holder.tvCalLeft.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalLeft.setText(sdfDate.format(quietTask.calBegDate));
                 holder.tvCalRight.setText("");
             } else if (quietTask.calLocation.equals("")) {
-                holder.tvCalLeft.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalLeft.setText(sdfDate.format(quietTask.calBegDate));
                 holder.tvCalRight.setText(quietTask.calDesc);
             } else if (quietTask.calDesc.equals("")) {
                 holder.tvCalLeft.setText(quietTask.calLocation);
-                holder.tvCalRight.setText(sdfDate.format(quietTask.calStartDate));
+                holder.tvCalRight.setText(sdfDate.format(quietTask.calBegDate));
             } else {
                 holder.tvCalLeft.setText(quietTask.calLocation);
-                String s = sdfDate.format(quietTask.calStartDate) + " ⋙";
+                String s = sdfDate.format(quietTask.calBegDate) + " ⋙";
                 holder.tvCalRight.setText(s);
             }
             holder.tvCalRight.setSingleLine(true);
