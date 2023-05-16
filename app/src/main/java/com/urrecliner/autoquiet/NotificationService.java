@@ -110,7 +110,7 @@ public class NotificationService extends Service {
         rightNowI.putExtra("operation", RIGHT_NOW);
         PendingIntent pi = PendingIntent.getService(context, 2, rightNowI, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
-        mRemoteViews.setOnClickPendingIntent(R.id.stopNow, pi);
+        mRemoteViews.setOnClickPendingIntent(R.id.right_now, pi);
 
         Intent stopTalkI = new Intent(this, NotificationService.class);
         stopTalkI.putExtra("operation", STOP_SPEAK);
@@ -133,7 +133,7 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.beg_time, beg);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.end_time, end);
-        mRemoteViews.setImageViewResource(R.id.stopNow, R.drawable.no_disturb);
+        mRemoteViews.setImageViewResource(R.id.right_now, R.drawable.right_now);
         mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
         mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
     }

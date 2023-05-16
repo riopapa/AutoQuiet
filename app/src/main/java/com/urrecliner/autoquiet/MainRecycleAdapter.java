@@ -299,16 +299,16 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(position);
             notifyItemRemoved(position);
             new QuietTaskGetPut().put(quietTasks);
-            Snackbar snackbar = Snackbar
-                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
-            snackbar.setAction("복원", view -> {
-                quietTasks.add(position, quietTask);
-                notifyItemInserted(position);
-                new QuietTaskGetPut().put(quietTasks);
-            });
+//            Snackbar snackbar = Snackbar
+//                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
+//            snackbar.setAction("복원", view -> {
+//                quietTasks.add(position, quietTask);
+//                notifyItemInserted(position);
+//                new QuietTaskGetPut().put(quietTasks);
+//            });
 
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
+//            snackbar.setActionTextColor(Color.YELLOW);
+//            snackbar.show();
 
         } else {
             if (topLine++ < 0)

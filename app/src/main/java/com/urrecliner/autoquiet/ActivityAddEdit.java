@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +50,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
     private int xSize, numPos;
+    final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,6 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     void build_QuietTask() {
 
-        final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
         subject = qT.subject;
         begHour = qT.begHour;
         begMin = qT.begMin;
@@ -105,7 +106,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         agenda = qT.agenda;
         sHour = begHour;
         am = begHour < 12;
-        if (!am)
+        if (begHour > 12)
             sHour = begHour - 12;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
@@ -119,15 +120,16 @@ public class ActivityAddEdit extends AppCompatActivity {
         findViewById(R.id.num8).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num9).setOnClickListener(this::number_Clicked);
         findViewById(R.id.numBack).setOnClickListener(view -> {
-            if (numPos > 1) {
+            if (numPos > 1)
                 numPos--;
-                set_TimeForm();
-            }
+            else
+                numPos = 4;
+            set_TimeForm();
         });
         findViewById(R.id.numFore).setOnClickListener(view -> {
-            if (numPos < 4) {
+            if (numPos < 4)
                 numPos++;
-            } else
+            else
                 numPos = 1;
             set_TimeForm();
         });
@@ -330,9 +332,9 @@ public class ActivityAddEdit extends AppCompatActivity {
         binding.numMM2.setText(s2); binding.numMM2.setBackgroundColor(0x00bbbbbb);
 
         TextView tv;
-        Animation anim = new AlphaAnimation(0.0f, 1.0f);
-        anim.setDuration(100); //You can manage the blinking time with this parameter
-        anim.setStartOffset(100);
+        Animation anim = new AlphaAnimation(0.2f, 1.0f);
+        anim.setDuration(160);
+        anim.setStartOffset(160);
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);
 
@@ -361,11 +363,11 @@ public class ActivityAddEdit extends AppCompatActivity {
     private void number_Clicked(View v) {
         int num = Integer.parseInt(v.getTag().toString());
         if (numPos == 1) {
-            if (num > 1)
+            if (num > 1) {
                 sHour = num;
-            else
+                numPos = 2;
+            } else
                 sHour = num * 10 + Integer.parseInt(binding.numHH2.getText().toString());
-
         } else if (numPos == 2) {
             sHour = Integer.parseInt(binding.numHH1.getText().toString()) * 10 + num;
         } else if (numPos == 3) {
@@ -400,11 +402,11 @@ public class ActivityAddEdit extends AppCompatActivity {
             endHour = (end99) ? 99 : binding.timePickerEnd.getHour();
             endMin = binding.timePickerEnd.getMinute();
         } else {
-            updateOneAlert();
+            save_AlarmTask();
         }
 
         if (agenda) {
-            updateAgenda();
+            save_AgendaTask();
         } else {
             qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                     week, active, vibrate, begLoop, endLoop, sayDate);
@@ -416,10 +418,11 @@ public class ActivityAddEdit extends AppCompatActivity {
         new QuietTaskGetPut().put(quietTasks);
     }
 
-    private void updateOneAlert() {
+    private void save_AlarmTask() {
         begHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
-                + Integer.parseInt(binding.numHH2.getText().toString())
-                + ((am) ? 0:12);
+                + Integer.parseInt(binding.numHH2.getText().toString());
+        if (!am && begHour < 12)
+            begHour += 12;
         begMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
                 + Integer.parseInt(binding.numMM2.getText().toString());
 
@@ -435,16 +438,15 @@ public class ActivityAddEdit extends AppCompatActivity {
         if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHour > nextHour)) {
             week = new boolean[7];
             int weekDay = c.get(Calendar.DAY_OF_WEEK);
-            if (weekDay < 7)
-                week[weekDay] = true;
-            else
-                week[0] = true;
-            Toast.makeText(context, "Week Number changed to Tomorrow",Toast.LENGTH_SHORT).show();
+            if (weekDay > 6)
+                weekDay = 0;
+            week[weekDay] = true;
+            Toast.makeText(context, "요일을 "+weekName[weekDay]+" 로 바꿈",Toast.LENGTH_SHORT).show();
         }
         endHour = 99;
     }
 
-    private void updateAgenda() {
+    private void save_AgendaTask() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(qT.calBegDate);
         c.set(Calendar.HOUR_OF_DAY, begHour);
