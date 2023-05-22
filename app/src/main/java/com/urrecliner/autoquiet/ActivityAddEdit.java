@@ -182,7 +182,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             if (begLoop == 0)
                 begLoop = 1;
             else if (begLoop == 1)
-                begLoop = 9;
+                begLoop = 11;
             else
                 begLoop = 0;
             binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
@@ -268,22 +268,26 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void show_Info() {
-            /*
-        loop    begLoop     endLoop     action
-        0                   0           beep only
-        0                   1           say task ended
-        1-3                 1           say task once
-        1-3                 11          say task info loop times
-     */
-        String s = "";
+        /*
+        begLoop     endLoop     action
+        1           0           say task ended and gone = 11, 0
+        1           1           say task once only
+        1           11          say task once only and then next day
+        11          0           say task ended and gone = 1,1
+        11          11          say task info loop times, set loop time
+        */
+        String s = "설정 안 된 케이스";
         if (end99) {
-            if (endLoop == 1)
-                s = "한 번만 알려주고 비활성화됨";
-            else if (endLoop > 1)
+            if      (endLoop == 0)
+                s = "삐이 소리만 나고 사라짐";
+            else if (endLoop == 1)
+                s = "한 번만 알려 주고 끝";
+            else if (begLoop == 1 && endLoop == 11)
+                s = "한 번만 알려 주고 내일로 바꿈";
+            else if (begLoop == 11 && endLoop == 11)
                 s = "여러번 알려줌";
-            else
-                s = "삐이 소리만 남";
-        }
+        } else
+            s = "";
         binding.dateDesc.setText(s);
     }
     private void set_TimeForm() {
@@ -315,7 +319,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.numDateTime.setVisibility(View.VISIBLE);
             binding.timePickerBeg.setVisibility(View.GONE);
             binding.timePickerEnd.setVisibility(View.GONE);
-            binding.iVVibrate.setImageResource(R.drawable.alarm);
+            binding.iVVibrate.setImageResource((endLoop == 0) ? R.drawable.bell:R.drawable.alarm);
             show_ResultTime();
         }
     }
@@ -416,6 +420,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.set(currIdx, qT);
         }
         new QuietTaskGetPut().put(quietTasks);
+        new NextTask(context, new QuietTaskGetPut().get(context),"Task Saved ");
     }
 
     private void save_AlarmTask() {
@@ -489,7 +494,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
             save_QuietTask();
             mainRecycleAdapter.notifyItemChanged(currIdx);
-            Toast.makeText(this, qT.subject+ ((currIdx == -1)? " Added": " Saved"), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, qt.subject+ ((currIdx == -1)? " Added": " Saved"), Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.action_delete) {
             finish();

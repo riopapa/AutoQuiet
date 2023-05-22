@@ -48,7 +48,7 @@ public class NextTask {
         }
         QuietTask qT = quietTasks.get(saveIdx);
         // if endHour == 99 then it means alarm, if endLoop > 1 then repeat 3 times
-        loop = (qT.endHour == 99 && qT.endLoop > 1) ? 3 : 0; // if alarm repeat 3 times
+        loop = (qT.endHour == 99 && qT.endLoop == 11) ? 3 : 0; // if alarm repeat 3 times
         new NextAlarm().request(context, qT, nextTime, begEnd, loop);
         subject = qT.subject;
         timeInfoS = getHourMin(qT.begHour, qT.begMin);
@@ -70,7 +70,7 @@ public class NextTask {
             timeInfo = timeInfoS;
             soonOrUntill = "알림";
             msg = headInfo + "\n" + timeInfo + " " + subject;
-            icon = 3;
+            icon = (qT.endLoop == 0) ? 4:3;
         }
 
         new Utils(context).log("NextTask",msg);

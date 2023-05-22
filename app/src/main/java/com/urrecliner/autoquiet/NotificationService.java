@@ -119,7 +119,8 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    int [] smallIcons = { R.drawable.phone_normal, R.drawable.phone_vibrate, R.drawable.phone_off, R.drawable.alarm};
+    int [] smallIcons = { R.drawable.phone_normal, R.drawable.phone_vibrate, R.drawable.phone_off,
+                    R.drawable.alarm, R.drawable.bell};
 
     void updateRemoteViews() {
 

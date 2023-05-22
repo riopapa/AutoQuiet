@@ -23,7 +23,7 @@ import java.util.Locale;
 
 public class ActivityAddAgenda extends AppCompatActivity {
 
-    private int sRepeatTime = 1, fRepeatTime = 1;
+    private int begLoop = 1, endLoop = 1;
     private boolean vibrate = true;
     private GCal gCal;
     private ArrayList<GCal> gCals;
@@ -70,27 +70,27 @@ public class ActivityAddAgenda extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
-        binding.aStartRepeat.setOnClickListener(v -> {
-            if (sRepeatTime == 0)
-                sRepeatTime = 1;
-            else if (sRepeatTime == 1)
-                sRepeatTime = 11;
+        binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.aBegLoop.setOnClickListener(v -> {
+            if (begLoop == 0)
+                begLoop = 1;
+            else if (begLoop == 1)
+                begLoop = 11;
             else
-                sRepeatTime = 0;
-            binding.aStartRepeat.setImageResource((sRepeatTime == 0)? R.drawable.speak_off: (sRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                begLoop = 0;
+            binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
-        binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
-        binding.aFinishRepeat.setOnClickListener(v -> {
-            if (fRepeatTime == 0)
-                fRepeatTime = 1;
-            else if (fRepeatTime == 1)
-                fRepeatTime = 11;
+        binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.aEndLoop.setOnClickListener(v -> {
+            if (endLoop == 0)
+                endLoop = 1;
+            else if (endLoop == 1)
+                endLoop = 11;
             else
-                fRepeatTime = 0;
-            binding.aFinishRepeat.setImageResource((fRepeatTime == 0)? R.drawable.speak_off: (fRepeatTime == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+                endLoop = 0;
+            binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
             v.invalidate();
         });
 
@@ -135,7 +135,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
             if (gCals.get(i).id == id) {
                 GCal gC = gCals.get(i);
                 QuietTask q = new QuietTask(mTitle, gC.begTime + (long) before * 60 * 1000, gC.endTime + (long) after * 60 * 1000,
-                        qId, gC.calName, gC.desc, gC.location, true, vibrate, sRepeatTime, fRepeatTime, gC.repeat);
+                        qId, gC.calName, gC.desc, gC.location, true, vibrate, begLoop, endLoop, gC.repeat);
                 sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calBegDate));
                 quietTasks.add(q);
             }

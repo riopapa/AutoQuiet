@@ -136,7 +136,7 @@
             android:textStyle="bold"
             android:textSize="16sp" />
         <ImageView
-            android:id="@+id/aStartRepeat"
+            android:id="@+id/aBegLoop"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@drawable/speak_on"
@@ -149,7 +149,7 @@
             android:text="종료"
             android:textSize="16sp" />
         <ImageView
-            android:id="@+id/aFinishRepeat"
+            android:id="@+id/aEndLoop"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@drawable/speak_on"

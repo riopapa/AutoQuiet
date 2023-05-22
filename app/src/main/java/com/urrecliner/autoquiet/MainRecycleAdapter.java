@@ -2,7 +2,6 @@ package com.urrecliner.autoquiet;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
@@ -34,7 +32,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         implements ItemTouchHelperAdapter {
 
     private ItemTouchHelper mTouchHelper;
-    private QuietTask quietTask;
+    private QuietTask qt;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
     private View swipeView;
@@ -92,7 +90,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             this.tvEndTime = itemView.findViewById(R.id.rmdEndTime);
             this.viewLine.setOnClickListener(v -> {
                 int qIdx = getBindingAdapterPosition();
-                quietTask = quietTasks.get(qIdx);
+                qt = quietTasks.get(qIdx);
                 Intent intent;
                 if (qIdx != 0) {
                     vars.addNewQuiet = false;
@@ -163,21 +161,21 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        quietTask = quietTasks.get(position);
-        boolean gCalendar = quietTask.agenda;
-        boolean active = quietTask.active;
-        boolean vibrate = quietTask.vibrate;
-        boolean end99 = quietTask.endHour == 99;
+        qt = quietTasks.get(position);
+        boolean gCalendar = qt.agenda;
+        boolean active = qt.active;
+        boolean vibrate = qt.vibrate;
+        boolean end99 = qt.endHour == 99;
 
-        holder.rmdSubject.setText(quietTask.subject);
+        holder.rmdSubject.setText(qt.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
-        holder.rmdDate.setVisibility((quietTask.sayDate)? View.VISIBLE : View.GONE);
+        holder.rmdDate.setVisibility((qt.sayDate)? View.VISIBLE : View.GONE);
         holder.rmdDate.setTextColor((active) ? colorOn : colorOff);
 
-        String txt = buildHourMin(quietTask.begHour, quietTask.begMin);
+        String txt = buildHourMin(qt.begHour, qt.begMin);
         holder.tvBegTime.setText(txt);
-        txt = (end99) ? "":buildHourMin(quietTask.endHour, quietTask.endMin);
+        txt = (end99) ? "":buildHourMin(qt.endHour, qt.endMin);
         holder.tvEndTime.setText(txt);
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
@@ -188,15 +186,15 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             else
                 holder.lvVibrate.setImageResource(
                         (active) ? R.drawable.phone_off : R.drawable.transperent);
-            int begLoop = quietTask.begLoop;
-            int endLoop = quietTask.endLoop;
+            int begLoop = qt.begLoop;
+            int endLoop = qt.endLoop;
             holder.lvBegLoop.setVisibility(View.VISIBLE);
             holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
             holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
         } else {
-            holder.lvVibrate.setImageResource(R.drawable.alarm);
+            holder.lvVibrate.setImageResource((qt.endLoop == 0) ? R.drawable.bell:R.drawable.alarm);
             holder.lvBegLoop.setVisibility(View.INVISIBLE);
-            int endLoop = quietTask.endLoop;
+            int endLoop = qt.endLoop;
             holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
         }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
@@ -222,7 +220,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 txt = "";
                 holder.tvBegTime.setText(txt);
             } else {
-                boolean[] week = quietTask.week;
+                boolean[] week = qt.week;
                 for (int i = 0; i < 7; i++) {
                     tViewWeek[i].setTextColor(active ? colorActive : colorOff);
                     if (active)
@@ -238,25 +236,25 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.llWeekFlag.setVisibility(View.GONE);
             holder.rmdDate.setVisibility(View.GONE);
             final SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
-            if (quietTask.calDesc.equals("") && quietTask.calLocation.equals("")) {
-                holder.tvCalLeft.setText(sdfDate.format(quietTask.calBegDate));
+            if (qt.calDesc.equals("") && qt.calLocation.equals("")) {
+                holder.tvCalLeft.setText(sdfDate.format(qt.calBegDate));
                 holder.tvCalRight.setText("");
-            } else if (quietTask.calLocation.equals("")) {
-                holder.tvCalLeft.setText(sdfDate.format(quietTask.calBegDate));
-                holder.tvCalRight.setText(quietTask.calDesc);
-            } else if (quietTask.calDesc.equals("")) {
-                holder.tvCalLeft.setText(quietTask.calLocation);
-                holder.tvCalRight.setText(sdfDate.format(quietTask.calBegDate));
+            } else if (qt.calLocation.equals("")) {
+                holder.tvCalLeft.setText(sdfDate.format(qt.calBegDate));
+                holder.tvCalRight.setText(qt.calDesc);
+            } else if (qt.calDesc.equals("")) {
+                holder.tvCalLeft.setText(qt.calLocation);
+                holder.tvCalRight.setText(sdfDate.format(qt.calBegDate));
             } else {
-                holder.tvCalLeft.setText(quietTask.calLocation);
-                String s = sdfDate.format(quietTask.calBegDate) + " ⋙";
+                holder.tvCalLeft.setText(qt.calLocation);
+                String s = sdfDate.format(qt.calBegDate) + " ⋙";
                 holder.tvCalRight.setText(s);
             }
             holder.tvCalRight.setSingleLine(true);
             holder.tvCalRight.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             holder.tvCalRight.setSelected(true);
 
-            holder.viewLine.setBackgroundColor(NameColor.get(quietTask.calName, context));
+            holder.viewLine.setBackgroundColor(NameColor.get(qt.calName, context));
         }
     }
 
@@ -295,14 +293,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public void onItemSwiped(int position) {
         if (position != 0) {
-            quietTask = quietTasks.get(position);
+            qt = quietTasks.get(position);
             quietTasks.remove(position);
             notifyItemRemoved(position);
             new QuietTaskGetPut().put(quietTasks);
 //            Snackbar snackbar = Snackbar
 //                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
 //            snackbar.setAction("복원", view -> {
-//                quietTasks.add(position, quietTask);
+//                quietTasks.add(position, qt);
 //                notifyItemInserted(position);
 //                new QuietTaskGetPut().put(quietTasks);
 //            });

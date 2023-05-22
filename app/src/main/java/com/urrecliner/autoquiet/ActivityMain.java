@@ -43,6 +43,7 @@ public class ActivityMain extends AppCompatActivity  {
     TimerTask timerTask = null;
     long timeSaved;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,14 +182,15 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
 
-    @Override
-    public void onBackPressed() {
-        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
-        super.onBackPressed();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
+//        super.onBackPressed();
+//    }
 
     @Override
     protected void onStop() {
+        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
         super.onStop();
     }
 }
