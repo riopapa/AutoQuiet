@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +22,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
@@ -51,6 +51,8 @@ public class ActivityAddEdit extends AppCompatActivity {
     private Context context;
     private int xSize, numPos;
     final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
+
+    private int alarmIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,12 +187,12 @@ public class ActivityAddEdit extends AppCompatActivity {
                 begLoop = 11;
             else
                 begLoop = 0;
-            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
             show_Info();
         });
 
-        binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
         binding.ivBegLoop.setOnClickListener(v -> {
             if (begLoop == 0)
                 begLoop = 1;
@@ -198,7 +200,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 begLoop = 11;
             else
                 begLoop = 0;
-            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
             show_Info();
         });
@@ -210,11 +212,11 @@ public class ActivityAddEdit extends AppCompatActivity {
                 endLoop = 11;
             else
                 endLoop = 0;
-            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
             show_Info();
         });
-        binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
         binding.ivEndLoop.setOnClickListener(v -> {
             if (endLoop == 0)
                 endLoop = 1;
@@ -222,7 +224,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 endLoop = 11;
             else
                 endLoop = 0;
-            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
             show_Info();
         });
@@ -268,27 +270,29 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void show_Info() {
-        /*
-        begLoop     endLoop     action
-        1           0           say task ended and gone = 11, 0
-        1           1           say task once only
-        1           11          say task once only and then next day
-        11          0           say task ended and gone = 1,1
-        11          11          say task info loop times, set loop time
-        */
-        String s = "설정 안 된 케이스";
+
+        String s = "";
+        int icon;
         if (end99) {
-            if      (endLoop == 0)
-                s = "삐이 소리만 나고 사라짐";
-            else if (endLoop == 1)
-                s = "한 번만 알려 주고 끝";
-            else if (begLoop == 1 && endLoop == 11)
-                s = "한 번만 알려 주고 내일로 바꿈";
-            else if (begLoop == 11 && endLoop == 11)
-                s = "여러번 알려줌";
-        } else
-            s = "";
+            icon = new Alarm99Icon().setId(begLoop, endLoop);
+
+            s = "의미 없는 벨 조합";
+            if      (icon == R.drawable.bell_several)
+                s = "벨과 제목을 여러 번 울려줌";
+            else if (icon == R.drawable.bell_tomorrow)
+                s = "벨과 제목을 한 번 울리고 내일로 바꿔 줌";
+            else if (icon == R.drawable.bell_onetime)
+                s = "한번만 울리고 끄읏";
+            else if (icon == R.drawable.bell_once_gone)
+                s = "벨 한 번 울린 후 사라짐";
+
+        } else {
+            s = "기간이 있는 경우";
+            icon = vibrate ? R.drawable.phone_vibrate : R.drawable.phone_normal;
+        }
+
         binding.dateDesc.setText(s);
+        binding.iVVibrate.setImageResource(icon);
     }
     private void set_TimeForm() {
         binding.end99.setChecked(end99);
@@ -319,7 +323,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.numDateTime.setVisibility(View.VISIBLE);
             binding.timePickerBeg.setVisibility(View.GONE);
             binding.timePickerEnd.setVisibility(View.GONE);
-            binding.iVVibrate.setImageResource((endLoop == 0) ? R.drawable.bell:R.drawable.alarm);
+            binding.iVVibrate.setImageResource(new Alarm99Icon().setId(begLoop, endLoop));
             show_ResultTime();
         }
     }

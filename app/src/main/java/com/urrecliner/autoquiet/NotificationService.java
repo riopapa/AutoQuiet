@@ -27,8 +27,8 @@ public class NotificationService extends Service {
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 1044;
 
-    public NotificationService() {
-    }
+    public NotificationService(){}      // do not remove
+
     public NotificationService(Context context) {
         this.context = context;
     }
@@ -48,21 +48,24 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.w("onStartCommand", "started ...");
         createNotification();
         try {
             beg = intent.getStringExtra("beg");
         } catch (Exception e) {
+            Log.w("onStartCommand","beg is nothing");
             return START_STICKY;
         }
         end = intent.getStringExtra("end");
         end99 = intent.getBooleanExtra("end99", false);
         subject = intent.getStringExtra("subject");
-        icon = intent.getIntExtra("icon", 0);
+        icon = intent.getIntExtra("icon", R.drawable.no_disturb);
+        if (icon == R.drawable.no_disturb)
+            Log.w("onStartCommand", "Icon is missed");
         updateRemoteViews();
-        startForeground(100, mBuilder.build());
-        boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
-        if (isUpdate)
-            return START_STICKY;
+//        boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
+//        if (isUpdate)
+//            return START_STICKY;
 
         int operation = -1;
         try {
@@ -119,24 +122,17 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }
 
-    int [] smallIcons = { R.drawable.phone_normal, R.drawable.phone_vibrate, R.drawable.phone_off,
-                    R.drawable.alarm, R.drawable.bell};
-
     void updateRemoteViews() {
 
-        mBuilder.setSmallIcon(smallIcons[icon]);
-//        if (icon == 3) {  // make drawable bitmap icon
-//            Bitmap bitmap = new IconTime().make(this, beg); // now time -> bitmap
-//            IconCompat smallIcon = IconCompat.createWithBitmap(bitmap); // bitmap -> icon
-//            mBuilder.setSmallIcon(smallIcon);
-//        }
-        mRemoteViews.setImageViewResource(R.id.state_icon, smallIcons[icon]);
+        mBuilder.setSmallIcon(icon);
+        mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.beg_time, beg);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.end_time, end);
         mRemoteViews.setImageViewResource(R.id.right_now, R.drawable.right_now);
         mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
         mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
+        startForeground(100, mBuilder.build());
     }
 
     @Override

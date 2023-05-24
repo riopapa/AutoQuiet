@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.urrecliner.autoquiet.AlarmReceiver;
 import com.urrecliner.autoquiet.Utils;
@@ -14,6 +15,7 @@ public class NextAlarm {
 
     public void request(Context context, QuietTask quietTask,
                         long nextTime, String StartFinish, int loop) {
+        Log.w("NextAlarm","requested");
         String logID = "NextAlarm";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
@@ -28,8 +30,7 @@ public class NextAlarm {
         if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
             new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.subject);
-        }
-        else {
+        } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }
     }

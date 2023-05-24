@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.IsScreen;
 import com.urrecliner.autoquiet.Sub.NextAlarm;
@@ -23,33 +24,26 @@ public class NextTask {
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
         String begEnd = "";
-        boolean[] week;
         for (int idx = 0; idx < quietTasks.size(); idx++) {
-            QuietTask qTaskNext = quietTasks.get(idx);
-            if (qTaskNext.active) {
-                week = qTaskNext.week;
-                long nextStart = CalculateNext.calc(false, qTaskNext.begHour, qTaskNext.begMin, week, 0);
-                if (nextStart < nextTime) {
-                    nextTime = nextStart;
+            QuietTask qThis = quietTasks.get(idx);
+            if (qThis.active) {
+                long thisBeg = CalculateNext.calc(false, qThis.begHour, qThis.begMin, qThis.week, 0);
+                if (thisBeg < nextTime) {
+                    nextTime = thisBeg;
                     saveIdx = idx;
                     begEnd = "S";
-                    icon = 0;
                 }
-                if (qTaskNext.endHour != 99) {
-                    long nextEnd = CalculateNext.calc(true, qTaskNext.endHour, qTaskNext.endMin, week, (qTaskNext.begHour > qTaskNext.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
-                    if (nextEnd < nextTime) {
-                        nextTime = nextEnd;
+                if (qThis.endHour != 99) {
+                    long thisEnd = CalculateNext.calc(true, qThis.endHour, qThis.endMin, qThis.week, (qThis.begHour > qThis.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+                    if (thisEnd < nextTime) {
+                        nextTime = thisEnd;
                         saveIdx = idx;
                         begEnd = (idx == 0) ? "O" : "F";
-                        icon = (qTaskNext.vibrate) ? 1 : 2;
                     }
                 }
             }
         }
         QuietTask qT = quietTasks.get(saveIdx);
-        // if endHour == 99 then it means alarm, if endLoop > 1 then repeat 3 times
-        loop = (qT.endHour == 99 && qT.endLoop == 11) ? 3 : 0; // if alarm repeat 3 times
-        new NextAlarm().request(context, qT, nextTime, begEnd, loop);
         subject = qT.subject;
         timeInfoS = getHourMin(qT.begHour, qT.begMin);
         boolean end99 = qT.endHour == 99;
@@ -66,22 +60,19 @@ public class NextTask {
                     + " " + soonOrUntill + " " + begEnd;
             if  (begEnd.equals("S"))
                 msg += " ~ " + timeInfoF;
+            loop = 0;
+            icon = (qT.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
         } else {
             timeInfo = timeInfoS;
             soonOrUntill = "알림";
             msg = headInfo + "\n" + timeInfo + " " + subject;
-            icon = (qT.endLoop == 0) ? 4:3;
+            icon = new Alarm99Icon().setId(qT.begLoop, qT.endLoop);
+            loop = (icon == R.drawable.bell_several) ? 3:0;
         }
 
         new Utils(context).log("NextTask",msg);
-        Intent intent = new Intent(context, NotificationService.class);
-        intent.putExtra("beg", timeInfo);
-        intent.putExtra("end", soonOrUntill);
-        intent.putExtra("subject", subject);
-        intent.putExtra("isUpdate", true);
-        intent.putExtra("end99", false);
-        intent.putExtra("icon", icon);
-        context.startForegroundService(intent);
+        updateNotiBar(context);
+        new NextAlarm().request(context, qT, nextTime, begEnd, loop);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -90,6 +81,17 @@ public class NextTask {
                     Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private static void updateNotiBar(Context context) {
+        Intent intent = new Intent(context, NotificationService.class);
+        intent.putExtra("beg", timeInfo);
+        intent.putExtra("end", soonOrUntill);
+        intent.putExtra("subject", subject);
+        intent.putExtra("isUpdate", true);
+        intent.putExtra("end99", false);
+        intent.putExtra("icon", icon);
+        context.startForegroundService(intent);
     }
 
     private String getHourMin(int hour, int min) {

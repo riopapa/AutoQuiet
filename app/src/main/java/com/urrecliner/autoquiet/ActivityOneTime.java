@@ -123,7 +123,7 @@ public class ActivityOneTime extends AppCompatActivity {
             adjustTimePicker();
         });
 
-        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
         binding.oneFinishRepeat.setOnClickListener(v -> {
             if (fRepeatCount == 0)
                 fRepeatCount = 1;
@@ -131,7 +131,7 @@ public class ActivityOneTime extends AppCompatActivity {
                 fRepeatCount = 11;
             else
                 fRepeatCount = 0;
-            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
         });
 

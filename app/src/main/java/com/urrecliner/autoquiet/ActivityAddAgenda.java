@@ -70,7 +70,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
             v.invalidate();
         });
 
-        binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
         binding.aBegLoop.setOnClickListener(v -> {
             if (begLoop == 0)
                 begLoop = 1;
@@ -78,11 +78,11 @@ public class ActivityAddAgenda extends AppCompatActivity {
                 begLoop = 11;
             else
                 begLoop = 0;
-            binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
         });
 
-        binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+        binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
         binding.aEndLoop.setOnClickListener(v -> {
             if (endLoop == 0)
                 endLoop = 1;
@@ -90,7 +90,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
                 endLoop = 11;
             else
                 endLoop = 0;
-            binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.alert_bell : R.drawable.speak_on);
+            binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
             v.invalidate();
         });
 

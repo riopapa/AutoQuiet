@@ -18,6 +18,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
@@ -164,7 +165,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         qt = quietTasks.get(position);
         boolean gCalendar = qt.agenda;
         boolean active = qt.active;
-        boolean vibrate = qt.vibrate;
+
         boolean end99 = qt.endHour == 99;
 
         holder.rmdSubject.setText(qt.subject);
@@ -180,7 +181,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
         if (!end99) {
-            if (vibrate)
+            if (qt.vibrate)
                 holder.lvVibrate.setImageResource(
                         (active) ? R.drawable.phone_vibrate :R.drawable.transperent);
             else
@@ -189,13 +190,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             int begLoop = qt.begLoop;
             int endLoop = qt.endLoop;
             holder.lvBegLoop.setVisibility(View.VISIBLE);
-            holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
-            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
+            holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
+            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
         } else {
-            holder.lvVibrate.setImageResource((qt.endLoop == 0) ? R.drawable.bell:R.drawable.alarm);
+            holder.lvVibrate.setImageResource(new Alarm99Icon().setId(qt.begLoop, qt.endLoop));
             holder.lvBegLoop.setVisibility(View.INVISIBLE);
             int endLoop = qt.endLoop;
-            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.alert_bell : R.drawable.speak_on);
+            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
         }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
