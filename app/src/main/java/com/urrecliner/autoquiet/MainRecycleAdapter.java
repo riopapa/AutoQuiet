@@ -190,13 +190,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             int begLoop = qt.begLoop;
             int endLoop = qt.endLoop;
             holder.lvBegLoop.setVisibility(View.VISIBLE);
+            holder.lvEndLoop.setVisibility(View.VISIBLE);
             holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
             holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
         } else {
             holder.lvVibrate.setImageResource(new Alarm99Icon().setId(qt.begLoop, qt.endLoop));
-            holder.lvBegLoop.setVisibility(View.INVISIBLE);
-            int endLoop = qt.endLoop;
-            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
+            holder.lvBegLoop.setVisibility(View.GONE);
+            holder.lvEndLoop.setVisibility(View.GONE);
         }
         holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
 
