@@ -9,17 +9,17 @@ import android.widget.Toast;
 import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.IsScreen;
-import com.urrecliner.autoquiet.Sub.NextAlarm;
+import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
-public class NextTask {
+public class SetUpComingTask {
     long nextTime;
     static int icon, loop;
     static String timeInfoS, timeInfoF, timeInfo, soonOrUntill, subject, msg;
 
-    public NextTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
+    public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
         nextTime = System.currentTimeMillis() + 240*60*60*1000L;
         int saveIdx = 0;
@@ -70,9 +70,9 @@ public class NextTask {
             loop = (icon == R.drawable.bell_several) ? 3:0;
         }
 
-        new Utils(context).log("NextTask",msg);
+        new Utils(context).log("SetUpComingTask",msg);
         updateNotiBar(context);
-        new NextAlarm().request(context, qT, nextTime, begEnd, loop);
+        new SetAlarmTime().request(context, qT, nextTime, begEnd, loop);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

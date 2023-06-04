@@ -271,8 +271,18 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void show_Info() {
 
+        int [] icons = {
+                R.drawable.phone_normal, // 0
+                R.drawable.phone_vibrate,   // 1
+                R.drawable.phone_off, // 2
+                R.drawable.bell_several,   // 3
+                R.drawable.bell_tomorrow, // 4
+                R.drawable.bell_onetime, // 5
+                R.drawable.bell_once_gone  // 6 meaning less
+        };
+
         String s = "";
-        int icon;
+        int icon, drawIcon;
         if (end99) {
             icon = new Alarm99Icon().setId(begLoop, endLoop);
 
@@ -424,7 +434,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.set(currIdx, qT);
         }
         new QuietTaskGetPut().put(quietTasks);
-        new NextTask(context, new QuietTaskGetPut().get(context),"Task Saved ");
+        new SetUpComingTask(context, new QuietTaskGetPut().get(context),"Task Saved ");
     }
 
     private void save_AlarmTask() {

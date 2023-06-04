@@ -1,10 +1,10 @@
 <vector android:autoMirrored="true"
-        android:height="24dp"
+        android:height="48dp"
         android:viewportHeight="24"
         android:viewportWidth="24"
-        android:width="24dp"
+        android:width="48dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
-  <path android:strokeColor="#77540F"
+  <path android:strokeColor="#AC721C"
         android:strokeLineJoin="round"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
@@ -13,7 +13,7 @@
           M6,17L17,17z
           M10,19.5M11.5,19.5z
            "/>
-  <path android:strokeColor="#181C36"
+  <path android:strokeColor="#525791"
         android:strokeLineJoin="round"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"

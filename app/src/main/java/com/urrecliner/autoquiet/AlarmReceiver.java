@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.urrecliner.autoquiet.Sub.Alarm99Icon;
-import com.urrecliner.autoquiet.Sub.NextAlarm;
+import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.MannerMode;
@@ -93,7 +93,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 qt.setActive(false);
                 quietTasks.set(0, qt);
                 new QuietTaskGetPut().put(quietTasks);
-                new NextTask(context, quietTasks, "After oneTime");
+                new SetUpComingTask(context, quietTasks, "After oneTime");
             break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
@@ -138,7 +138,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             String say = subject + " 를 확인 하시지요";
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
         }
-        new NextTask(context, quietTasks, "ended");
+        new SetUpComingTask(context, quietTasks, "ended");
 
     }
 
@@ -171,7 +171,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
 
             long nextTime = System.currentTimeMillis() + 70 * 1000;
-            new NextAlarm().request(context, qt, nextTime, "S", loop);   // loop 0 : no more
+            new SetAlarmTime().request(context, qt, nextTime, "S", loop);   // loop 0 : no more
             Intent uIntent = new Intent(context, NotificationService.class);
             uIntent.putExtra("beg", nowTimeToString(nextTime));
             uIntent.putExtra("end", "다시");
@@ -223,7 +223,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new MannerMode().turn2Quiet(context, beep, qt.vibrate);
             }
         }, 6000);
-        new NextTask(context, quietTasks, "say_Started()");
+        new SetUpComingTask(context, quietTasks, "say_Started()");
     }
 
     String addPostPosition(String s) {
@@ -255,7 +255,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-                new NextTask(context, quietTasks, "say_Finished()");
+                new SetUpComingTask(context, quietTasks, "say_Finished()");
                 new Utils(context).deleteOldLogFiles();
             }
         }, 3000);

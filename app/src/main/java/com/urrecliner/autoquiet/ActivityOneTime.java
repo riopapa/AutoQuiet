@@ -159,9 +159,9 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTasks.set(0, quietTask);
         new QuietTaskGetPut().put(quietTasks);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
-//        new NextTask(this,"One Time");
+//        new SetUpComingTask(this,"One Time");
 //        new VarsGetPut().put(vars, getApplicationContext());
-        new NextTask(this, quietTasks, "Quit RightNow");
+        new SetUpComingTask(this, quietTasks, "Quit RightNow");
     }
 
     @Override

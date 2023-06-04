@@ -184,13 +184,13 @@ public class ActivityMain extends AppCompatActivity  {
 
 //    @Override
 //    public void onBackPressed() {
-//        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
+//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
 //        super.onBackPressed();
 //    }
 
     @Override
     protected void onStop() {
-        new NextTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
+        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
         super.onStop();
     }
 }

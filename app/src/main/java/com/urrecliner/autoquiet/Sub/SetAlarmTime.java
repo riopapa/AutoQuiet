@@ -11,12 +11,12 @@ import com.urrecliner.autoquiet.AlarmReceiver;
 import com.urrecliner.autoquiet.Utils;
 import com.urrecliner.autoquiet.models.QuietTask;
 
-public class NextAlarm {
+public class SetAlarmTime {
 
     public void request(Context context, QuietTask quietTask,
                         long nextTime, String StartFinish, int loop) {
-        Log.w("NextAlarm","requested");
-        String logID = "NextAlarm";
+        Log.w("SetAlarmTime","requested");
+        String logID = "SetAlarmTime";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);

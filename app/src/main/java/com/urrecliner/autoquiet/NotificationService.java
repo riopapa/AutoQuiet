@@ -84,7 +84,7 @@ public class NotificationService extends Service {
         } else if (operation == STOP_SPEAK) {
             end99 = false;
             updateRemoteViews();
-            new NextTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
+            new SetUpComingTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
         }
         startForeground(100, mBuilder.build()); // ??
         return START_STICKY;

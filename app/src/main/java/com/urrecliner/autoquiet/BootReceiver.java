@@ -4,12 +4,9 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.urrecliner.autoquiet.Sub.NextAlarm;
 import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ public class BootReceiver extends BroadcastReceiver {
                 @Override public void run() {
                     ArrayList<QuietTask> quietTasks;
                     quietTasks = new QuietTaskGetPut().get(context);
-                    new NextTask(context, quietTasks, "After Boot");
+                    new SetUpComingTask(context, quietTasks, "After Boot");
                 }
             }, 10000);
         }
