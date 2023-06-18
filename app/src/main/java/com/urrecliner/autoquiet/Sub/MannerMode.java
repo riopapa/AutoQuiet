@@ -28,12 +28,12 @@ public class MannerMode {
                 am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1000);
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
         }
     }
 

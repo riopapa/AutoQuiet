@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
+import com.urrecliner.autoquiet.Sub.VibratePhone;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.MannerMode;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
@@ -161,7 +162,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (loop > 0) {
             loop--;
             String say;
-            if (isQuiet()) {
+            if (isSilentNow()) {
+                new VibratePhone(context);
                 say = subject;
                 loop = 0;
             } else {
@@ -169,7 +171,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
             }
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-
             long nextTime = System.currentTimeMillis() + 70 * 1000;
             new SetAlarmTime().request(context, qt, nextTime, "S", loop);   // loop 0 : no more
             Intent uIntent = new Intent(context, NotificationService.class);
@@ -313,7 +314,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         return sdfTime.format(time);
     }
 
-    boolean isQuiet() {
+    boolean isSilentNow() {
         AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
