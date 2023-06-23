@@ -33,8 +33,8 @@ public class ActivityOneTime extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         vars = new VarsGetPut().get(this);
-        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        getApplicationContext().sendBroadcast(intent);
+//        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+//        getApplicationContext().sendBroadcast(intent);
         super.onCreate(savedInstanceState);
         binding = ActivityOneTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -48,7 +48,7 @@ public class ActivityOneTime extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true) ;
         quietTasks = new QuietTaskGetPut().get(this);
         quietTask = quietTasks.get(0);
-        subject = quietTask.subject;
+        subject = getResources().getString(R.string.Quiet_Once);
         vibrate = quietTask.vibrate;
         fRepeatCount = quietTask.endLoop;
         durationMin = Integer.parseInt(vars.sharedTimeInit);
@@ -159,8 +159,6 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTasks.set(0, quietTask);
         new QuietTaskGetPut().put(quietTasks);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
-//        new SetUpComingTask(this,"One Time");
-//        new VarsGetPut().put(vars, getApplicationContext());
         new SetUpComingTask(this, quietTasks, "Quit RightNow");
     }
 

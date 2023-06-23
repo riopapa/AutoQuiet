@@ -1,5 +1,6 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.ActivityMain.currIdx;
 import static com.urrecliner.autoquiet.ActivityMain.mainRecycleAdapter;
 import static com.urrecliner.autoquiet.ActivityMain.vars;
 
@@ -45,7 +46,6 @@ public class ActivityAddEdit extends AppCompatActivity {
     private boolean vibrate, agenda, sayDate;
     private QuietTask qT;
     private ArrayList<QuietTask> quietTasks;
-    private int currIdx;
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
@@ -62,8 +62,6 @@ public class ActivityAddEdit extends AppCompatActivity {
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         quietTasks = new QuietTaskGetPut().get(this);
-        Intent intent = getIntent();
-        currIdx = intent.getExtras().getInt("idx",-1);
         if (currIdx == -1)
             qT = new QuietTaskDefault().get();
         else
@@ -74,7 +72,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle((vars.addNewQuiet) ? R.string.add_table :R.string.update_table);
-        actionBar.setIcon(R.mipmap.let_me_quiet_mini);
+        actionBar.setIcon(R.drawable.auto_quite);
 //        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -161,6 +159,10 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         binding.end99.setOnClickListener(v -> {
             end99 = !end99;
+            if (end99)
+                endHour = 99;
+            else
+                endHour = begHour;
             binding.end99.setChecked(end99);
             numPos = 1;
             set_TimeForm();
@@ -402,28 +404,11 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void save_QuietTask() {
 
-        int any = 0;
-        for (int i = 0; i < 7; i++) {
-            if (week[i]) any++;
-        }
-        if (any == 0) {
-            Toast.makeText(getBaseContext(), R.string.at_least_one_day_selected, Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (getScreen2Vars()) return;
 
-        subject = binding.etSubject.getText().toString();
-        if (subject.length() == 0)
-            subject = getString(R.string.no_subject);
-        if (!end99) {
-            begHour = binding.timePickerBeg.getHour();
-            begMin = binding.timePickerBeg.getMinute();
-            endHour = (end99) ? 99 : binding.timePickerEnd.getHour();
-            endMin = binding.timePickerEnd.getMinute();
-        } else {
+        if (end99)
             save_AlarmTask();
-        }
-
-        if (agenda) {
+        else if (agenda) {
             save_AgendaTask();
         } else {
             qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
@@ -437,13 +422,36 @@ public class ActivityAddEdit extends AppCompatActivity {
         new SetUpComingTask(context, new QuietTaskGetPut().get(context),"Task Saved ");
     }
 
+    private boolean getScreen2Vars() {
+        int any = 0;
+        for (int i = 0; i < 7; i++) {
+            if (week[i]) any++;
+        }
+        if (any == 0) {
+            Toast.makeText(getBaseContext(), R.string.at_least_one_day_selected, Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        subject = binding.etSubject.getText().toString();
+        if (subject.length() == 0)
+            subject = getString(R.string.no_subject);
+        if (end99) {
+            begHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
+                    + Integer.parseInt(binding.numHH2.getText().toString());
+            if (!am && begHour < 12)
+                begHour += 12;
+            begMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
+                    + Integer.parseInt(binding.numMM2.getText().toString());
+        } else {
+            begHour = binding.timePickerBeg.getHour();
+            begMin = binding.timePickerBeg.getMinute();
+            endHour = binding.timePickerEnd.getHour();
+            endMin = binding.timePickerEnd.getMinute();
+        }
+        return false;
+    }
+
     private void save_AlarmTask() {
-        begHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
-                + Integer.parseInt(binding.numHH2.getText().toString());
-        if (!am && begHour < 12)
-            begHour += 12;
-        begMin =  Integer.parseInt(binding.numMM1.getText().toString()) * 10
-                + Integer.parseInt(binding.numMM2.getText().toString());
 
         long nowTime = System.currentTimeMillis();
         long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
@@ -462,7 +470,13 @@ public class ActivityAddEdit extends AppCompatActivity {
             week[weekDay] = true;
             Toast.makeText(context, "요일을 "+weekName[weekDay]+" 로 바꿈",Toast.LENGTH_SHORT).show();
         }
-        endHour = 99;
+        qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
+                week, active, vibrate, begLoop, endLoop, sayDate);
+        if (currIdx == -1)
+            quietTasks.add(qT);
+        else
+            quietTasks.set(currIdx, qT);
+        mainRecycleAdapter.notifyItemChanged(currIdx);
     }
 
     private void save_AgendaTask() {
@@ -517,11 +531,13 @@ public class ActivityAddEdit extends AppCompatActivity {
             new QuietTaskGetPut().put(quietTasks);
 
         } else if (id == R.id.action_copy) {
+            getScreen2Vars();
+            if (begMin == qT.begMin)
+                begMin++;
             QuietTask qtNew = new QuietTask(qT.subject,
-                    qT.begHour, qT.begMin + 1, qT.endHour, qT.endMin + 1,
-                    qT.week, qT.active, qT.vibrate,
-                    qT.begLoop, qT.endLoop, qT.sayDate);
-            quietTasks.add(currIdx, qtNew);
+                    begHour, begMin, endHour, endMin,
+                    week, active, vibrate, begLoop, endLoop, sayDate);
+            quietTasks.add(++currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
             mainRecycleAdapter.notifyItemChanged(currIdx);

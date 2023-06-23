@@ -99,7 +99,7 @@ public class NotificationService extends Service {
         }
         if (null == mBuilder) {
             mBuilder = new NotificationCompat.Builder(context,"default")
-                    .setSmallIcon(R.mipmap.let_me_quiet)
+                    .setSmallIcon(R.drawable.auto_quite)
                     .setContent(mRemoteViews)
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(false)

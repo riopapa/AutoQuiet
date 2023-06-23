@@ -39,6 +39,8 @@ public class ActivityMain extends AppCompatActivity  {
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
     int count;
+    public static int currIdx;
+
     Timer timer = null;
     TimerTask timerTask = null;
     long timeSaved;

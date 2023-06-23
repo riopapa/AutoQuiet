@@ -6,12 +6,12 @@
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
     <color name="notification_back">#8F2A5B8C</color>
-    <color name="colorNotification">#CEE3E1</color>
+    <color name="colorNotification">#C5E4E1</color>
     <color name="num_button">#042B28</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>
-    <color name="itemSelectBorder">#B4D1D1</color>
+    <color name="itemSelectBorder">#91BABA</color>
     <color name="itemSelectFill">#CAD3C0</color>
 
     <color name="itemAgendaFill">#CAF1A3</color>

@@ -4,7 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="#FFFF00" android:pathData="M14.4,6.8v1.6h3.2v-1.6h-3.2zM16.32,2.48c-0.32,-0.424 -0.64,-0.856 -0.96,-1.28 -0.792,0.592 -1.792,1.344 -2.56,1.92 0.32,0.424 0.64,0.856 0.96,1.28 0.768,-0.576 1.768,-1.32 2.56,-1.92zM3.2,5.2c-0.88,0 -1.6,0.72 -1.6,1.6v1.6c0,0.88 0.72,1.6 1.6,1.6h0.8v3.2h1.6v-3.2h0.8l4,2.4l0,-9.6l-4,2.4l-3.2,0zM12.4,7.6c0,-1.064 -0.464,-2.024 -1.2,-2.68v5.352c0.736,-0.648 1.2,-1.608 1.2,-2.672"/>
     <path android:fillColor="#00000000" android:pathData="M11,17 a3.5,3.5 0 1,1 0.1,0.1 zm5,-5l-5,5"
-          android:strokeColor="#880E4F"
+          android:strokeColor="#E78E4A"
           android:strokeWidth="1" />
 
 </vector>

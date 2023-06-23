@@ -1,5 +1,7 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.ActivityMain.currIdx;
+
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -90,13 +92,12 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             this.tvBegTime = itemView.findViewById(R.id.rmdBegTime);
             this.tvEndTime = itemView.findViewById(R.id.rmdEndTime);
             this.viewLine.setOnClickListener(v -> {
-                int qIdx = getBindingAdapterPosition();
-                qt = quietTasks.get(qIdx);
+                currIdx = getBindingAdapterPosition();
+                qt = quietTasks.get(currIdx);
                 Intent intent;
-                if (qIdx != 0) {
+                if (currIdx != 0) {
                     vars.addNewQuiet = false;
                     intent = new Intent(context, ActivityAddEdit.class);
-                    intent.putExtra("idx",qIdx);
                 } else {
                     intent = new Intent(context, ActivityOneTime.class);
                 }
@@ -129,15 +130,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         public boolean onSingleTapUp(MotionEvent e) {
             vars.addNewQuiet = false;
             new VarsGetPut().put(vars, context);
-            int qIdx = getBindingAdapterPosition();
+            currIdx = getBindingAdapterPosition();
             Intent intent;
-            if (qIdx != 0) {
+            if (currIdx != 0) {
                 intent = new Intent(context, ActivityAddEdit.class);
             } else {
                 intent = new Intent(context, ActivityOneTime.class);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("idx",qIdx);
             context.startActivity(intent);
 
             return true;
@@ -198,7 +198,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvBegLoop.setVisibility(View.GONE);
             holder.lvEndLoop.setVisibility(View.GONE);
         }
-        holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), R.color.itemNormalFill, null));
+        holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(context.getResources(), (position == currIdx) ? R.color.colorNotification: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
             holder.lvgCal.setImageResource(R.drawable.transperent);
