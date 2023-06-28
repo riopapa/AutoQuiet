@@ -27,6 +27,8 @@ public class QuietTask implements Serializable {
     public String calName;
     public boolean calTaskRepeat;
 
+    public long sortKey;    // 0번째 바로 조용히 는 -1
+
     // normal QuietTask
     public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin, boolean[] week, boolean active, boolean vibrate, int begLoop, int endLoop, boolean sayDate) {
         this.subject = subject;

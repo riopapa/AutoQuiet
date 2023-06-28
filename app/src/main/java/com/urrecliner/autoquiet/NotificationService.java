@@ -59,13 +59,10 @@ public class NotificationService extends Service {
         end = intent.getStringExtra("end");
         end99 = intent.getBooleanExtra("end99", false);
         subject = intent.getStringExtra("subject");
-        icon = intent.getIntExtra("icon", R.drawable.no_disturb);
-        if (icon == R.drawable.no_disturb)
+        icon = intent.getIntExtra("icon", R.drawable.stop_talking);
+        if (icon == R.drawable.stop_talking)
             Log.w("onStartCommand", "Icon is missed");
         updateRemoteViews();
-//        boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
-//        if (isUpdate)
-//            return START_STICKY;
 
         int operation = -1;
         try {

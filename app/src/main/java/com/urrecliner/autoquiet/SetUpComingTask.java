@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class SetUpComingTask {
     long nextTime;
-    static int icon, loop;
+    static int icon, several;
     static String timeInfoS, timeInfoF, timeInfo, soonOrUntill, subject, msg;
 
     public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
@@ -60,19 +60,19 @@ public class SetUpComingTask {
                     + " " + soonOrUntill + " " + begEnd;
             if  (begEnd.equals("S"))
                 msg += " ~ " + timeInfoF;
-            loop = 0;
+            several = (qT.sayDate) ? 2: 0;  // finish 인데 sayDate 가 있으면 2번 울림
             icon = (qT.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
         } else {
             timeInfo = timeInfoS;
             soonOrUntill = "알림";
             msg = headInfo + "\n" + timeInfo + " " + subject;
             icon = new Alarm99Icon().setId(qT.begLoop, qT.endLoop);
-            loop = (icon == R.drawable.bell_several) ? 3:0;
+            several = (icon == R.drawable.bell_several) ? 3:0;
         }
 
         new Utils(context).log("SetUpComingTask",msg);
         updateNotiBar(context);
-        new SetAlarmTime().request(context, qT, nextTime, begEnd, loop);
+        new SetAlarmTime().request(context, qT, nextTime, begEnd, several);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -88,7 +88,6 @@ public class SetUpComingTask {
         intent.putExtra("beg", timeInfo);
         intent.putExtra("end", soonOrUntill);
         intent.putExtra("subject", subject);
-        intent.putExtra("isUpdate", true);
         intent.putExtra("end99", false);
         intent.putExtra("icon", icon);
         context.startForegroundService(intent);

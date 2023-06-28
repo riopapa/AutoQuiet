@@ -10,7 +10,7 @@ import com.urrecliner.autoquiet.R;
 
 public class Sounds {
 
-    public enum BEEP {NOTY, ALARM, INFO}
+    public enum BEEP {NOTY, ALARM, INFO, BBEEPP}
 
     public void beep(Context context, BEEP e) {
 
@@ -19,6 +19,7 @@ public class Sounds {
             case NOTY:    soundID = R.raw.glass_drop_and_roll; break;
             case ALARM:   soundID = R.raw.tympani_bing; break;
             case INFO:   soundID = R.raw.wood_plank_flicks; break;
+            case BBEEPP:   soundID = R.raw.beep_beep; break;
         }
         SoundPool.Builder builder;
         AudioAttributes audioAttributes = new AudioAttributes.Builder()

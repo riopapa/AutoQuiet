@@ -34,7 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     QuietTask qt;
     int qtIdx;
     Context context;
-    int loop;
+    int several;
     String caseSFO;
     Vars vars;
     final int STOP_SPEAK = 1022;
@@ -48,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         qt = (QuietTask) args.getSerializable("quietTask");
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
-        loop = Objects.requireNonNull(intent.getExtras()).getInt("loop", 0);
+        several = Objects.requireNonNull(intent.getExtras()).getInt("several", 0);
         icon = new Alarm99Icon().setId(qt.begLoop, qt.endLoop);
 
         vars = new VarsGetPut().get(context);
@@ -69,37 +69,39 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         assert caseSFO != null;
-        boolean beep = vars.sharedManner && (qt.endLoop == 1);
 
         switch (caseSFO) {
             case "S":   // beg?
                 say_Started();
                 break;
             case "F":   // end
-                new MannerMode().turn2Normal(beep, context);
                 say_Finished();
                 break;
             case "O":   // onetime
-                new MannerMode().turn2Normal(beep, context);
-                if (qt.endLoop > 1) {
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
-                                        " 입니다. 무음 모드가 끝났습니다";
-                            myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-                        }
-                    }, 3000);
-                }
-                qt.setActive(false);
-                quietTasks.set(0, qt);
-                new QuietTaskGetPut().put(quietTasks);
-                new SetUpComingTask(context, quietTasks, "After oneTime");
-            break;
+                say_OneTimeFinished(context);
+                break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
         new VarsGetPut().put(vars, context);
+    }
+
+    private void say_OneTimeFinished(Context context) {
+        new MannerMode().turn2Normal(vars.sharedManner && (qt.endLoop == 1), context);
+        if (qt.endLoop > 1) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
+                                " 입니다. 무음 모드가 끝났습니다";
+                    myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+                }
+            }, 3000);
+        }
+        qt.setActive(false);
+        quietTasks.set(0, qt);
+        new QuietTaskGetPut().put(quietTasks);
+        new SetUpComingTask(context, quietTasks, "After oneTime");
     }
 
     void say_Started() {
@@ -121,11 +123,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void say_Started99() {
+        if (qt.begLoop != 0)
+            new Sounds().beep(context, Sounds.BEEP.NOTY);
         String subject = qt.subject;
         icon = new Alarm99Icon().setId(qt.begLoop, qt.endLoop);
         if      (icon == R.drawable.bell_several) {
             bell_Several(subject);
-            if (loop != 0)
+            if (several != 0)
                 return;
         }
         else if (icon == R.drawable.bell_tomorrow)
@@ -144,7 +148,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void bellOnceThenGone(String subject) {
-        new Sounds().beep(context, Sounds.BEEP.NOTY);
         String say = subject + " 를 확인하면 조용해 집니다";
         myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
         qt.active = false;
@@ -153,33 +156,29 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void bellOneTime(String subject) {
-        new Sounds().beep(context, Sounds.BEEP.NOTY);
         String say = subject + " 를 잊지 마세요";
         myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
     }
 
     private void bell_Several(String subject) {
-        if (loop > 0) {
-            loop--;
-            String say;
+        if (several > 0) {
+            several--;
             if (isSilentNow()) {
                 new VibratePhone(context);
-                say = subject;
-                loop = 0;
+                new Sounds().beep(context, Sounds.BEEP.BBEEPP);
             } else {
-                say = subject + " 를 확인하세요, " +
-                        ((loop == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+                String say = subject + " 를 확인하세요, " +
+                        ((several == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
+                myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
-            myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-            long nextTime = System.currentTimeMillis() + 70 * 1000;
-            new SetAlarmTime().request(context, qt, nextTime, "S", loop);   // loop 0 : no more
+            long nextTime = System.currentTimeMillis() + 90 * 1000;
+            new SetAlarmTime().request(context, qt, nextTime, "S", several);   // several 0 : no more
             Intent uIntent = new Intent(context, NotificationService.class);
             uIntent.putExtra("beg", nowTimeToString(nextTime));
             uIntent.putExtra("end", "다시");
             uIntent.putExtra("end99", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
-            uIntent.putExtra("isUpdate", true);
             context.startForegroundService(uIntent);
         } else {
             String say = addPostPosition(subject) + "끝났습니다";
@@ -234,16 +233,36 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     void say_Finished() {
+        new MannerMode().turn2Normal(vars.sharedManner && (qt.endLoop == 1), context);
+        if (!qt.sayDate) {
+            say_FinishedNormal();
+        } else {
+            new Timer().schedule(new TimerTask() {
+                public void run () {
+                    if (several > 0) {
+                        say_FinishDated();
+                        long nextTime = System.currentTimeMillis() + 120 * 1000;
+                        new SetAlarmTime().request(context, qt, nextTime, "F", --several);
+                        Intent uIntent = new Intent(context, NotificationService.class);
+                        uIntent.putExtra("beg", nowTimeToString(nextTime));
+                        uIntent.putExtra("end", "반복"+several);
+                        uIntent.putExtra("end99", false);
+                        uIntent.putExtra("subject", qt.subject);
+                        uIntent.putExtra("icon", R.drawable.phone_normal);
+                        context.startForegroundService(uIntent);
+                        return;
+                    }
+                    new SetUpComingTask(context, quietTasks, "say_FinDate");
+                }
+            }, 3000);
+        }
+    }
+
+    private void say_FinishedNormal() {
         new Timer().schedule(new TimerTask() {
             public void run () {
                 if (qt.endLoop > 1) {
-                    new Sounds().beep(context, Sounds.BEEP.NOTY);
-                    String subject = qt.subject;
-                    String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
-                    String t = nowTimeToString(System.currentTimeMillis());
-                    String s = d + t +  " 입니다. ";
-                    s += addPostPosition(subject) + "끝났습니다";
-                    myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+                    say_FinishDated();
                 } else if (qt.endLoop == 1) {
                     new Sounds().beep(context, Sounds.BEEP.ALARM);
                 }
@@ -256,10 +275,19 @@ public class AlarmReceiver extends BroadcastReceiver {
                         }
                     }
                 }
-                new SetUpComingTask(context, quietTasks, "say_Finished()");
+                new SetUpComingTask(context, quietTasks, "say_FinishNormal()");
                 new Utils(context).deleteOldLogFiles();
             }
         }, 3000);
+    }
+
+    private void say_FinishDated() {
+        new Sounds().beep(context, Sounds.BEEP.NOTY);
+        String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
+        String t = nowTimeToString(System.currentTimeMillis());
+        String s = d + t +  " 입니다. ";
+        s += addPostPosition(qt.subject) + "끝났습니다";
+        myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
     }
 
     private void readyTTS() {
@@ -304,9 +332,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     String nowDateToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault());
-        final SimpleDateFormat sdfWeek = new SimpleDateFormat(" EEEE ", Locale.US);
-        String s = sdfTime.format(time) + sdfWeek.format(time);
+        String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
         return s + s;
     }
     String nowTimeToString(long time) {

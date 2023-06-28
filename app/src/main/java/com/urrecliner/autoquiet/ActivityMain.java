@@ -29,6 +29,7 @@ import com.urrecliner.autoquiet.Sub.Permission;
 import com.urrecliner.autoquiet.Sub.SharedPrefer;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
+import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -142,6 +143,11 @@ public class ActivityMain extends AppCompatActivity  {
             startActivityForResult(intent, 22);
             return true;
 
+        } else if (menuItem == R.id.action_sort) {
+            mainRecycleAdapter.sort();
+            mainRecycleAdapter.notifyDataSetChanged();
+            return true;
+
         } else if (menuItem == R.id.action_setting) {
             new VarsGetPut().put(vars, pContext);
             startActivityForResult(new Intent(this, ActivityPrefer.class),33);
@@ -169,6 +175,7 @@ public class ActivityMain extends AppCompatActivity  {
         super.onActivityResult(requestCode, resultCode, data);
         mainRecycleAdapter.notifyDataSetChanged();
     }
+
 
     private void showMainList() {
 

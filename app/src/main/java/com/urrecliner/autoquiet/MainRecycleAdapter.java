@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.urrecliner.autoquiet.Sub.Alarm99Icon;
+import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
@@ -29,6 +30,7 @@ import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder>
@@ -273,6 +275,24 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 new ClearAllTasks(context);
         }
         return quietTasks.size();
+    }
+
+    public void sort() {
+
+        for (int i = 1; i < quietTasks.size(); i++) {
+            QuietTask qt = quietTasks.get(i);
+            if (qt.active) {
+                if (qt.endHour == 99) {
+                    qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
+                } else
+                    qt.sortKey = i;
+            } else
+                qt.sortKey = System.currentTimeMillis() + (long) 0x2FFFFFFF + (long) i * 100;
+            quietTasks.set(i, qt);
+        }
+        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
+        new QuietTaskGetPut().put(quietTasks);
+        Toast.makeText(context, "Sorted by next Time", Toast.LENGTH_SHORT).show();
     }
 
     @Override

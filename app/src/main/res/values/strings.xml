@@ -34,5 +34,6 @@
     <string name="reset_table">이미 설정되어 있는 테이블을 다 삭제하고 초기화 합니다</string>
     <string name="reset_title">데이터 초기화</string>
     <string name="click_to_stop_speaking">Click to stop speaking</string>
+    <string name = "action_sort">소트</string>
 
 </resources>
