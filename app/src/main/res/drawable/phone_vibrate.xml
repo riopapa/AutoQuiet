@@ -4,16 +4,16 @@
         android:viewportWidth="24"
         android:width="48dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
-  <path android:strokeColor="#AC721C"
+  <path android:strokeColor="#16F1CD"
         android:strokeLineJoin="round"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:pathData="
-          M7,2h10v20h-10z
-          M8,17h8z
-          M11,19.5h2z
+          M7,3h10v18h-10z
+          M8,16h8z
+          M11,18.5h2z
            "/>
-  <path android:strokeColor="#FF0000"
+  <path android:strokeColor="#FEF08A"
         android:strokeLineJoin="round"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
@@ -21,7 +21,7 @@
           M3,4l1,4l-1,4l1,4l-1,4
           M21,4l-1,4l1,4l-1,4l1,4
        " />
-  <path android:strokeColor="#FEF08A"
+  <path android:strokeColor="#FE403A"
         android:strokeLineJoin="round"
         android:strokeWidth="0.6"
         android:strokeLineCap="round"

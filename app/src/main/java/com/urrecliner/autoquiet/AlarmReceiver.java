@@ -48,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         qt = (QuietTask) args.getSerializable("quietTask");
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
-        several = Objects.requireNonNull(intent.getExtras()).getInt("several", 0);
+        several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
         icon = new Alarm99Icon().setId(qt.begLoop, qt.endLoop);
 
         vars = new VarsGetPut().get(context);
@@ -98,7 +98,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 }
             }, 3000);
         }
-        qt.setActive(false);
+        qt.active = false;
         quietTasks.set(0, qt);
         new QuietTaskGetPut().put(quietTasks);
         new SetUpComingTask(context, quietTasks, "After oneTime");
@@ -285,7 +285,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Sounds().beep(context, Sounds.BEEP.NOTY);
         String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
         String t = nowTimeToString(System.currentTimeMillis());
-        String s = d + t +  " 입니다. ";
+        String s =  ((several == 1) ? "마지막 안내입니다 " : "") + d + t +  " 입니다. ";
         s += addPostPosition(qt.subject) + "끝났습니다";
         myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
     }

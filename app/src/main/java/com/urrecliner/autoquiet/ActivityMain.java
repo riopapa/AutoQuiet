@@ -191,15 +191,15 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
-//        super.onBackPressed();
-//    }
-
     @Override
-    protected void onStop() {
-        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
-        super.onStop();
+    public void onBackPressed() {
+        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
+        super.onBackPressed();
     }
+
+//    @Override
+//    protected void onStop() {
+//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
+//        super.onStop();
+//    }
 }

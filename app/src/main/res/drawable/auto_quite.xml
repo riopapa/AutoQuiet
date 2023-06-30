@@ -2,7 +2,7 @@
         android:viewportHeight="24" android:viewportWidth="24"
         android:width="48dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:strokeColor="#9C713B"
+    <path android:strokeColor="#16F1CD"
           android:strokeLineJoin="round"
           android:strokeWidth="1.5"
           android:strokeLineCap="round"

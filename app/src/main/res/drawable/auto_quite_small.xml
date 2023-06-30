@@ -2,7 +2,7 @@
         android:viewportHeight="24" android:viewportWidth="24"
         android:width="24dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:strokeColor="#9C713B"
+    <path android:strokeColor="#16F1CD"
           android:strokeLineJoin="round"
           android:strokeWidth="1.5"
           android:strokeLineCap="round"
@@ -19,7 +19,7 @@
           M2,4l1,2l-1,2l1,2l-1,2l1,2l-1,2l1,2l-1,2
           M21.5,4l-1,2l1,2l-1,2l1,2l-1,2l1,2l-1,2l1,2
            " />
-    <path android:strokeColor="#F9A825"
+    <path android:strokeColor="#16F1CD"
           android:strokeLineJoin="round"
           android:strokeWidth=".8"
           android:strokeLineCap="round"

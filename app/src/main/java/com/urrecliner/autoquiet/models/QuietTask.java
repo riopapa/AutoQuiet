@@ -73,7 +73,4 @@ public class QuietTask implements Serializable {
         this.week[weekNbr] = true;
         this.sayDate = true;
     }
-
-    public void setSubject(String subject) { this.subject = subject; }
-    public void setActive(boolean TorF) { this.active = TorF; }
 }

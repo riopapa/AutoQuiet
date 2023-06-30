@@ -60,7 +60,7 @@ public class SetUpComingTask {
                     + " " + soonOrUntill + " " + begEnd;
             if  (begEnd.equals("S"))
                 msg += " ~ " + timeInfoF;
-            several = (qT.sayDate) ? 2: 0;  // finish 인데 sayDate 가 있으면 2번 울림
+            several = (qT.sayDate) ? 3: 0;  // finish 인데 sayDate 가 있으면 여러 번 울림
             icon = (qT.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
         } else {
             timeInfo = timeInfoS;
@@ -74,13 +74,6 @@ public class SetUpComingTask {
         updateNotiBar(context);
         new SetAlarmTime().request(context, qT, nextTime, begEnd, several);
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (IsScreen.On(context))
-                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private static void updateNotiBar(Context context) {

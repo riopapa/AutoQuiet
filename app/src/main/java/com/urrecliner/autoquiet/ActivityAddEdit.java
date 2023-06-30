@@ -419,7 +419,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.set(currIdx, qT);
         }
         new QuietTaskGetPut().put(quietTasks);
-        new SetUpComingTask(context, new QuietTaskGetPut().get(context),"Task Saved ");
+        new SetUpComingTask(context, quietTasks,"Task Saved ");
     }
 
     private boolean getScreen2Vars() {
