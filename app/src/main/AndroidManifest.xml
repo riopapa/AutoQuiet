@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+          package="com.urrecliner.autoquiet"
+          xmlns:tools="http://schemas.android.com/tools">
 
-<!--    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />-->
-<!--    <uses-permission android:name = "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,7 +11,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
@@ -44,15 +42,13 @@
         <activity android:name=".ActivityOneTime" />
         <activity android:name=".ActivityPrefer" />
 
-        <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="true">
+        <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="com.urrecliner.autoquiet" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="false"
+            android:name=".BootReceiver" android:enabled="true" android:exported="false"
             android:label="BOOTReceiver">
             <intent-filter >
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

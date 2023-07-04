@@ -9,6 +9,7 @@ public class CalculateNext {
         nextDay.set(Calendar.HOUR_OF_DAY, hour);
         nextDay.set(Calendar.MINUTE, min);
         nextDay.set(Calendar.SECOND, 0);
+        nextDay.set(Calendar.MILLISECOND, 0);
 
         int DD = nextDay.get(Calendar.DATE);
         int WK = nextDay.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday

@@ -196,7 +196,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
             holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
         } else {
-            holder.lvVibrate.setImageResource(new Alarm99Icon().setId(qt.begLoop, qt.endLoop));
+            holder.lvVibrate.setImageResource(new Alarm99Icon().getRscId(qt.begLoop, qt.endLoop));
             holder.lvBegLoop.setVisibility(View.GONE);
             holder.lvEndLoop.setVisibility(View.GONE);
         }

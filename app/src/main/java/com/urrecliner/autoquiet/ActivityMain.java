@@ -99,22 +99,22 @@ public class ActivityMain extends AppCompatActivity  {
         Log.w("Main", "onResume is called");
         new Utils(pContext).deleteOldLogFiles();
         showMainList();
-        count = 0;
-
-        timeSaved = System.currentTimeMillis();
-        if (timer != null)
-            timer.cancel();
-        if (timerTask != null)
-            timerTask.cancel();
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run () {
-                Log.w("Main", count++ + ") timeGap = "+((System.currentTimeMillis() - timeSaved)/1000)+" secs");
-                timeSaved = System.currentTimeMillis();
-            }
-        };
-        timer.schedule(timerTask, 27*60000, 27*60000);
+//        count = 0;
+//
+//        timeSaved = System.currentTimeMillis();
+//        if (timer != null)
+//            timer.cancel();
+//        if (timerTask != null)
+//            timerTask.cancel();
+//        timer = new Timer();
+//        timerTask = new TimerTask() {
+//            @Override
+//            public void run () {
+//                Log.w("Main", count++ + ") timeGap = "+((System.currentTimeMillis() - timeSaved)/1000)+" secs");
+//                timeSaved = System.currentTimeMillis();
+//            }
+//        };
+//        timer.schedule(timerTask, 27*60000, 27*60000);
         super.onResume();
     }
 
@@ -191,15 +191,15 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
 
-    @Override
-    public void onBackPressed() {
-        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
-        super.onBackPressed();
-    }
-
 //    @Override
-//    protected void onStop() {
-//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
-//        super.onStop();
+//    public void onBackPressed() {
+//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
+//        super.onBackPressed();
 //    }
+
+    @Override
+    protected void onStop() {
+        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
+        super.onStop();
+    }
 }

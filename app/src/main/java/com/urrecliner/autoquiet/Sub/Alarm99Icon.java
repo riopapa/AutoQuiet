@@ -23,7 +23,7 @@ public class Alarm99Icon {
             R.drawable.bell_once_gone  // 6 meaning less
     };
 
-    public int setId(int begLoop, int endLoop) {
+    public int getRscId(int begLoop, int endLoop) {
         if (begLoop == 0) {
             icon = 2;   // off, meaning less
         } else if (begLoop == 1) {

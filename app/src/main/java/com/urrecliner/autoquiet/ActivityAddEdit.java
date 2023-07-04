@@ -5,7 +5,6 @@ import static com.urrecliner.autoquiet.ActivityMain.mainRecycleAdapter;
 import static com.urrecliner.autoquiet.ActivityMain.vars;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -286,8 +285,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         String s = "";
         int icon, drawIcon;
         if (end99) {
-            icon = new Alarm99Icon().setId(begLoop, endLoop);
-
+            icon = new Alarm99Icon().getRscId(begLoop, endLoop);
             s = "의미 없는 벨 조합";
             if      (icon == R.drawable.bell_several)
                 s = "벨과 제목을 여러 번 울려줌";
@@ -297,14 +295,13 @@ public class ActivityAddEdit extends AppCompatActivity {
                 s = "한번만 울리고 끄읏";
             else if (icon == R.drawable.bell_once_gone)
                 s = "벨 한 번 울린 후 사라짐";
+            binding.iVVibrate.setImageResource(icon);
 
         } else {
             s = "기간이 있는 경우";
-            icon = vibrate ? R.drawable.phone_vibrate : R.drawable.phone_normal;
+            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate:R.drawable.phone_off);
         }
-
         binding.dateDesc.setText(s);
-        binding.iVVibrate.setImageResource(icon);
     }
     private void set_TimeForm() {
         binding.end99.setChecked(end99);
@@ -335,7 +332,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.numDateTime.setVisibility(View.VISIBLE);
             binding.timePickerBeg.setVisibility(View.GONE);
             binding.timePickerEnd.setVisibility(View.GONE);
-            binding.iVVibrate.setImageResource(new Alarm99Icon().setId(begLoop, endLoop));
+            binding.iVVibrate.setImageResource(new Alarm99Icon().getRscId(begLoop, endLoop));
             show_ResultTime();
         }
     }
