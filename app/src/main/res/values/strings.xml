@@ -28,7 +28,7 @@
     <string name="add_table"> 추가</string>
     <string name="no_subject">제목이 없어요</string>
     <string name="at_least_one_day_selected">적어도 하루는 선택해야 하지 않을까요?</string>
-    <string name="date_time">23:59</string>
+    <string name="date_time">23:59 까지</string>
     <string name="subject_name">Weekly DayTime</string>
     <string name="startFinish">시작</string>
     <string name="reset_table">이미 설정되어 있는 테이블을 다 삭제하고 초기화 합니다</string>

@@ -133,16 +133,14 @@ public class NotificationService extends Service {
         mBuilder.setSmallIcon(icon);
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
-        mRemoteViews.setTextViewText(R.id.beg_time, beg);
-        mRemoteViews.setTextViewText(R.id.end_time, end);
+        mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
         mRemoteViews.setImageViewResource(R.id.right_now, R.drawable.right_now);
         mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
         mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
-        mRemoteViews.setTextViewText(R.id.beg_timeN, begN);
-        mRemoteViews.setTextViewText(R.id.end_timeN, endN);
+        mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
         startForeground(100, mBuilder.build());
     }
 
