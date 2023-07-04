@@ -125,7 +125,6 @@ public class SetUpComingTask {
         intent.putExtra("begN", timeInfoN);
         intent.putExtra("endN", soonOrUntillN);
         intent.putExtra("subjectN", subjectN);
-        intent.putExtra("end99N", false);
         intent.putExtra("iconN", iconN);
         context.startForegroundService(intent);
     }
