@@ -3,6 +3,7 @@ package com.urrecliner.autoquiet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -14,6 +15,7 @@ import com.urrecliner.autoquiet.Sub.Alarm99Icon;
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.Sub.VibratePhone;
+import com.urrecliner.autoquiet.models.NextTwoTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.MannerMode;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
@@ -173,14 +175,25 @@ public class AlarmReceiver extends BroadcastReceiver {
                         ((several == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
+            NextTwoTasks n2 = new NextTwoTasks(quietTasks);
+
             long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 90) * 1000;
             new SetAlarmTime().request(context, qt, nextTime, "S", several);   // several 0 : no more
             Intent uIntent = new Intent(context, NotificationService.class);
+
             uIntent.putExtra("beg", nowTimeToString(nextTime));
             uIntent.putExtra("end", "다시");
             uIntent.putExtra("end99", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
+
+            SharedPreferences sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
+            uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
+            uIntent.putExtra("endN", n2.soonOrUntil);
+            uIntent.putExtra("end99N", true);
+            uIntent.putExtra("subjectN", n2.subject);
+            uIntent.putExtra("icon", n2.icon);
+
             context.startForegroundService(uIntent);
         } else {
             String say = addPostPosition(subject) + "끝났습니다";
@@ -249,12 +262,24 @@ public class AlarmReceiver extends BroadcastReceiver {
                         say_FinishDated();
                         long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 180) * 1000;
                         new SetAlarmTime().request(context, qt, nextTime, "F", --several);
+
+                        SharedPreferences sharedPref
+                                = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+                        String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
+                        String endN = sharedPref.getString("endN", "시작");
+                        String subjectN = sharedPref.getString("subjectN", "Next Item");
+                        int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
+
                         Intent uIntent = new Intent(context, NotificationService.class);
                         uIntent.putExtra("beg", nowTimeToString(nextTime));
                         uIntent.putExtra("end", "반복"+several);
                         uIntent.putExtra("end99", false);
                         uIntent.putExtra("subject", qt.subject);
                         uIntent.putExtra("icon", R.drawable.phone_normal);
+                        uIntent.putExtra("begN", begN);
+                        uIntent.putExtra("endN", endN);
+                        uIntent.putExtra("subjectN", subjectN);
+                        uIntent.putExtra("iconN", iconN);
                         context.startForegroundService(uIntent);
                         return;
                     }

@@ -67,7 +67,7 @@ public class NotificationService extends Service {
         iconN = intent.getIntExtra("iconN", 0);
         if (icon == 0) {
             Log.w("onStartCommand", "Icon is missed");
-            icon = R.drawable.auto_quite_small;
+            return START_NOT_STICKY;
         }
         if (iconN == 0)
             iconN = R.drawable.auto_quite_small;
@@ -134,8 +134,8 @@ public class NotificationService extends Service {
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
-        mRemoteViews.setImageViewResource(R.id.right_now, R.drawable.right_now);
-        mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
+//        mRemoteViews.setImageViewResource(R.id.right_now, R.drawable.right_now);
+//        mRemoteViews.setImageViewResource(R.id.no_speak, R.drawable.stop_talking);
         mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
