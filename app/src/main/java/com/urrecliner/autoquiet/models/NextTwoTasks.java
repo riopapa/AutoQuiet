@@ -1,7 +1,7 @@
 package com.urrecliner.autoquiet.models;
 
 import com.urrecliner.autoquiet.R;
-import com.urrecliner.autoquiet.Sub.Alarm99Icon;
+import com.urrecliner.autoquiet.Sub.AlarmIcon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 
 import java.util.ArrayList;
@@ -25,22 +25,19 @@ public class NextTwoTasks {
                     saveIdx = idx;
                     subject = qThis.subject;
                     begEnd = "S";
-                    if (qThis.endHour != 99)
-                        icon = (qThis.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
-                    else
-                        icon = new Alarm99Icon().getRscId(qThis.begLoop, qThis.endLoop);
+                    icon = new AlarmIcon().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
                     soonOrUntil = "예정";
                 }
-                if (qThis.endHour != 99) {
-                    long thisEnd = CalculateNext.calc(true, qThis.endHour, qThis.endMin, qThis.week, (qThis.begHour > qThis.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
-                    if (thisEnd < nextTime) {
-                        nextTime = thisEnd;
-                        saveIdx = idx;
-                        subject = qThis.subject;
-                        begEnd = (idx == 0) ? "O" : "F";
-                        icon = (qThis.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
-                        soonOrUntilN = "까지";
-                    }
+                if (qThis.endHour == 99)
+                    continue;
+                long thisEnd = CalculateNext.calc(true, qThis.endHour, qThis.endMin, qThis.week, (qThis.begHour > qThis.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+                if (thisEnd < nextTime) {
+                    nextTime = thisEnd;
+                    saveIdx = idx;
+                    subject = qThis.subject;
+                    begEnd = (idx == 0) ? "O" : "F";
+                    icon = new AlarmIcon().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+                    soonOrUntilN = "까지";
                 }
             }
         }
@@ -53,22 +50,19 @@ public class NextTwoTasks {
                     begEndN = "S";
                     saveIdxN = idx;
                     subjectN = qNxt.subject;
-                    if (qNxt.endHour != 99)
-                        icon = (qNxt.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
-                    else
-                        icon = new Alarm99Icon().getRscId(qNxt.begLoop, qNxt.endLoop);
+                    iconN = new AlarmIcon().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
                     soonOrUntilN = "예정";
                 }
-                if (qNxt.endHour != 99) {
-                    long nxtEnd = CalculateNext.calc(true, qNxt.endHour, qNxt.endMin, qNxt.week, (qNxt.begHour > qNxt.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
-                    if (nxtEnd < nextTimeN && nxtEnd > nextTime) {
-                        nextTimeN = nxtEnd;
-                        begEndN = (idx == 0) ? "O" : "F";
-                        saveIdxN = idx;
-                        subjectN = qNxt.subject;
-                        iconN = (qNxt.vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_normal;
-                        soonOrUntilN = "까지";
-                    }
+                if (qNxt.endHour == 99)
+                    continue;
+                long nxtEnd = CalculateNext.calc(true, qNxt.endHour, qNxt.endMin, qNxt.week, (qNxt.begHour > qNxt.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+                if (nxtEnd < nextTimeN && nxtEnd > nextTime) {
+                    nextTimeN = nxtEnd;
+                    begEndN = (idx == 0) ? "O" : "F";
+                    saveIdxN = idx;
+                    subjectN = qNxt.subject;
+                    iconN = new AlarmIcon().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+                    soonOrUntilN = "까지";
                 }
             }
         }

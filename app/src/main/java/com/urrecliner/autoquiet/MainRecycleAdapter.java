@@ -20,7 +20,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.Sub.Alarm99Icon;
+import com.urrecliner.autoquiet.Sub.AlarmIcon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
@@ -196,7 +196,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
             holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
         } else {
-            holder.lvVibrate.setImageResource(new Alarm99Icon().getRscId(qt.begLoop, qt.endLoop));
+            holder.lvVibrate.setImageResource(new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate,
+                    qt.begLoop, qt.endLoop));
             holder.lvBegLoop.setVisibility(View.GONE);
             holder.lvEndLoop.setVisibility(View.GONE);
         }

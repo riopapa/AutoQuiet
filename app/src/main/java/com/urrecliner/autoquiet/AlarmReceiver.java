@@ -11,7 +11,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.urrecliner.autoquiet.Sub.Alarm99Icon;
+import com.urrecliner.autoquiet.Sub.AlarmIcon;
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.Sub.VibratePhone;
@@ -51,7 +51,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-        icon = new Alarm99Icon().getRscId(qt.begLoop, qt.endLoop);
+        icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
 
         vars = new VarsGetPut().get(context);
         readyTTS();
@@ -130,7 +130,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (qt.begLoop != 0)
             new Sounds().beep(context, Sounds.BEEP.NOTY);
         String subject = qt.subject;
-        icon = new Alarm99Icon().getRscId(qt.begLoop, qt.endLoop);
+        icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
         if      (icon == R.drawable.bell_several) {
             bell_Several(subject);
             if (several != 0)

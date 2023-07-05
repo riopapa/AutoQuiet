@@ -22,7 +22,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.urrecliner.autoquiet.Sub.Alarm99Icon;
+import com.urrecliner.autoquiet.Sub.AlarmIcon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActivityAddEdit extends AppCompatActivity {
 
@@ -50,8 +51,6 @@ public class ActivityAddEdit extends AppCompatActivity {
     private Context context;
     private int xSize, numPos;
     final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
-
-    private int alarmIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,20 +271,9 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void show_Info() {
 
-        int [] icons = {
-                R.drawable.phone_normal, // 0
-                R.drawable.phone_vibrate,   // 1
-                R.drawable.phone_off, // 2
-                R.drawable.bell_several,   // 3
-                R.drawable.bell_tomorrow, // 4
-                R.drawable.bell_onetime, // 5
-                R.drawable.bell_once_gone  // 6 meaning less
-        };
-
-        String s = "";
-        int icon, drawIcon;
+        String s;
+        int icon = new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop);
         if (end99) {
-            icon = new Alarm99Icon().getRscId(begLoop, endLoop);
             s = "의미 없는 벨 조합";
             if      (icon == R.drawable.bell_several)
                 s = "벨과 제목을 여러 번 울려줌";
@@ -305,6 +293,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
     private void set_TimeForm() {
         binding.end99.setChecked(end99);
+        AtomicInteger icon = new AtomicInteger(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
         if (!end99) {    // normal beg, end
             if (endHour == 99)
                 endHour = begHour;
@@ -316,15 +305,16 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.timePickerEnd.setHour(endHour);
             binding.timePickerEnd.setMinute(endMin);
             binding.timePickerEnd.setHour(endHour); binding.timePickerEnd.setMinute(endMin);
-            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+            binding.iVVibrate.setImageResource(icon.get());
             binding.iVVibrate.setOnClickListener(v -> {
                 vibrate = !vibrate;
-                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+                icon.set(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
+                binding.iVVibrate.setImageResource(icon.get());
                 v.invalidate();
             });
             binding.tVVibrate.setOnClickListener(v -> {
                 vibrate = !vibrate;
-                binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate : R.drawable.phone_off);
+                icon.set(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
                 v.invalidate();
             });
 
@@ -332,7 +322,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.numDateTime.setVisibility(View.VISIBLE);
             binding.timePickerBeg.setVisibility(View.GONE);
             binding.timePickerEnd.setVisibility(View.GONE);
-            binding.iVVibrate.setImageResource(new Alarm99Icon().getRscId(begLoop, endLoop));
+            binding.iVVibrate.setImageResource(icon.get());
             show_ResultTime();
         }
     }

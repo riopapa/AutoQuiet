@@ -3,6 +3,7 @@ package com.urrecliner.autoquiet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.models.NextTwoTasks;
@@ -19,6 +20,7 @@ public class SetUpComingTask {
     public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
         n2 = new NextTwoTasks(quietTasks);
+        Log.w("icon", n2.icon+" vs "+n2.iconN);
         QuietTask qN = quietTasks.get(n2.saveIdxN);
         QuietTask qT = quietTasks.get(n2.saveIdx);
         timeInfoS = getHourMin(qT.begHour, qT.begMin);
