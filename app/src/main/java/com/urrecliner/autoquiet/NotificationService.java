@@ -20,7 +20,7 @@ public class NotificationService extends Service {
     NotificationManager mNotificationManager;
     private RemoteViews mRemoteViews;
     String beg, subject, end, begN, subjectN, endN;
-    int icon, iconN;
+    int icon, iconN, iconNow;
     boolean end99 = false, end99N = false;
     Context context;
 
@@ -65,6 +65,7 @@ public class NotificationService extends Service {
         subjectN = intent.getStringExtra("subjectN");
         icon = intent.getIntExtra("icon", 0);
         iconN = intent.getIntExtra("iconN", 0);
+        iconNow = intent.getIntExtra("iconNow", 0);
         if (icon == 0) {
             Log.w("onStartCommand", "Icon is missed");
             return START_NOT_STICKY;
@@ -130,7 +131,7 @@ public class NotificationService extends Service {
 
     void updateRemoteViews() {
 
-        mBuilder.setSmallIcon(icon);
+        mBuilder.setSmallIcon(iconNow);
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);

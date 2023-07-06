@@ -20,7 +20,6 @@ public class SetUpComingTask {
     public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
         n2 = new NextTwoTasks(quietTasks);
-        Log.w("icon", n2.icon+" vs "+n2.iconN);
         QuietTask qN = quietTasks.get(n2.saveIdxN);
         QuietTask qT = quietTasks.get(n2.saveIdx);
         timeInfoS = getHourMin(qT.begHour, qT.begMin);
@@ -59,6 +58,7 @@ public class SetUpComingTask {
         intent.putExtra("subject", n2.subject);
         intent.putExtra("end99", false);
         intent.putExtra("icon", n2.icon);
+        intent.putExtra("iconNow", (n2.begEnd.equals("S"))? R.drawable.phone_normal:n2.icon);
 
         intent.putExtra("begN", timeInfoN);
         intent.putExtra("endN", n2.soonOrUntilN);
