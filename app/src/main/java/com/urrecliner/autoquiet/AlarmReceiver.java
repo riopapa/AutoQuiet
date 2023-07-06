@@ -186,13 +186,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             uIntent.putExtra("end99", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
+            uIntent.putExtra("iconNow", n2.icon);
 
             SharedPreferences sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
             uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
             uIntent.putExtra("endN", n2.soonOrUntil);
             uIntent.putExtra("end99N", true);
             uIntent.putExtra("subjectN", n2.subject);
-            uIntent.putExtra("icon", n2.icon);
+            uIntent.putExtra("icon", n2.iconN);
 
             context.startForegroundService(uIntent);
         } else {

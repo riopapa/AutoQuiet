@@ -58,7 +58,12 @@ public class SetUpComingTask {
         intent.putExtra("subject", n2.subject);
         intent.putExtra("end99", false);
         intent.putExtra("icon", n2.icon);
-        intent.putExtra("iconNow", (n2.begEnd.equals("S"))? R.drawable.phone_normal:n2.icon);
+        int iconNow = n2.icon;
+        if (n2.icon != R.drawable.bell_several && n2.icon != R.drawable.bell_tomorrow &&
+            n2.icon != R.drawable.bell_onetime && n2.icon != R.drawable.bell_once_gone &&
+            n2.begEnd.equals("S"))
+            iconNow = R.drawable.phone_normal;
+        intent.putExtra("iconNow", iconNow);
 
         intent.putExtra("begN", timeInfoN);
         intent.putExtra("endN", n2.soonOrUntilN);
