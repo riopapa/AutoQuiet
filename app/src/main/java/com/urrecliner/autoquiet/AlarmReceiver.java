@@ -152,7 +152,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void bellOnceThenGone(String subject) {
-        String say = subject + " 를 확인하면 조용해 집니다";
+        String say = "잠시만요! " + subject + " 를 잊지 마세요! "+ subject +" 시간 입니다";
         myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
         qt.active = false;
         quietTasks.set(qtIdx, qt);
