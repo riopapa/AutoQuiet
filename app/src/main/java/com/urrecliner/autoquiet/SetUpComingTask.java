@@ -77,6 +77,7 @@ public class SetUpComingTask {
         sharedEditor.putString("begN", timeInfoN);
         sharedEditor.putString("endN", n2.soonOrUntilN);
         sharedEditor.putString("subjectN", n2.subjectN);
+        sharedEditor.putInt("icon", n2.icon);
         sharedEditor.putInt("iconN", n2.iconN);
         sharedEditor.apply();
 

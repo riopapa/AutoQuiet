@@ -32,7 +32,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
 
         context = ActivityMain.pContext;
         vars = new VarsGetPut().get(context);
-//        gCals = new GetAgenda().get(context);
+//        gCals = new GetAgenda().get(rContext);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
     }

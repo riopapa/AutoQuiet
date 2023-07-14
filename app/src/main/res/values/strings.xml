@@ -36,4 +36,5 @@
     <string name="click_to_stop_speaking">Click to stop speaking</string>
     <string name = "action_sort">소트</string>
 
+    <string name="com.crashlytics.android.build_id">1</string>
 </resources>

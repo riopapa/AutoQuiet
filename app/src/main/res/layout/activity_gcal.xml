@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/one_Gcal"
     android:background="@color/itemAgendaFill"
-    tools:context=".ActivityGCalShow">
+    tools:nContext=".ActivityGCalShow">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gCalRecycler"

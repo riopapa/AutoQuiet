@@ -88,7 +88,14 @@ public class ActivityMain extends AppCompatActivity  {
 
         new VarsGetPut().put(vars, pContext);
 
-        new NotificationStart(pContext);
+//        new NotificationStart(pContext);
+        NotificationService notificationService  = new NotificationService(pContext);
+        if (!BootReceiver.isServiceRunning(pContext, notificationService.getClass())) {
+            Intent mBackgroundServiceIntent;
+            mBackgroundServiceIntent = new Intent(pContext, notificationService.getClass());
+//            pContext.startForegroundService(mBackgroundServiceIntent);
+            pContext.startService(mBackgroundServiceIntent);
+        }
 
     }
 
