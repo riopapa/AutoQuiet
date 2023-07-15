@@ -29,23 +29,13 @@ import com.urrecliner.autoquiet.Sub.Permission;
 import com.urrecliner.autoquiet.Sub.SharedPrefer;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
-import java.util.Comparator;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class ActivityMain extends AppCompatActivity  {
 
     public static Context pContext;
     public static Activity pActivity;
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
-    int count;
     public static int currIdx;
-
-    Timer timer = null;
-    TimerTask timerTask = null;
-    long timeSaved;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,22 +96,6 @@ public class ActivityMain extends AppCompatActivity  {
         Log.w("Main", "onResume is called");
         new Utils(pContext).deleteOldLogFiles();
         showMainList();
-//        count = 0;
-//
-//        timeSaved = System.currentTimeMillis();
-//        if (timer != null)
-//            timer.cancel();
-//        if (timerTask != null)
-//            timerTask.cancel();
-//        timer = new Timer();
-//        timerTask = new TimerTask() {
-//            @Override
-//            public void run () {
-//                Log.w("Main", count++ + ") timeGap = "+((System.currentTimeMillis() - timeSaved)/1000)+" secs");
-//                timeSaved = System.currentTimeMillis();
-//            }
-//        };
-//        timer.schedule(timerTask, 27*60000, 27*60000);
         super.onResume();
     }
 
@@ -152,7 +126,6 @@ public class ActivityMain extends AppCompatActivity  {
 
         } else if (menuItem == R.id.action_sort) {
             mainRecycleAdapter.sort();
-            mainRecycleAdapter.notifyDataSetChanged();
             return true;
 
         } else if (menuItem == R.id.action_setting) {
@@ -183,7 +156,6 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecycleAdapter.notifyDataSetChanged();
     }
 
-
     private void showMainList() {
 
         RecyclerView mainRecyclerView = findViewById(R.id.mainRecycler);
@@ -197,12 +169,6 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setAdapter(mainRecycleAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"next is ");
-//        super.onBackPressed();
-//    }
 
     @Override
     protected void onStop() {

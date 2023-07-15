@@ -1,6 +1,7 @@
 package com.urrecliner.autoquiet;
 
 import static com.urrecliner.autoquiet.ActivityMain.currIdx;
+import static com.urrecliner.autoquiet.ActivityMain.mainRecycleAdapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -292,6 +293,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.set(i, qt);
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
+        mainRecycleAdapter.notifyDataSetChanged();
         new QuietTaskGetPut().put(quietTasks);
         Toast.makeText(context, "Sorted by next Time", Toast.LENGTH_SHORT).show();
     }
