@@ -1,5 +1,6 @@
 package com.urrecliner.autoquiet.Sub;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.urrecliner.autoquiet.ActivityMain;
@@ -8,7 +9,7 @@ import com.urrecliner.autoquiet.Vars;
 public class SharedPrefer {
 
     public void get(Vars vars) {
-        SharedPreferences sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
+        SharedPreferences sharedPref = ActivityMain.pContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         vars.sharedTimeBefore = sharedPref.getString("timeBefore", "");
         if (vars.sharedTimeBefore.equals("")) {

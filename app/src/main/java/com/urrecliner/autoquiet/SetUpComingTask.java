@@ -12,7 +12,7 @@ import com.urrecliner.autoquiet.models.QuietTask;
 import java.util.ArrayList;
 
 public class SetUpComingTask {
-    static int several, severalN;
+    static int several;
     static String timeInfoS, timeInfo, msg;
     static String timeInfoN;
     static NextTwoTasks n2;
@@ -71,8 +71,7 @@ public class SetUpComingTask {
         intent.putExtra("iconN", n2.iconN);
         context.startForegroundService(intent);
 
-        SharedPreferences sharedPref
-                = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         sharedEditor.putString("begN", timeInfoN);
         sharedEditor.putString("endN", n2.soonOrUntilN);

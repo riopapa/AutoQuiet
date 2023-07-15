@@ -51,7 +51,6 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.w("onStartCommand", "started ...");
         createNotification();
 
         int operation = -1;
@@ -92,10 +91,8 @@ public class NotificationService extends Service {
             icon = intent.getIntExtra("icon", 0);
             iconN = intent.getIntExtra("iconN", 0);
             iconNow = intent.getIntExtra("iconNow", 0);
-            if (icon == 0) {
-                Log.w("onStartCommand", "Icon is missed");
+            if (icon == 0)
                 return START_NOT_STICKY;
-            }
             if (iconN == 0)
                 iconN = R.drawable.auto_quite_small;
             updateRemoteViews();
@@ -108,34 +105,9 @@ public class NotificationService extends Service {
         String app = "viva.republica.toss";
         PackageManager managerclock = nContext.getPackageManager();
         Intent appIntent = managerclock.getLaunchIntentForPackage(app);
-//        appIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-//        appIntent.addCategory(Intent.ACTION_MAIN);
-//        appIntent.addCategory(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-//        appIntent.addCategory(Intent.ACTION_PICK_ACTIVITY);
-//        appIntent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         appIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         nContext.startActivity(appIntent);
-
-//                Intent intent = new Intent(rContext, ActivityMain.class);
-//                rContext.startActivity(intent);
-//                PendingIntent contentIntent = PendingIntent.getActivity(rContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                try {
-//                    contentIntent.send();
-//
-//                    new Timer().schedule(new TimerTask() {
-//                        @Override
-//                        public void run() {
-//                            Intent appIntent = rContext.getPackageManager().getLaunchIntentForPackage(app);
-//                            appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                            rContext.startForegroundService(appIntent);
-//                            rContext.startActivity(appIntent);
-//                        }
-//                    }, 300);
-//
-//                } catch (PendingIntent.CanceledException e) {
-//                    e.printStackTrace();
-//                }
     }
 
     private void createNotification() {

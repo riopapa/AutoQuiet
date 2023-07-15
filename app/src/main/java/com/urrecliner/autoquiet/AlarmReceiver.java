@@ -1,26 +1,23 @@
 package com.urrecliner.autoquiet;
 
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.urrecliner.autoquiet.Sub.AlarmIcon;
+import com.urrecliner.autoquiet.Sub.MannerMode;
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
+import com.urrecliner.autoquiet.Sub.VarsGetPut;
 import com.urrecliner.autoquiet.Sub.VibratePhone;
 import com.urrecliner.autoquiet.models.NextTwoTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.Sub.MannerMode;
-import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -190,7 +187,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             uIntent.putExtra("icon", icon);
             uIntent.putExtra("iconNow", n2.icon);
 
-            SharedPreferences sharedPref = android.preference.PreferenceManager.getDefaultSharedPreferences(ActivityMain.pContext);
+            SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
             uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
             uIntent.putExtra("endN", n2.soonOrUntil);
             uIntent.putExtra("end99N", true);
@@ -263,8 +260,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 180) * 1000;
                         new SetAlarmTime().request(rContext, qt, nextTime, "F", --several);
 
-                        SharedPreferences sharedPref
-                                = android.preference.PreferenceManager.getDefaultSharedPreferences(rContext);
+                        SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
                         String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
                         String endN = sharedPref.getString("endN", "시작");
                         String subjectN = sharedPref.getString("subjectN", "Next Item");
@@ -355,13 +351,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void onError(String utteranceId) { }
         });
 
-        int result = myTTS.setLanguage(Locale.getDefault());
-        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            Toast.makeText(rContext, "Not supported Language", Toast.LENGTH_SHORT).show();
-        } else {
-            myTTS.setPitch(1.2f);
-            myTTS.setSpeechRate(1.3f);
-        }
+        myTTS.setLanguage(Locale.getDefault());
+        myTTS.setPitch(1.2f);
+        myTTS.setSpeechRate(1.3f);
     }
 
     String nowDateToString(long time) {
