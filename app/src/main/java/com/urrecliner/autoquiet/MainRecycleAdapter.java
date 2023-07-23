@@ -202,7 +202,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.lvBegLoop.setVisibility(View.GONE);
             holder.lvEndLoop.setVisibility(View.GONE);
         }
-        holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(context.getResources(), (position == currIdx) ? R.color.colorNotification: R.color.itemNormalFill, null));
+        holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(context.getResources(), (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
             holder.lvgCal.setImageResource(R.drawable.transperent);

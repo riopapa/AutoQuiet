@@ -10,6 +10,7 @@
     <color name="notification_back2">#8F0E3154</color>
     <color name="colorNotification">#EAF1F0</color>
     <color name="num_button">#042B28</color>
+    <color name="colorSelected">#DCE7E5</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>

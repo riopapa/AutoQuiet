@@ -35,7 +35,9 @@ public class ActivityMain extends AppCompatActivity  {
     public static Activity pActivity;
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
-    public static int currIdx;
+    public static int currIdx = -1;
+
+    RecyclerView mainRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class ActivityMain extends AppCompatActivity  {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission","Required for READ_CALENDAR");
         }
-        Log.w("autoQuiet","onCreated ----- ");
+//        Log.w("autoQuiet","onCreated ----- ");
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
@@ -95,8 +97,12 @@ public class ActivityMain extends AppCompatActivity  {
         vars = new VarsGetPut().get(pContext);
         Log.w("Main", "onResume is called");
         new Utils(pContext).deleteOldLogFiles();
+
         showMainList();
         super.onResume();
+        if (currIdx == -1)
+            currIdx = mainRecycleAdapter.getItemCount() / 2;
+        mainRecyclerView.scrollToPosition((currIdx > 2)? currIdx - 1:currIdx);
     }
 
     @Override
@@ -158,7 +164,7 @@ public class ActivityMain extends AppCompatActivity  {
 
     private void showMainList() {
 
-        RecyclerView mainRecyclerView = findViewById(R.id.mainRecycler);
+        mainRecyclerView = findViewById(R.id.mainRecycler);
 
         mainRecycleAdapter = new MainRecycleAdapter();
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);

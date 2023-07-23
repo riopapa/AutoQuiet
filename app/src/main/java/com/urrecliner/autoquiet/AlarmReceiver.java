@@ -389,8 +389,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         timerTask = new TimerTask() {
             @Override
             public void run () {
-                count++;
-                new Utils(rContext).log("waitLoop() "+count, (System.currentTimeMillis()-lastTime)/1000+"  ");
+//                count++;
+//                new Utils(rContext).log("waitLoop() "+count, (System.currentTimeMillis()-lastTime)/1000+"  ");
                 lastTime = System.currentTimeMillis();
             }
         };

@@ -4,13 +4,12 @@
     android:id="@+id/ll_customNotification"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/notification_back"
     android:baselineAligned="false"
     tools:ignore="ContentDescription"
     android:orientation="vertical">
 
     <LinearLayout
-        android:background="@color/notification_back1"
+        android:background="#4B5673"
         android:orientation="horizontal"
         android:layout_marginBottom="4dp"
         android:layout_width = "match_parent"
@@ -60,6 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="#8F465884"
         android:orientation="horizontal"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content">
