@@ -174,7 +174,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.rmdSubject.setText(qt.subject);
         holder.rmdSubject.setTextColor((active) ? colorOn : colorOff);
 
-        holder.rmdDate.setVisibility((qt.sayDate)? View.VISIBLE : View.GONE);
+        holder.rmdDate.setVisibility((qt.sayDate)? View.VISIBLE : View.INVISIBLE);
         holder.rmdDate.setTextColor((active) ? colorOn : colorOff);
 
         String txt = buildHourMin(qt.begHour, qt.begMin);

@@ -22,7 +22,7 @@ public class NotificationService extends Service {
     private RemoteViews mRemoteViews;
     String beg, subject, end, begN, subjectN, endN;
     int icon, iconN, iconNow;
-    boolean end99 = false, end99N = false;
+    boolean stop_repeat = false;
     Context nContext;
 
     final int RIGHT_NOW = 100;
@@ -69,7 +69,7 @@ public class NotificationService extends Service {
                 e.printStackTrace();
             }
         } else if (operation == STOP_SPEAK) {
-            end99 = false;
+            stop_repeat = false;
             updateRemoteViews();
             new SetUpComingTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
         } else if (operation == TO_TOSS) {
@@ -84,8 +84,7 @@ public class NotificationService extends Service {
             }
             end = intent.getStringExtra("end");
             endN = intent.getStringExtra("endN");
-            end99 = intent.getBooleanExtra("end99", false);
-            end99N = intent.getBooleanExtra("end99N", false);
+            stop_repeat = intent.getBooleanExtra("stop_repeat", false);
             subject = intent.getStringExtra("subject");
             subjectN = intent.getStringExtra("subjectN");
             icon = intent.getIntExtra("icon", 0);
@@ -154,7 +153,7 @@ public class NotificationService extends Service {
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
-        mRemoteViews.setViewVisibility(R.id.no_speak, (end99) ? View.VISIBLE:View.GONE);
+        mRemoteViews.setViewVisibility(R.id.no_speak, (stop_repeat) ? View.VISIBLE:View.GONE);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);

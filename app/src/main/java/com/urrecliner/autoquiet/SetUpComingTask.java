@@ -56,7 +56,7 @@ public class SetUpComingTask {
         intent.putExtra("beg", timeInfo);
         intent.putExtra("end", n2.soonOrUntil);
         intent.putExtra("subject", n2.subject);
-        intent.putExtra("end99", false);
+        intent.putExtra("stop_repeat", false);
         intent.putExtra("icon", n2.icon);
         int iconNow = n2.icon;
         if (n2.icon != R.drawable.bell_several && n2.icon != R.drawable.bell_tomorrow &&

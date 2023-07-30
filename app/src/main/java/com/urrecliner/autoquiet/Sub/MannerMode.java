@@ -41,8 +41,8 @@ public class MannerMode {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        int mx = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, mx-3, AudioManager.FLAG_PLAY_SOUND);
+//        int mx = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+//        am.setStreamVolume(AudioManager.STREAM_MUSIC, mx-3, AudioManager.FLAG_PLAY_SOUND);
 
         if (sharedManner) {
             MediaPlayer mpFinish = MediaPlayer.create(context, R.raw.back2normal);

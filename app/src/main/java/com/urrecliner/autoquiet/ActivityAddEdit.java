@@ -278,7 +278,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             if      (icon == R.drawable.bell_several)
                 s = "벨과 제목을 여러 번 울려줌";
             else if (icon == R.drawable.bell_tomorrow)
-                s = "벨과 제목을 한 번 울리고 내일로 바꿔 줌";
+                s = "벨과 제목을 한 번 알려 줌";
             else if (icon == R.drawable.bell_onetime)
                 s = "한번만 울리고 끄읏";
             else if (icon == R.drawable.bell_once_gone)
@@ -419,7 +419,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             return true;
         }
 
-        subject = binding.etSubject.getText().toString();
+        subject = binding.etSubject.getText().toString().trim();
         if (subject.length() == 0)
             subject = getString(R.string.no_subject);
         if (end99) {

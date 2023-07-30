@@ -182,7 +182,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             uIntent.putExtra("beg", nowTimeToString(nextTime));
             uIntent.putExtra("end", "다시");
-            uIntent.putExtra("end99", true);
+            uIntent.putExtra("stop_repeat", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
             uIntent.putExtra("iconNow", n2.icon);
@@ -190,7 +190,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
             uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
             uIntent.putExtra("endN", n2.soonOrUntil);
-            uIntent.putExtra("end99N", true);
             uIntent.putExtra("subjectN", n2.subject);
             uIntent.putExtra("icon", n2.iconN);
 
@@ -270,7 +269,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         Intent uIntent = new Intent(rContext, NotificationService.class);
                         uIntent.putExtra("beg", nowTimeToString(nextTime));
                         uIntent.putExtra("end", "반복"+several);
-                        uIntent.putExtra("end99", false);
+                        uIntent.putExtra("stop_repeat", true);
                         uIntent.putExtra("subject", qt.subject);
                         uIntent.putExtra("icon", icon);
                         uIntent.putExtra("iconNow", icon);
@@ -370,12 +369,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
-
-
-    int count;
     Timer timer = new Timer();
     TimerTask timerTask = null;
-    long lastTime = 0;
+    int count = 0;
     void waitLoop() {
 
         final long LOOP_INTERVAL = 25 * 60 * 1000;
@@ -389,9 +385,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         timerTask = new TimerTask() {
             @Override
             public void run () {
-//                count++;
-//                new Utils(rContext).log("waitLoop() "+count, (System.currentTimeMillis()-lastTime)/1000+"  ");
-                lastTime = System.currentTimeMillis();
+                count++;
             }
         };
         timer.schedule(timerTask, LOOP_INTERVAL, LOOP_INTERVAL);
