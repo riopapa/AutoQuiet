@@ -170,10 +170,10 @@ public class ActivityMain extends AppCompatActivity  {
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
-        new VarsGetPut().put(vars, pContext);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
+        new VarsGetPut().put(vars, pContext);
     }
 
     @Override

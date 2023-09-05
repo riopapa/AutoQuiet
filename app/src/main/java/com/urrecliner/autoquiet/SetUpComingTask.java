@@ -20,34 +20,35 @@ public class SetUpComingTask {
     public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
 
         n2 = new NextTwoTasks(quietTasks);
-        QuietTask qN = quietTasks.get(n2.saveIdxN);
-        QuietTask qT = quietTasks.get(n2.saveIdx);
-        timeInfoS = getHourMin(qT.begHour, qT.begMin);
-        boolean end99N = qN.endHour == 99;
-        boolean end99 = qT.endHour == 99;
-        if (!end99N) {
+        QuietTask qNxt = quietTasks.get(n2.saveIdxN);
+        QuietTask qThis = quietTasks.get(n2.saveIdx);
+        timeInfoS = getHourMin(qThis.begHour, qThis.begMin);
+        boolean end99Nxt = qNxt.endHour == 99;
+        boolean end99Now = qThis.endHour == 99;
+        if (!end99Nxt) {
             timeInfoN = (n2.begEndN.equals("S")) ?
-                    getHourMin(qN.begHour, qN.begMin) : getHourMin(qN.endHour, qN.endMin);
+                    getHourMin(qNxt.begHour, qNxt.begMin) : getHourMin(qNxt.endHour, qNxt.endMin);
         } else {
-            timeInfoN = getHourMin(qN.begHour, qN.begMin);
+            timeInfoN = getHourMin(qNxt.begHour, qNxt.begMin);
         }
-        if (!end99) {
+        if (!end99Now) {
             timeInfo = (n2.begEnd.equals("S")) ?
-                        getHourMin(qT.begHour, qT.begMin) : getHourMin(qT.endHour, qT.endMin);
+                        getHourMin(qThis.begHour, qThis.begMin) : getHourMin(qThis.endHour, qThis.endMin);
             msg = headInfo + " " + n2.subject + "\n" + timeInfo
                     + " " + n2.soonOrUntil + " " + n2.begEnd;
             if  (n2.begEnd.equals("S"))
-                msg += " ~ " + getHourMin(qT.endHour, qT.endMin);
-            several = (qT.sayDate) ? 3:0;  // finish 인데 sayDate 가 있으면 여러 번 울림
+                msg += " ~ " + getHourMin(qThis.endHour, qThis.endMin);
+            several = (qThis.sayDate) ? 3:0;  // finish 인데 sayDate 가 있으면 여러 번 울림
         } else {
-            timeInfo = getHourMin(qT.begHour, qT.begMin);
+            timeInfo = getHourMin(qThis.begHour, qThis.begMin);
             msg = headInfo + "\n" + timeInfo + " " + n2.subject;
             several = (n2.icon == R.drawable.bell_several) ? 3:0;
         }
 
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
-        new SetAlarmTime().request(context, qT, n2.nextTime, n2.begEnd, several);
+        long alarmTime = (n2.nextTime / 60000) * 60000;
+        new SetAlarmTime().request(context, qThis, alarmTime, n2.begEnd, several);
 
     }
 

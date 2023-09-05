@@ -1,609 +1,634 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/addUpdate"
-    android:orientation="vertical">
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              xmlns:tools = "http://schemas.android.com/tools"
+              android:id = "@+id/addUpdate"
+              android:orientation="vertical"
+              android:layout_width = "match_parent"
+              android:layout_height = "match_parent">
 
     <LinearLayout
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="@string/start_time"
-            android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:padding="4dp"
-            android:textSize="24sp" />
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:gravity = "center">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="@string/end_time"
-            android:textStyle="bold"
-            android:layout_margin="2dp"
-            android:padding="4dp"
-            android:textSize="24sp" />
+            android:layout_width = "0dp"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "2dp"
+            android:layout_weight = "1"
+            android:gravity = "center"
+            android:padding = "4dp"
+            android:text = "@string/start_time"
+            android:textSize = "24sp"
+            android:textStyle = "bold" />
+
+        <TextView
+            android:layout_width = "0dp"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "2dp"
+            android:layout_weight = "1"
+            android:gravity = "center"
+            android:padding = "4dp"
+            android:text = "@string/end_time"
+            android:textSize = "24sp"
+            android:textStyle = "bold" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/end_99"
-            android:layout_width="32sp"
-            android:layout_height="32sp"
-            />
+            android:id = "@+id/end_99"
+            android:layout_width = "32sp"
+            android:layout_height = "32sp" />
     </LinearLayout>
+
     <LinearLayout
-        android:id="@+id/timeTicker"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id = "@+id/timeTicker"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:gravity = "center"
+        android:orientation = "horizontal">
 
         <TimePicker
-            android:id="@+id/timePickerBeg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:timePickerMode="spinner"
-            android:theme="@style/NumberPickerStyle"
-            android:headerTimeTextAppearance="@style/TextAppearance.AppCompat.Display2"
-            tools:animateLayoutChanges="@tools:sample/date/hhmm" />
+            android:id = "@+id/timePickerBeg"
+            android:layout_width = "0dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1"
+            android:headerTimeTextAppearance = "@style/TextAppearance.AppCompat.Display2"
+            android:theme = "@style/NumberPickerStyle"
+            android:timePickerMode = "spinner"
+            tools:animateLayoutChanges = "@tools:sample/date/hhmm" />
 
         <TimePicker
-            android:id="@+id/timePickerEnd"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:timePickerMode="spinner"
-            android:theme="@style/NumberPickerStyle"
-            android:headerTimeTextAppearance="@style/TextAppearance.AppCompat.Display2"
-            tools:animateLayoutChanges="@tools:sample/date/hhmm" />
+            android:id = "@+id/timePickerEnd"
+            android:layout_width = "0dp"
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1"
+            android:headerTimeTextAppearance = "@style/TextAppearance.AppCompat.Display2"
+            android:theme = "@style/NumberPickerStyle"
+            android:timePickerMode = "spinner"
+            tools:animateLayoutChanges = "@tools:sample/date/hhmm" />
     </LinearLayout>
+
     <LinearLayout
-        android:id="@+id/numDateTime"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id = "@+id/numDateTime"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:gravity = "center"
+        android:visibility="gone"
+        android:orientation = "vertical">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_horizontal"
+            android:orientation = "horizontal">
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "5"
+                android:text = ""
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/am_pm"
-                android:textSize="24sp"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:text="오전"
-                android:textColor="#33CC33"
-                />
+                android:id = "@+id/am_pm"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "3"
+                android:text = "오전"
+                android:textColor = "#33CC33"
+                android:textSize = "24sp" />
+
             <TextView
-                android:id="@+id/numHH1"
-                android:textSize="32sp"
-                android:textColor="#000"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="1"
-                />
+                android:id = "@+id/numHH1"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:text = "1"
+                android:textColor = "#000"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/numHH2"
-                android:textSize="32sp"
-                android:textColor="#000"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="1"
-                />
+                android:id = "@+id/numHH2"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:text = "1"
+                android:textColor = "#000"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:textColor="#000"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text=":"
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:text = ":"
+                android:textColor = "#000"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/numMM1"
-                android:textSize="32sp"
-                android:textColor="#000"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="3"
-                />
+                android:id = "@+id/numMM1"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:text = "3"
+                android:textColor = "#000"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/numMM2"
-                android:textSize="32sp"
-                android:textColor="#000"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="4"
-                />
+                android:id = "@+id/numMM2"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:text = "4"
+                android:textColor = "#000"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
         </LinearLayout>
-<!--         1, 2, 3-->
+        <!--         1, 2, 3-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_horizontal"
+            android:orientation = "horizontal">
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num1"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:textColor="@color/num_button"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="1"
-                android:tag="1"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num1"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "1"
+                android:text = "1"
+                android:textColor = "@color/num_button"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num2"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:textColor="@color/num_button"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="2"
-                android:tag="2"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num2"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "2"
+                android:text = "2"
+                android:textColor = "@color/num_button"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num3"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="3"
-                android:tag="3"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num3"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "3"
+                android:text = "3"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
         </LinearLayout>
-<!--         4, 5, 6-->
+        <!--         4, 5, 6-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_horizontal"
+            android:orientation = "horizontal">
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num4"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="4"
-                android:tag="4"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num4"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "4"
+                android:text = "4"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num5"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="5"
-                android:tag="5"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num5"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "5"
+                android:text = "5"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num6"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="6"
-                android:tag="6"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num6"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "6"
+                android:text = "6"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
         </LinearLayout>
-<!--         7, 8, 9-->
+        <!--         7, 8, 9-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_horizontal"
+            android:orientation = "horizontal">
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num7"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="7"
-                android:tag="7"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num7"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "7"
+                android:text = "7"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num8"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="8"
-                android:tag="8"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num8"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "8"
+                android:text = "8"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num9"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="9"
-                android:tag="9"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num9"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "9"
+                android:text = "9"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
         </LinearLayout>
-<!--         0 , <, OK-->
+        <!--         0 , <, OK-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_horizontal"
+            android:orientation = "horizontal">
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/numBack"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:textColor="#510A0A"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="←"
-                android:tag="b"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/numBack"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "b"
+                android:text = "←"
+                android:textColor = "#510A0A"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/num0"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="0"
-                android:tag="0"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/num0"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "0"
+                android:text = "0"
+                android:textSize = "32sp" />
+
             <TextView
-                android:id="@+id/numFore"
-                android:background="@drawable/button_number"
-                android:layout_margin="2dp"
-                android:textSize="32sp"
-                android:textColor="#1733D1"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:text="→"
-                android:tag="o"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                />
+                android:id = "@+id/numFore"
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_margin = "2dp"
+                android:layout_weight = "2"
+                android:background = "@drawable/button_number"
+                android:gravity = "center"
+                android:tag = "o"
+                android:text = "→"
+                android:textColor = "#1733D1"
+                android:textSize = "32sp" />
+
             <TextView
-                android:textSize="32sp"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:text=""
-                />
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "4"
+                android:text = ""
+                android:textSize = "32sp" />
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="40sp">
+        android:layout_width = "match_parent"
+        android:layout_height = "40sp"
+        android:layout_marginTop = "8dp"
+        android:gravity = "center"
+        android:orientation = "horizontal">
+
+        <Switch
+            android:id = "@+id/swActive"
+            android:layout_width = "100dp"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_vertical"
+            android:text = "활성화"
+            android:textColor="#235E23"
+            android:textSize = "16sp"
+            tools:ignore = "UseSwitchCompatOrMaterialXml" />
+
+        <TextView
+            android:id = "@+id/tVDate"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_marginStart = "12dp"
+            android:gravity = "center"
+            android:padding = "2dp"
+            android:text = "날짜 말하기"
+            android:textColor="#235E23"
+            android:textSize = "14sp"
+            android:textStyle = "bold" />
+
+        <Switch
+            android:id = "@+id/say_date"
+            android:layout_width = "64dp"
+            android:layout_height = "wrap_content"
+            android:text = ""
+            android:textSize = "2sp"
+            tools:ignore = "UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width = "match_parent"
+        android:layout_height = "40sp"
+        android:layout_marginTop = "8dp"
+        android:gravity = "center"
+        android:orientation = "horizontal">
+
         <ImageView
-            android:id="@+id/gCal"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:contentDescription="@string/blank"
-            android:src="@drawable/calendar" />
+            android:id = "@+id/gCal"
+            android:layout_width = "32dp"
+            android:layout_height = "match_parent"
+            android:layout_gravity = "center"
+            android:contentDescription = "@string/blank"
+            android:src = "@drawable/calendar" />
 
         <EditText
-            android:id="@+id/etSubject"
-            android:layout_width="0dp"
-            android:layout_weight="12"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:hint="@string/subject"
-            android:gravity="center"
-            android:background="@color/itemNormalFill"
-            android:padding="4dp"
-            android:importantForAutofill="no" />
-
-        <Switch
-            android:id="@+id/swActive"
-            android:layout_width="72dp"
-            android:text="@string/blank"
-            android:layout_gravity="center_vertical"
-            android:textSize="2sp"
-            android:layout_height="wrap_content"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            android:id = "@+id/etSubject"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "12"
+            android:background = "@color/itemNormalFill"
+            android:gravity = "center"
+            android:hint = "@string/subject"
+            android:importantForAutofill = "no"
+            android:padding = "4dp"
+            android:textSize = "20sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:gravity = "center"
+        android:orientation = "horizontal">
+
         <TextView
-            android:id="@+id/tVVibrate"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="진동"
-            android:textStyle="bold"
-            android:layout_marginEnd="0dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:id = "@+id/tVVibrate"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_marginEnd = "0dp"
+            android:gravity = "center"
+            android:padding = "2dp"
+            android:text = "진동"
+            android:textSize = "18sp"
+            android:textStyle = "bold" />
 
         <ImageView
-            android:id="@+id/iVVibrate"
-            android:layout_margin="4dp"
-            android:layout_width="28dp"
-            android:layout_height="32dp"
-            android:src="@drawable/phone_vibrate"
-            android:contentDescription="@string/blank" />
+            android:id = "@+id/iVVibrate"
+            android:layout_width = "28dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:contentDescription = "@string/blank"
+            android:src = "@drawable/phone_vibrate" />
+
         <TextView
-            android:id="@+id/tv_beg_loop"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="시작"
-            android:textStyle="bold"
-            android:layout_marginStart="10dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:id = "@+id/tv_beg_loop"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_marginStart = "10dp"
+            android:gravity = "center"
+            android:padding = "2dp"
+            android:text = "시작"
+            android:textSize = "18sp"
+            android:textStyle = "bold" />
+
         <ImageView
-            android:id="@+id/iv_beg_loop"
-            android:layout_margin="4dp"
-            android:layout_width="28dp"
-            android:layout_height="32dp"
-            android:src="@drawable/speak_on"
-            android:contentDescription="@string/blank" />
+            android:id = "@+id/iv_beg_loop"
+            android:layout_width = "28dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:contentDescription = "@string/blank"
+            android:src = "@drawable/speak_on" />
 
         <TextView
-            android:id="@+id/tv_end_loop"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="종료"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:padding="2dp"
-            android:textSize="18sp" />
+            android:id = "@+id/tv_end_loop"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_marginStart = "16dp"
+            android:gravity = "center"
+            android:padding = "2dp"
+            android:text = "종료"
+            android:textSize = "18sp"
+            android:textStyle = "bold" />
+
         <ImageView
-            android:id="@+id/iv_end_loop"
-            android:layout_margin="4dp"
-            android:layout_width="28dp"
-            android:layout_height="32dp"
-            android:src="@drawable/speak_on"
-            android:contentDescription="@string/blank" />
+            android:id = "@+id/iv_end_loop"
+            android:layout_width = "28dp"
+            android:layout_height = "32dp"
+            android:layout_margin = "4dp"
+            android:contentDescription = "@string/blank"
+            android:src = "@drawable/speak_on" />
 
-        <TextView
-            android:id="@+id/tVDate"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="날짜\n말하기"
-            android:textStyle="bold"
-            android:layout_marginStart="12dp"
-            android:padding="2dp"
-            android:textSize="16sp" />
-
-        <Switch
-            android:id="@+id/say_date"
-            android:layout_width="64dp"
-            android:text=""
-            android:textSize="2sp"
-            android:layout_height="wrap_content"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/weekFlag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/av_week0"
-            android:tag="0"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_0"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week1"
-            android:tag="1"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_1"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week2"
-            android:tag="2"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_2"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week3"
-            android:tag="3"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_3"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week4"
-            android:tag="4"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_4"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week5"
-            android:tag="5"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_5"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
-        <TextView
-            android:id="@+id/av_week6"
-            android:tag="6"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/week_6"
-            android:layout_margin="1dp"
-            android:padding="1dp"
-            android:onClick="toggleWeek"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/edit_week"/>
     </LinearLayout>
     <TextView
-        android:id="@+id/dateDesc"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:text="@string/end_time"
-        android:textStyle="bold"
-        android:layout_margin="2dp"
-        android:padding="4dp"
-        android:textSize="20sp" />
+        android:id = "@+id/dateDesc"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_margin = "2dp"
+        android:gravity = "center"
+        android:padding = "4dp"
+        android:text = "@string/end_time"
+        android:textSize = "20sp"
+        android:textStyle = "bold" />
+
+    <LinearLayout
+        android:id = "@+id/weekFlag"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:gravity = "center"
+        android:orientation = "horizontal">
+
+        <TextView
+            android:id = "@+id/av_week0"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "0"
+            android:text = "@string/week_0"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week1"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "1"
+            android:text = "@string/week_1"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week2"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "2"
+            android:text = "@string/week_2"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week3"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "3"
+            android:text = "@string/week_3"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week4"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "4"
+            android:text = "@string/week_4"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week5"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "5"
+            android:text = "@string/week_5"
+            android:textSize = "@dimen/edit_week" />
+
+        <TextView
+            android:id = "@+id/av_week6"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_margin = "1dp"
+            android:clickable = "true"
+            android:gravity = "center_vertical"
+            android:onClick = "toggleWeek"
+            android:padding = "1dp"
+            android:tag = "6"
+            android:text = "@string/week_6"
+            android:textSize = "@dimen/edit_week" />
+    </LinearLayout>
+
 
 </LinearLayout>

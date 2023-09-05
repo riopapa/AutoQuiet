@@ -1,6 +1,6 @@
 package com.urrecliner.autoquiet.Sub;
 
-public interface ItemTouchHelperAdapter {
+public interface MyItemTouchHelperAdapter {
 
     void onItemMove(int fromPosition, int toPosition);
 

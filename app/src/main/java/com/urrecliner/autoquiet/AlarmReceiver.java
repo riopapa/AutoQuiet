@@ -125,27 +125,33 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void say_Started99() {
-        if (qt.begLoop != 0)
-            new Sounds().beep(rContext, Sounds.BEEP.NOTY);
+
         String subject = qt.subject;
-        icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
-        if      (icon == R.drawable.bell_several) {
-            bell_Several(subject);
-            if (several != 0)
-                return;
-        }
-        else if (icon == R.drawable.bell_tomorrow)
-            bellTomorrow(subject);
-        else if (icon == R.drawable.bell_onetime)
-            bellOneTime(subject);
-        else if (icon == R.drawable.bell_once_gone)
-            bellOnceThenGone(subject);
-        else {
-            new Sounds().beep(rContext, Sounds.BEEP.NOTY);
-            String say = subject + " 를 확인 하시지요";
-            myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-        }
-        new SetUpComingTask(rContext, quietTasks, "ended");
+        new Sounds().beep(rContext, (subject.equals("토스")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
+        if (qt.begLoop != 0)
+            icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+            if      (icon == R.drawable.bell_several) {
+                bell_Several(subject);
+                if (several != 0)
+                    return;
+            }
+            else if (icon == R.drawable.bell_tomorrow)
+                bellTomorrow(subject);
+            else if (icon == R.drawable.bell_onetime)
+                bellOneTime(subject);
+            else if (icon == R.drawable.bell_once_gone)
+                bellOnceThenGone(subject);
+            else {
+                new Sounds().beep(rContext, Sounds.BEEP.NOTY);
+                String say = subject + " 를 확인 하시지요";
+                myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+            }
+            new SetUpComingTask(rContext, quietTasks, "ended");
+            }
+        }, 3000);
+
 
     }
 
@@ -167,8 +173,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             several--;
             if (isSilentNow()) {
                 new VibratePhone(rContext);
-                new Sounds().beep(rContext, Sounds.BEEP.BBEEPP);
             } else {
+                new Sounds().beep(rContext, (subject.equals("토스")) ? Sounds.BEEP.TOSS:Sounds.BEEP.BBEEPP);
                 String tit = (subject.equals("토스")) ? "삐이":subject;
                 String say = tit + " 를 확인하세요, " +
                         ((several == 0) ? "마지막 안내입니다 " : "") + tit + " 를 확인하세요";
@@ -176,7 +182,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             NextTwoTasks n2 = new NextTwoTasks(quietTasks);
 
-            long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 90) * 1000;
+            long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 90) * 1000;
             new SetAlarmTime().request(rContext, qt, nextTime, "S", several);   // several 0 : no more
             Intent uIntent = new Intent(rContext, NotificationService.class);
 
@@ -198,10 +204,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         } else {
             String say = addPostPosition(subject) + "끝났습니다";
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-//            new QuietTaskGetPut().put(quietTasks);
         }
     }
-
 
     private void bellTomorrow(String subject) {
         new Sounds().beep(rContext, Sounds.BEEP.NOTY);

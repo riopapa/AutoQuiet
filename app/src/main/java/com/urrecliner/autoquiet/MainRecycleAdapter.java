@@ -25,7 +25,7 @@ import com.urrecliner.autoquiet.Sub.AlarmIcon;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
-import com.urrecliner.autoquiet.Sub.ItemTouchHelperAdapter;
+import com.urrecliner.autoquiet.Sub.MyItemTouchHelperAdapter;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 
@@ -35,7 +35,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder>
-        implements ItemTouchHelperAdapter {
+        implements MyItemTouchHelperAdapter {
 
     private ItemTouchHelper mTouchHelper;
     private QuietTask qt;

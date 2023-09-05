@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,7 @@ import com.urrecliner.autoquiet.R;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
+    private final MyItemTouchHelperAdapter mAdapter;
     private final Context mContext;
 
     Paint mClearPaint;
@@ -29,7 +30,7 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     int intrinsicWidth;
     int intrinsicHeight;
 
-    public MyItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
+    public MyItemTouchHelper(MyItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
         mContext = context;
     }
@@ -110,7 +111,6 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         int deleteIconBottom = deleteIconTop + intrinsicHeight;
         deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
         deleteDrawable.draw(c);
-
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 

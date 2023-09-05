@@ -30,7 +30,7 @@ public class MannerMode {
             try {
                 Thread.sleep(1000);
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
+//                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -42,7 +42,7 @@ public class MannerMode {
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 //        int mx = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-//        am.setStreamVolume(AudioManager.STREAM_MUSIC, mx-3, AudioManager.FLAG_PLAY_SOUND);
+//        am.setStreamVolume(AudioManager.STREAM_MUSIC, mx*8/10, AudioManager.FLAG_PLAY_SOUND);
 
         if (sharedManner) {
             MediaPlayer mpFinish = MediaPlayer.create(context, R.raw.back2normal);
