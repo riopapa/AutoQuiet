@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +69,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         xSize = metrics.widthPixels / 9;
+        Float sz = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, this.getApplicationContext().getResources().getDisplayMetrics());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle((vars.addNewQuiet) ? R.string.add_table :R.string.update_table);

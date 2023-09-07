@@ -32,7 +32,7 @@ public class CalculateNext {
             if (i == 7)
                 i = 0;
         }
-        return (nextEvent+add24Hour);
+        return (nextEvent+add24Hour - 50*1000);
     }
 
 }

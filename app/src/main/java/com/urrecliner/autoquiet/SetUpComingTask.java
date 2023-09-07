@@ -42,13 +42,12 @@ public class SetUpComingTask {
         } else {
             timeInfo = getHourMin(qThis.begHour, qThis.begMin);
             msg = headInfo + "\n" + timeInfo + " " + n2.subject;
-            several = (n2.icon == R.drawable.bell_several) ? 3:0;
+            several = (n2.icon == R.drawable.bell_several) ? 2:0;
         }
 
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
-        long alarmTime = (n2.nextTime / 60000) * 60000;
-        new SetAlarmTime().request(context, qThis, alarmTime, n2.begEnd, several);
+        new SetAlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
 
     }
 
