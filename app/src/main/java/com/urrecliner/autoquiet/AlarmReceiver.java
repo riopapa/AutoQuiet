@@ -10,7 +10,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
-import com.urrecliner.autoquiet.Sub.AlarmIcon;
+import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.MannerMode;
 import com.urrecliner.autoquiet.Sub.SetAlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import static com.urrecliner.autoquiet.ActivityAddEdit.alarmIcons;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -39,6 +40,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     Vars vars;
     final int STOP_SPEAK = 1022;
     int icon;
+    enum alarmType { PRE, POST, ERR, TESLY, ONLY, STOCK}
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -49,7 +51,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-        icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+        if (qt.alarmType == 0)
+            icon = new AlarmType().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+        else
+            icon = alarmIcons[qt.alarmType];
 
         vars = new VarsGetPut().get(context);
         readyTTS();
@@ -129,7 +134,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String subject = qt.subject;
         new Sounds().beep(rContext, (subject.equals("토스")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
         if (qt.begLoop != 0)
-            icon = new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+            icon = new AlarmType().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
         new Timer().schedule(new TimerTask() {
             public void run() {
             if      (icon == R.drawable.bell_several) {

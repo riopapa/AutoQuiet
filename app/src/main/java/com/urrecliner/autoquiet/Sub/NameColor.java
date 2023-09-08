@@ -13,6 +13,8 @@ public class NameColor {
             switch (calName) {
                 case "디지털교육":
                     return ResourcesCompat.getColor(context.getResources(), R.color.nameDigital, null);
+                case "경기복지":
+                    return ResourcesCompat.getColor(context.getResources(), R.color.nameBokji, null);
                 case "events":
                     return ResourcesCompat.getColor(context.getResources(), R.color.nameEvents, null);
                 case "Rio Papa":

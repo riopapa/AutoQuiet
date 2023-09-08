@@ -1,10 +1,13 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.urrecliner.autoquiet.ActivityMain.currIdx;
 import static com.urrecliner.autoquiet.ActivityMain.mainRecycleAdapter;
+import static com.urrecliner.autoquiet.ActivityMain.pActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -21,13 +24,14 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.urrecliner.autoquiet.Sub.AlarmIcon;
+import com.google.android.material.snackbar.Snackbar;
+import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
-import com.urrecliner.autoquiet.models.QuietTask;
 import com.urrecliner.autoquiet.Sub.MyItemTouchHelperAdapter;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
+import com.urrecliner.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +45,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     private QuietTask qt;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
-    private View swipeView;
     Vars vars;
     Context context;
 
@@ -59,7 +62,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         colorActive = ResourcesCompat.getColor(context.getResources(), R.color.colorActive, null);
         colorOffBack = ResourcesCompat.getColor(context.getResources(), R.color.colorTransparent, null);
 
-        swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_line, parent, false);
+        View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_line, parent, false);
 
         return new ViewHolder(swipeView);
     }
@@ -68,19 +71,19 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             GestureDetector.OnGestureListener {
 
         View viewLine;
-        ImageView lvVibrate, lvBegLoop, lvEndLoop, lvgCal;
+//        ImageView lvVibrate, lvBegLoop, lvEndLoop, lvgCal;
+        ImageView lvgCal, lvAlarmType;
         TextView rmdSubject, rmdDate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvBegTime, tvEndTime, tvCalRight, tvCalLeft;
-        LinearLayout llCalInfo, llBegEndLoop, llBegEndTime, llWeekFlag;
+        LinearLayout llCalInfo;
+        LinearLayout llBegEndTime;
+        LinearLayout llWeekFlag;
         GestureDetector mGestureDetector;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.viewLine = itemView.findViewById(R.id.one_reminder);
-            this.lvVibrate = itemView.findViewById(R.id.lv_vibrate);
-            this.llBegEndLoop = itemView.findViewById(R.id.llBegEnd);
-            this.lvBegLoop = itemView.findViewById(R.id.lvBegLoop);
-            this.lvEndLoop = itemView.findViewById(R.id.lvEndLoop);
+            this.lvAlarmType = itemView.findViewById(R.id.lv_alarm_type);
             this.lvgCal = itemView.findViewById(R.id.gCal);
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
             this.rmdDate = itemView.findViewById(R.id.rmdDate);
@@ -166,6 +169,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         qt = quietTasks.get(position);
+        if (qt.alarmType == 0)
+            qt.alarmType = new AlarmType().getType(qt.endHour==99, qt.vibrate, qt.begLoop, qt.endLoop);
+
         boolean gCalendar = qt.agenda;
         boolean active = qt.active;
 
@@ -183,25 +189,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvEndTime.setText(txt);
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
-        if (!end99) {
-            if (qt.vibrate)
-                holder.lvVibrate.setImageResource(
-                        (active) ? R.drawable.phone_vibrate :R.drawable.transperent);
-            else
-                holder.lvVibrate.setImageResource(
-                        (active) ? R.drawable.phone_off : R.drawable.transperent);
-            int begLoop = qt.begLoop;
-            int endLoop = qt.endLoop;
-            holder.lvBegLoop.setVisibility(View.VISIBLE);
-            holder.lvEndLoop.setVisibility(View.VISIBLE);
-            holder.lvBegLoop.setImageResource((begLoop == 0) ? R.drawable.speak_off : (begLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
-            holder.lvEndLoop.setImageResource((endLoop == 0) ? R.drawable.speak_off : (endLoop == 1) ? R.drawable.bell_onetime : R.drawable.speak_on);
-        } else {
-            holder.lvVibrate.setImageResource(new AlarmIcon().getRscId(qt.endHour == 99, qt.vibrate,
-                    qt.begLoop, qt.endLoop));
-            holder.lvBegLoop.setVisibility(View.GONE);
-            holder.lvEndLoop.setVisibility(View.GONE);
-        }
+        holder.lvAlarmType.setImageResource(alarmIcons[qt.alarmType]);
+
         holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(context.getResources(), (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
@@ -209,6 +198,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.llCalInfo.setVisibility(View.GONE);
             holder.llBegEndTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);
+            holder.rmdSubject.setBackgroundColor(0x00FFFFFF);
             TextView[] tViewWeek = new TextView[7];
             tViewWeek[0] = holder.ltWeek0;
             tViewWeek[1] = holder.ltWeek1;
@@ -259,7 +249,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.tvCalRight.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             holder.tvCalRight.setSelected(true);
 
-            holder.viewLine.setBackgroundColor(NameColor.get(qt.calName, context));
+            holder.rmdSubject.setBackgroundColor(NameColor.get(qt.calName, context));
         }
     }
 
@@ -284,7 +274,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         for (int i = 1; i < quietTasks.size(); i++) {
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
-                if (qt.endHour == 99) {
+                if (qt.endHour == 99 || qt.agenda) {
                     qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
                 } else
                     qt.sortKey = i;
@@ -319,18 +309,20 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         if (position != 0) {
             qt = quietTasks.get(position);
             quietTasks.remove(position);
-            notifyItemRemoved(position);
+            mainRecycleAdapter.notifyItemRemoved(position);
             new QuietTaskGetPut().put(quietTasks);
-//            Snackbar snackbar = Snackbar
-//                    .make(swipeView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
-//            snackbar.setAction("복원", view -> {
-//                quietTasks.add(position, qt);
-//                notifyItemInserted(position);
-//                new QuietTaskGetPut().put(quietTasks);
-//            });
+            View pView = pActivity.findViewById(R.id.mainRecycler);
+            Snackbar snackbar = Snackbar
+                    .make(pView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
+            snackbar.setAction("복원", view -> {
+                quietTasks.add(position, qt);
+                new QuietTaskGetPut().put(quietTasks);
+                mainRecycleAdapter.notifyDataSetChanged();
+//                pView.invalidate();
+            });
 
-//            snackbar.setActionTextColor(Color.YELLOW);
-//            snackbar.show();
+            snackbar.setActionTextColor(Color.CYAN);
+            snackbar.show();
 
         } else {
             if (topLine++ < 0)

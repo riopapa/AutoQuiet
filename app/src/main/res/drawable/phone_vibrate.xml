@@ -4,7 +4,7 @@
         android:viewportWidth="24"
         android:width="48dp"
         xmlns:android="http://schemas.android.com/apk/res/android">
-  <path android:strokeColor="#16F1CD"
+  <path android:strokeColor="#18A68F"
         android:strokeLineJoin="round"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
@@ -15,15 +15,15 @@
            "/>
   <path android:strokeColor="#FEF08A"
         android:strokeLineJoin="round"
-        android:strokeWidth="1.8"
+        android:strokeWidth="2"
         android:strokeLineCap="round"
         android:pathData="
           M3,4l1,4l-1,4l1,4l-1,4
           M21,4l-1,4l1,4l-1,4l1,4
        " />
-  <path android:strokeColor="#FE403A"
+  <path android:strokeColor="#08257E"
         android:strokeLineJoin="round"
-        android:strokeWidth="0.6"
+        android:strokeWidth="0.8"
         android:strokeLineCap="round"
         android:pathData="
           M3,4l1,4l-1,4l1,4l-1,4

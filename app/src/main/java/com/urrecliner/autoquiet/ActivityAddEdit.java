@@ -4,11 +4,11 @@ import static com.urrecliner.autoquiet.ActivityMain.currIdx;
 import static com.urrecliner.autoquiet.ActivityMain.mainRecycleAdapter;
 import static com.urrecliner.autoquiet.ActivityMain.vars;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -24,7 +24,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.urrecliner.autoquiet.Sub.AlarmIcon;
+import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
@@ -35,24 +35,42 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
     private int begHour, begMin, endHour, endMin, sHour;
     private boolean active, end99, am;
-    private int begLoop, endLoop;
+    private int alarmType;
     private boolean[] week = new boolean[7];
     private final TextView[] weekView = new TextView[7];
-    private boolean vibrate, agenda, sayDate;
+    private boolean agenda, sayDate;
     private QuietTask qT;
     private ArrayList<QuietTask> quietTasks;
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
     private int xSize, numPos;
+    private Dialog dialog;
     final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
+
+    final public String[] alarmTypeNames = { "의미 없음",
+        "벨과 제목을 여러 번 울려줌",
+        "벨과 제목을 한 번 알려 줌",
+        "한번만 울리고 끄읏",
+        "벨 한 번 울린 후 사라짐",
+        "종료 시각까지 진동",
+        "종료 시각까지 조용",
+    };
+    public final static int[] alarmIcons = { 0,
+            R.drawable.bell_several,
+            R.drawable.bell_tomorrow,
+            R.drawable.bell_onetime,
+            R.drawable.bell_once_gone,
+            R.drawable.phone_vibrate,
+            R.drawable.phone_off,
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +104,39 @@ public class ActivityAddEdit extends AppCompatActivity {
         colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
+        if (qT.alarmType == 0)
+            qT.alarmType = new AlarmType().getType(end99, qT.vibrate, qT.begLoop, qT.endLoop);
         build_QuietTask();
+        TextView alarm_Type = findViewById(R.id.typeDesc);
+        alarm_Type.setOnClickListener(v -> dialog.show());
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alarm_case);
 
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels/2;
+        dialog.getWindow().setLayout(width, height);
+
+    }
+
+    public void alarmType_Selected(View view) {
+        int checkedId = view.getId();
+        if (checkedId == R.id.radio_bell_subject_several)
+            alarmType = 1;
+        else if (checkedId == R.id.radio_bell_subject_once)
+            alarmType = 2;
+        else if (checkedId == R.id.radio_bee_one_time)
+            alarmType = 3;
+        else if (checkedId == R.id.radio_bell_once_gone)
+            alarmType = 4;
+
+        else if (checkedId == R.id.radio_vibrate_start_end)
+            alarmType = 5;
+        else
+            alarmType = 6;
+        dialog.dismiss();
+        end99 = alarmType < 5;
+
+        showTimeForm();
     }
 
     void build_QuietTask() {
@@ -99,11 +148,9 @@ public class ActivityAddEdit extends AppCompatActivity {
         endMin = qT.endMin;
         end99 = qT.endHour == 99;
         active = qT.active;
-        begLoop = qT.begLoop;
-        endLoop = qT.endLoop;
+        alarmType = qT.alarmType;
         sayDate = qT.sayDate;
         week = qT.week;
-        vibrate = qT.vibrate;
         agenda = qT.agenda;
         sHour = begHour;
         am = begHour < 12;
@@ -125,21 +172,21 @@ public class ActivityAddEdit extends AppCompatActivity {
                 numPos--;
             else
                 numPos = 4;
-            set_TimeForm();
+            showTimeForm();
         });
         findViewById(R.id.numFore).setOnClickListener(view -> {
             if (numPos < 4)
                 numPos++;
             else
                 numPos = 1;
-            set_TimeForm();
+            showTimeForm();
         });
 
         binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.drawable.transperent);
         binding.timePickerBeg.setIs24HourView(true);
         binding.timePickerEnd.setIs24HourView(true);
         numPos = 1;
-        set_TimeForm();
+        showTimeForm();
 
         binding.etSubject.setText(subject);
         binding.etSubject.setBackgroundColor(NameColor.get(qT.calName, context));
@@ -158,18 +205,6 @@ public class ActivityAddEdit extends AppCompatActivity {
             }
         }
 
-        binding.end99.setOnClickListener(v -> {
-            end99 = !end99;
-            if (end99)
-                endHour = 99;
-            else
-                endHour = begHour;
-            binding.end99.setChecked(end99);
-            numPos = 1;
-            set_TimeForm();
-            show_Info();
-        });
-
         if (agenda)
             binding.swActive.setVisibility(View.GONE);
         else {
@@ -183,54 +218,6 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.addUpdate.setBackgroundColor(active? BGColorOn : BGColorOff);
         }
 
-        binding.tvBegLoop.setOnClickListener(v -> {
-            if (begLoop == 0)
-                begLoop = 1;
-            else if (begLoop == 1)
-                begLoop = 11;
-            else
-                begLoop = 0;
-            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-            v.invalidate();
-            show_Info();
-        });
-
-        binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-        binding.ivBegLoop.setOnClickListener(v -> {
-            if (begLoop == 0)
-                begLoop = 1;
-            else if (begLoop == 1)
-                begLoop = 11;
-            else
-                begLoop = 0;
-            binding.ivBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-            v.invalidate();
-            show_Info();
-        });
-
-        binding.tvEndLoop.setOnClickListener(v -> {
-            if (endLoop == 0)
-                endLoop = 1;
-            else if (endLoop == 1)
-                endLoop = 11;
-            else
-                endLoop = 0;
-            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-            v.invalidate();
-            show_Info();
-        });
-        binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-        binding.ivEndLoop.setOnClickListener(v -> {
-            if (endLoop == 0)
-                endLoop = 1;
-            else if (endLoop == 1)
-                endLoop = 11;
-            else
-                endLoop = 0;
-            binding.ivEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-            v.invalidate();
-            show_Info();
-        });
         binding.sayDate.setChecked(sayDate);    // sayDate is only for end Time
         binding.sayDate.setOnClickListener(v -> {
             sayDate = !sayDate;
@@ -245,9 +232,9 @@ public class ActivityAddEdit extends AppCompatActivity {
                 s += "\n" + qT.calLocation;
             if (!qT.calDesc.equals(""))
                 s += "\n" + qT.calDesc;
-            binding.dateDesc.setText(s);
+            binding.typeDesc.setText(s);
         } else
-            show_Info();
+            showTimeForm();
 
         binding.amPm.setOnClickListener(v -> {
             am = !am;
@@ -272,32 +259,19 @@ public class ActivityAddEdit extends AppCompatActivity {
         });
     }
 
-    private void show_Info() {
 
-        String s;
-        int icon = new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop);
-        if (end99) {
-            s = "의미 없는 벨 조합";
-            if      (icon == R.drawable.bell_several)
-                s = "벨과 제목을 여러 번 울려줌";
-            else if (icon == R.drawable.bell_tomorrow)
-                s = "벨과 제목을 한 번 알려 줌";
-            else if (icon == R.drawable.bell_onetime)
-                s = "한번만 울리고 끄읏";
-            else if (icon == R.drawable.bell_once_gone)
-                s = "벨 한 번 울린 후 사라짐";
-            binding.iVVibrate.setImageResource(icon);
-
+    private void showTimeForm() {
+        binding.typeDesc.setText(alarmTypeNames[alarmType]);
+        binding.alarmType.setImageResource(alarmIcons[alarmType]);
+        if (alarmType < 5) { // end99
+            end99 = true;
+            endHour = 99;
         } else {
-            s = "기간이 있는 경우";
-            binding.iVVibrate.setImageResource((vibrate) ? R.drawable.phone_vibrate:R.drawable.phone_off);
+            end99 = false;
         }
-        binding.dateDesc.setText(s);
-    }
-    private void set_TimeForm() {
-        binding.end99.setChecked(end99);
-        AtomicInteger icon = new AtomicInteger(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
+
         if (!end99) {    // normal beg, end
+            binding.txtEnd.setVisibility(View.VISIBLE);
             if (endHour == 99)
                 endHour = begHour;
             binding.timePickerBeg.setVisibility(View.VISIBLE);
@@ -308,24 +282,12 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.timePickerEnd.setHour(endHour);
             binding.timePickerEnd.setMinute(endMin);
             binding.timePickerEnd.setHour(endHour); binding.timePickerEnd.setMinute(endMin);
-            binding.iVVibrate.setImageResource(icon.get());
-            binding.iVVibrate.setOnClickListener(v -> {
-                vibrate = !vibrate;
-                icon.set(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
-                binding.iVVibrate.setImageResource(icon.get());
-                v.invalidate();
-            });
-            binding.tVVibrate.setOnClickListener(v -> {
-                vibrate = !vibrate;
-                icon.set(new AlarmIcon().getRscId(end99, vibrate, begLoop, endLoop));
-                v.invalidate();
-            });
 
         } else {
+            binding.txtEnd.setVisibility(View.GONE);
             binding.numDateTime.setVisibility(View.VISIBLE);
             binding.timePickerBeg.setVisibility(View.GONE);
             binding.timePickerEnd.setVisibility(View.GONE);
-            binding.iVVibrate.setImageResource(icon.get());
             show_ResultTime();
         }
     }
@@ -389,7 +351,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         }
         if (numPos < 4)
             numPos++;
-        set_TimeForm();
+        showTimeForm();
     }
 
     private void save_QuietTask() {
@@ -402,7 +364,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             save_AgendaTask();
         } else {
             qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
-                    week, active, vibrate, begLoop, endLoop, sayDate);
+                    week, active, alarmType, sayDate);
             if (currIdx == -1)
                 quietTasks.add(qT);
             else
@@ -461,7 +423,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             Toast.makeText(context, "요일을 "+weekName[weekDay]+" 로 바꿈",Toast.LENGTH_SHORT).show();
         }
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
-                week, active, vibrate, begLoop, endLoop, sayDate);
+                week, active, alarmType, sayDate);
         if (currIdx == -1)
             quietTasks.add(qT);
         else
@@ -480,7 +442,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         long endDate = c.getTimeInMillis();
         QuietTask qAgenda = new QuietTask(subject, begDate, endDate,
                 qT.calId, qT.calName, qT.calDesc, qT.calLocation,
-                true, vibrate, begLoop, endLoop, true);
+                true, 5, true); // 5: vibrate
         quietTasks.set(currIdx, qAgenda);
     }
 
@@ -512,7 +474,6 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
             save_QuietTask();
             mainRecycleAdapter.notifyItemChanged(currIdx);
-//            Toast.makeText(this, qt.subject+ ((currIdx == -1)? " Added": " Saved"), Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.action_delete) {
             finish();
@@ -526,7 +487,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 begMin++;
             QuietTask qtNew = new QuietTask(qT.subject,
                     begHour, begMin, endHour, endMin,
-                    week, active, vibrate, begLoop, endLoop, sayDate);
+                    week, active, alarmType, sayDate);
             quietTasks.add(++currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);

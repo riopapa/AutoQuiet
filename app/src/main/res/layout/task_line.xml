@@ -16,39 +16,13 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/lv_vibrate"
+            android:id="@+id/lv_alarm_type"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/phone_vibrate"
             android:contentDescription="@string/blank" />
-        <LinearLayout
-            android:id="@+id/llBegEnd"
-            android:layout_width="50dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/lvBegLoop"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="0dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/speak_on"
-            android:contentDescription="@string/blank" />
-        <ImageView
-            android:id="@+id/lvEndLoop"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="2dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/speak_on"
-            android:contentDescription="@string/blank" />
-        </LinearLayout>
+
     </LinearLayout>
     <!--  hour, min  -->
     <LinearLayout

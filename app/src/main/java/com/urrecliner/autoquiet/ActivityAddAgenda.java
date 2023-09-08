@@ -135,7 +135,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
             if (gCals.get(i).id == id) {
                 GCal gC = gCals.get(i);
                 QuietTask q = new QuietTask(mTitle, gC.begTime + (long) before * 60 * 1000, gC.endTime + (long) after * 60 * 1000,
-                        qId, gC.calName, gC.desc, gC.location, true, vibrate, begLoop, endLoop, gC.repeat);
+                        qId, gC.calName, gC.desc, gC.location, true, 5, gC.repeat);
                 sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calBegDate));
                 quietTasks.add(q);
             }

@@ -18,7 +18,7 @@ public class QuietTask implements Serializable {
     public boolean sayDate; // 현재 일자, 시각을 말할찌 여부
 
     public boolean[] week = {true, true, true, true, true, true, true};
-    public int begLoop, endLoop;  // 0 : not Active, 1: bell only, > 1: talk subject
+    public int begLoop, endLoop, alarmType;  // 0 : not Active, 1: bell only, > 1: talk subject
     // begLoop = 0 무음 보드, endLoop == 1 삐 소리만,  > 1 subject를 읽어 주는 것
     public long calBegDate, calEndDate;    // 통상으로 만들어지면 callStartDate = index 가 됨 sort 목적임
     public int calId;
@@ -44,9 +44,23 @@ public class QuietTask implements Serializable {
         this.sayDate = sayDate;
         System.arraycopy(week, 0, this.week, 0, 7);
     }
-    
+    // normal QuietTask replaced
+    public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin, boolean[] week, boolean active, int alarmType, boolean sayDate) {
+        this.subject = subject;
+        this.begHour = begHour;
+        this.begMin = begMin;
+        this.endHour = endHour;
+        this.endMin = endMin;
+        this.active = active;
+        this.alarmType = alarmType;
+        this.agenda = false;
+        this.sayDate = sayDate;
+        System.arraycopy(week, 0, this.week, 0, 7);
+    }
+
+
     // QuietTask from calendar
-    public QuietTask(String title, long beg, long end, int id, String calName, String desc, String location, boolean active, boolean vibrate, int begLoop, int endLoop, boolean taskRepeat) {
+    public QuietTask(String title, long beg, long end, int id, String calName, String desc, String location, boolean active, int alarmType, boolean taskRepeat) {
         SimpleDateFormat sdfHour = new SimpleDateFormat("HH", Locale.getDefault());
         SimpleDateFormat sdfMin = new SimpleDateFormat("mm", Locale.getDefault());
         this.agenda = true;
@@ -58,9 +72,7 @@ public class QuietTask implements Serializable {
         this.calDesc = desc;
         this.calLocation = location;
         this.active = active;
-        this.vibrate = vibrate;
-        this.begLoop = begLoop;
-        this.endLoop = endLoop;
+        this.alarmType = alarmType;     // vibrate
         this.calTaskRepeat = taskRepeat;
         this.begHour = Integer.parseInt(sdfHour.format(beg));
         this.begMin = Integer.parseInt(sdfMin.format(beg));
@@ -73,4 +85,5 @@ public class QuietTask implements Serializable {
         this.week[weekNbr] = true;
         this.sayDate = true;
     }
+
 }

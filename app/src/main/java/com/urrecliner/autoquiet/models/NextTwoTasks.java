@@ -1,7 +1,6 @@
 package com.urrecliner.autoquiet.models;
 
-import com.urrecliner.autoquiet.R;
-import com.urrecliner.autoquiet.Sub.AlarmIcon;
+import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class NextTwoTasks {
                     saveIdx = idx;
                     subject = qThis.subject;
                     begEnd = "S";
-                    icon = new AlarmIcon().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+                    icon = new AlarmType().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
                     soonOrUntil = "예정";
                 }
                 if (qThis.endHour == 99)
@@ -36,7 +35,7 @@ public class NextTwoTasks {
                     saveIdx = idx;
                     subject = qThis.subject;
                     begEnd = (idx == 0) ? "O" : "F";
-                    icon = new AlarmIcon().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+                    icon = new AlarmType().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
                     soonOrUntilN = "까지";
                 }
             }
@@ -50,7 +49,7 @@ public class NextTwoTasks {
                     begEndN = "S";
                     saveIdxN = idx;
                     subjectN = qNxt.subject;
-                    iconN = new AlarmIcon().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+                    iconN = new AlarmType().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
                     soonOrUntilN = "예정";
                 }
                 if (qNxt.endHour == 99)
@@ -61,7 +60,7 @@ public class NextTwoTasks {
                     begEndN = (idx == 0) ? "O" : "F";
                     saveIdxN = idx;
                     subjectN = qNxt.subject;
-                    iconN = new AlarmIcon().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+                    iconN = new AlarmType().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
                     soonOrUntilN = "까지";
                 }
             }
