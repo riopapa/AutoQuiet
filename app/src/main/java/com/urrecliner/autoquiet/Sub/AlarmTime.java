@@ -23,7 +23,7 @@ public class AlarmTime {
         intent.putExtra("DATA",args);
         intent.putExtra("several", several);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
             new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.subject);

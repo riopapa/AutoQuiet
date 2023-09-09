@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
@@ -86,7 +89,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 finish_Task();
                 break;
             case "O":   // onetime
-                start_OneTime(context);
+                only_OneTime(context);
                 break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
@@ -95,9 +98,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         waitLoop(); // not to be killed
     }
 
-    private void start_OneTime(Context context) {
+    private void only_OneTime(Context context) {
         new MannerMode().turn2Normal(vars.sharedManner, context);
-        if (qt.alarmType >= PHONE_VIBRATE) {
+        if (vars.sharedManner) {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -106,6 +109,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
                 }
             }, 2000);
+        } else {
+            vibrate();
         }
         qt.active = false;
         quietTasks.set(0, qt);
@@ -324,6 +329,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
     }
 
+    public void vibrate() {
+        final long[] vibPattern = {0, 20, 200, 300, 300, 400, 400, 500};
+        VibratorManager vibManager = (VibratorManager) rContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+        Vibrator vibrator = vibManager.getDefaultVibrator();
+        VibrationEffect vibEffect = VibrationEffect.createWaveform(vibPattern, -1);
+        vibrator.vibrate(vibEffect);
+    }
     private void readyTTS() {
 
         myTTS = null;

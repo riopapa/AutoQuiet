@@ -1,5 +1,6 @@
 package com.urrecliner.autoquiet;
 
+import static com.urrecliner.autoquiet.ActivityAddEdit.PHONE_OFF;
 import static com.urrecliner.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 
 import android.os.Bundle;
@@ -22,8 +23,8 @@ public class ActivityOneTime extends AppCompatActivity {
     QuietTask quietTask;
     ArrayList<QuietTask> quietTasks;
     private String subject;
-    private int begHour, begMin, endHour, endMin; // 0: silent 1: bell 2: talk
-    private boolean vibrate;
+    private int begHour, begMin, endHour, endMin; // 0: silent 1: bell 2: manner
+    private boolean vibrate, manner;
     private int durationMin = 0;       // in minutes
     Calendar calendar;
     boolean timePicker_UpDown = false;
@@ -48,7 +49,8 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTasks = new QuietTaskGetPut().get(this);
         quietTask = quietTasks.get(0);
         subject = getResources().getString(R.string.Quiet_Once);
-        vibrate = quietTask.vibrate;
+        vibrate = quietTask.alarmType == PHONE_VIBRATE;
+        manner = vars.sharedManner;
         durationMin = Integer.parseInt(vars.sharedTimeInit);
         shortInterval = Integer.parseInt(vars.sharedTimeShort);
         longInterval = Integer.parseInt(vars.sharedTimeLong);
@@ -97,6 +99,14 @@ public class ActivityOneTime extends AppCompatActivity {
             binding.oneVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
             v.invalidate();
         });
+
+        binding.manner.setImageResource((manner)? R.drawable.speak_on :R.drawable.speak_off);
+        binding.manner.setOnClickListener(v -> {
+            manner ^= true;
+            binding.manner.setImageResource((manner)? R.drawable.speak_on :R.drawable.speak_off);
+            v.invalidate();
+        });
+
         binding.minus10Min.setOnClickListener(v -> {
             if (durationMin > shortInterval) {
                 durationMin -= shortInterval;
@@ -140,9 +150,11 @@ public class ActivityOneTime extends AppCompatActivity {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, begHour, begMin, endHour, endMin,
-                week, true,  PHONE_VIBRATE, false);
-         quietTasks.set(0, quietTask);
+                week, true,  (vibrate) ? PHONE_VIBRATE:PHONE_OFF, false);
+        quietTasks.set(0, quietTask);
         new QuietTaskGetPut().put(quietTasks);
+        vars.sharedManner = manner;
+        new VarsGetPut().put(vars, this);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
         new SetUpComingTask(this, quietTasks, "Quit RightNow");
     }

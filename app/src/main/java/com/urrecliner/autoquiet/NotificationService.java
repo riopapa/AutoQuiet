@@ -62,7 +62,7 @@ public class NotificationService extends Service {
 
         if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(nContext, ActivityOneTime.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(nContext, 0, oIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(nContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
             try {
                 pendingIntent.send();
             } catch(PendingIntent.CanceledException e) {
@@ -126,23 +126,23 @@ public class NotificationService extends Service {
         }
 
         Intent mainIntent = new Intent(nContext, ActivityMain.class);
-        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(nContext, 0, mainIntent, 0));
+        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(nContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
 
         Intent rightNowI = new Intent(this, NotificationService.class);
         rightNowI.putExtra("operation", RIGHT_NOW);
-        PendingIntent pi = PendingIntent.getService(nContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getService(nContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         mRemoteViews.setOnClickPendingIntent(R.id.right_now, pi);
 
         Intent tossI = new Intent(this, NotificationService.class);
         tossI.putExtra("operation", TO_TOSS);
-        PendingIntent pt = PendingIntent.getService(nContext, TO_TOSS, tossI, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pt = PendingIntent.getService(nContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pt);
         mRemoteViews.setOnClickPendingIntent(R.id.to_toss, pt);
 
         Intent stopTalkI = new Intent(this, NotificationService.class);
         stopTalkI.putExtra("operation", STOP_SPEAK);
-        PendingIntent ps = PendingIntent.getService(nContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent ps = PendingIntent.getService(nContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(ps);
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
     }

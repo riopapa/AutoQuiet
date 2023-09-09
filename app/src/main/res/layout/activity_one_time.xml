@@ -120,7 +120,7 @@
             android:padding="2dp"
             android:textSize="18sp" />
         <ImageView
-            android:id="@+id/oneFinishRepeat"
+            android:id="@+id/manner"
             android:layout_margin="8dp"
             android:layout_width="28dp"
             android:layout_height="32dp"
