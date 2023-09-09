@@ -1,6 +1,7 @@
 package com.urrecliner.autoquiet;
 
-import android.content.Intent;
+import static com.urrecliner.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +22,7 @@ public class ActivityOneTime extends AppCompatActivity {
     QuietTask quietTask;
     ArrayList<QuietTask> quietTasks;
     private String subject;
-    private int begHour, begMin, endHour, endMin, fRepeatCount; // 0: silent 1: bell 2: talk
+    private int begHour, begMin, endHour, endMin; // 0: silent 1: bell 2: talk
     private boolean vibrate;
     private int durationMin = 0;       // in minutes
     Calendar calendar;
@@ -33,8 +34,6 @@ public class ActivityOneTime extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         vars = new VarsGetPut().get(this);
-//        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-//        getApplicationContext().sendBroadcast(intent);
         super.onCreate(savedInstanceState);
         binding = ActivityOneTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -50,7 +49,6 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTask = quietTasks.get(0);
         subject = getResources().getString(R.string.Quiet_Once);
         vibrate = quietTask.vibrate;
-        fRepeatCount = quietTask.endLoop;
         durationMin = Integer.parseInt(vars.sharedTimeInit);
         shortInterval = Integer.parseInt(vars.sharedTimeShort);
         longInterval = Integer.parseInt(vars.sharedTimeLong);
@@ -123,18 +121,6 @@ public class ActivityOneTime extends AppCompatActivity {
             adjustTimePicker();
         });
 
-        binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off: (fRepeatCount == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-        binding.oneFinishRepeat.setOnClickListener(v -> {
-            if (fRepeatCount == 0)
-                fRepeatCount = 1;
-            else if (fRepeatCount == 1)
-                fRepeatCount = 11;
-            else
-                fRepeatCount = 0;
-            binding.oneFinishRepeat.setImageResource((fRepeatCount == 0)? R.drawable.speak_off : (fRepeatCount == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-            v.invalidate();
-        });
-
     }
 
     void adjustTimePicker() {
@@ -154,9 +140,8 @@ public class ActivityOneTime extends AppCompatActivity {
 
         boolean [] week = new boolean[]{true, true, true, true, true, true, true};
         quietTask = new QuietTask(subject, begHour, begMin, endHour, endMin,
-                week, true, vibrate, 0, fRepeatCount, false);    // onetime repeat is 0
-
-        quietTasks.set(0, quietTask);
+                week, true,  PHONE_VIBRATE, false);
+         quietTasks.set(0, quietTask);
         new QuietTaskGetPut().put(quietTasks);
         new MannerMode().turn2Quiet(this, vars.sharedManner, vibrate);
         new SetUpComingTask(this, quietTasks, "Quit RightNow");

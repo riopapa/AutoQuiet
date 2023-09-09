@@ -10,9 +10,8 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
-import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.MannerMode;
-import com.urrecliner.autoquiet.Sub.SetAlarmTime;
+import com.urrecliner.autoquiet.Sub.AlarmTime;
 import com.urrecliner.autoquiet.Sub.Sounds;
 import com.urrecliner.autoquiet.Sub.VarsGetPut;
 import com.urrecliner.autoquiet.Sub.VibratePhone;
@@ -26,6 +25,12 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.urrecliner.autoquiet.ActivityAddEdit.BELL_ONCE_GONE;
+import static com.urrecliner.autoquiet.ActivityAddEdit.BELL_ONETIME;
+import static com.urrecliner.autoquiet.ActivityAddEdit.BELL_SEVERAL;
+import static com.urrecliner.autoquiet.ActivityAddEdit.BELL_EVENT;
+import static com.urrecliner.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.urrecliner.autoquiet.ActivityAddEdit.alarmIcons;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -40,7 +45,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     Vars vars;
     final int STOP_SPEAK = 1022;
     int icon;
-    enum alarmType { PRE, POST, ERR, TESLY, ONLY, STOCK}
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,10 +55,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-        if (qt.alarmType == 0)
-            icon = new AlarmType().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
-        else
-            icon = alarmIcons[qt.alarmType];
 
         vars = new VarsGetPut().get(context);
         readyTTS();
@@ -72,6 +72,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             myTTS.speak(err, TextToSpeech.QUEUE_ADD, null, TTSId);
             Log.w("Quiet Idx Err", qt.subject);
         }
+//        if (qt.alarmType == 0)
+//            qt.alarmType = new AlarmType().getType(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+        icon = alarmIcons[qt.alarmType];
 
         assert caseSFO != null;
 
@@ -89,13 +92,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
 
-        waitLoop();
-
+        waitLoop(); // not to be killed
     }
 
     private void start_OneTime(Context context) {
-        new MannerMode().turn2Normal(vars.sharedManner && (qt.endLoop == 1), context);
-        if (qt.endLoop > 1) {
+        new MannerMode().turn2Normal(vars.sharedManner, context);
+        if (qt.alarmType >= PHONE_VIBRATE) {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -113,10 +115,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void start_Task() {
 
-        boolean end99 = qt.endHour == 99;
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (end99)
+                if (qt.alarmType < PHONE_VIBRATE)
                     say_Started99();
                 else {
                     start_Normal();
@@ -133,20 +134,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String subject = qt.subject;
         new Sounds().beep(rContext, (subject.equals("토스")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
-        if (qt.begLoop != 0)
-            icon = new AlarmType().getRscId(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+//        if (qt.alarmType == 0) {
+//            qt.alarmType = new AlarmType().getType(qt.endHour == 99, qt.vibrate, qt.begLoop, qt.endLoop);
+//            icon = alarmIcons[qt.alarmType];
+//        }
         new Timer().schedule(new TimerTask() {
             public void run() {
-            if      (icon == R.drawable.bell_several) {
+            if      (qt.alarmType == BELL_SEVERAL) {
                 bell_Several(subject);
                 if (several != 0)
                     return;
-            }
-            else if (icon == R.drawable.bell_tomorrow)
-                bellTomorrow(subject);
-            else if (icon == R.drawable.bell_onetime)
+            } else if (qt.alarmType == BELL_EVENT)
+                bellEvent(subject);
+            else if (qt.alarmType == BELL_ONETIME)
                 bellOneTime(subject);
-            else if (icon == R.drawable.bell_once_gone)
+            else if (qt.alarmType == BELL_ONCE_GONE)
                 bellOnceThenGone(subject);
             else {
                 new Sounds().beep(rContext, Sounds.BEEP.NOTY);
@@ -156,7 +158,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             new SetUpComingTask(rContext, quietTasks, "ended");
             }
         }, 3000);
-
 
     }
 
@@ -171,6 +172,17 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void bellOneTime(String subject) {
         String say = subject + " 를 잊지 마세요";
         myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+    }
+
+    private void bellEvent(String subject) {
+        new Sounds().beep(rContext, Sounds.BEEP.NOTY);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                String say = subject + " 를 확인 하세요.";
+                myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+            }
+        }, 1500);
     }
 
     private void bell_Several(String subject) {
@@ -188,7 +200,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             NextTwoTasks n2 = new NextTwoTasks(quietTasks);
 
             long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 90) * 1000;
-            new SetAlarmTime().request(rContext, qt, nextTime, "S", several);   // several 0 : no more
+            new AlarmTime().request(rContext, qt, nextTime, "S", several);   // several 0 : no more
             Intent uIntent = new Intent(rContext, NotificationService.class);
 
             uIntent.putExtra("beg", nowTimeToString(nextTime));
@@ -211,43 +223,27 @@ public class AlarmReceiver extends BroadcastReceiver {
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
         }
     }
-
-    private void bellTomorrow(String subject) {
+    private void start_Normal() {
         new Sounds().beep(rContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                String say = subject + " 를 확인하세요.";
+                String subject = qt.subject;
+                String say = addPostPosition(subject) + "시작 됩니다";
+                Log.w("Task "+System.currentTimeMillis(), say);
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
-        }, 1500);
-    }
-    private void start_Normal() {
-        if (qt.begLoop > 1) {
-            new Sounds().beep(rContext, Sounds.BEEP.NOTY);
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    String subject = qt.subject;
-                    String say = addPostPosition(subject) + "시작 됩니다";
-                    myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-                }
-            }, 1500);
-        } else if (qt.begLoop == 1){
-            new Sounds().beep(rContext, Sounds.BEEP.INFO);
-        }
-        goIntoMannerMode();
-        new SetUpComingTask(rContext, quietTasks, "say_Started()");
-    }
+        }, 1200);
 
-    private void goIntoMannerMode() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                boolean beep = vars.sharedManner && (qt.begLoop > 1);
-                new MannerMode().turn2Quiet(rContext, beep, qt.vibrate);
+            new MannerMode().turn2Quiet(rContext, vars.sharedManner,
+                    qt.alarmType == PHONE_VIBRATE);
+            Log.w("Task "+System.currentTimeMillis(), "SetUpComingTask");
+            new SetUpComingTask(rContext, quietTasks, "say_Started()");
             }
-        }, 5000);
+        }, 20000);
     }
 
     String addPostPosition(String s) {
@@ -257,50 +253,51 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     void finish_Task() {
-        new MannerMode().turn2Normal(vars.sharedManner && (qt.endLoop == 1), rContext);
-        if (!qt.sayDate) {
+        new MannerMode().turn2Normal(vars.sharedManner, rContext);
+        if (!qt.sayDate)
             finish_Normal();
-        } else {
-            new Timer().schedule(new TimerTask() {
-                public void run () {
-                    if (several > 0) {
-                        say_FinishDated();
-                        long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 180) * 1000;
-                        new SetAlarmTime().request(rContext, qt, nextTime, "F", --several);
+        else
+            finish_Several();
+    }
 
-                        SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-                        String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
-                        String endN = sharedPref.getString("endN", "시작");
-                        String subjectN = sharedPref.getString("subjectN", "Next Item");
-                        int icon = sharedPref.getInt("icon", R.drawable.next_task);
-                        int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
+    private void finish_Several() {
+        new Timer().schedule(new TimerTask() {
+            public void run () {
+                if (several > 0) {
+                    finish_Dated();
+                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 180) * 1000;
+                    new AlarmTime().request(rContext, qt, nextTime, "F", --several);
+                    SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+                    String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
+                    String endN = sharedPref.getString("endN", "시작");
+                    String subjectN = sharedPref.getString("subjectN", "Next Item");
+                    int icon = sharedPref.getInt("icon", R.drawable.next_task);
+                    int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
 
-                        Intent uIntent = new Intent(rContext, NotificationService.class);
-                        uIntent.putExtra("beg", nowTimeToString(nextTime));
-                        uIntent.putExtra("end", "반복"+several);
-                        uIntent.putExtra("stop_repeat", true);
-                        uIntent.putExtra("subject", qt.subject);
-                        uIntent.putExtra("icon", icon);
-                        uIntent.putExtra("iconNow", icon);
-                        uIntent.putExtra("begN", begN);
-                        uIntent.putExtra("endN", endN);
-                        uIntent.putExtra("subjectN", subjectN);
-                        uIntent.putExtra("iconN", iconN);
-                        rContext.startForegroundService(uIntent);
-                        return;
-                    }
+                    Intent uIntent = new Intent(rContext, NotificationService.class);
+                    uIntent.putExtra("beg", nowTimeToString(nextTime));
+                    uIntent.putExtra("end", "반복"+several);
+                    uIntent.putExtra("stop_repeat", true);
+                    uIntent.putExtra("subject", qt.subject);
+                    uIntent.putExtra("icon", icon);
+                    uIntent.putExtra("iconNow", icon);
+                    uIntent.putExtra("begN", begN);
+                    uIntent.putExtra("endN", endN);
+                    uIntent.putExtra("subjectN", subjectN);
+                    uIntent.putExtra("iconN", iconN);
+                    rContext.startForegroundService(uIntent);
+                } else
                     new SetUpComingTask(rContext, quietTasks, "say_FinDate");
-                }
-            }, 3000);
-        }
+            }
+        }, 3000);
     }
 
     private void finish_Normal() {
         new Timer().schedule(new TimerTask() {
             public void run () {
-                if (qt.endLoop > 1) {
-                    say_FinishDated();
-                } else if (qt.endLoop == 1) {
+                if (qt.alarmType < PHONE_VIBRATE) {
+                    finish_Dated();
+                } else if (qt.alarmType == PHONE_VIBRATE) {
                     new Sounds().beep(rContext, Sounds.BEEP.ALARM);
                 }
                 if (qt.agenda) { // delete if agenda based
@@ -318,7 +315,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }, 3000);
     }
 
-    private void say_FinishDated() {
+    private void finish_Dated() {
         new Sounds().beep(rContext, Sounds.BEEP.NOTY);
         String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
         String t = nowTimeToString(System.currentTimeMillis());

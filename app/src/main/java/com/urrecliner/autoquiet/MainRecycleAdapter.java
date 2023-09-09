@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,7 +26,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.ClearAllTasks;
 import com.urrecliner.autoquiet.Sub.MyItemTouchHelperAdapter;
@@ -72,7 +72,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         View viewLine;
 //        ImageView lvVibrate, lvBegLoop, lvEndLoop, lvgCal;
-        ImageView lvgCal, lvAlarmType;
+        ImageView lvAlarmType;
         TextView rmdSubject, rmdDate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvBegTime, tvEndTime, tvCalRight, tvCalLeft;
         LinearLayout llCalInfo;
@@ -84,7 +84,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             super(itemView);
             this.viewLine = itemView.findViewById(R.id.one_reminder);
             this.lvAlarmType = itemView.findViewById(R.id.lv_alarm_type);
-            this.lvgCal = itemView.findViewById(R.id.gCal);
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
             this.rmdDate = itemView.findViewById(R.id.rmdDate);
             this.ltWeek0 = itemView.findViewById(R.id.lt_week0);
@@ -169,8 +168,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         qt = quietTasks.get(position);
-        if (qt.alarmType == 0)
-            qt.alarmType = new AlarmType().getType(qt.endHour==99, qt.vibrate, qt.begLoop, qt.endLoop);
+//        if (qt.alarmType == 0)
+//            qt.alarmType = new AlarmType().getType(qt.endHour==99, qt.vibrate, qt.begLoop, qt.endLoop);
 
         boolean gCalendar = qt.agenda;
         boolean active = qt.active;
@@ -189,12 +188,11 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvEndTime.setText(txt);
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
-        holder.lvAlarmType.setImageResource(alarmIcons[qt.alarmType]);
 
         holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(context.getResources(), (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
-            holder.lvgCal.setImageResource(R.drawable.transperent);
+            holder.lvAlarmType.setImageResource(alarmIcons[qt.alarmType]);
             holder.llCalInfo.setVisibility(View.GONE);
             holder.llBegEndTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);
@@ -226,7 +224,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             }
 
         } else {
-            holder.lvgCal.setImageResource(R.drawable.calendar);
+            holder.lvAlarmType.setImageResource(R.drawable.calendar);
             holder.llCalInfo.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.GONE);
             holder.rmdDate.setVisibility(View.GONE);
@@ -274,12 +272,20 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         for (int i = 1; i < quietTasks.size(); i++) {
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
-                if (qt.endHour == 99 || qt.agenda) {
+                if (qt.endHour == 99) {
                     qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
+                } else if (qt.agenda) {
+                    qt.sortKey = qt.calBegDate;
                 } else
                     qt.sortKey = i;
             } else
-                qt.sortKey = System.currentTimeMillis() + (long) 0x2FFFFFFF + (long) i * 100;
+                qt.sortKey = System.currentTimeMillis() + 9999999999L + (long) i * 1000;
+
+            if (qt.sortKey > 1000) {
+                SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd HH:mm:ss ", Locale.getDefault());
+                Log.w("seq "+i, sdfDate.format(qt.sortKey) +" "+qt.subject);
+            }
+
             quietTasks.set(i, qt);
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));

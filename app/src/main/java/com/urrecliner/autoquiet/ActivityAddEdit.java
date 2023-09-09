@@ -24,7 +24,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.urrecliner.autoquiet.Sub.AlarmType;
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 import com.urrecliner.autoquiet.Sub.NameColor;
 import com.urrecliner.autoquiet.Sub.QuietTaskDefault;
@@ -64,12 +63,19 @@ public class ActivityAddEdit extends AppCompatActivity {
     };
     public final static int[] alarmIcons = { 0,
             R.drawable.bell_several,
-            R.drawable.bell_tomorrow,
+            R.drawable.bell_event,
             R.drawable.bell_onetime,
             R.drawable.bell_once_gone,
             R.drawable.phone_vibrate,
             R.drawable.phone_off,
     };
+
+    public final static int BELL_SEVERAL = 1;
+    public final static int BELL_EVENT = 2;
+    public final static int BELL_ONETIME = 3;
+    public final static int BELL_ONCE_GONE = 4;
+    public final static int PHONE_VIBRATE = 5;
+    public final static int PHONE_OFF = 6;
 
 
     @Override
@@ -104,8 +110,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
-        if (qT.alarmType == 0)
-            qT.alarmType = new AlarmType().getType(end99, qT.vibrate, qT.begLoop, qT.endLoop);
+//        if (qT.alarmType == 0)
+//            qT.alarmType = new AlarmType().getType(end99, qT.vibrate, qT.begLoop, qT.endLoop);
         build_QuietTask();
         TextView alarm_Type = findViewById(R.id.typeDesc);
         alarm_Type.setOnClickListener(v -> dialog.show());
@@ -121,20 +127,20 @@ public class ActivityAddEdit extends AppCompatActivity {
     public void alarmType_Selected(View view) {
         int checkedId = view.getId();
         if (checkedId == R.id.radio_bell_subject_several)
-            alarmType = 1;
+            alarmType = BELL_SEVERAL;
         else if (checkedId == R.id.radio_bell_subject_once)
-            alarmType = 2;
+            alarmType = BELL_EVENT;
         else if (checkedId == R.id.radio_bee_one_time)
-            alarmType = 3;
+            alarmType = BELL_ONETIME;
         else if (checkedId == R.id.radio_bell_once_gone)
-            alarmType = 4;
+            alarmType = BELL_ONCE_GONE;
 
         else if (checkedId == R.id.radio_vibrate_start_end)
             alarmType = 5;
         else
             alarmType = 6;
         dialog.dismiss();
-        end99 = alarmType < 5;
+        end99 = alarmType < PHONE_VIBRATE;
 
         showTimeForm();
     }
@@ -182,7 +188,6 @@ public class ActivityAddEdit extends AppCompatActivity {
             showTimeForm();
         });
 
-        binding.gCal.setImageResource((agenda)? R.drawable.calendar:R.drawable.transperent);
         binding.timePickerBeg.setIs24HourView(true);
         binding.timePickerEnd.setIs24HourView(true);
         numPos = 1;
@@ -262,8 +267,8 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void showTimeForm() {
         binding.typeDesc.setText(alarmTypeNames[alarmType]);
-        binding.alarmType.setImageResource(alarmIcons[alarmType]);
-        if (alarmType < 5) { // end99
+        binding.alarmType.setImageResource((agenda)? R.drawable.calendar: alarmIcons[alarmType]);
+        if (alarmType < PHONE_VIBRATE) { // end99
             end99 = true;
             endHour = 99;
         } else {

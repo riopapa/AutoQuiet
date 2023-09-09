@@ -5,17 +5,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.urrecliner.autoquiet.AlarmReceiver;
 import com.urrecliner.autoquiet.Utils;
 import com.urrecliner.autoquiet.models.QuietTask;
 
-public class SetAlarmTime {
+public class AlarmTime {
 
     public void request(Context context, QuietTask quietTask,
                         long nextTime, String StartFinish, int several) {
-        String logID = "SetAlarmTime";
+        String logID = "AlarmTime";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);

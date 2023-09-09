@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 public class CalculateNext {
 
+    static final long A_LITTLE_GAP = 30 * 1000;
     public static long calc(boolean end, int hour, int min, boolean[] week, long add24Hour) {
         Calendar nextDay = Calendar.getInstance();
         nextDay.set(Calendar.HOUR_OF_DAY, hour);
@@ -14,7 +15,7 @@ public class CalculateNext {
         int DD = nextDay.get(Calendar.DATE);
         int WK = nextDay.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
 
-        long nowTime = System.currentTimeMillis();
+        long nowTime = System.currentTimeMillis() + A_LITTLE_GAP + A_LITTLE_GAP;
         long nextEvent;
         for (int i = WK; ; ) {
             if (week[i]) {
@@ -32,7 +33,7 @@ public class CalculateNext {
             if (i == 7)
                 i = 0;
         }
-        return (nextEvent+add24Hour - 50*1000);
-    }
 
+        return (nextEvent+add24Hour - A_LITTLE_GAP);
+    }
 }

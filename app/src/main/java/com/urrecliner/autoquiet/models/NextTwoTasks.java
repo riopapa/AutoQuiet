@@ -1,6 +1,7 @@
 package com.urrecliner.autoquiet.models;
 
-import com.urrecliner.autoquiet.Sub.AlarmType;
+import static com.urrecliner.autoquiet.ActivityAddEdit.alarmIcons;
+
 import com.urrecliner.autoquiet.Sub.CalculateNext;
 
 import java.util.ArrayList;
@@ -18,13 +19,19 @@ public class NextTwoTasks {
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qThis = quietTasks.get(idx);
             if (qThis.active) {
+//                if (qThis.alarmType == 0) {
+//                    qThis.alarmType = new AlarmType().getType(
+//                            qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+//                    quietTasks.set(idx, qThis);
+//                    new QuietTaskGetPut().put(quietTasks);
+//                }
                 long thisBeg = CalculateNext.calc(false, qThis.begHour, qThis.begMin, qThis.week, 0);
                 if (thisBeg < nextTime) {
                     nextTime = thisBeg;
                     saveIdx = idx;
                     subject = qThis.subject;
                     begEnd = "S";
-                    icon = new AlarmType().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+                    icon = alarmIcons[qThis.alarmType];
                     soonOrUntil = "예정";
                 }
                 if (qThis.endHour == 99)
@@ -35,7 +42,7 @@ public class NextTwoTasks {
                     saveIdx = idx;
                     subject = qThis.subject;
                     begEnd = (idx == 0) ? "O" : "F";
-                    icon = new AlarmType().getRscId(qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
+                    icon = alarmIcons[qThis.alarmType];
                     soonOrUntilN = "까지";
                 }
             }
@@ -43,13 +50,19 @@ public class NextTwoTasks {
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qNxt = quietTasks.get(idx);
             if (qNxt.active) {
+//                if (qNxt.alarmType == 0) {
+//                    qNxt.alarmType = new AlarmType().getType(
+//                            qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+//                    quietTasks.set(idx, qNxt);
+//                    new QuietTaskGetPut().put(quietTasks);
+//                }
                 long nxtBeg = CalculateNext.calc(false, qNxt.begHour, qNxt.begMin, qNxt.week, 0);
                 if (nxtBeg < nextTimeN && nxtBeg > nextTime) {
                     nextTimeN = nxtBeg;
                     begEndN = "S";
                     saveIdxN = idx;
                     subjectN = qNxt.subject;
-                    iconN = new AlarmType().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+                    iconN = alarmIcons[qNxt.alarmType];
                     soonOrUntilN = "예정";
                 }
                 if (qNxt.endHour == 99)
@@ -60,7 +73,7 @@ public class NextTwoTasks {
                     begEndN = (idx == 0) ? "O" : "F";
                     saveIdxN = idx;
                     subjectN = qNxt.subject;
-                    iconN = new AlarmType().getRscId(qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
+                    iconN = alarmIcons[qNxt.alarmType];
                     soonOrUntilN = "까지";
                 }
             }

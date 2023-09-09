@@ -452,100 +452,18 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width = "match_parent"
-        android:layout_height = "40sp"
-        android:layout_marginTop = "8dp"
-        android:gravity = "center"
-        android:orientation = "horizontal">
-
-        <ImageView
-            android:id = "@+id/gCal"
-            android:layout_width = "32dp"
-            android:layout_height = "match_parent"
-            android:layout_gravity = "center"
-            android:contentDescription = "@string/blank"
-            android:src = "@drawable/calendar" />
-
         <EditText
             android:id = "@+id/etSubject"
-            android:layout_width = "0dp"
-            android:layout_height = "match_parent"
-            android:layout_weight = "12"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
             android:background = "@color/itemNormalFill"
             android:gravity = "center"
             android:hint = "@string/subject"
             android:importantForAutofill = "no"
             android:padding = "4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:textSize = "20sp" />
-
-    </LinearLayout>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width = "match_parent"-->
-<!--        android:layout_height = "wrap_content"-->
-<!--        android:gravity = "center"-->
-<!--        android:orientation = "horizontal">-->
-
-<!--        <TextView-->
-<!--            android:id = "@+id/tVVibrate"-->
-<!--            android:layout_width = "wrap_content"-->
-<!--            android:layout_height = "wrap_content"-->
-<!--            android:layout_marginEnd = "0dp"-->
-<!--            android:gravity = "center"-->
-<!--            android:padding = "2dp"-->
-<!--            android:text = "진동"-->
-<!--            android:textSize = "18sp"-->
-<!--            android:textStyle = "bold" />-->
-
-<!--        <ImageView-->
-<!--            android:id = "@+id/iVVibrate"-->
-<!--            android:layout_width = "28dp"-->
-<!--            android:layout_height = "32dp"-->
-<!--            android:layout_margin = "4dp"-->
-<!--            android:contentDescription = "@string/blank"-->
-<!--            android:src = "@drawable/phone_vibrate" />-->
-
-<!--        <TextView-->
-<!--            android:id = "@+id/tv_beg_loop"-->
-<!--            android:layout_width = "wrap_content"-->
-<!--            android:layout_height = "wrap_content"-->
-<!--            android:layout_marginStart = "10dp"-->
-<!--            android:gravity = "center"-->
-<!--            android:padding = "2dp"-->
-<!--            android:text = "시작"-->
-<!--            android:textSize = "18sp"-->
-<!--            android:textStyle = "bold" />-->
-
-<!--        <ImageView-->
-<!--            android:id = "@+id/iv_beg_loop"-->
-<!--            android:layout_width = "28dp"-->
-<!--            android:layout_height = "32dp"-->
-<!--            android:layout_margin = "4dp"-->
-<!--            android:contentDescription = "@string/blank"-->
-<!--            android:src = "@drawable/speak_on" />-->
-
-<!--        <TextView-->
-<!--            android:id = "@+id/tv_end_loop"-->
-<!--            android:layout_width = "wrap_content"-->
-<!--            android:layout_height = "wrap_content"-->
-<!--            android:layout_marginStart = "16dp"-->
-<!--            android:gravity = "center"-->
-<!--            android:padding = "2dp"-->
-<!--            android:text = "종료"-->
-<!--            android:textSize = "18sp"-->
-<!--            android:textStyle = "bold" />-->
-
-<!--        <ImageView-->
-<!--            android:id = "@+id/iv_end_loop"-->
-<!--            android:layout_width = "28dp"-->
-<!--            android:layout_height = "32dp"-->
-<!--            android:layout_margin = "4dp"-->
-<!--            android:contentDescription = "@string/blank"-->
-<!--            android:src = "@drawable/speak_on" />-->
-
-<!--    </LinearLayout>-->
-
 
     <LinearLayout
         android:id = "@+id/weekFlag"

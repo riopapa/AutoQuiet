@@ -3,9 +3,8 @@ package com.urrecliner.autoquiet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.urrecliner.autoquiet.Sub.SetAlarmTime;
+import com.urrecliner.autoquiet.Sub.AlarmTime;
 import com.urrecliner.autoquiet.models.NextTwoTasks;
 import com.urrecliner.autoquiet.models.QuietTask;
 
@@ -47,7 +46,7 @@ public class SetUpComingTask {
 
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
-        new SetAlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
+        new AlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
 
     }
 
@@ -59,7 +58,7 @@ public class SetUpComingTask {
         intent.putExtra("stop_repeat", false);
         intent.putExtra("icon", n2.icon);
         int iconNow = n2.icon;
-        if (n2.icon != R.drawable.bell_several && n2.icon != R.drawable.bell_tomorrow &&
+        if (n2.icon != R.drawable.bell_several && n2.icon != R.drawable.bell_event &&
             n2.icon != R.drawable.bell_onetime && n2.icon != R.drawable.bell_once_gone &&
             n2.begEnd.equals("S"))
             iconNow = R.drawable.phone_normal;

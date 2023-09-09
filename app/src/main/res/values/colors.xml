@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#61A69F</color>
+    <color name="colorPrimary">#7EB4AF</color>
     <color name="colorTimer">#CEECE8</color>
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
@@ -11,6 +11,8 @@
     <color name="colorNotification">#EAF1F0</color>
     <color name="num_button">#042B28</color>
     <color name="colorSelected">#DCE7E5</color>
+    <color name="cal_Left">#8F021425</color>
+    <color name="cal_Right">#051E47</color>
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#F1F8E9</color>

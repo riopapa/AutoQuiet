@@ -18,8 +18,7 @@ public class QuietTask implements Serializable {
     public boolean sayDate; // 현재 일자, 시각을 말할찌 여부
 
     public boolean[] week = {true, true, true, true, true, true, true};
-    public int begLoop, endLoop, alarmType;  // 0 : not Active, 1: bell only, > 1: talk subject
-    // begLoop = 0 무음 보드, endLoop == 1 삐 소리만,  > 1 subject를 읽어 주는 것
+    public int alarmType;
     public long calBegDate, calEndDate;    // 통상으로 만들어지면 callStartDate = index 가 됨 sort 목적임
     public int calId;
     public String calDesc;
@@ -29,21 +28,6 @@ public class QuietTask implements Serializable {
 
     public long sortKey;    // 0번째 바로 조용히 는 -1
 
-    // normal QuietTask
-    public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin, boolean[] week, boolean active, boolean vibrate, int begLoop, int endLoop, boolean sayDate) {
-        this.subject = subject;
-        this.begHour = begHour;
-        this.begMin = begMin;
-        this.endHour = endHour;
-        this.endMin = endMin;
-        this.active = active;
-        this.vibrate = vibrate;
-        this.begLoop = begLoop;
-        this.endLoop = endLoop;
-        this.agenda = false;
-        this.sayDate = sayDate;
-        System.arraycopy(week, 0, this.week, 0, 7);
-    }
     // normal QuietTask replaced
     public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin, boolean[] week, boolean active, int alarmType, boolean sayDate) {
         this.subject = subject;
