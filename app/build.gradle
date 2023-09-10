@@ -7,7 +7,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.urrecliner.autoquiet"
+        applicationId "com.riopapa.autoquiet"
         minSdkVersion 31 // android 10:29, 11:30, 12:31, 13:32 (note 20 ultra 23.7.30)
         targetSdkVersion 31
         versionCode 1
@@ -27,7 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildFeatures { viewBinding = true }
-    namespace 'com.urrecliner.autoquiet'
+    namespace 'com.riopapa.autoquiet'
 //
 //    viewBinding {
 //        enabled = true
