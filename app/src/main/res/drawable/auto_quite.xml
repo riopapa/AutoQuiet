@@ -42,7 +42,11 @@
           M21,4l-2,3l2,3l-1,3l2,3
        " />
 
-    <path android:fillColor="#00000000" android:pathData="M9.5,11.5 a4,4 0 1,1 0.1,0.1 zm6,-5l-6,5"
+    <path android:fillColor="#00000000" android:pathData="M9.5,11.7 a4,4 0 1,1 0.1,0.1 zm6,-5l-6,5"
+          android:strokeColor="#1023A1"
+          android:strokeWidth="2" />
+
+    <path android:fillColor="#00000000" android:pathData="M9.2,11.4 a4,4 0 1,1 0.1,0.1 zm6,-5l-6,5"
           android:strokeColor="#D84315"
           android:strokeWidth="1.5" />
 

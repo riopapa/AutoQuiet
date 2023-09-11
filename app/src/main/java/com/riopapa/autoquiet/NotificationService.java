@@ -27,7 +27,6 @@ public class NotificationService extends Service {
 
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 1044;
-
     final int TO_TOSS = 1066;
 
     public NotificationService(){}      // do not remove
@@ -60,7 +59,10 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
 
-        if (operation == RIGHT_NOW) {
+        Log.w("onStartCommand","operation = "+operation);
+        if (operation == TO_TOSS) {
+            launchToss();
+        } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(nContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(nContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
             try {
@@ -72,16 +74,14 @@ public class NotificationService extends Service {
             stop_repeat = false;
             updateRemoteViews();
             new SetUpComingTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
-        } else if (operation == TO_TOSS) {
-            launchToss();
         } else {
-            try {
+//            try {
                 beg = intent.getStringExtra("beg");
                 begN = intent.getStringExtra("begN");
-            } catch (Exception e) {
-                Log.w("onStartCommand","beg is nothing");
-                return START_NOT_STICKY;
-            }
+//            } catch (Exception e) {
+//                Log.w("onStartCommand","beg is nothing");
+//                return START_NOT_STICKY;
+//            }
             end = intent.getStringExtra("end");
             endN = intent.getStringExtra("endN");
             stop_repeat = intent.getBooleanExtra("stop_repeat", false);
@@ -101,11 +101,10 @@ public class NotificationService extends Service {
     }
 
     private void launchToss() {
-        String app = "viva.republica.toss";
-        PackageManager managerclock = nContext.getPackageManager();
-        Intent appIntent = managerclock.getLaunchIntentForPackage(app);
+        Intent appIntent = nContext.getPackageManager().getLaunchIntentForPackage(
+                "viva.republica.toss");
         appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        appIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        appIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         nContext.startActivity(appIntent);
     }
 
@@ -130,21 +129,21 @@ public class NotificationService extends Service {
 
         Intent rightNowI = new Intent(this, NotificationService.class);
         rightNowI.putExtra("operation", RIGHT_NOW);
-        PendingIntent pi = PendingIntent.getService(nContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pi);
-        mRemoteViews.setOnClickPendingIntent(R.id.right_now, pi);
+        PendingIntent rightNowP = PendingIntent.getService(nContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(rightNowP);
+        mRemoteViews.setOnClickPendingIntent(R.id.right_now, rightNowP);
 
         Intent tossI = new Intent(this, NotificationService.class);
         tossI.putExtra("operation", TO_TOSS);
-        PendingIntent pt = PendingIntent.getService(nContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pt);
-        mRemoteViews.setOnClickPendingIntent(R.id.to_toss, pt);
+        PendingIntent tossP = PendingIntent.getService(nContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(tossP);
+        mRemoteViews.setOnClickPendingIntent(R.id.to_toss, tossP);
 
         Intent stopTalkI = new Intent(this, NotificationService.class);
         stopTalkI.putExtra("operation", STOP_SPEAK);
-        PendingIntent ps = PendingIntent.getService(nContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(ps);
-        mRemoteViews.setOnClickPendingIntent(R.id.no_speak, ps);
+        PendingIntent stopTalkP = PendingIntent.getService(nContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(stopTalkP);
+        mRemoteViews.setOnClickPendingIntent(R.id.no_speak, stopTalkP);
     }
 
     void updateRemoteViews() {
@@ -159,7 +158,10 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
         mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
         mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("토스"))? View.VISIBLE:View.GONE);
-        startForeground(100, mBuilder.build());
+//        startForeground(100, mBuilder.build());
+
+        mNotificationManager.notify(100,mBuilder.build());
+
     }
 
     @Override
