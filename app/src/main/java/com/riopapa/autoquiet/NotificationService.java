@@ -110,19 +110,19 @@ public class NotificationService extends Service {
 
     private void createNotification() {
 
-        if (null == mNotificationChannel) {
+//        if (null == mNotificationChannel) {
             mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(mNotificationChannel);
-        }
-        if (null == mBuilder) {
+//        }
+//        if (null == mBuilder) {
             mBuilder = new NotificationCompat.Builder(nContext,"default")
                     .setSmallIcon(R.drawable.auto_quite)
                     .setContent(mRemoteViews)
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(false)
                     .setOngoing(true);
-        }
+//        }
 
         Intent mainIntent = new Intent(nContext, ActivityMain.class);
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(nContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
