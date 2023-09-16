@@ -24,6 +24,7 @@ import com.riopapa.autoquiet.models.QuietTask;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
@@ -35,6 +36,8 @@ import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_EVENT;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
+import static com.riopapa.autoquiet.ActivityMain.currIdx;
+import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -281,7 +284,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                     Intent uIntent = new Intent(rContext, NotificationService.class);
                     uIntent.putExtra("beg", nowTimeToString(nextTime));
-                    uIntent.putExtra("end", "반복"+several);
+                    uIntent.putExtra("end", "반복" + several);
                     uIntent.putExtra("stop_repeat", true);
                     uIntent.putExtra("subject", qt.subject);
                     uIntent.putExtra("icon", icon);
@@ -291,8 +294,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     uIntent.putExtra("subjectN", subjectN);
                     uIntent.putExtra("iconN", iconN);
                     rContext.startForegroundService(uIntent);
-                } else
+                } else {
+//                    if (qt.agenda)
+//                        quietTasks.remove(qtIdx);
                     new SetUpComingTask(rContext, quietTasks, "say_FinDate");
+                }
             }
         }, 3000);
     }
@@ -306,13 +312,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     new Sounds().beep(rContext, Sounds.BEEP.ALARM);
                 }
                 if (qt.agenda) { // delete if agenda based
-                    for (int i = 0; i < quietTasks.size(); i++) {
-                        if (quietTasks.get(i).calId == qt.calId) {
-                            quietTasks.remove(i);
-                            new QuietTaskGetPut().put(quietTasks);
-                            break;
-                        }
-                    }
+                    quietTasks.remove(qtIdx);
+                    if (mainRecycleAdapter == null)
+                        mainRecycleAdapter = new MainRecycleAdapter();
+                    else
+                        mainRecycleAdapter.notifyItemRemoved(qtIdx);
                 }
                 new SetUpComingTask(rContext, quietTasks, "say_FinishNormal()");
                 new Utils(rContext).deleteOldLogFiles();
@@ -326,13 +330,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         String t = nowTimeToString(System.currentTimeMillis());
         String s =  ((several == 1) ? "마지막 안내입니다 " : "") + d + t +  " 입니다. ";
         s += addPostPosition(qt.subject) + "끝났습니다";
-        myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, null);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put(TextToSpeech.Engine.KEY_PARAM_VOLUME, "0.1");
+        myTTS.speak(s, TextToSpeech.QUEUE_ADD, params);
     }
 
     public void vibrate() {
         final long[] vibPattern = {0, 20, 200, 300, 300, 400, 400, 500};
-        VibratorManager vibManager = (VibratorManager) rContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-        Vibrator vibrator = vibManager.getDefaultVibrator();
+        VibratorManager vibManager = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            vibManager = (VibratorManager) rContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+        }
+        Vibrator vibrator = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            vibrator = vibManager.getDefaultVibrator();
+        }
         VibrationEffect vibEffect = VibrationEffect.createWaveform(vibPattern, -1);
         vibrator.vibrate(vibEffect);
     }

@@ -67,7 +67,7 @@ public class QuietTask implements Serializable {
         int weekNbr = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         this.week = new boolean[7];
         this.week[weekNbr] = true;
-        this.sayDate = true;
+        this.sayDate = false;
     }
 
 }

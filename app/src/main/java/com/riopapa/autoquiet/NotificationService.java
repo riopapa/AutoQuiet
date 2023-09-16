@@ -93,7 +93,7 @@ public class NotificationService extends Service {
             if (icon == 0)
                 return START_NOT_STICKY;
             if (iconN == 0)
-                iconN = R.drawable.auto_quite_small;
+                iconN = R.drawable.auto_quite;
             updateRemoteViews();
         }
         startForeground(100, mBuilder.build()); // ??
@@ -103,9 +103,10 @@ public class NotificationService extends Service {
     private void launchToss() {
         Intent appIntent = nContext.getPackageManager().getLaunchIntentForPackage(
                 "viva.republica.toss");
-        appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        appIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         nContext.startActivity(appIntent);
+
     }
 
     private void createNotification() {

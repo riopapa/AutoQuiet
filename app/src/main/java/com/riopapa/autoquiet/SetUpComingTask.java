@@ -37,7 +37,7 @@ public class SetUpComingTask {
                     + " " + n2.soonOrUntil + " " + n2.begEnd;
             if  (n2.begEnd.equals("S"))
                 msg += " ~ " + getHourMin(qThis.endHour, qThis.endMin);
-            several = (qThis.sayDate) ? 3:0;  // finish 인데 sayDate 가 있으면 여러 번 울림
+            several = (qThis.sayDate && !qThis.agenda) ? 3:0;  // finish 인데 sayDate 가 있으면 여러 번 울림
         } else {
             timeInfo = getHourMin(qThis.begHour, qThis.begMin);
             msg = headInfo + "\n" + timeInfo + " " + n2.subject;
