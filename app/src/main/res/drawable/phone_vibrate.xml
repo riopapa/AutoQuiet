@@ -6,16 +6,17 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
   <path android:strokeColor="#17584E"
         android:strokeLineJoin="round"
-        android:strokeWidth="1.5"
+        android:strokeWidth="1.3"
         android:strokeLineCap="round"
+        android:fillColor="#A7E8CE"
         android:pathData="
           M7,3l1,-1h8l1,1v12h-10z
            "/>
   <path android:strokeColor="#17584E"
         android:strokeLineJoin="round"
-        android:strokeWidth="1.5"
+        android:strokeWidth="1.3"
         android:strokeLineCap="round"
-        android:fillColor="#BABA56"
+        android:fillColor="#A7E8CE"
         android:pathData="
           M7,15h10v5l-1,1h-8l-1,-1z
           M11,18.5h2z
@@ -30,7 +31,7 @@
        " />
   <path android:strokeColor="#17584E"
         android:strokeLineJoin="round"
-        android:strokeWidth="1.5"
+        android:strokeWidth="1.6"
         android:strokeLineCap="round"
         android:pathData="
           M3,4l1,4l-1,4l1,4l-1,4

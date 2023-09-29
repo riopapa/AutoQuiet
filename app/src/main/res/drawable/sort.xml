@@ -3,8 +3,7 @@
         android:viewportHeight="24"
         android:viewportWidth="24"
         xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#39E30A"
-          android:pathData="
+    <path android:pathData="
           M3,04h16
           M3,09h12
           M3,14h8
@@ -12,7 +11,7 @@
           M18.5,20v-10
           M19,21l-4,-4
           M18,21l4,-4"
-          android:strokeColor="#39E30A"
+          android:strokeColor="#fff"
           android:strokeWidth="1.5" />
 
 </vector>

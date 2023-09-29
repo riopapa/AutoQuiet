@@ -67,7 +67,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         return new ViewHolder(swipeView);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
         View viewLine;

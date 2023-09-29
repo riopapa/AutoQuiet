@@ -273,7 +273,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run () {
                 if (several > 0) {
                     finish_Dated();
-                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 180) * 1000;
+                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 10 : 180) * 1000;
                     new AlarmTime().request(rContext, qt, nextTime, "F", --several);
                     SharedPreferences sharedPref = rContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
                     String begN = sharedPref.getString("begN", nowTimeToString(nextTime));

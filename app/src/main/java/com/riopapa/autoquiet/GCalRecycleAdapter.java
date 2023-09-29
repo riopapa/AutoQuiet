@@ -37,7 +37,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         return new ViewHolder(swipeView);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         View viewLine;
         TextView tvADate, tvADay, tvBegTime, tvEndTime, tvSubject, tvName, tvCalLeft, tvCalRight;
@@ -106,9 +106,6 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
 
     @Override
     public int getItemCount() {
-//        if (gCals == null) {
-            gCals = new GetAgenda().get(ActivityMain.pContext);
-//        }
         return gCals.size();
     }
 }
