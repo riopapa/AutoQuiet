@@ -14,7 +14,6 @@ public class AlarmTime {
 
     public void request(Context context, QuietTask quietTask,
                         long nextTime, String StartFinish, int several) {
-        String logID = "AlarmTime";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);
@@ -26,7 +25,7 @@ public class AlarmTime {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
-            new Utils(context).log(logID,StartFinish+" TASK Canceled : "+ quietTask.subject);
+            new Utils(context).log("req1",StartFinish+" TASK Canceled : "+ quietTask.subject);
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }
