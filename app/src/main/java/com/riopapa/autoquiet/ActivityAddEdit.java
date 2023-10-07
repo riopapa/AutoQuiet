@@ -90,6 +90,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             qT = new QuietTaskDefault().get();
         else
             qT = quietTasks.get(currIdx);
+        qT.active = true;
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         xSize = metrics.widthPixels / 9;

@@ -8,7 +8,7 @@
         android:strokeLineJoin="round"
         android:strokeWidth="1.3"
         android:strokeLineCap="round"
-        android:fillColor="#A7E8CE"
+        android:fillColor="#8BA89D"
         android:pathData="
           M7,3l1,-1h8l1,1v12h-10z
            "/>
@@ -16,7 +16,7 @@
         android:strokeLineJoin="round"
         android:strokeWidth="1.3"
         android:strokeLineCap="round"
-        android:fillColor="#A7E8CE"
+        android:fillColor="#21C382"
         android:pathData="
           M7,15h10v5l-1,1h-8l-1,-1z
           M11,18.5h2z

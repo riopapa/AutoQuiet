@@ -168,8 +168,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         qt = quietTasks.get(position);
-//        if (qt.alarmType == 0)
-//            qt.alarmType = new AlarmType().getType(qt.endHour==99, qt.vibrate, qt.begLoop, qt.endLoop);
 
         boolean gCalendar = qt.agenda;
         boolean active = qt.active;
@@ -324,7 +322,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 quietTasks.add(position, qt);
                 new QuietTaskGetPut().put(quietTasks);
                 mainRecycleAdapter.notifyDataSetChanged();
-//                pView.invalidate();
             });
 
             snackbar.setActionTextColor(Color.CYAN);
@@ -335,7 +332,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 Toast.makeText(context,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
             else if (topLine > 30)
                 topLine = -1;
-//           notifyItemChanged(0);
         }
     }
 

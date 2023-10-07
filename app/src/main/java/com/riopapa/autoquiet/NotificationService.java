@@ -59,7 +59,7 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
 
-        Log.w("onStartCommand","operation = "+operation);
+//        Log.w("onStartCommand","operation = "+operation);
         if (operation == TO_TOSS) {
             launchToss();
         } else if (operation == RIGHT_NOW) {
@@ -75,13 +75,8 @@ public class NotificationService extends Service {
             updateRemoteViews();
             new SetUpComingTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
         } else {
-//            try {
-                beg = intent.getStringExtra("beg");
-                begN = intent.getStringExtra("begN");
-//            } catch (Exception e) {
-//                Log.w("onStartCommand","beg is nothing");
-//                return START_NOT_STICKY;
-//            }
+            beg = intent.getStringExtra("beg");
+            begN = intent.getStringExtra("begN");
             end = intent.getStringExtra("end");
             endN = intent.getStringExtra("endN");
             stop_repeat = intent.getBooleanExtra("stop_repeat", false);
@@ -111,19 +106,15 @@ public class NotificationService extends Service {
 
     private void createNotification() {
 
-//        if (null == mNotificationChannel) {
-            mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
-            mNotificationManager.createNotificationChannel(mNotificationChannel);
-//        }
-//        if (null == mBuilder) {
-            mBuilder = new NotificationCompat.Builder(nContext,"default")
-                    .setSmallIcon(R.drawable.auto_quite)
-                    .setContent(mRemoteViews)
-                    .setOnlyAlertOnce(true)
-                    .setAutoCancel(false)
-                    .setOngoing(true);
-//        }
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
+        mNotificationManager.createNotificationChannel(mNotificationChannel);
+        mBuilder = new NotificationCompat.Builder(nContext,"default")
+                .setSmallIcon(R.drawable.auto_quite)
+                .setContent(mRemoteViews)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(false)
+                .setOngoing(true);
 
         Intent mainIntent = new Intent(nContext, ActivityMain.class);
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(nContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
@@ -159,7 +150,6 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
         mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
         mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("토스"))? View.VISIBLE:View.GONE);
-//        startForeground(100, mBuilder.build());
 
         mNotificationManager.notify(100,mBuilder.build());
 

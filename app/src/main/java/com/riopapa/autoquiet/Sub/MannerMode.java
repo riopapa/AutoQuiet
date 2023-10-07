@@ -8,16 +8,16 @@ import com.riopapa.autoquiet.R;
 
 public class MannerMode {
 
-    public void turn2Quiet(Context context, boolean sharedManner, boolean vibrate) {
+    public void turn2Quiet(Context context, boolean vibrate) {
 
-        if (sharedManner) {
-            MediaPlayer mpStart = MediaPlayer.create(context, R.raw.manner_starting);
-            mpStart.setOnPreparedListener(MediaPlayer::start);
-            mpStart.setOnCompletionListener(mediaPlayer -> {
-                mediaPlayer.reset();
-                mediaPlayer.release();
-            });
-        }
+//        if (sharedManner) {
+//            MediaPlayer mpStart = MediaPlayer.create(context, R.raw.manner_starting);
+//            mpStart.setOnPreparedListener(MediaPlayer::start);
+//            mpStart.setOnCompletionListener(mediaPlayer -> {
+//                mediaPlayer.reset();
+//                mediaPlayer.release();
+//            });
+//        }
 
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
@@ -28,7 +28,7 @@ public class MannerMode {
                 am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(300);
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 //                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
             } catch (InterruptedException e) {
@@ -37,20 +37,18 @@ public class MannerMode {
         }
     }
 
-    public void turn2Normal(boolean sharedManner, Context context) {
+    public void turn2Normal(Context context) {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         assert am != null;
         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//        int mx = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-//        am.setStreamVolume(AudioManager.STREAM_MUSIC, mx*8/10, AudioManager.FLAG_PLAY_SOUND);
 
-        if (sharedManner) {
-            MediaPlayer mpFinish = MediaPlayer.create(context, R.raw.back2normal);
-            mpFinish.setOnPreparedListener(MediaPlayer::start);
-            mpFinish.setOnCompletionListener(mediaPlayer -> {
-                mediaPlayer.reset();
-                mediaPlayer.release();
-            });
-        }
+//        if (sharedManner) {
+//            MediaPlayer mpFinish = MediaPlayer.create(context, R.raw.back2normal);
+//            mpFinish.setOnPreparedListener(MediaPlayer::start);
+//            mpFinish.setOnCompletionListener(mediaPlayer -> {
+//                mediaPlayer.reset();
+//                mediaPlayer.release();
+//            });
+//        }
     }
 }

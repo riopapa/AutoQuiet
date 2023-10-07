@@ -12,6 +12,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -175,6 +178,23 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
         new VarsGetPut().put(vars, pContext);
     }
+
+    public final static Handler removeHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            int idx = Integer.parseInt(msg.obj.toString());
+            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemRemoved(idx));
+        }
+
+    };
+
+
+    public final static Handler updateHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            int idx = Integer.parseInt(msg.obj.toString());
+            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemChanged(idx));
+        }
+
+    };
 
     @Override
     protected void onStop() {
