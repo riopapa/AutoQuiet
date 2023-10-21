@@ -31,6 +31,9 @@ import com.riopapa.autoquiet.Sub.MyItemTouchHelper;
 import com.riopapa.autoquiet.Sub.Permission;
 import com.riopapa.autoquiet.Sub.SharedPrefer;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
+import com.riopapa.autoquiet.models.QuietTask;
+
+import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity  {
 
@@ -41,6 +44,8 @@ public class ActivityMain extends AppCompatActivity  {
     public static int currIdx = -1;
 
     RecyclerView mainRecyclerView;
+
+    public static ArrayList<QuietTask> quietTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,14 +103,14 @@ public class ActivityMain extends AppCompatActivity  {
     public void onResume() {
 
         vars = new VarsGetPut().get(pContext);
-        Log.w("Main", "onResume is called");
+        Log.w("Main", "onResume");
         new Utils(pContext).deleteOldLogFiles();
 
         showMainList();
-        super.onResume();
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 2;
         mainRecyclerView.scrollToPosition((currIdx > 2)? currIdx - 1:currIdx);
+        super.onResume();
     }
 
     @Override
@@ -198,7 +203,7 @@ public class ActivityMain extends AppCompatActivity  {
 
     @Override
     protected void onStop() {
-        new SetUpComingTask(pContext, new QuietTaskGetPut().get(pContext),"onStop ");
+        new SetUpComingTask(pContext,"onStop ");
         super.onStop();
     }
 }

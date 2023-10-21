@@ -7,6 +7,7 @@ import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
+import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.removeHandler;
 import static com.riopapa.autoquiet.ActivityMain.updateHandler;
 
@@ -34,7 +35,6 @@ import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -44,7 +44,6 @@ import java.util.TimerTask;
 public class AlarmReceiver extends BroadcastReceiver {
 
     TextToSpeech myTTS;
-    ArrayList<QuietTask> quietTasks;
     QuietTask qt;
     int qtIdx;
     Context rContext;
@@ -105,7 +104,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void only_OneTime(Context context) {
         new MannerMode().turn2Normal(context);
-        if (vars.sharedManner) {
+//        if (vars.sharedManner) {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -114,11 +113,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
                 }
             }, 2000);
-        } else {
-            vibrate();
-        }
+//        } else {
+//            vibrate();
+//        }
         setInactive(0);
-        new SetUpComingTask(context, quietTasks, "After oneTime");
+        new SetUpComingTask(context, "After oneTime");
     }
 
     private void setInactive(int index) {
@@ -178,7 +177,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 String say = subject + " 를 확인 하시지요";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
-            new SetUpComingTask(rContext, quietTasks, "ended");
+            new SetUpComingTask(rContext, "ended");
             }
         }, 1500);
 
@@ -264,7 +263,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
             new MannerMode().turn2Quiet(rContext, qt.alarmType == PHONE_VIBRATE);
             Log.w("Task "+System.currentTimeMillis(), "SetUpComingTask");
-            new SetUpComingTask(rContext, quietTasks, "say_Started()");
+            new SetUpComingTask(rContext, "say_Started()");
             }
         }, 20000);
     }
@@ -312,7 +311,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else {
                     if (qt.agenda)
                         removeAgenda();
-                    new SetUpComingTask(rContext, quietTasks, "say_FinDate");
+                    new SetUpComingTask(rContext, "say_FinDate");
                 }
             }
         }, 3000);
@@ -334,7 +333,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     quietTasks.set(qtIdx, qt);
                     mainRecycleAdapter.notifyItemChanged(qtIdx);
                 }
-                new SetUpComingTask(rContext, quietTasks, "say_FinishNormal()");
+                new SetUpComingTask(rContext, "say_FinishNormal()");
                 new Utils(rContext).deleteOldLogFiles();
             }
         }, 3000);

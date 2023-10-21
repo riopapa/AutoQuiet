@@ -25,7 +25,7 @@ public class BootReceiver extends BroadcastReceiver {
                 @Override public void run() {
                     ArrayList<QuietTask> quietTasks;
                     quietTasks = new QuietTaskGetPut().get(context);
-                    new SetUpComingTask(context, quietTasks, "After Boot");
+                    new SetUpComingTask(context, "After Boot");
                 }
             }, 10000);
         }

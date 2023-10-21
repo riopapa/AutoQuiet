@@ -73,7 +73,7 @@ public class NotificationService extends Service {
         } else if (operation == STOP_SPEAK) {
             stop_repeat = false;
             updateRemoteViews();
-            new SetUpComingTask(this, new QuietTaskGetPut().get(this),"stopped, next is");
+            new SetUpComingTask(this, "stopped, next is");
         } else {
             beg = intent.getStringExtra("beg");
             begN = intent.getStringExtra("begN");

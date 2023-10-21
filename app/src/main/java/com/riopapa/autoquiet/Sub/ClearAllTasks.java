@@ -19,7 +19,7 @@ public class ClearAllTasks {
         ArrayList<QuietTask> quietTasks = new ArrayList<>();
         week = new boolean[]{false, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(context.getString(R.string.Quiet_Once), 1,2,3,4,
-                week, true, PHONE_VIBRATE, false));
+                week, false, PHONE_VIBRATE, false));
 
         week = new boolean[]{true, true, true, true, true, true, false};
         quietTasks.add(new QuietTask(context.getString(R.string.WeekDay_Night), 22, 30, 6, 30, week, true, PHONE_VIBRATE, true));

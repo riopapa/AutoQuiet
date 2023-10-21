@@ -8,6 +8,7 @@ import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.models.NextTwoTasks;
 import com.riopapa.autoquiet.models.QuietTask;
 
+
 import java.util.ArrayList;
 
 public class SetUpComingTask {
@@ -16,8 +17,11 @@ public class SetUpComingTask {
     static String timeInfoN;
     static NextTwoTasks n2;
 
-    public SetUpComingTask(Context context, ArrayList<QuietTask> quietTasks, String headInfo) {
+    ArrayList<QuietTask> quietTasks;
 
+    public SetUpComingTask(Context context, String headInfo) {
+
+        quietTasks = new QuietTaskGetPut().get(context);
         n2 = new NextTwoTasks(quietTasks);
         QuietTask qNxt = quietTasks.get(n2.saveIdxN);
         QuietTask qThis = quietTasks.get(n2.saveIdx);
@@ -46,6 +50,8 @@ public class SetUpComingTask {
 
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
+        if (qThis.endHour == 99)
+            n2.nextTime -= 30000;   // if 삐이 30초 전에
         new AlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
 
     }
