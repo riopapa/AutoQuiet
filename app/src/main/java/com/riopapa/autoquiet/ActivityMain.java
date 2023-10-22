@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity  {
 
-    public static Context pContext;
+    public static Context mContext;
     public static Activity pActivity;
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
@@ -50,12 +50,12 @@ public class ActivityMain extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pContext = this;
+        mContext = this;
         pActivity = this;
         vars = new Vars();
         new SharedPrefer().get(vars);
 
-        new Utils(pContext).deleteOldLogFiles();
+        new Utils(mContext).deleteOldLogFiles();
         setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
@@ -86,15 +86,15 @@ public class ActivityMain extends AppCompatActivity  {
             startActivity(intent);
         }
 
-        new VarsGetPut().put(vars, pContext);
+        new VarsGetPut().put(vars, mContext);
 
 //        new NotificationStart(pContext);
-        NotificationService notificationService  = new NotificationService(pContext);
-        if (!BootReceiver.isServiceRunning(pContext, notificationService.getClass())) {
+        NotificationService notificationService  = new NotificationService(mContext);
+        if (!BootReceiver.isServiceRunning(mContext, notificationService.getClass())) {
             Intent mBackgroundServiceIntent;
-            mBackgroundServiceIntent = new Intent(pContext, notificationService.getClass());
+            mBackgroundServiceIntent = new Intent(mContext, notificationService.getClass());
 //            pContext.startForegroundService(mBackgroundServiceIntent);
-            pContext.startService(mBackgroundServiceIntent);
+            mContext.startService(mBackgroundServiceIntent);
         }
 
     }
@@ -102,11 +102,12 @@ public class ActivityMain extends AppCompatActivity  {
     @Override
     public void onResume() {
 
-        vars = new VarsGetPut().get(pContext);
+        vars = new VarsGetPut().get(mContext);
         Log.w("Main", "onResume");
-        new Utils(pContext).deleteOldLogFiles();
+        new Utils(mContext).deleteOldLogFiles();
 
         showMainList();
+        new VarsGetPut().put(vars, mContext);
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 2;
         mainRecyclerView.scrollToPosition((currIdx > 2)? currIdx - 1:currIdx);
@@ -126,14 +127,14 @@ public class ActivityMain extends AppCompatActivity  {
         int menuItem = item.getItemId();
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
-            new VarsGetPut().put(vars, pContext);
+            new VarsGetPut().put(vars, mContext);
             intent = new Intent(this, ActivityAddEdit.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
-            new VarsGetPut().put(vars, pContext);
+            new VarsGetPut().put(vars, mContext);
             intent = new Intent(this, ActivityGCalShow.class);
             startActivityForResult(intent, 22);
             return true;
@@ -143,12 +144,12 @@ public class ActivityMain extends AppCompatActivity  {
             return true;
 
         } else if (menuItem == R.id.action_setting) {
-            new VarsGetPut().put(vars, pContext);
+            new VarsGetPut().put(vars, mContext);
             startActivityForResult(new Intent(this, ActivityPrefer.class),33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
-            new VarsGetPut().put(vars, pContext);
+            new VarsGetPut().put(vars, mContext);
             new AlertDialog.Builder(this)
                     .setTitle(R.string.reset_title)
                     .setMessage(R.string.reset_table)
@@ -175,35 +176,32 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView = findViewById(R.id.mainRecycler);
 
         mainRecycleAdapter = new MainRecycleAdapter();
-        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter, pContext);
+        ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
-        new VarsGetPut().put(vars, pContext);
     }
 
-    public final static Handler removeHandler = new Handler(Looper.getMainLooper()) {
+    public final static Handler removeRecycler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             int idx = Integer.parseInt(msg.obj.toString());
             pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemRemoved(idx));
         }
-
     };
 
 
-    public final static Handler updateHandler = new Handler(Looper.getMainLooper()) {
+    public final static Handler updateRecycler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             int idx = Integer.parseInt(msg.obj.toString());
             pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemChanged(idx));
         }
-
     };
 
     @Override
     protected void onStop() {
-        new SetUpComingTask(pContext,"onStop ");
+        new SetUpComingTask(mContext,"onStop ");
         super.onStop();
     }
 }

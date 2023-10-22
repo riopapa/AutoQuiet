@@ -12,7 +12,7 @@ public class VibratePhone {
         VibratorManager vibratorManager;
         Vibrator vibrator = null;
         VibrationEffect vibrationEffect = null;
-        final long[] vibPattern = {0, 20, 200, 300, 300, 400, 400, 500, 550, 300, 400, 400, 500, 550};
+        final long[] vibPattern = {0, 20, 200, 300, 300, 400, 400, 400, 500, 550};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 vibratorManager =
                         (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);

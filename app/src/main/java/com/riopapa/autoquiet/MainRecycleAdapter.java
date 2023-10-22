@@ -54,7 +54,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        vars = new VarsGetPut().get(ActivityMain.pContext);
+        vars = new VarsGetPut().get(ActivityMain.mContext);
         colorOn = ResourcesCompat.getColor(context.getResources(), R.color.colorOn, null);
         colorInactiveBack = ResourcesCompat.getColor(context.getResources(), R.color.colorInactiveBack, null);
         colorOnBack = ResourcesCompat.getColor(context.getResources(), R.color.colorOnBack, null);
@@ -257,8 +257,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public int getItemCount() {
         if (quietTasks == null) {
-            context = ActivityMain.pContext;
-            quietTasks = new QuietTaskGetPut().get(ActivityMain.pContext);
+            context = ActivityMain.mContext;
+            quietTasks = new QuietTaskGetPut().get(ActivityMain.mContext);
             if (quietTasks == null)
                 new ClearAllTasks(context);
         }

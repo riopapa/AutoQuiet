@@ -51,7 +51,7 @@ public class SetUpComingTask {
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
         if (qThis.endHour == 99)
-            n2.nextTime -= 30000;   // if 삐이 30초 전에
+            n2.nextTime -= 70000;   // if 삐이 미리 미리
         new AlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
 
     }

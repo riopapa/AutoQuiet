@@ -149,7 +149,7 @@ public class NotificationService extends Service {
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
         mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
-        mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("토스"))? View.VISIBLE:View.GONE);
+        mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("삐이"))? View.VISIBLE:View.GONE);
 
         mNotificationManager.notify(100,mBuilder.build());
 

@@ -10,7 +10,6 @@ import com.riopapa.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class QuietTaskGetPut {
@@ -25,7 +24,7 @@ public class QuietTaskGetPut {
 //            }
 //        }
 //        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calBegDate));
-        SharedPreferences sharedPref = ActivityMain.pContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = ActivityMain.mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);

@@ -9,7 +9,7 @@ import com.riopapa.autoquiet.Vars;
 public class SharedPrefer {
 
     public void get(Vars vars) {
-        SharedPreferences sharedPref = ActivityMain.pContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = ActivityMain.mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         vars.sharedTimeBefore = sharedPref.getString("timeBefore", "");
         if (vars.sharedTimeBefore.equals("")) {

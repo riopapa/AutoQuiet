@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.riopapa.autoquiet.models.GCal;
-import com.riopapa.autoquiet.Sub.GetAgenda;
 import com.riopapa.autoquiet.Sub.NameColor;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 
@@ -30,7 +29,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        context = ActivityMain.pContext;
+        context = ActivityMain.mContext;
         vars = new VarsGetPut().get(context);
 //        gCals = new GetAgenda().get(rContext);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);

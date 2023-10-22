@@ -1,6 +1,7 @@
 package com.riopapa.autoquiet.Sub;
 
-import android.content.Context;
+import static com.riopapa.autoquiet.ActivityMain.mContext;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,7 +21,6 @@ import com.riopapa.autoquiet.R;
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
     private final MyItemTouchHelperAdapter mAdapter;
-    private final Context mContext;
 
     Paint mClearPaint;
     ColorDrawable mBackground;
@@ -30,9 +29,8 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     int intrinsicWidth;
     int intrinsicHeight;
 
-    public MyItemTouchHelper(MyItemTouchHelperAdapter adapter, Context context) {
+    public MyItemTouchHelper(MyItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
-        mContext = context;
     }
 
     @Override
