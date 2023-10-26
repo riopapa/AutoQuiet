@@ -51,7 +51,7 @@ public class SetUpComingTask {
         new Utils(context).log("SetUpComingTask",msg);
         updateNotyBar(context);
         if (qThis.endHour == 99)
-            n2.nextTime -= 70000;   // if 삐이 미리 미리
+            n2.nextTime -= 60000;   // if 삐이 미리 미리
         new AlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
 
     }
@@ -74,7 +74,8 @@ public class SetUpComingTask {
         intent.putExtra("endN", n2.soonOrUntilN);
         intent.putExtra("subjectN", n2.subjectN);
         intent.putExtra("iconN", n2.iconN);
-        context.startForegroundService(intent);
+//        context.startForegroundService(intent);
+        context.startService(intent);
 
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();

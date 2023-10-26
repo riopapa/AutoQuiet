@@ -39,6 +39,7 @@ public class QuietTask implements Serializable {
         this.alarmType = alarmType;
         this.agenda = false;
         this.sayDate = sayDate;
+        this.sortKey = System.currentTimeMillis();
         System.arraycopy(week, 0, this.week, 0, 7);
     }
 

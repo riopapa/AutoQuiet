@@ -1,12 +1,13 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityMain.mContext;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -23,23 +24,22 @@ public class NotificationService extends Service {
     String beg, subject, end, begN, subjectN, endN;
     int icon, iconN, iconNow;
     boolean stop_repeat = false;
-    Context nContext;
 
     final int RIGHT_NOW = 100;
-    final int STOP_SPEAK = 1044;
-    final int TO_TOSS = 1066;
+    final int STOP_SPEAK = 144;
+    final int TO_TOSS = 166;
 
     public NotificationService(){}      // do not remove
 
-    public NotificationService(Context nContext) {
-        this.nContext = nContext;
+    public NotificationService(Context context) {
+        mContext = context;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        nContext = this;
-        mRemoteViews = new RemoteViews(nContext.getPackageName(), R.layout.notification_bar);
+        mContext = this;
+        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_bar);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class NotificationService extends Service {
         if (operation == TO_TOSS) {
             launchToss();
         } else if (operation == RIGHT_NOW) {
-            Intent oIntent = new Intent(nContext, ActivityOneTime.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(nContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
+            Intent oIntent = new Intent(mContext, ActivityOneTime.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
             try {
                 pendingIntent.send();
             } catch(PendingIntent.CanceledException e) {
@@ -96,11 +96,11 @@ public class NotificationService extends Service {
     }
 
     private void launchToss() {
-        Intent appIntent = nContext.getPackageManager().getLaunchIntentForPackage(
+        Intent appIntent = mContext.getPackageManager().getLaunchIntentForPackage(
                 "viva.republica.toss");
         appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
                             Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-        nContext.startActivity(appIntent);
+        mContext.startForegroundService(appIntent);
 
     }
 
@@ -109,31 +109,31 @@ public class NotificationService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
-        mBuilder = new NotificationCompat.Builder(nContext,"default")
-                .setSmallIcon(R.drawable.auto_quite)
+        mBuilder = new NotificationCompat.Builder(mContext,"default")
+                .setSmallIcon(iconNow)
                 .setContent(mRemoteViews)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(false)
                 .setOngoing(true);
 
-        Intent mainIntent = new Intent(nContext, ActivityMain.class);
-        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(nContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+        Intent mainIntent = new Intent(mContext, ActivityMain.class);
+        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(mContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
 
         Intent rightNowI = new Intent(this, NotificationService.class);
         rightNowI.putExtra("operation", RIGHT_NOW);
-        PendingIntent rightNowP = PendingIntent.getService(nContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent rightNowP = PendingIntent.getService(mContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(rightNowP);
         mRemoteViews.setOnClickPendingIntent(R.id.right_now, rightNowP);
 
         Intent tossI = new Intent(this, NotificationService.class);
         tossI.putExtra("operation", TO_TOSS);
-        PendingIntent tossP = PendingIntent.getService(nContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent tossP = PendingIntent.getService(mContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(tossP);
         mRemoteViews.setOnClickPendingIntent(R.id.to_toss, tossP);
 
         Intent stopTalkI = new Intent(this, NotificationService.class);
         stopTalkI.putExtra("operation", STOP_SPEAK);
-        PendingIntent stopTalkP = PendingIntent.getService(nContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent stopTalkP = PendingIntent.getService(mContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(stopTalkP);
         mRemoteViews.setOnClickPendingIntent(R.id.no_speak, stopTalkP);
     }
