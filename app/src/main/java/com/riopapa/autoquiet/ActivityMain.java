@@ -30,6 +30,7 @@ import com.riopapa.autoquiet.Sub.ClearAllTasks;
 import com.riopapa.autoquiet.Sub.MyItemTouchHelper;
 import com.riopapa.autoquiet.Sub.Permission;
 import com.riopapa.autoquiet.Sub.SharedPrefer;
+import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
 
@@ -88,15 +89,10 @@ public class ActivityMain extends AppCompatActivity  {
 
         new VarsGetPut().put(vars, mContext);
 
-//        new NotificationStart(pContext);
-        NotificationService notificationService  = new NotificationService(mContext);
-        if (!BootReceiver.isServiceRunning(mContext, notificationService.getClass())) {
-            Intent mBackgroundServiceIntent;
-            mBackgroundServiceIntent = new Intent(mContext, notificationService.getClass());
-//            pContext.startForegroundService(mBackgroundServiceIntent);
-            mContext.startService(mBackgroundServiceIntent);
-        }
-
+        NotificationService notificationService  = new NotificationService();
+        Intent intent;
+        intent = new Intent(mContext, notificationService.getClass());
+        new ShowNotification(mContext, intent);
     }
 
     @Override
@@ -204,4 +200,11 @@ public class ActivityMain extends AppCompatActivity  {
         new SetUpComingTask(mContext,"onStop ");
         super.onStop();
     }
+
+//    public static void showNotification(Intent intent) {
+//        if (!BootReceiver.isServiceRunning(mContext, NotificationService.class)) {
+//            mContext.startService(intent);
+//        } else
+//            mContext.startForegroundService(intent);
+//    }
 }

@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.MannerMode;
+import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.Sounds;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.Sub.VibratePhone;
@@ -146,9 +147,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             start_Normal();
         }
 
-        Intent notification = new Intent(mContext, NotificationService.class);
-        notification.putExtra("operation", STOP_SPEAK);
-        mContext.startForegroundService(notification);
+        Intent intent = new Intent(mContext, NotificationService.class);
+        intent.putExtra("operation", STOP_SPEAK);
+        new ShowNotification(mContext, intent);
     }
 
     private void say_Started99() {
@@ -202,7 +203,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new VibratePhone(mContext);
             } else {
                 sounds.beep(mContext, (subject.equals("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.BBEEPP);
-                String say = subject + " 를 확인하세요, " +
+                String say = "지금은 "+nowSecToString(System.currentTimeMillis()) + " 입니다." +
+                        subject + " 를 확인하세요, " +
                         ((several == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
@@ -226,7 +228,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             uIntent.putExtra("endN", n2.soonOrUntil);
             uIntent.putExtra("subjectN", n2.subject);
             uIntent.putExtra("icon", n2.iconN);
-            mContext.startForegroundService(uIntent);
+            new ShowNotification(mContext, uIntent);
 
         } else {
             String say = addPostPosition(subject) + "끝났습니다";
@@ -243,7 +245,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.w("start_Normal", say);
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
-        }, 800);
+        }, 2000);
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -251,7 +253,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
             new SetUpComingTask(mContext, "Normal()");
             }
-        }, 10000);
+        }, 15000);
     }
 
     String addPostPosition(String s) {
@@ -286,40 +288,46 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
     private void finish_Several() {
-        if (several > 0) {
-            String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
-            String t = nowTimeToString(System.currentTimeMillis());
-            String s =  ((several == 1) ? "마지막 안내입니다 " : "") + d + t +  " 입니다. ";
-            s += addPostPosition(qt.subject) + "끝났습니다";
-            myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+                if (several > 0) {
+                    String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
+                    String t = nowTimeToString(System.currentTimeMillis());
+                    String s =  ((several == 1) ? "마지막 안내입니다 " : "") + d + t +  " 입니다. ";
+                    s += addPostPosition(qt.subject) + "끝났습니다";
+                    myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
 
-            long nextTime = System.currentTimeMillis() + ((several == 1) ? 10 : 180) * 1000;
-            new AlarmTime().request(mContext, qt, nextTime, "F", --several);
-            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-            String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
-            String endN = sharedPref.getString("endN", "시작");
-            String subjectN = sharedPref.getString("subjectN", "Next Item");
-            int icon = sharedPref.getInt("icon", R.drawable.next_task);
-            int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
+                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 120) * 1000;
+                    new AlarmTime().request(mContext, qt, nextTime, "F", --several);
+                    SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+                    String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
+                    String endN = sharedPref.getString("endN", "시작");
+                    String subjectN = sharedPref.getString("subjectN", "Next Item");
+                    int icon = sharedPref.getInt("icon", R.drawable.next_task);
+                    int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
 
-            Intent uIntent = new Intent(mContext, NotificationService.class);
-            uIntent.putExtra("beg", nowTimeToString(nextTime));
-            uIntent.putExtra("end", "반복" + several);
-            uIntent.putExtra("stop_repeat", true);
-            uIntent.putExtra("subject", qt.subject);
-            uIntent.putExtra("icon", icon);
-            uIntent.putExtra("iconNow", icon);
-            uIntent.putExtra("begN", begN);
-            uIntent.putExtra("endN", endN);
-            uIntent.putExtra("subjectN", subjectN);
-            uIntent.putExtra("iconN", iconN);
-//                    mContext.startForegroundService(uIntent);
-            mContext.startService(uIntent);
-        } else {
-            if (qt.agenda)
-                removeAgenda();
-            new SetUpComingTask(mContext, "say_FinDate");
-        }
+                    Intent intent = new Intent(mContext, NotificationService.class);
+                    intent.putExtra("beg", nowTimeToString(nextTime));
+                    intent.putExtra("end", "반복" + several);
+                    intent.putExtra("stop_repeat", true);
+                    intent.putExtra("subject", qt.subject);
+                    intent.putExtra("icon", icon);
+                    intent.putExtra("iconNow", icon);
+                    intent.putExtra("begN", begN);
+                    intent.putExtra("endN", endN);
+                    intent.putExtra("subjectN", subjectN);
+                    intent.putExtra("iconN", iconN);
+                    new ShowNotification(mContext, intent);
+
+                } else {
+                    if (qt.agenda)
+                        removeAgenda();
+                    new SetUpComingTask(mContext, "say_FinDate");
+                }
+
+            }
+        }, 1200);
+
     }
 
     private void readyTTS() {
@@ -367,6 +375,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
     String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdfTime.format(time);
+    }
+    String nowSecToString(long time) {
+        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH 시 mm 분 ss 초 ", Locale.getDefault());
         return sdfTime.format(time);
     }
 

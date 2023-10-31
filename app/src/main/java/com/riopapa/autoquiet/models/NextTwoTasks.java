@@ -19,14 +19,8 @@ public class NextTwoTasks {
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qThis = quietTasks.get(idx);
             if (qThis.active) {
-//                if (qThis.alarmType == 0) {
-//                    qThis.alarmType = new AlarmType().getType(
-//                            qThis.endHour == 99, qThis.vibrate, qThis.begLoop, qThis.endLoop);
-//                    quietTasks.set(idx, qThis);
-//                    new QuietTaskGetPut().put(quietTasks);
-//                }
                 long thisBeg = CalculateNext.calc(false, qThis.begHour, qThis.begMin, qThis.week, 0);
-                if (thisBeg < nextTime) {
+                if (thisBeg < nextTime && thisBeg > System.currentTimeMillis() + 90000) {
                     nextTime = thisBeg;
                     saveIdx = idx;
                     subject = qThis.subject;

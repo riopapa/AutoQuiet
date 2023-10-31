@@ -31,9 +31,9 @@ public class NotificationService extends Service {
 
     public NotificationService(){}      // do not remove
 
-    public NotificationService(Context context) {
-        mContext = context;
-    }
+//    public NotificationService(Context context) {
+//        mContext = context;
+//    }
 
     @Override
     public void onCreate() {
@@ -100,7 +100,8 @@ public class NotificationService extends Service {
                 "viva.republica.toss");
         appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
                             Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-        mContext.startForegroundService(appIntent);
+//        mContext.startForegroundService(appIntent);
+        mContext.startService(appIntent);
 
     }
 
