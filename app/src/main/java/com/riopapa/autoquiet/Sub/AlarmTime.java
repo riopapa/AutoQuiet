@@ -22,12 +22,19 @@ public class AlarmTime {
         intent.putExtra("DATA",args);
         intent.putExtra("several", several);
         intent.putExtra("case",StartFinish);   // "S" : Start, "F" : Finish, "O" : One time
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND); // add this flag to trigger even if phone if flipped
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 23456
+                , intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
             new Utils(context).log("req1",StartFinish+" TASK Canceled : "+ quietTask.subject);
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                if (alarmManager.canScheduleExactAlarms())
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, nextTime, pendingIntent);
+//            }
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }
     }
 }

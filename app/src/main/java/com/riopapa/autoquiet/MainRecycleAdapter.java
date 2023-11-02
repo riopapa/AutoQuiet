@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,7 +25,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.riopapa.autoquiet.Sub.CalculateNext;
+import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 import com.riopapa.autoquiet.Sub.ClearAllTasks;
 import com.riopapa.autoquiet.Sub.MyItemTouchHelperAdapter;
 import com.riopapa.autoquiet.Sub.NameColor;
@@ -271,7 +270,11 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
                 if (qt.endHour == 99) {
-                    qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
+                    CalcNextBegEnd cal = new CalcNextBegEnd(qt);
+                    qt.sortKey = cal.begTime;
+
+//                    qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
+
                 } else if (qt.agenda) {
                     qt.sortKey = qt.calBegDate;
                 } else
@@ -279,10 +282,10 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             } else
                 qt.sortKey = System.currentTimeMillis() + 9999999999L + (long) i * 1000;
 
-            if (qt.sortKey > 1000) {
-                SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd HH:mm:ss ", Locale.getDefault());
-                Log.w("seq "+i, sdfDate.format(qt.sortKey) +" "+qt.subject);
-            }
+//            if (qt.sortKey > 1000) {
+//                SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd HH:mm:ss ", Locale.getDefault());
+//                Log.w("seq "+i, sdfDate.format(qt.sortKey) +" "+qt.subject);
+//            }
 
             quietTasks.set(i, qt);
         }

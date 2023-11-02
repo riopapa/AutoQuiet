@@ -12,6 +12,8 @@ import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.removeRecycler;
 import static com.riopapa.autoquiet.ActivityMain.updateRecycler;
 
+import static java.time.MonthDay.now;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,11 +31,12 @@ import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.Sounds;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.Sub.VibratePhone;
-import com.riopapa.autoquiet.models.NextTwoTasks;
+import com.riopapa.autoquiet.models.UpcomingTasks;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
@@ -48,13 +51,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     String caseSFO;
     Vars vars;
     final int STOP_SPEAK = 1022;
+    final String TOSS_BEEP = "삐이";
     int icon;
     Sounds sounds = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // save context value for some tasks
         mContext = context;
 
         // bundle contains saved scheduled quietTask info
@@ -197,20 +200,24 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void bell_Several(String subject) {
+
         if (several > 0) {
             several--;
             if (isSilentNow()) {
                 new VibratePhone(mContext);
             } else {
-                sounds.beep(mContext, (subject.equals("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.BBEEPP);
-                String say = "지금은 "+nowSecToString(System.currentTimeMillis()) + " 입니다." +
-                        subject + " 를 확인하세요, " +
-                        ((several == 0) ? "마지막 안내입니다 " : "") + subject + " 를 확인하세요";
-                myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
+                long now = System.currentTimeMillis();
+                String s = (several == 0) ? "마지막 안내입니다 " : "";
+                s += (qt.sayDate) ? nowDateToString(now):"";
+                if (subject.equals(TOSS_BEEP)) {
+                    s += subject+" 시작 "+ secRemaining(now) + " 초 전";
+                } else
+                    s +=  " " + subject + " 를 확인하세요, ";
+                myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
             if (several == 0)
                 setInactive(qtIdx);
-            NextTwoTasks n2 = new NextTwoTasks(quietTasks);
+            UpcomingTasks n2 = new UpcomingTasks(quietTasks);
 
             long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 40) * 1000;
             new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
@@ -291,10 +298,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (several > 0) {
-                    String d = (qt.sayDate) ? "지금은 " + nowDateToString(System.currentTimeMillis()) : "";
-                    String t = nowTimeToString(System.currentTimeMillis());
-                    String s =  ((several == 1) ? "마지막 안내입니다 " : "") + d + t +  " 입니다. ";
-                    s += addPostPosition(qt.subject) + "끝났습니다";
+                    String s = (several == 1) ? "마지막 안내입니다 " : "";
+                    s += " 지금은 ";
+                    long now = System.currentTimeMillis();
+                    s +=  (qt.sayDate)? nowDateTimeToString(now) : nowTimeToString(now);
+                    s += " " + addPostPosition(qt.subject) + "끝났습니다";
                     myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
 
                     long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 120) * 1000;
@@ -373,13 +381,25 @@ public class AlarmReceiver extends BroadcastReceiver {
         String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
         return s + s;
     }
+    String nowDateTimeToString(long time) {
+        String s =  new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
+        return s + s;
+    }
     String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
     String nowSecToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH 시 mm 분 ss 초 ", Locale.getDefault());
+        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH 시 mm 분", Locale.getDefault());
         return sdfTime.format(time);
+    }
+    String secRemaining(long time) {
+        Calendar toDay = Calendar.getInstance();
+        toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
+        toDay.set(Calendar.MINUTE, qt.begMin);
+        toDay.set(Calendar.SECOND, 0);
+        long schedule = toDay.getTimeInMillis();
+        return ""+(schedule-time)/1000;
     }
 
     boolean isSilentNow() {

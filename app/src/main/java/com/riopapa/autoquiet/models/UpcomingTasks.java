@@ -2,25 +2,29 @@ package com.riopapa.autoquiet.models;
 
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 
-import com.riopapa.autoquiet.Sub.CalculateNext;
+import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 
 import java.util.ArrayList;
 
-public class NextTwoTasks {
+public class UpcomingTasks {
 
     public long nextTime, nextTimeN;
     public int saveIdx, saveIdxN, icon, iconN;
     public String subject, subjectN, begEnd, begEndN, soonOrUntil, soonOrUntilN;
 
-    public NextTwoTasks(ArrayList<QuietTask> quietTasks) {
+    public UpcomingTasks(ArrayList<QuietTask> quietTasks) {
 
-        nextTime = System.currentTimeMillis() + 240*60*60*1000L;
+        long nowTime = System.currentTimeMillis() + 90000;
+        nextTime = nowTime + 240*60*60*1000L;
         nextTimeN = nextTime;
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qThis = quietTasks.get(idx);
             if (qThis.active) {
-                long thisBeg = CalculateNext.calc(false, qThis.begHour, qThis.begMin, qThis.week, 0);
-                if (thisBeg < nextTime && thisBeg > System.currentTimeMillis() + 90000) {
+                CalcNextBegEnd cal = new CalcNextBegEnd(qThis);
+                long thisBeg = cal.begTime;
+                long thisEnd = cal.endTime;
+//                long thisBeg = CalculateNext.calc(false, qThis.begHour, qThis.begMin, qThis.week, 0);
+                if (thisBeg < nextTime && thisBeg > nowTime) {
                     nextTime = thisBeg;
                     saveIdx = idx;
                     subject = qThis.subject;
@@ -30,7 +34,7 @@ public class NextTwoTasks {
                 }
                 if (qThis.endHour == 99)
                     continue;
-                long thisEnd = CalculateNext.calc(true, qThis.endHour, qThis.endMin, qThis.week, (qThis.begHour > qThis.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+//                long thisEnd = CalculateNext.calc(true, qThis.endHour, qThis.endMin, qThis.week, (qThis.begHour > qThis.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
                 if (thisEnd < nextTime) {
                     nextTime = thisEnd;
                     saveIdx = idx;
@@ -44,13 +48,10 @@ public class NextTwoTasks {
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             QuietTask qNxt = quietTasks.get(idx);
             if (qNxt.active) {
-//                if (qNxt.alarmType == 0) {
-//                    qNxt.alarmType = new AlarmType().getType(
-//                            qNxt.endHour == 99, qNxt.vibrate, qNxt.begLoop, qNxt.endLoop);
-//                    quietTasks.set(idx, qNxt);
-//                    new QuietTaskGetPut().put(quietTasks);
-//                }
-                long nxtBeg = CalculateNext.calc(false, qNxt.begHour, qNxt.begMin, qNxt.week, 0);
+                CalcNextBegEnd cal = new CalcNextBegEnd(qNxt);
+                long nxtBeg = cal.begTime;
+                long nxtEnd = cal.endTime;
+//                long nxtBeg = CalculateNext.calc(false, qNxt.begHour, qNxt.begMin, qNxt.week, 0);
                 if (nxtBeg < nextTimeN && nxtBeg > nextTime) {
                     nextTimeN = nxtBeg;
                     begEndN = "S";
@@ -61,7 +62,7 @@ public class NextTwoTasks {
                 }
                 if (qNxt.endHour == 99)
                     continue;
-                long nxtEnd = CalculateNext.calc(true, qNxt.endHour, qNxt.endMin, qNxt.week, (qNxt.begHour > qNxt.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
+//                long nxtEnd = CalculateNext.calc(true, qNxt.endHour, qNxt.endMin, qNxt.week, (qNxt.begHour > qNxt.endHour) ? (long) 24 * 60 * 60 * 1000 : 0);
                 if (nxtEnd < nextTimeN && nxtEnd > nextTime) {
                     nextTimeN = nxtEnd;
                     begEndN = (idx == 0) ? "O" : "F";

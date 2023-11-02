@@ -108,6 +108,7 @@ public class ActivityMain extends AppCompatActivity  {
             currIdx = mainRecycleAdapter.getItemCount() / 2;
         mainRecyclerView.scrollToPosition((currIdx > 2)? currIdx - 1:currIdx);
         super.onResume();
+
     }
 
     @Override

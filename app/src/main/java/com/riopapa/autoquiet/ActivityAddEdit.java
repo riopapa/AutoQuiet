@@ -24,7 +24,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.riopapa.autoquiet.Sub.CalculateNext;
+import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 import com.riopapa.autoquiet.Sub.NameColor;
 import com.riopapa.autoquiet.Sub.QuietTaskDefault;
 import com.riopapa.autoquiet.databinding.ActivityAddEditBinding;
@@ -412,7 +412,12 @@ public class ActivityAddEdit extends AppCompatActivity {
     private void save_AlarmTask() {
 
         long nowTime = System.currentTimeMillis();
-        long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
+//        long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
+        qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
+                week, active, alarmType, sayDate);
+        CalcNextBegEnd cal = new CalcNextBegEnd(qT);
+        long nextTime = cal.begTime;
+
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(nowTime);
         int nowDays = c.get(Calendar.DAY_OF_YEAR);
