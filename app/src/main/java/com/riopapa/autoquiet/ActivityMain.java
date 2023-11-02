@@ -198,7 +198,7 @@ public class ActivityMain extends AppCompatActivity  {
 
     @Override
     protected void onStop() {
-        new SetUpComingTask(mContext,"onStop ");
+        new ScheduleNextTask(mContext,"onStop ");
         super.onStop();
     }
 

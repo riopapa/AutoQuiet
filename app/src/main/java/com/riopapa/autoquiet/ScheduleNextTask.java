@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
-import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.models.UpcomingTasks;
 import com.riopapa.autoquiet.models.QuietTask;
@@ -14,27 +13,18 @@ import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
-public class SetUpComingTask {
+public class ScheduleNextTask {
     static int several;
     static String timeInfoS, timeInfo, msg;
     static String timeInfoN;
     static UpcomingTasks n2;
 
-    public final static int AHEAD_TIME = 55000;    // should be < 90000
+    public final static int AHEAD_TIME = 80000;    // should be < 90000
     ArrayList<QuietTask> quietTasks;
 
-    public SetUpComingTask(Context context, String headInfo) {
+    public ScheduleNextTask(Context context, String headInfo) {
 
         quietTasks = new QuietTaskGetPut().get(context);
-
-        CalcNextBegEnd cal = new CalcNextBegEnd(quietTasks.get(2));
-
-
-
-
-
-
-
 
         n2 = new UpcomingTasks(quietTasks);
         QuietTask qNxt = quietTasks.get(n2.saveIdxN);
@@ -62,7 +52,7 @@ public class SetUpComingTask {
             several = (n2.icon == R.drawable.bell_several) ? 2:0;
         }
 
-        new Utils(context).log("SetUpComingTask",msg);
+        new Utils(context).log("ScheduleNextTask",msg);
         updateNotyBar(context);
         if (qThis.endHour == 99)    // 99 means no EndHour
             n2.nextTime -= AHEAD_TIME;   // if 삐이 미리 미리

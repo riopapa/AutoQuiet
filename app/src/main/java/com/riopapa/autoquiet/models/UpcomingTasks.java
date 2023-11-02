@@ -1,6 +1,7 @@
 package com.riopapa.autoquiet.models;
 
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
+import static com.riopapa.autoquiet.ScheduleNextTask.AHEAD_TIME;
 
 import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 
@@ -14,7 +15,7 @@ public class UpcomingTasks {
 
     public UpcomingTasks(ArrayList<QuietTask> quietTasks) {
 
-        long nowTime = System.currentTimeMillis() + 90000;
+        long nowTime = System.currentTimeMillis() + AHEAD_TIME + AHEAD_TIME;
         nextTime = nowTime + 240*60*60*1000L;
         nextTimeN = nextTime;
         for (int idx = 0; idx < quietTasks.size(); idx++) {

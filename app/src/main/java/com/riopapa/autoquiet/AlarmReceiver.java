@@ -121,9 +121,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 //            vibrate();
 //        }
         setInactive(0);
-        new SetUpComingTask(context, "After oneTime");
+        new ScheduleNextTask(context, "After oneTime");
     }
 
+    // after speak make it disabled
     private void setInactive(int index) {
         qt.active = false;
         quietTasks.set(index, qt);
@@ -176,7 +177,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 String say = subject + " 를 확인 하시지요";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
-            new SetUpComingTask(mContext, "ended");
+            new ScheduleNextTask(mContext, "ended");
             }
         }, 1500);
 
@@ -206,35 +207,34 @@ public class AlarmReceiver extends BroadcastReceiver {
             if (isSilentNow()) {
                 new VibratePhone(mContext);
             } else {
-                long now = System.currentTimeMillis();
                 String s = (several == 0) ? "마지막 안내입니다 " : "";
-                s += (qt.sayDate) ? nowDateToString(now):"";
+                s += (qt.sayDate) ? nowDateToString(System.currentTimeMillis()):"";
                 if (subject.equals(TOSS_BEEP)) {
-                    s += subject+" 시작 "+ secRemaining(now) + " 초 전";
+                    s += subject + secRemaining(System.currentTimeMillis());
                 } else
                     s +=  " " + subject + " 를 확인하세요, ";
                 myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
             }
             if (several == 0)
                 setInactive(qtIdx);
-            UpcomingTasks n2 = new UpcomingTasks(quietTasks);
+            UpcomingTasks ucTasks = new UpcomingTasks(quietTasks);
 
-            long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 40) * 1000;
+            long nextTime = System.currentTimeMillis() + 15 * 1000;
             new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
-            Intent uIntent = new Intent(mContext, NotificationService.class);
 
+            Intent uIntent = new Intent(mContext, NotificationService.class);
             uIntent.putExtra("beg", nowTimeToString(nextTime));
             uIntent.putExtra("end", "다시");
             uIntent.putExtra("stop_repeat", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
-            uIntent.putExtra("iconNow", n2.icon);
+            uIntent.putExtra("iconNow", ucTasks.icon);
 
             SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
             uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
-            uIntent.putExtra("endN", n2.soonOrUntil);
-            uIntent.putExtra("subjectN", n2.subject);
-            uIntent.putExtra("icon", n2.iconN);
+            uIntent.putExtra("endN", ucTasks.soonOrUntil);
+            uIntent.putExtra("subjectN", ucTasks.subject);
+            uIntent.putExtra("icon", ucTasks.iconN);
             new ShowNotification(mContext, uIntent);
 
         } else {
@@ -258,7 +258,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void run() {
             new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
-            new SetUpComingTask(mContext, "Normal()");
+            new ScheduleNextTask(mContext, "Normal()");
             }
         }, 15000);
     }
@@ -289,7 +289,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             quietTasks.set(qtIdx, qt);
             mainRecycleAdapter.notifyItemChanged(qtIdx);
         }
-        new SetUpComingTask(mContext, "say_FinishNormal()");
+        new ScheduleNextTask(mContext, "say_FinishNormal()");
         new Utils(mContext).deleteOldLogFiles();
     }
 
@@ -330,7 +330,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else {
                     if (qt.agenda)
                         removeAgenda();
-                    new SetUpComingTask(mContext, "say_FinDate");
+                    new ScheduleNextTask(mContext, "say_FinDate");
                 }
 
             }
@@ -398,8 +398,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
         toDay.set(Calendar.MINUTE, qt.begMin);
         toDay.set(Calendar.SECOND, 0);
-        long schedule = toDay.getTimeInMillis();
-        return ""+(schedule-time)/1000;
+        long timeDiff = (toDay.getTimeInMillis() - time)/1000;
+        if (timeDiff > 0)
+            return  " 시작 "+ timeDiff+ " 초 전 ";
+        return " 시작됨 ";
     }
 
     boolean isSilentNow() {

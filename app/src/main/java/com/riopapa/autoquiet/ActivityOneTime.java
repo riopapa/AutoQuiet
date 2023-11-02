@@ -156,7 +156,7 @@ public class ActivityOneTime extends AppCompatActivity {
         vars.sharedManner = manner;
         new VarsGetPut().put(vars, this);
         new MannerMode().turn2Quiet(this, vibrate);
-        new SetUpComingTask(this, "Quit RightNow");
+        new ScheduleNextTask(this, "Quit RightNow");
     }
 
     @Override

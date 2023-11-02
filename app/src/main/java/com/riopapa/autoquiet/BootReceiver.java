@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.riopapa.autoquiet.models.QuietTask;
-
-import java.util.ArrayList;
-
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
@@ -20,7 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 
                 @Override public void run() {
-                    new SetUpComingTask(context, "After Boot");
+                    new ScheduleNextTask(context, "After Boot");
                 }
             }, 10000);
         }
