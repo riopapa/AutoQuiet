@@ -19,7 +19,7 @@ public class ScheduleNextTask {
     static String timeInfoN;
     static UpcomingTasks n2;
 
-    public final static int AHEAD_TIME = 80000;    // should be < 90000
+    public final static int AHEAD_TIME = 90000;    // should be < 90000
     ArrayList<QuietTask> quietTasks;
 
     public ScheduleNextTask(Context context, String headInfo) {

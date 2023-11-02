@@ -398,7 +398,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
         toDay.set(Calendar.MINUTE, qt.begMin);
         toDay.set(Calendar.SECOND, 0);
-        long timeDiff = (toDay.getTimeInMillis() - time)/1000;
+        long timeDiff = (toDay.getTimeInMillis() - time - 5000)/1000;
         if (timeDiff > 0)
             return  " 시작 "+ timeDiff+ " 초 전 ";
         return " 시작됨 ";
