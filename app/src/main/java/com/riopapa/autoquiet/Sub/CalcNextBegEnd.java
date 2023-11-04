@@ -1,6 +1,8 @@
 package com.riopapa.autoquiet.Sub;
 
 
+import android.util.Log;
+
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.Calendar;
@@ -18,7 +20,7 @@ public class CalcNextBegEnd {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        int DD = cal.get(Calendar.DATE);
+        int DD = cal.get(Calendar.DAY_OF_MONTH);
         int WK = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
 
         for (int i = WK; ; ) {
@@ -27,7 +29,7 @@ public class CalcNextBegEnd {
                 cal.set(Calendar.MINUTE, qt.begMin);
                 begTime = cal.getTimeInMillis();
                 if (qt.endHour == 99) {
-                    endTime = begTime + 1000;
+                    endTime = begTime + 9999 * 60 * 60000;
                 } else {
                     cal.set(Calendar.HOUR_OF_DAY, qt.endHour);
                     cal.set(Calendar.MINUTE, qt.endMin);
@@ -38,11 +40,13 @@ public class CalcNextBegEnd {
                 }
                 break;
             }
-            cal.set(Calendar.DATE, ++DD);
-            DD = cal.get(Calendar.DATE);
+            cal.set(Calendar.DAY_OF_MONTH, ++DD);
+            DD = cal.get(Calendar.DAY_OF_MONTH);
             i++;
             if (i == 7)
                 i = 0;
         }
+//        Log.w("Cal", qt.subject+" "+cal.get(Calendar.YEAR)+" "+cal.get(Calendar.MONTH
+//                + " "+cal.get(Calendar.DAY_OF_MONTH)));
     }
 }

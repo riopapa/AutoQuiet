@@ -27,11 +27,11 @@ import android.util.Log;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.MannerMode;
+import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.Sounds;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.Sub.VibratePhone;
-import com.riopapa.autoquiet.models.UpcomingTasks;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.Normalizer;
@@ -217,7 +217,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             if (several == 0)
                 setInactive(qtIdx);
-            UpcomingTasks ucTasks = new UpcomingTasks(quietTasks);
+            NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
 
             long nextTime = System.currentTimeMillis() + 15 * 1000;
             new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
@@ -228,13 +228,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             uIntent.putExtra("stop_repeat", true);
             uIntent.putExtra("subject", qt.subject);
             uIntent.putExtra("icon", icon);
-            uIntent.putExtra("iconNow", ucTasks.icon);
+            uIntent.putExtra("iconNow", nxtTsk.icon);
 
             SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
             uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
-            uIntent.putExtra("endN", ucTasks.soonOrUntil);
-            uIntent.putExtra("subjectN", ucTasks.subject);
-            uIntent.putExtra("icon", ucTasks.iconN);
+            uIntent.putExtra("endN", nxtTsk.beginOrEndN);
+            uIntent.putExtra("subjectN", nxtTsk.subject);
+            uIntent.putExtra("icon", nxtTsk.iconN);
             new ShowNotification(mContext, uIntent);
 
         } else {
@@ -279,7 +279,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private void finish_Normal() {
-        sounds.beep(mContext, Sounds.BEEP.ALARM);
+        sounds.beep(mContext, Sounds.BEEP.INFO);
         String s = addPostPosition(qt.subject) + "끝났습니다";
         myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
         if (qt.agenda) { // delete if agenda based
@@ -305,7 +305,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     s += " " + addPostPosition(qt.subject) + "끝났습니다";
                     myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
 
-                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 20 : 120) * 1000;
+                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 50 : 300) * 1000;
                     new AlarmTime().request(mContext, qt, nextTime, "F", --several);
                     SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
                     String begN = sharedPref.getString("begN", nowTimeToString(nextTime));

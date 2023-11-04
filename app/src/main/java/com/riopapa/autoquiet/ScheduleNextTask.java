@@ -4,89 +4,69 @@ package com.riopapa.autoquiet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
+import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ShowNotification;
-import com.riopapa.autoquiet.models.UpcomingTasks;
 import com.riopapa.autoquiet.models.QuietTask;
 
 
 import java.util.ArrayList;
 
 public class ScheduleNextTask {
-    static int several;
-    static String timeInfoS, timeInfo, msg;
+    static String timeInfo, msg;
     static String timeInfoN;
-    static UpcomingTasks n2;
 
-    public final static int AHEAD_TIME = 90000;    // should be < 90000
+    public final static int AHEAD_TIME = 87654;
     ArrayList<QuietTask> quietTasks;
+    static NextTwoTasks nxtTsk;
 
     public ScheduleNextTask(Context context, String headInfo) {
 
         quietTasks = new QuietTaskGetPut().get(context);
 
-        n2 = new UpcomingTasks(quietTasks);
-        QuietTask qNxt = quietTasks.get(n2.saveIdxN);
-        QuietTask qThis = quietTasks.get(n2.saveIdx);
-        timeInfoS = getHourMin(qThis.begHour, qThis.begMin);
-        boolean end99Nxt = qNxt.endHour == 99;
-        boolean end99Now = qThis.endHour == 99;
-        if (!end99Nxt) {
-            timeInfoN = (n2.begEndN.equals("S")) ?
-                    getHourMin(qNxt.begHour, qNxt.begMin) : getHourMin(qNxt.endHour, qNxt.endMin);
-        } else {
-            timeInfoN = getHourMin(qNxt.begHour, qNxt.begMin);
-        }
-        if (!end99Now) {
-            timeInfo = (n2.begEnd.equals("S")) ?
-                        getHourMin(qThis.begHour, qThis.begMin) : getHourMin(qThis.endHour, qThis.endMin);
-            msg = headInfo + " " + n2.subject + "\n" + timeInfo
-                    + " " + n2.soonOrUntil + " " + n2.begEnd;
-            if  (n2.begEnd.equals("S"))
-                msg += " ~ " + getHourMin(qThis.endHour, qThis.endMin);
-            several = (qThis.sayDate && !qThis.agenda) ? 3:0;  // finish 인데 sayDate 가 있으면 여러 번 울림
-        } else {
-            timeInfo = getHourMin(qThis.begHour, qThis.begMin);
-            msg = headInfo + "\n" + timeInfo + " " + n2.subject;
-            several = (n2.icon == R.drawable.bell_several) ? 2:0;
-        }
+//        nt = new UpcomingTasks(quietTasks);
+        nxtTsk = new NextTwoTasks(quietTasks);
+
+        timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
+        timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
+
+        msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
 
         new Utils(context).log("ScheduleNextTask",msg);
         updateNotyBar(context);
-        if (qThis.endHour == 99)    // 99 means no EndHour
-            n2.nextTime -= AHEAD_TIME;   // if 삐이 미리 미리
-        new AlarmTime().request(context, qThis, n2.nextTime, n2.begEnd, several);
+
+        new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
+                nxtTsk.nextTime, nxtTsk.caseSFO, nxtTsk.several);
 
     }
 
     private static void updateNotyBar(Context context) {
         Intent intent = new Intent(context, NotificationService.class);
         intent.putExtra("beg", timeInfo);
-        intent.putExtra("end", n2.soonOrUntil);
-        intent.putExtra("subject", n2.subject);
+        intent.putExtra("end", nxtTsk.beginOrEnd);
+        intent.putExtra("subject", nxtTsk.subject);
         intent.putExtra("stop_repeat", false);
-        intent.putExtra("icon", n2.icon);
-        int iconNow = n2.icon;
-        if (n2.icon != R.drawable.bell_several && n2.icon != R.drawable.bell_event &&
-            n2.icon != R.drawable.bell_onetime && n2.icon != R.drawable.bell_once_gone &&
-            n2.begEnd.equals("S"))
+        intent.putExtra("icon", nxtTsk.icon);
+        int iconNow = nxtTsk.icon;
+        if (nxtTsk.caseSFO.equals("S"))
             iconNow = R.drawable.phone_normal;
         intent.putExtra("iconNow", iconNow);
 
         intent.putExtra("begN", timeInfoN);
-        intent.putExtra("endN", n2.soonOrUntilN);
-        intent.putExtra("subjectN", n2.subjectN);
-        intent.putExtra("iconN", n2.iconN);
+        intent.putExtra("endN", nxtTsk.beginOrEndN);
+        intent.putExtra("subjectN", nxtTsk.subjectN);
+        intent.putExtra("iconN", nxtTsk.iconN);
         new ShowNotification(context, intent);
 
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         sharedEditor.putString("begN", timeInfoN);
-        sharedEditor.putString("endN", n2.soonOrUntilN);
-        sharedEditor.putString("subjectN", n2.subjectN);
-        sharedEditor.putInt("icon", n2.icon);
-        sharedEditor.putInt("iconN", n2.iconN);
+        sharedEditor.putString("endN", nxtTsk.beginOrEndN);
+        sharedEditor.putString("subjectN", nxtTsk.subjectN);
+        sharedEditor.putInt("icon", nxtTsk.icon);
+        sharedEditor.putInt("iconN", nxtTsk.iconN);
         sharedEditor.apply();
 
     }
