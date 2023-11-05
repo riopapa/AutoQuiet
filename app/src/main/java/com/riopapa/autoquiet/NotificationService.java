@@ -55,7 +55,8 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
 
-//        Log.w("onStartCommand","operation = "+operation);
+
+        Log.w("onStartCommand","operation = "+operation);
         if (operation == TO_TOSS) {
             launchToss();
         } else if (operation == RIGHT_NOW) {
@@ -92,12 +93,19 @@ public class NotificationService extends Service {
     }
 
     private void launchToss() {
-        Intent appIntent = mContext.getPackageManager().getLaunchIntentForPackage(
+
+        Intent tossIntent = getPackageManager().getLaunchIntentForPackage(
                 "viva.republica.toss");
-        appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-//        mContext.startForegroundService(appIntent);
-        mContext.startService(appIntent);
+//        tossIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
+//                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        Log.w("launchToss", "launchToss");
+        try {
+            startForegroundService(tossIntent);
+            Log.w("launchToss", "startForegroundService");
+        } catch (Exception e) {
+            mContext.startService(tossIntent);
+            Log.w("launchToss", "startService");
+        }
 
     }
 
@@ -142,11 +150,11 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
         mRemoteViews.setViewVisibility(R.id.no_speak, (stop_repeat) ? View.VISIBLE:View.GONE);
+//        mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("삐이"))? View.VISIBLE:View.GONE);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
         mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
-        mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("삐이"))? View.VISIBLE:View.GONE);
 
         mNotificationManager.notify(100,mBuilder.build());
 
