@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:background="@drawable/notification_box"
+        android:background="#00000000"
         android:orientation="horizontal"
         android:layout_marginBottom="0dp"
         android:layout_width = "match_parent"
@@ -59,7 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:background="#8F465884"
+        android:background="#00000000"
         android:orientation="horizontal"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content">

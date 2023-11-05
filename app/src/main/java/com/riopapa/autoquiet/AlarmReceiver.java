@@ -11,6 +11,8 @@ import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
 import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.removeRecycler;
 import static com.riopapa.autoquiet.ActivityMain.updateRecycler;
+import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
+import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
 
 import static java.time.MonthDay.now;
 
@@ -28,6 +30,7 @@ import android.util.Log;
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.MannerMode;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
+import com.riopapa.autoquiet.Sub.ReadyTTS;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.Sounds;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
@@ -44,7 +47,6 @@ import java.util.TimerTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    TextToSpeech myTTS;
     QuietTask qt;
     int qtIdx;
     int several;
@@ -52,7 +54,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     Vars vars;
     final int STOP_SPEAK = 1022;
     final String TOSS_BEEP = "삐이";
+    final String TTSId = "tId";
     int icon;
+    ReadyTTS readyTTS = null;
     Sounds sounds = null;
 
     @Override
@@ -67,9 +71,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-
+        if (readyTTS == null)
+            readyTTS = new ReadyTTS();
+        if (sounds == null)
+            sounds = new Sounds();
         vars = new VarsGetPut().get(context);
-        readyTTS();
+
         qtIdx = -1;
         for (int i = 1; i < quietTasks.size(); i++) {
             QuietTask qT1 = quietTasks.get(i);
@@ -338,44 +345,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     }
 
-    private void readyTTS() {
-
-        if (sounds == null)
-            sounds = new Sounds();
-        myTTS = null;
-        myTTS = new TextToSpeech(mContext, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                initializeTTS();
-            }
-        });
-    }
-
-    String TTSId = "tts";
-
-    private void initializeTTS() {
-
-        myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override
-            public void onStart(String utteranceId) {
-                TTSId = utteranceId;
-            }
-
-            @Override
-            // this method will always called from a background thread.
-            public void onDone(String utteranceId) {
-                if (myTTS.isSpeaking())
-                    return;
-                myTTS.stop();
-            }
-
-            @Override
-            public void onError(String utteranceId) { }
-        });
-
-        myTTS.setLanguage(Locale.getDefault());
-        myTTS.setPitch(1.2f);
-        myTTS.setSpeechRate(1.3f);
-    }
 
     String nowDateToString(long time) {
         String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);

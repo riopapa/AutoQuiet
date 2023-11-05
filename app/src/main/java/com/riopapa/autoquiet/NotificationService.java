@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -29,10 +30,6 @@ public class NotificationService extends Service {
     final int TO_TOSS = 166;
 
     public NotificationService(){}      // do not remove
-
-//    public NotificationService(Context context) {
-//        mContext = context;
-//    }
 
     @Override
     public void onCreate() {
@@ -90,7 +87,7 @@ public class NotificationService extends Service {
                 iconN = R.drawable.auto_quite;
             updateRemoteViews();
         }
-        startForeground(100, mBuilder.build()); // ??
+        startForeground(100, mBuilder.build());
         return START_NOT_STICKY;
     }
 
