@@ -90,8 +90,7 @@ public class ActivityMain extends AppCompatActivity  {
         new VarsGetPut().put(vars, mContext);
 
         NotificationService notificationService  = new NotificationService();
-        Intent intent;
-        intent = new Intent(mContext, notificationService.getClass());
+        Intent intent = new Intent(mContext, notificationService.getClass());
         new ShowNotification(mContext, intent);
     }
 

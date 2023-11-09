@@ -1,5 +1,6 @@
 package com.riopapa.autoquiet.Sub;
 
+import static androidx.core.content.ContextCompat.startForegroundService;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
 
 import android.app.ActivityManager;
@@ -17,11 +18,11 @@ public class ShowNotification {
             try {
                 context.startService(intent);  // if started
             } catch (Exception e) {
-                context.startForegroundService(intent);    // if not started already
+                startForegroundService(context, intent);    // if not started already
             }
         } else {
             try {
-                context.startForegroundService(intent);    // if not started already
+                startForegroundService(context, intent);    // if not started already
             } catch (Exception e) {
                 context.startService(intent);  // if started
             }

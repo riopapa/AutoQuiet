@@ -96,14 +96,14 @@ public class NotificationService extends Service {
 
         Intent tossIntent = getPackageManager().getLaunchIntentForPackage(
                 "viva.republica.toss");
-//        tossIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
-//                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        tossIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         Log.w("launchToss", "launchToss");
         try {
             startForegroundService(tossIntent);
             Log.w("launchToss", "startForegroundService");
         } catch (Exception e) {
-            mContext.startService(tossIntent);
+            startService(tossIntent);
             Log.w("launchToss", "startService");
         }
 

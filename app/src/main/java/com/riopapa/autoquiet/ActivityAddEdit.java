@@ -119,8 +119,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.alarm_case);
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels/2;
+        int width = getResources().getDisplayMetrics().widthPixels * 9 / 10;
+        int height = getResources().getDisplayMetrics().heightPixels*2/3;
         dialog.getWindow().setLayout(width, height);
 
     }
@@ -129,7 +129,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         int checkedId = view.getId();
         if (checkedId == R.id.radio_bell_subject_several)
             alarmType = BELL_SEVERAL;
-        else if (checkedId == R.id.radio_bell_subject_once)
+        else if (checkedId == R.id.radio_bell_event)
             alarmType = BELL_EVENT;
         else if (checkedId == R.id.radio_bee_one_time)
             alarmType = BELL_ONETIME;

@@ -12,9 +12,6 @@ import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.removeRecycler;
 import static com.riopapa.autoquiet.ActivityMain.updateRecycler;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
-import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
-
-import static java.time.MonthDay.now;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,7 +21,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
@@ -358,19 +354,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
-    String nowSecToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH 시 mm 분", Locale.getDefault());
-        return sdfTime.format(time);
-    }
     String secRemaining(long time) {
         Calendar toDay = Calendar.getInstance();
         toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
         toDay.set(Calendar.MINUTE, qt.begMin);
         toDay.set(Calendar.SECOND, 0);
-        long timeDiff = (toDay.getTimeInMillis() - time - 5000)/1000;
-        if (timeDiff > 0)
-            return  " 시작 "+ timeDiff+ " 초 전 ";
-        return " 시작됨 ";
+        long timeDiff = (toDay.getTimeInMillis() - time)/1000 - 2;
+        return  (timeDiff > 0) ? " 시작 "+ timeDiff+ " 초 전 " : " 진행 중 ";
     }
 
     boolean isSilentNow() {

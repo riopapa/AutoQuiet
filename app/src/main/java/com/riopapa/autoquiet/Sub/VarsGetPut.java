@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.riopapa.autoquiet.ActivityMain;
 import com.riopapa.autoquiet.Vars;
 
 import java.lang.reflect.Type;
