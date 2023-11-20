@@ -43,7 +43,6 @@ public class ActivityMain extends AppCompatActivity  {
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
     public static int currIdx = -1;
-
     RecyclerView mainRecyclerView;
 
     public static ArrayList<QuietTask> quietTasks;

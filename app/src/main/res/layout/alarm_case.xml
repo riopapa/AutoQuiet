@@ -72,21 +72,6 @@
                     android:onClick="alarmType_Selected"
                     />
                 <RadioButton
-                    android:id="@+id/radio_bell_once_gone"
-                    android:layout_width = "match_parent"
-                    android:layout_height = "wrap_content"
-                    android:textSize="14sp"
-                    android:text="벨 한 번 울린 후 사라짐"
-                    android:textColor="#223344"
-                    android:layout_margin="3dp"
-                    android:padding="3dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/type_selector"
-                    android:button="@drawable/bell_once_gone"
-                    android:gravity="center"
-                    android:onClick="alarmType_Selected"
-                    />
-                <RadioButton
                     android:id="@+id/radio_vibrate_start_end"
                     android:layout_width = "match_parent"
                     android:layout_height = "wrap_content"

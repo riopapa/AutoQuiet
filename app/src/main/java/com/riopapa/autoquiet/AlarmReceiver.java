@@ -1,7 +1,6 @@
 package com.riopapa.autoquiet;
 
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_EVENT;
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONCE_GONE;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
@@ -174,8 +173,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 bellEvent(subject);
             else if (qt.alarmType == BELL_ONETIME)
                 bellOneTime(subject);
-            else if (qt.alarmType == BELL_ONCE_GONE)
-                bellOnceThenGone(subject);
             else {
                 String say = subject + " 를 확인 하시지요";
                 myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
@@ -184,12 +181,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }, 1500);
 
-    }
-
-    private void bellOnceThenGone(String subject) {
-        String say = "잠시만요! " + subject + " 를 잊지 마세요! "+ subject +" 시간 입니다";
-        myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
-        setInactive(qtIdx);
     }
 
     private void bellOneTime(String subject) {
@@ -207,39 +198,41 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (several > 0) {
             several--;
+            int remain = secRemaining(System.currentTimeMillis()) - 3;
             if (isSilentNow()) {
                 new VibratePhone(mContext);
             } else {
-                String s = (several == 0) ? "마지막 안내입니다 " : "";
-                s += (qt.sayDate) ? nowDateToString(System.currentTimeMillis()):"";
-                if (subject.equals(TOSS_BEEP)) {
-                    s += subject + secRemaining(System.currentTimeMillis());
+                String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
+                if (subject.contains(TOSS_BEEP)) {
+                    s += subject + ((remain > 0) ? (" 시작 " + remain + " 초 전 ") : " 진행 중 ");
+                    s += (several == 0) ? " 이예요":"";
                 } else
-                    s +=  " " + subject + " 를 확인하세요, ";
+                    s += " " + subject + " 를 " + ((several== 0)? "꼬옥":"") + " 확인하세요, ";
                 myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
+            }
+            remain = remain / 3;
+            if (remain > 5) {
+                long nextTime = System.currentTimeMillis() + remain * 1000;
+                new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
+                NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
+
+                Intent uIntent = new Intent(mContext, NotificationService.class);
+                uIntent.putExtra("beg", nowTimeToString(nextTime));
+                uIntent.putExtra("end", "다시");
+                uIntent.putExtra("stop_repeat", true);
+                uIntent.putExtra("subject", qt.subject);
+                uIntent.putExtra("icon", icon);
+                uIntent.putExtra("iconNow", nxtTsk.icon);
+
+                SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+                uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
+                uIntent.putExtra("endN", nxtTsk.beginOrEnd);
+                uIntent.putExtra("subjectN", nxtTsk.subject);
+                uIntent.putExtra("icon", nxtTsk.icon);
+                new ShowNotification(mContext, uIntent);
             }
             if (several == 0)
                 setInactive(qtIdx);
-            NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
-
-            long nextTime = System.currentTimeMillis() + 15 * 1000;
-            new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
-
-            Intent uIntent = new Intent(mContext, NotificationService.class);
-            uIntent.putExtra("beg", nowTimeToString(nextTime));
-            uIntent.putExtra("end", "다시");
-            uIntent.putExtra("stop_repeat", true);
-            uIntent.putExtra("subject", qt.subject);
-            uIntent.putExtra("icon", icon);
-            uIntent.putExtra("iconNow", nxtTsk.icon);
-
-            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-            uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
-            uIntent.putExtra("endN", nxtTsk.beginOrEndN);
-            uIntent.putExtra("subjectN", nxtTsk.subject);
-            uIntent.putExtra("icon", nxtTsk.iconN);
-            new ShowNotification(mContext, uIntent);
-
         } else {
             String say = addPostPosition(subject) + "끝났습니다";
             myTTS.speak(say, TextToSpeech.QUEUE_ADD, null, TTSId);
@@ -354,13 +347,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
-    String secRemaining(long time) {
+    int secRemaining(long time) {
         Calendar toDay = Calendar.getInstance();
         toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
         toDay.set(Calendar.MINUTE, qt.begMin);
         toDay.set(Calendar.SECOND, 0);
-        long timeDiff = (toDay.getTimeInMillis() - time)/1000 - 2;
-        return  (timeDiff > 0) ? " 시작 "+ timeDiff+ " 초 전 " : " 진행 중 ";
+        return (int) ((toDay.getTimeInMillis() - time)/1000);
     }
 
     boolean isSilentNow() {

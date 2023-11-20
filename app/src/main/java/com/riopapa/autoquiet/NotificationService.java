@@ -55,8 +55,7 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
 
-
-        Log.w("onStartCommand","operation = "+operation);
+//        Log.w("onStartCommand","operation = "+operation);
         if (operation == TO_TOSS) {
             launchToss();
         } else if (operation == RIGHT_NOW) {

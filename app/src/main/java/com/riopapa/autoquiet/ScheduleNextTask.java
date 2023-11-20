@@ -18,7 +18,7 @@ public class ScheduleNextTask {
     static String timeInfo, msg;
     static String timeInfoN;
 
-    public final static int AHEAD_TIME = 87654;
+    public final static int AHEAD_TIME = 40000;
     ArrayList<QuietTask> quietTasks;
     static NextTwoTasks nxtTsk;
 
@@ -26,7 +26,6 @@ public class ScheduleNextTask {
 
         quietTasks = new QuietTaskGetPut().get(context);
 
-//        nt = new UpcomingTasks(quietTasks);
         nxtTsk = new NextTwoTasks(quietTasks);
 
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);

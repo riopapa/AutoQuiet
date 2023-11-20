@@ -73,7 +73,6 @@ public class ActivityAddEdit extends AppCompatActivity {
     public final static int BELL_SEVERAL = 1;
     public final static int BELL_EVENT = 2;
     public final static int BELL_ONETIME = 3;
-    public final static int BELL_ONCE_GONE = 4;
     public final static int PHONE_VIBRATE = 5;
     public final static int PHONE_OFF = 6;
 
@@ -111,8 +110,6 @@ public class ActivityAddEdit extends AppCompatActivity {
         colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
-//        if (qT.alarmType == 0)
-//            qT.alarmType = new AlarmType().getType(end99, qT.vibrate, qT.begLoop, qT.endLoop);
         build_QuietTask();
         TextView alarm_Type = findViewById(R.id.typeDesc);
         alarm_Type.setOnClickListener(v -> dialog.show());
@@ -133,13 +130,10 @@ public class ActivityAddEdit extends AppCompatActivity {
             alarmType = BELL_EVENT;
         else if (checkedId == R.id.radio_bee_one_time)
             alarmType = BELL_ONETIME;
-        else if (checkedId == R.id.radio_bell_once_gone)
-            alarmType = BELL_ONCE_GONE;
-
         else if (checkedId == R.id.radio_vibrate_start_end)
-            alarmType = 5;
+            alarmType = PHONE_VIBRATE;
         else
-            alarmType = 6;
+            alarmType = PHONE_OFF;
         dialog.dismiss();
         end99 = alarmType < PHONE_VIBRATE;
 

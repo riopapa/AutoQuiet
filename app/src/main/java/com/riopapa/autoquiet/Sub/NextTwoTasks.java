@@ -56,9 +56,11 @@ public class NextTwoTasks {
                 }
 
                 if (nowTime < nxtStart) {
-                    if (qt.endHour == 99)
-                        nxtStart -= AHEAD_TIME;
-                    several = (qt.alarmType == BELL_SEVERAL) ? 3 : 0;
+                    if (qt.alarmType == BELL_SEVERAL) {
+                        nxtStart -= AHEAD_TIME + AHEAD_TIME + AHEAD_TIME;
+                        several = 3;
+                    } else
+                        several = 0;
                     String s = nxtStart + "_" + "S_ " + qt.subject + "_" +
                             several + "_" + alarmIcons[qt.alarmType] + "_" +
                             idx + "_" + qt.begHour + "_" + qt.begMin + "_" +
@@ -76,9 +78,6 @@ public class NextTwoTasks {
             }
         }
         Collections.sort(nextTasks);
-
-//        Log.w("nxtTsk 0", nextTasks.get(0));
-//        Log.w("nxtTsk 1", nextTasks.get(1));
 
         String [] sFirst = nextTasks.get(0).split("_");
         String [] sSecond = nextTasks.get(1).split("_");
