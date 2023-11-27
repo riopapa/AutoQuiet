@@ -22,7 +22,6 @@ public class CalcNextBegEnd {
 
         int DD = cal.get(Calendar.DAY_OF_MONTH);
         int WK = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
-
         for (int i = WK; ; ) {
             if (qt.week[i]) {
                 cal.set(Calendar.HOUR_OF_DAY, qt.begHour);

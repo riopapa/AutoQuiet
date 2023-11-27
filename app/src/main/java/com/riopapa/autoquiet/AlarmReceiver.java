@@ -161,7 +161,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void say_Started99() {
 
         String subject = qt.subject;
-        sounds.beep(mContext, (subject.equals("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
+        sounds.beep(mContext, (subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
 
         new Timer().schedule(new TimerTask() {
             public void run() {
@@ -199,7 +199,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (several > 0) {
             several--;
             int remain = secRemaining(System.currentTimeMillis()) - 3;
-            if (isSilentNow()) {
+            Log.w("bell_Several "+several, "remain = "+remain);
+            if (remain > 60) {
+                several++;
+//                new VibratePhone(mContext);
+                remain = 20;
+            } else if (isSilentNow()) {
                 new VibratePhone(mContext);
             } else {
                 String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
@@ -209,28 +214,27 @@ public class AlarmReceiver extends BroadcastReceiver {
                 } else
                     s += " " + subject + " 를 " + ((several== 0)? "꼬옥":"") + " 확인하세요, ";
                 myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
+                remain = remain / 3;
             }
-            remain = remain / 3;
-            if (remain > 5) {
-                long nextTime = System.currentTimeMillis() + remain * 1000;
-                new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
-                NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
 
-                Intent uIntent = new Intent(mContext, NotificationService.class);
-                uIntent.putExtra("beg", nowTimeToString(nextTime));
-                uIntent.putExtra("end", "다시");
-                uIntent.putExtra("stop_repeat", true);
-                uIntent.putExtra("subject", qt.subject);
-                uIntent.putExtra("icon", icon);
-                uIntent.putExtra("iconNow", nxtTsk.icon);
+            long nextTime = System.currentTimeMillis() + remain * 1000L;
+            new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
+            NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
 
-                SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-                uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
-                uIntent.putExtra("endN", nxtTsk.beginOrEnd);
-                uIntent.putExtra("subjectN", nxtTsk.subject);
-                uIntent.putExtra("icon", nxtTsk.icon);
-                new ShowNotification(mContext, uIntent);
-            }
+            Intent uIntent = new Intent(mContext, NotificationService.class);
+            uIntent.putExtra("beg", nowTimeToString(nextTime));
+            uIntent.putExtra("end", "다시");
+            uIntent.putExtra("stop_repeat", true);
+            uIntent.putExtra("subject", qt.subject);
+            uIntent.putExtra("icon", icon);
+            uIntent.putExtra("iconNow", nxtTsk.icon);
+
+            SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+            uIntent.putExtra("begN", sharedPref.getString("begN", "없음"));
+            uIntent.putExtra("endN", nxtTsk.beginOrEnd);
+            uIntent.putExtra("subjectN", nxtTsk.subject);
+            uIntent.putExtra("icon", nxtTsk.icon);
+            new ShowNotification(mContext, uIntent);
             if (several == 0)
                 setInactive(qtIdx);
         } else {
@@ -294,11 +298,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (several > 0) {
-                    String s = (several == 1) ? "마지막 안내입니다 " : "";
-                    s += " 지금은 ";
+                    String s= "";
                     long now = System.currentTimeMillis();
                     s +=  (qt.sayDate)? nowDateTimeToString(now) : nowTimeToString(now);
-                    s += " " + addPostPosition(qt.subject) + "끝났습니다";
+                    s += " " + addPostPosition(qt.subject) + ((several == 1) ? " 이제 끝났어요 " : " 끄으읏");
                     myTTS.speak(s, TextToSpeech.QUEUE_ADD, null, TTSId);
 
                     long nextTime = System.currentTimeMillis() + ((several == 1) ? 50 : 300) * 1000;

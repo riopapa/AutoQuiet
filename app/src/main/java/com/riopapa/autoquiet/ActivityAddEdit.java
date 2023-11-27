@@ -405,21 +405,21 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void save_AlarmTask() {
 
-        long nowTime = System.currentTimeMillis();
 //        long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
-        CalcNextBegEnd cal = new CalcNextBegEnd(qT);
-        long nextTime = cal.begTime;
+        CalcNextBegEnd calBE = new CalcNextBegEnd(qT);
+        long nextTime = calBE.begTime;
+        long nowTime = System.currentTimeMillis();
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(nowTime);
         int nowDays = c.get(Calendar.DAY_OF_YEAR);
-        int nowHour = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
+        int nowHourMin = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
         c.setTimeInMillis(nextTime);
         int nextDays = c.get(Calendar.DAY_OF_YEAR);
-        int nextHour = begHour * 60 + begMin;
-        if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHour > nextHour)) {
+        int nextHourMin = begHour * 60 + begMin;
+        if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHourMin > nextHourMin)) {
             week = new boolean[7];
             int weekDay = c.get(Calendar.DAY_OF_WEEK);
             if (weekDay > 6)
