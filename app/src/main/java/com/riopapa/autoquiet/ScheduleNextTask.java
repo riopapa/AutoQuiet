@@ -1,6 +1,8 @@
 package com.riopapa.autoquiet;
 
 
+import static com.riopapa.autoquiet.AlarmReceiver.showNotification;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,7 +59,7 @@ public class ScheduleNextTask {
         intent.putExtra("endN", nxtTsk.beginOrEndN);
         intent.putExtra("subjectN", nxtTsk.subjectN);
         intent.putExtra("iconN", nxtTsk.iconN);
-        new ShowNotification(context, intent);
+        showNotification.show(context, intent);
 
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();

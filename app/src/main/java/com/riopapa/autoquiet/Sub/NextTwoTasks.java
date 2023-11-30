@@ -58,7 +58,7 @@ public class NextTwoTasks {
                 if (nowTime < nxtStart) {
                     if (qt.alarmType == BELL_SEVERAL) {
                         nxtStart -= AHEAD_TIME + AHEAD_TIME + AHEAD_TIME;
-                        several = 3;
+                        several = 2;
                     } else
                         several = 0;
                     String s = nxtStart + "_" + "S_ " + qt.subject + "_" +

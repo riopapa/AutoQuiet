@@ -1,5 +1,7 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.AlarmReceiver.showNotification;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -90,7 +92,8 @@ public class ActivityMain extends AppCompatActivity  {
 
         NotificationService notificationService  = new NotificationService();
         Intent intent = new Intent(mContext, notificationService.getClass());
-        new ShowNotification(mContext, intent);
+        showNotification = new ShowNotification();
+        showNotification.show(mContext, intent);
     }
 
     @Override
@@ -195,9 +198,9 @@ public class ActivityMain extends AppCompatActivity  {
     };
 
     @Override
-    protected void onStop() {
+    protected void onPause() {
         new ScheduleNextTask(mContext,"onStop ");
-        super.onStop();
+        super.onPause();
     }
 
 //    public static void showNotification(Intent intent) {

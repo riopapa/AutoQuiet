@@ -12,13 +12,15 @@ import com.riopapa.autoquiet.BootReceiver;
 import com.riopapa.autoquiet.NotificationService;
 
 public class ShowNotification {
-    public ShowNotification(Context context, Intent intent) {
 
-        if (!isServiceRunning(mContext, NotificationService.class)) {
+    public void show(Context context, Intent intent) {
+
+        if (!isServiceRunning(context, NotificationService.class)) {
             try {
                 context.startService(intent);  // if started
             } catch (Exception e) {
-                startForegroundService(context, intent);    // if not started already
+                Log.e("startService","show error \n"+e);
+//                startForegroundService(context, intent);    // if not started already
             }
         } else {
             try {
