@@ -182,26 +182,27 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
     }
 
-    public final static Handler removeRecycler = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(Message msg) {
-            int idx = Integer.parseInt(msg.obj.toString());
-            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemRemoved(idx));
-        }
-    };
-
-
-    public final static Handler updateRecycler = new Handler(Looper.getMainLooper()) {
-        public void handleMessage(Message msg) {
-            int idx = Integer.parseInt(msg.obj.toString());
-            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemChanged(idx));
-        }
-    };
-
     @Override
     protected void onPause() {
         new ScheduleNextTask(mContext,"onStop ");
         super.onPause();
     }
+//
+//    public final static Handler removeRecycler = new Handler(Looper.getMainLooper()) {
+//        public void handleMessage(Message msg) {
+//            int idx = Integer.parseInt(msg.obj.toString());
+//            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemRemoved(idx));
+//        }
+//    };
+//
+//
+//
+//    public final static Handler updateRecycler = new Handler(Looper.getMainLooper()) {
+//        public void handleMessage(Message msg) {
+//            int idx = Integer.parseInt(msg.obj.toString());
+//            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemChanged(idx));
+//        }
+//    };
 
 //    public static void showNotification(Intent intent) {
 //        if (!BootReceiver.isServiceRunning(mContext, NotificationService.class)) {

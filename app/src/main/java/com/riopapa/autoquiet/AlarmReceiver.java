@@ -8,8 +8,6 @@ import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
 import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
 import static com.riopapa.autoquiet.ActivityMain.quietTasks;
-import static com.riopapa.autoquiet.ActivityMain.removeRecycler;
-import static com.riopapa.autoquiet.ActivityMain.updateRecycler;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
 
 import android.content.BroadcastReceiver;
@@ -18,7 +16,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
@@ -134,18 +131,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         qt.active = false;
         quietTasks.set(index, qt);
         new QuietTaskGetPut().put(quietTasks);
-        Message msg = new Message();
-        msg.obj = ""+index;
-        updateRecycler.sendMessage(msg);
     }
 
     private void removeAgenda() {
-        quietTasks.remove(qtIdx);
-        if (mainRecycleAdapter != null) {
-            Message msg = new Message();
-            msg.obj = "" + qtIdx;
-            removeRecycler.sendMessage(msg);
-        }
     }
 
     void start_Task() {
@@ -187,7 +175,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new ScheduleNextTask(mContext, "ended");
             }
         }, 1500);
-
     }
 
     private void bellEvent(String subject) {
@@ -209,13 +196,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             sounds.beep(mContext, (subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                int remain = secRemaining(System.currentTimeMillis());
+                int remain = secRemaining(System.currentTimeMillis()) - 2;
                 if (several > 0) {
                     if (remain > 60) {
-                        Log.w("bell_Several "+several, "remain  > 60 = "+remain);
-                        remain = 30;
+                        remain = 20;
                     } else if (isSilentNow()) {
                         new VibratePhone(mContext);
+                        remain = remain / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         if (subject.contains(TOSS_BEEP)) {
@@ -224,10 +211,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         } else
                             s += " " + subject + " 를 " + ((several== 0)? "꼬옥":"") + " 확인하세요, ";
                         myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                        remain = remain / 3;
+                        remain = remain / 2;
                     }
-                    if (remain > 5) {
-                        Log.w("Remaing ",remain + " > 5");
+                    if (remain > 3) {
                         long nextTime = System.currentTimeMillis() + remain * 1000L;
                         new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
                         NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
@@ -299,7 +285,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String s = addPostPosition(qt.subject) + "끝났습니다";
         myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, TTSId);
         if (qt.agenda) { // delete if agenda based
-            removeAgenda();
+            quietTasks.remove(qtIdx);
         } else if (qt.alarmType < PHONE_VIBRATE) {
             qt.active = false;
             quietTasks.set(qtIdx, qt);
@@ -308,7 +294,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         new ScheduleNextTask(mContext, "say_FinishNormal()");
         new Utils(mContext).deleteOldLogFiles();
     }
-
 
     private void finish_Several() {
         new Timer().schedule(new TimerTask() {
@@ -344,7 +329,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 } else {
                     if (qt.agenda)
-                        removeAgenda();
+                        quietTasks.remove(qtIdx);
                     new ScheduleNextTask(mContext, "say_FinDate");
                 }
 
@@ -402,3 +387,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
 }
+//        if (mainRecycleAdapter != null)
+//        mainRecycleAdapter.notifyItemChanged(index);
+
+//        Message msg = new Message();
+//        msg.obj = ""+index;
+//        updateRecycler.sendMessage(msg);
