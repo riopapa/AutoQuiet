@@ -6,27 +6,45 @@
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     tools:ignore="ContentDescription"
-    android:orientation="vertical">
-
+    android:orientation="horizontal">
     <LinearLayout
         android:background="#00000000"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginBottom="0dp"
-        android:layout_width = "match_parent"
+        android:layout_marginStart="4dp"
+        android:layout_width = "0dp"
+        android:layout_weight="2"
         android:layout_height = "wrap_content">
+
         <ImageView
             android:id="@+id/state_icon"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="24dp"
-            android:layout_margin="2dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
             android:src="@drawable/auto_quite" />
+
+        <ImageView
+            android:id="@+id/state_iconN"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/auto_quite" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:background="#00000000"
+        android:orientation="vertical"
+        android:layout_marginBottom="0dp"
+        android:layout_width = "0dp"
+        android:layout_weight="10"
+        android:layout_height = "wrap_content">
 
         <TextView
             android:id="@+id/calSubject"
-            android:layout_margin="2dp"
-            android:layout_width="0dp"
-            android:layout_weight="12"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -34,57 +52,33 @@
             android:textStyle="bold"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
+
         <TextView
-            android:id="@+id/beg_time"
-            android:layout_width="0dp"
-            android:layout_weight="6"
+            android:id="@+id/calSubjectN"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:text = "@string/date_time"
-            android:textSize="@dimen/notification_time" />
-
-        <ImageView
-            android:id="@+id/to_toss"
-            android:layout_gravity="center"
-            android:layout_width="0sp"
-            android:layout_weight="4"
-            android:layout_height="20dp"
-            android:layout_margin="2dp"
-            android:src="@drawable/toss64s"
-            />
+            android:text="@string/subject_name"
+            android:textSize="@dimen/notification_text" />
 
     </LinearLayout>
 
     <LinearLayout
         android:background="#00000000"
-        android:orientation="horizontal"
-        android:layout_width = "match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="0dp"
+        android:layout_width = "0dp"
+        android:layout_weight="6"
         android:layout_height = "wrap_content">
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="24dp"
-            android:layout_margin="2dp"
-            android:layout_gravity="center"
-            android:src="@drawable/next_task" />
-
-        <ImageView
-            android:id="@+id/state_iconN"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="20dp"
-            android:layout_margin="2dp"
-            android:layout_gravity="center"
-            android:src="@drawable/auto_quite" />
 
         <TextView
-            android:id="@+id/calSubjectN"
-            android:layout_margin="2dp"
-            android:layout_width="0dp"
-            android:layout_weight="12"
+            android:id="@+id/beg_time"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -92,36 +86,54 @@
             android:textStyle="bold"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
+
         <TextView
             android:id="@+id/beg_timeN"
-            android:layout_width="0dp"
-            android:layout_weight="5"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:text="@string/date_time"
-            android:textSize="@dimen/notification_time" />
+            android:textStyle="bold"
+            android:text="@string/subject_name"
+            android:textSize="@dimen/notification_text" />
 
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:background="#00000000"
+        android:orientation="vertical"
+        android:layout_marginBottom="0dp"
+        android:layout_width = "0dp"
+        android:layout_weight="2"
+        android:layout_height = "wrap_content">
+
+        <ImageView
+            android:id="@+id/to_toss"
+            android:layout_gravity="center"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/alarm_off"
+            />
         <ImageView
             android:id="@+id/right_now"
             android:layout_gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="20dp"
-            android:layout_margin="2dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="4dp"
+            android:visibility="gone"
             android:src="@drawable/right_now" />
 
         <ImageView
             android:id="@+id/no_speak"
             android:layout_gravity="center"
-            android:layout_width="0sp"
-            android:layout_weight="6"
-            android:layout_height="20dp"
-            android:layout_margin="2dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="4dp"
             android:src="@drawable/stop_talking"
             />
-
     </LinearLayout>
-
 </LinearLayout>

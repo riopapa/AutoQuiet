@@ -61,37 +61,6 @@ public class ActivityAddAgenda extends AppCompatActivity {
         binding.aDesc.setText(gCal.desc);
         binding.aRepeat.setText((gCal.repeat)? gCal.rule:"");
 
-//        binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
-//        binding.iVVibrate.setOnClickListener(v -> {
-//            vibrate ^= true;
-//            binding.iVVibrate.setImageResource((vibrate)? R.drawable.phone_normal :R.drawable.phone_off);
-//            v.invalidate();
-//        });
-
-//        binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-//        binding.aBegLoop.setOnClickListener(v -> {
-//            if (begLoop == 0)
-//                begLoop = 1;
-//            else if (begLoop == 1)
-//                begLoop = 11;
-//            else
-//                begLoop = 0;
-//            binding.aBegLoop.setImageResource((begLoop == 0)? R.drawable.speak_off: (begLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-//            v.invalidate();
-//        });
-//
-//        binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-//        binding.aEndLoop.setOnClickListener(v -> {
-//            if (endLoop == 0)
-//                endLoop = 1;
-//            else if (endLoop == 1)
-//                endLoop = 11;
-//            else
-//                endLoop = 0;
-//            binding.aEndLoop.setImageResource((endLoop == 0)? R.drawable.speak_off: (endLoop == 1)? R.drawable.bell_onetime : R.drawable.speak_on);
-//            v.invalidate();
-//        });
-
         String []dispName = new String[] { "10분전", "9분전", "8분전", "7분전", "6분전",
                 "5분전",  "4분전", "3분전",  "2분전", "1분전",  " 정시 ", "1분후",  "2분후",  "3분후",  "4분후",
                 "5분후", "6분후", "7분후", "8분후", "9분후", "10분후" };

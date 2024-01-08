@@ -14,7 +14,6 @@ public class QuietTask implements Serializable {
     public int endHour, endMin;
     // if endHour == 99 알람 정보를 소리내는 용도
     public boolean active;  // 해당 task 를 잠시 죽일 떄 사용
-    public boolean vibrate; // 폰을 진동할찌 여부
     public boolean sayDate; // 현재 일자, 시각을 말할찌 여부
 
     public boolean[] week = {true, true, true, true, true, true, true};

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,8 +92,6 @@ public class ActivityAddEdit extends AppCompatActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         xSize = metrics.widthPixels / 9;
-        Float sz = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, this.getApplicationContext().getResources().getDisplayMetrics());
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle((vars.addNewQuiet) ? R.string.add_table :R.string.update_table);
         actionBar.setIcon(R.drawable.auto_quite);
@@ -294,11 +291,11 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void show_ResultTime() {
         binding.amPm.setText(am ? "오전":"오후");
-        String s = (sHour > 9) ? ""+sHour: "0"+sHour;
+        String s = (sHour > 9) ? String.valueOf(sHour) : "0"+sHour;
         String s1 = s.substring(0,1); String s2 = s.substring(1);
         binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
         binding.numHH2.setText(s2); binding.numHH2.setBackgroundColor(0x00bbbbbb);
-        s = (begMin > 9) ? ""+ begMin : "0"+ begMin;
+        s = (begMin > 9) ? String.valueOf(begMin) : "0"+ begMin;
         s1 = s.substring(0,1); s2 = s.substring(1);
         binding.numMM1.setText(s1); binding.numMM1.setBackgroundColor(0x00bbbbbb);
         binding.numMM2.setText(s2); binding.numMM2.setBackgroundColor(0x00bbbbbb);

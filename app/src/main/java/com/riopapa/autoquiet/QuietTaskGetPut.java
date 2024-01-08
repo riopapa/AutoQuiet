@@ -14,16 +14,6 @@ import java.util.List;
 
 public class QuietTaskGetPut {
     public void put(ArrayList<QuietTask> quietTasks) {
-
-//        for (int i = 0; i < quietTasks.size(); i++) {
-//            QuietTask q = quietTasks.get(i);
-//            if (!q.agenda) {
-//                q.calId = 1000 + i;
-//                q.calBegDate = 10000 + i;
-//                quietTasks.set(i, q);
-//            }
-//        }
-//        quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.calBegDate));
         SharedPreferences sharedPref = ActivityMain.mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();

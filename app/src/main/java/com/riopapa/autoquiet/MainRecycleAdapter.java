@@ -250,7 +250,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
     String int2NN (int nbr) {
-        return (""+(100 + nbr)).substring(1);
+        return (String.valueOf(100 + nbr)).substring(1);
     }
 
     @Override

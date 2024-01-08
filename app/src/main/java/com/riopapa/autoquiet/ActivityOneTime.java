@@ -78,7 +78,8 @@ public class ActivityOneTime extends AppCompatActivity {
     private String durationText() {
         String text;
         if (durationMin > 1)
-            text = " "+(""+(100 + durationMin / 60)).substring(1) + "시간 \n" + (""+(100 + durationMin % 60)).substring(1)+  "분후";
+            text = " "+(String.valueOf(100 + durationMin / 60)).substring(1) + "시간 \n"
+                    + (String.valueOf(100 + durationMin % 60)).substring(1)+  "분후";
         else
             text = getString(R.string.already_passed_time);
         return text;

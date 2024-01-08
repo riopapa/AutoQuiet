@@ -6,13 +6,10 @@ import static com.riopapa.autoquiet.AlarmReceiver.showNotification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
-import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.models.QuietTask;
-
 
 import java.util.ArrayList;
 
@@ -73,7 +70,8 @@ public class ScheduleNextTask {
     }
 
     private String getHourMin(int hour, int min) {
-        return (""+ (100+hour)).substring(1) + ":" + (""+(100+min)).substring(1);
+        return (String.valueOf(100 + hour)).substring(1) + ":"
+                + (String.valueOf(100 + min)).substring(1);
     }
 
 }

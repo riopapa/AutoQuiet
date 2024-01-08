@@ -18,8 +18,10 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
+import com.riopapa.autoquiet.Sub.BeQuiet;
 import com.riopapa.autoquiet.Sub.MannerMode;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ReadyTTS;
@@ -64,6 +66,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
+        Log.w("on Receive", "case="+caseSFO+" several="+several+" qt="+qt.subject+" "+
+                qt.begHour+":"+qt.begMin);
         if (readyTTS == null)
             readyTTS = new ReadyTTS();
         if (sounds == null)
@@ -71,23 +75,24 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (showNotification == null)
             showNotification = new ShowNotification();
         vars = new VarsGetPut().get(context);
-
-        qtIdx = -1;
-        for (int i = 1; i < quietTasks.size(); i++) {
-            QuietTask qT1 = quietTasks.get(i);
-            if (qT1.begHour == qt.begHour && qT1.begMin == qt.begMin &&
-                    qT1.endHour == qt.endHour && qT1.endMin == qt.endMin) {
-                qtIdx = i;
-                break;
+        if (!caseSFO.equals("T")) {  // toss quiet a min
+            qtIdx = -1;
+            for (int i = 1; i < quietTasks.size(); i++) {
+                QuietTask qT1 = quietTasks.get(i);
+                if (qT1.begHour == qt.begHour && qT1.begMin == qt.begMin &&
+                        qT1.endHour == qt.endHour && qT1.endMin == qt.endMin) {
+                    qtIdx = i;
+                    break;
+                }
             }
-        }
-        if (qtIdx == -1) {
-            String err = "quiet task index Error "+ qt.subject;
-            myTTS.speak(err, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-            Log.w("Quiet Idx Err", qt.subject);
-        }
+            if (qtIdx == -1) {
+                String err = "quiet task index Error " + qt.subject;
+                myTTS.speak(err, TextToSpeech.QUEUE_FLUSH, null, TTSId);
+                Log.w("Quiet Idx Err", qt.subject);
+            }
 
-        icon = alarmIcons[qt.alarmType];
+            icon = alarmIcons[qt.alarmType];
+        }
 
         assert caseSFO != null;
 
@@ -100,6 +105,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "O":   // onetime
                 only_OneTime(context);
+                break;
+            case "T":   // onetime
+                Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
+                new BeQuiet(context, false);
+                new ScheduleNextTask(mContext, "toss");
                 break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
@@ -131,9 +141,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         qt.active = false;
         quietTasks.set(index, qt);
         new QuietTaskGetPut().put(quietTasks);
-    }
-
-    private void removeAgenda() {
     }
 
     void start_Task() {
@@ -366,7 +373,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
     Timer timer = new Timer();
     TimerTask timerTask = null;
-    int count = 0;
+    long count = 0;
     void waitLoop() {
 
         final long LOOP_INTERVAL = 20 * 60 * 1000;
@@ -380,16 +387,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         timerTask = new TimerTask() {
             @Override
             public void run () {
-                count++;
+                Log.w("waiting..", String.valueOf(count++));
             }
         };
         timer.schedule(timerTask, LOOP_INTERVAL, LOOP_INTERVAL);
     }
-
 }
-//        if (mainRecycleAdapter != null)
-//        mainRecycleAdapter.notifyItemChanged(index);
-
-//        Message msg = new Message();
-//        msg.obj = ""+index;
-//        updateRecycler.sendMessage(msg);

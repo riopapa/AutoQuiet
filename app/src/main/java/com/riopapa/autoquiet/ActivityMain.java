@@ -14,9 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +35,7 @@ import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
-public class ActivityMain extends AppCompatActivity  {
+public class ActivityMain extends AppCompatActivity {
 
     public static Context mContext;
     public static Activity pActivity;
@@ -64,12 +61,12 @@ public class ActivityMain extends AppCompatActivity  {
                     .getPackageName(), PackageManager.GET_PERMISSIONS);
             Permission.ask(this, this, info);
         } catch (Exception e) {
-            Log.e("Permission", "No Permission "+e);
+            Log.e("Permission", "No Permission " + e);
         }
 
 // If you have access to the external storage, do whatever you need
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()){
+            if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 Uri uri = Uri.fromParts("package", this.getPackageName(), null);
@@ -78,7 +75,7 @@ public class ActivityMain extends AppCompatActivity  {
             }
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            Log.w("Permission","Required for READ_CALENDAR");
+            Log.w("Permission", "Required for READ_CALENDAR");
         }
 //        Log.w("autoQuiet","onCreated ----- ");
         NotificationManager notificationManager =
@@ -90,7 +87,7 @@ public class ActivityMain extends AppCompatActivity  {
 
         new VarsGetPut().put(vars, mContext);
 
-        NotificationService notificationService  = new NotificationService();
+        NotificationService notificationService = new NotificationService();
         Intent intent = new Intent(mContext, notificationService.getClass());
         showNotification = new ShowNotification();
         showNotification.show(mContext, intent);
@@ -107,7 +104,7 @@ public class ActivityMain extends AppCompatActivity  {
         new VarsGetPut().put(vars, mContext);
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 2;
-        mainRecyclerView.scrollToPosition((currIdx > 2)? currIdx - 1:currIdx);
+        mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
 
     }
@@ -143,7 +140,7 @@ public class ActivityMain extends AppCompatActivity  {
 
         } else if (menuItem == R.id.action_setting) {
             new VarsGetPut().put(vars, mContext);
-            startActivityForResult(new Intent(this, ActivityPrefer.class),33);
+            startActivityForResult(new Intent(this, ActivityPrefer.class), 33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
@@ -179,35 +176,12 @@ public class ActivityMain extends AppCompatActivity  {
         mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
-        mainRecyclerView.setLayoutManager(new LinearLayoutManager( this));
+        mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
     protected void onPause() {
-        new ScheduleNextTask(mContext,"onStop ");
+        new ScheduleNextTask(mContext, "onStop ");
         super.onPause();
     }
-//
-//    public final static Handler removeRecycler = new Handler(Looper.getMainLooper()) {
-//        public void handleMessage(Message msg) {
-//            int idx = Integer.parseInt(msg.obj.toString());
-//            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemRemoved(idx));
-//        }
-//    };
-//
-//
-//
-//    public final static Handler updateRecycler = new Handler(Looper.getMainLooper()) {
-//        public void handleMessage(Message msg) {
-//            int idx = Integer.parseInt(msg.obj.toString());
-//            pActivity.runOnUiThread(() -> mainRecycleAdapter.notifyItemChanged(idx));
-//        }
-//    };
-
-//    public static void showNotification(Intent intent) {
-//        if (!BootReceiver.isServiceRunning(mContext, NotificationService.class)) {
-//            mContext.startService(intent);
-//        } else
-//            mContext.startForegroundService(intent);
-//    }
 }

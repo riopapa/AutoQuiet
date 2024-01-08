@@ -76,7 +76,7 @@ public class Utils {
         try {
             applicationInfo = packageManager.getApplicationInfo(context.getApplicationInfo().packageName, 0);
         } catch (final PackageManager.NameNotFoundException e) {
-            Log.e("appl","name error");
+            Log.e("getAppLabel","name error");
         }
         return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
     }
@@ -91,14 +91,6 @@ public class Utils {
         String logFile = packageDir + "/" + PREFIX + sdfDate.format(new Date())+".txt";
         append2file(logFile, sdfLogTime.format(new Date())+" " +log);
     }
-//
-//    void logE(String tag, String text) {
-//        String log = logTrace() + " {"+ tag + "} " + text;
-//        Log.e("<" + tag + ">" , log);
-//        if (packageDir == null) packageDir = getPackageDirectory();
-//        String logFile = packageDir.toString() + "/" + PREFIX + sdfDate.format(new Date())+"E.txt";
-//        append2file(logFile, sdfLogTime.format(new Date())+" : " +log);
-//    }
 
     private String logTrace () {
 //        int pid = android.os.Process.myPid();

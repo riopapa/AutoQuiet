@@ -13,12 +13,8 @@ public class BootReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-
-                @Override public void run() {
-                    new ScheduleNextTask(context, "After Boot");
-                }
-            }, 10000);
+            new Handler(Looper.getMainLooper()).postDelayed(() ->
+                    new ScheduleNextTask(context, "After Boot"), 10000);
         }
     }
 

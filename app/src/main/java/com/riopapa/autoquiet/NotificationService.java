@@ -1,5 +1,7 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
 
 import android.app.NotificationChannel;
@@ -8,12 +10,18 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+
+import com.riopapa.autoquiet.Sub.AlarmTime;
+import com.riopapa.autoquiet.Sub.BeQuiet;
+import com.riopapa.autoquiet.models.QuietTask;
 
 public class NotificationService extends Service {
 
@@ -57,7 +65,7 @@ public class NotificationService extends Service {
 
 //        Log.w("onStartCommand","operation = "+operation);
         if (operation == TO_TOSS) {
-            launchToss();
+            quiet_a_minute();
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -91,21 +99,15 @@ public class NotificationService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void launchToss() {
+    private void quiet_a_minute() {
 
-        Intent tossIntent = getPackageManager().getLaunchIntentForPackage(
-                "viva.republica.toss");
-        tossIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                            Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-        Log.w("launchToss", "launchToss");
-        try {
-            startForegroundService(tossIntent);
-            Log.w("launchToss", "startForegroundService");
-        } catch (Exception e) {
-            startService(tossIntent);
-            Log.w("launchToss", "startService");
-        }
+        new BeQuiet(this, true);
+        QuietTask qt = new QuietTask("Toss", 0, 0, 0, 0,
+                new boolean[7], true,  PHONE_VIBRATE, false);
+        long nextTime = System.currentTimeMillis() + 60 * 1000L;
+        new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
 
+        Toast.makeText(this, "quiet a minute", Toast.LENGTH_SHORT).show();
     }
 
     private void createNotification() {
