@@ -1,6 +1,5 @@
 package com.riopapa.autoquiet;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
 
@@ -8,12 +7,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -137,11 +133,6 @@ public class NotificationService extends Service {
         mBuilder.setContentIntent(tossP);
         mRemoteViews.setOnClickPendingIntent(R.id.to_toss, tossP);
 
-        Intent stopTalkI = new Intent(this, NotificationService.class);
-        stopTalkI.putExtra("operation", STOP_SPEAK);
-        PendingIntent stopTalkP = PendingIntent.getService(mContext, STOP_SPEAK, stopTalkI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(stopTalkP);
-        mRemoteViews.setOnClickPendingIntent(R.id.no_speak, stopTalkP);
     }
 
     void updateRemoteViews() {
@@ -150,8 +141,6 @@ public class NotificationService extends Service {
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
-        mRemoteViews.setViewVisibility(R.id.no_speak, (stop_repeat) ? View.VISIBLE:View.GONE);
-//        mRemoteViews.setViewVisibility(R.id.to_toss, (subject.equals("삐이"))? View.VISIBLE:View.GONE);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);

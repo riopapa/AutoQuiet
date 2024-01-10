@@ -34,6 +34,9 @@ import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -107,6 +110,8 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
 
+        waitLoop(); // not to be killed
+
     }
 
     @Override
@@ -167,7 +172,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void showMainList() {
-
+//
         mainRecyclerView = findViewById(R.id.mainRecycler);
 
         mainRecycleAdapter = new MainRecycleAdapter();
@@ -179,9 +184,34 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    Timer timer = new Timer();
+    TimerTask timerTask = null;
+    static long count = 0;
+    static long lastTime;
+    void waitLoop() {
+
+        final long LOOP_INTERVAL = 20 * 60 * 1000;
+
+        if (timerTask != null)
+            timerTask.cancel();
+        if (timer != null)
+            timer.cancel();
+
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run () {
+                Log.w("waiting..", count++ +", "+ (System.currentTimeMillis()-lastTime));
+                lastTime = System.currentTimeMillis();
+            }
+        };
+        timer.schedule(timerTask, 1000, LOOP_INTERVAL);
+    }
+
     @Override
     protected void onPause() {
-        new ScheduleNextTask(mContext, "onStop ");
+        mainRecycleAdapter.sort();
+        new ScheduleNextTask(mContext, "onPause");
         super.onPause();
     }
 }

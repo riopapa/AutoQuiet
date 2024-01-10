@@ -13,26 +13,25 @@ public class BeQuiet {
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
 
         if (OnOff) {
-            int vol;
-            vol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-            if (vol > 5) {
-                sharedEditor.putInt("ring", vol);
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
-                vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                sharedEditor.putInt("music", vol);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
-                vol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-                sharedEditor.putInt("notify", vol);
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, 0);
-                vol = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
-                sharedEditor.putInt("system", vol);
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
-                vol = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-                sharedEditor.putInt("alarm", vol);
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 1, 0);
+            int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
+            int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+            int sVol = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+            int aVol = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+            if (mVol > 5 && nVol > 5) {
+                sharedEditor.putInt("ring", rVol);
+                sharedEditor.putInt("music", mVol);
+                sharedEditor.putInt("notify", nVol);
+                sharedEditor.putInt("system", sVol);
+                sharedEditor.putInt("alarm", aVol);
                 sharedEditor.apply();
                 sharedEditor.commit();
             }
+            audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 2, 0);
+            audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 2, 0);
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 2, 0);
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 2, 0);
 
         } else {
             int vol;

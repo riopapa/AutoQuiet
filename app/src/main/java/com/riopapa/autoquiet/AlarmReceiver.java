@@ -3,6 +3,7 @@ package com.riopapa.autoquiet;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_EVENT;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
@@ -114,8 +115,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
         }
-
-        waitLoop(); // not to be killed
     }
 
     private void only_OneTime(Context context) {
@@ -267,6 +266,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void run() {
             new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
+            if (qt.alarmType == PHONE_OFF)
+                new BeQuiet(mContext, true);
             new ScheduleNextTask(mContext, "Normal()");
             }
         }, 15000);
@@ -279,6 +280,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     void finish_Task() {
+        new BeQuiet(mContext, false);
         new MannerMode().turn2Normal(mContext);
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         if (!qt.sayDate)
@@ -370,26 +372,5 @@ public class AlarmReceiver extends BroadcastReceiver {
         AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
-    }
-    Timer timer = new Timer();
-    TimerTask timerTask = null;
-    long count = 0;
-    void waitLoop() {
-
-        final long LOOP_INTERVAL = 20 * 60 * 1000;
-
-        if (timerTask != null)
-            timerTask.cancel();
-        if (timer != null)
-            timer.cancel();
-
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run () {
-                Log.w("waiting..", String.valueOf(count++));
-            }
-        };
-        timer.schedule(timerTask, LOOP_INTERVAL, LOOP_INTERVAL);
     }
 }

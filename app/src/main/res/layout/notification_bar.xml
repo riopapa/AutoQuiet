@@ -18,23 +18,22 @@
 
         <ImageView
             android:id="@+id/state_icon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginTop="4dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="6dp"
             android:src="@drawable/auto_quite" />
 
         <ImageView
             android:id="@+id/state_iconN"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="4dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="6dp"
             android:layout_marginBottom="4dp"
             android:src="@drawable/auto_quite" />
 
     </LinearLayout>
     <LinearLayout
-        android:background="#00000000"
         android:orientation="vertical"
         android:layout_marginBottom="0dp"
         android:layout_width = "0dp"
@@ -43,25 +42,28 @@
 
         <TextView
             android:id="@+id/calSubject"
-            android:layout_margin="8dp"
+            android:padding="4dp"
             android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
+            android:background="#00000000"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
 
         <TextView
             android:id="@+id/calSubjectN"
-            android:layout_margin="8dp"
+            android:layout_margin="0dp"
             android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
+            android:padding="4dp"
+            android:background="#82222222"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
 
@@ -77,25 +79,27 @@
 
         <TextView
             android:id="@+id/beg_time"
-            android:layout_margin="8dp"
+            android:padding="4dp"
             android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
+            android:background="#00000000"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
 
         <TextView
             android:id="@+id/beg_timeN"
-            android:layout_margin="8dp"
+            android:padding="4dp"
             android:layout_width="match_parent"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
+            android:background="#82222222"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
 
@@ -115,7 +119,7 @@
             android:layout_gravity="center"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="4dp"
+            android:layout_margin="8dp"
             android:src="@drawable/alarm_off"
             />
         <ImageView
@@ -126,14 +130,5 @@
             android:layout_margin="4dp"
             android:visibility="gone"
             android:src="@drawable/right_now" />
-
-        <ImageView
-            android:id="@+id/no_speak"
-            android:layout_gravity="center"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="4dp"
-            android:src="@drawable/stop_talking"
-            />
     </LinearLayout>
 </LinearLayout>

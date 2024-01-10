@@ -266,7 +266,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     public void sort() {
 
-        for (int i = 1; i < quietTasks.size(); i++) {
+        for (int i = 1; i < quietTasks.size(); i++) {   // start 1 except 0 : 바로 조용히
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
                 if (qt.endHour == 99) {
@@ -278,14 +278,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 } else if (qt.agenda) {
                     qt.sortKey = qt.calBegDate;
                 } else
-                    qt.sortKey = i;
+                    qt.sortKey = (long) i * 10;
             } else
                 qt.sortKey = System.currentTimeMillis() + 9999999999L + (long) i * 1000;
-
-//            if (qt.sortKey > 1000) {
-//                SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd HH:mm:ss ", Locale.getDefault());
-//                Log.w("seq "+i, sdfDate.format(qt.sortKey) +" "+qt.subject);
-//            }
 
             quietTasks.set(i, qt);
         }
