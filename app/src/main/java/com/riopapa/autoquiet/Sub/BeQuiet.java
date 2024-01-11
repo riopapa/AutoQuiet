@@ -18,7 +18,7 @@ public class BeQuiet {
             int nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
             int sVol = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
             int aVol = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-            if (mVol > 5 && nVol > 5) {
+            if (mVol > 9 || nVol > 9) {
                 sharedEditor.putInt("ring", rVol);
                 sharedEditor.putInt("music", mVol);
                 sharedEditor.putInt("notify", nVol);
@@ -28,26 +28,28 @@ public class BeQuiet {
                 sharedEditor.commit();
             }
             audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 2, 0);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 3, 0);
             audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 2, 0);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 2, 0);
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 2, 0);
 
         } else {
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT)
+                return;
             int vol;
-            vol = sharedPref.getInt("ring", 5);
+            vol = sharedPref.getInt("ring", 12);
             audioManager.setStreamVolume(AudioManager.STREAM_RING, vol, 0);
 
-            vol = sharedPref.getInt("music", 5);
+            vol = sharedPref.getInt("music", 12);
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
 
-            vol = sharedPref.getInt("notify", 5);
+            vol = sharedPref.getInt("notify", 12);
             audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, vol, 0);
 
-            vol = sharedPref.getInt("system", 5);
+            vol = sharedPref.getInt("system", 4);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, vol, 0);
 
-            vol = sharedPref.getInt("alarm", 5);
+            vol = sharedPref.getInt("alarm", 12);
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, vol, 0);
 
         }

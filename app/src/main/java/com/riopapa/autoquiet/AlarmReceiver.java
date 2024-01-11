@@ -178,7 +178,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 String say = subject + " 를 알려 드립니다";
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
                 setInactive(qtIdx);
-                new ScheduleNextTask(mContext, "ended");
+                new ScheduleNextTask(mContext, "ended1");
             }
         }, 1500);
     }
@@ -189,7 +189,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             public void run() {
                 String say = subject + " 를 확인 하세요.";
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                new ScheduleNextTask(mContext, "ended");
+                new ScheduleNextTask(mContext, "end 2");
             }
         }, 1500);
 
@@ -240,12 +240,12 @@ public class AlarmReceiver extends BroadcastReceiver {
                         showNotification.show(mContext, intent);
                     } else {
                         setInactive(qtIdx);
-                        new ScheduleNextTask(mContext, "ended");
+                        new ScheduleNextTask(mContext, "end3");
                     }
                 } else {
                     Log.w("a Schedule ","New task");
                     setInactive(qtIdx);
-                    new ScheduleNextTask(mContext, "ended");
+                    new ScheduleNextTask(mContext, "end F");
                 }
             }
         }, 600);
@@ -280,9 +280,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     void finish_Task() {
-        new BeQuiet(mContext, false);
         new MannerMode().turn2Normal(mContext);
         sounds.beep(mContext, Sounds.BEEP.NOTY);
+        new BeQuiet(mContext, false);
         if (!qt.sayDate)
             finish_Normal();
         else
@@ -300,7 +300,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             quietTasks.set(qtIdx, qt);
             mainRecycleAdapter.notifyItemChanged(qtIdx);
         }
-        new ScheduleNextTask(mContext, "say_FinishNormal()");
+        new ScheduleNextTask(mContext, "FinishNormal()");
         new Utils(mContext).deleteOldLogFiles();
     }
 

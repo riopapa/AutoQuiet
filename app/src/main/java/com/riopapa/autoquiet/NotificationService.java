@@ -31,7 +31,8 @@ public class NotificationService extends Service {
 
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 144;
-    final int TO_TOSS = 166;
+    final int A_MINUTE = 166;
+    final int FIVE_MINUTES = 555;
 
     public NotificationService(){}      // do not remove
 
@@ -60,8 +61,10 @@ public class NotificationService extends Service {
         }
 
 //        Log.w("onStartCommand","operation = "+operation);
-        if (operation == TO_TOSS) {
+        if (operation == A_MINUTE) {
             quiet_a_minute();
+        } else if (operation == FIVE_MINUTES) {
+            quiet_five_minutes();
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -98,12 +101,23 @@ public class NotificationService extends Service {
     private void quiet_a_minute() {
 
         new BeQuiet(this, true);
-        QuietTask qt = new QuietTask("Toss", 0, 0, 0, 0,
+        QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
                 new boolean[7], true,  PHONE_VIBRATE, false);
         long nextTime = System.currentTimeMillis() + 60 * 1000L;
         new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
 
         Toast.makeText(this, "quiet a minute", Toast.LENGTH_SHORT).show();
+    }
+
+    private void quiet_five_minutes() {
+
+        new BeQuiet(this, true);
+        QuietTask qt = new QuietTask("Five Mins", 0, 0, 0, 0,
+                new boolean[7], true,  PHONE_VIBRATE, false);
+        long nextTime = System.currentTimeMillis() + 360 * 1000L;
+        new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
+
+        Toast.makeText(this, "quiet five minutes", Toast.LENGTH_SHORT).show();
     }
 
     private void createNotification() {
@@ -127,11 +141,17 @@ public class NotificationService extends Service {
         mBuilder.setContentIntent(rightNowP);
         mRemoteViews.setOnClickPendingIntent(R.id.right_now, rightNowP);
 
+        Intent toss5 = new Intent(this, NotificationService.class);
+        toss5.putExtra("operation", FIVE_MINUTES);
+        PendingIntent fiveP = PendingIntent.getService(mContext, FIVE_MINUTES, toss5, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(fiveP);
+        mRemoteViews.setOnClickPendingIntent(R.id.five_minute, fiveP);
+
         Intent tossI = new Intent(this, NotificationService.class);
-        tossI.putExtra("operation", TO_TOSS);
-        PendingIntent tossP = PendingIntent.getService(mContext, TO_TOSS, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(tossP);
-        mRemoteViews.setOnClickPendingIntent(R.id.to_toss, tossP);
+        tossI.putExtra("operation", A_MINUTE);
+        PendingIntent oneP = PendingIntent.getService(mContext, A_MINUTE, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(oneP);
+        mRemoteViews.setOnClickPendingIntent(R.id.a_minute, oneP);
 
     }
 
