@@ -7,6 +7,13 @@
 
     <path android:fillColor="#0FC0"
         android:strokeWidth="2"
+        android:strokeColor="#B39797"
+        android:strokeLineCap="round"
+        android:pathData="M15,9.5h-6v4h5
+        l1,1v2hl-1,1h-5"/>
+
+    <path android:fillColor="#0FC0"
+        android:strokeWidth="1.2"
         android:strokeColor="#ffFF0000"
         android:strokeLineCap="round"
         android:pathData="M15,9.5h-6v4h5

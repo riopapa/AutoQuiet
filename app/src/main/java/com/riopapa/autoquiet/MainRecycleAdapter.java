@@ -1,5 +1,6 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.currIdx;
 import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
@@ -264,8 +265,10 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         return quietTasks.size();
     }
 
-    public void sort() {
+    public void sort(String msg) {
 
+        if (quietTasks == null || quietTasks.size() == 0)
+            return;
         for (int i = 1; i < quietTasks.size(); i++) {   // start 1 except 0 : 바로 조용히
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
@@ -279,15 +282,18 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                     qt.sortKey = qt.calBegDate;
                 } else
                     qt.sortKey = (long) i * 10;
-            } else
+            } else if (qt.alarmType < PHONE_VIBRATE) {
                 qt.sortKey = System.currentTimeMillis() + 9999999999L + (long) i * 1000;
+            } else {
+                qt.sortKey = 10000 + (long) i * 10;
+            }
 
             quietTasks.set(i, qt);
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
         mainRecycleAdapter.notifyDataSetChanged();
         new QuietTaskGetPut().put(quietTasks);
-        Toast.makeText(context, "Sorted by next Time", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Sorted by "+msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

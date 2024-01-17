@@ -62,9 +62,9 @@ public class NotificationService extends Service {
 
 //        Log.w("onStartCommand","operation = "+operation);
         if (operation == A_MINUTE) {
-            quiet_a_minute();
+            quiet_minute(60);
         } else if (operation == FIVE_MINUTES) {
-            quiet_five_minutes();
+            quiet_minute(60*5);
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -98,26 +98,15 @@ public class NotificationService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void quiet_a_minute() {
+    private void quiet_minute(int secs) {
 
-        new BeQuiet(this, true);
+        new BeQuiet(this, 0);
         QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
                 new boolean[7], true,  PHONE_VIBRATE, false);
-        long nextTime = System.currentTimeMillis() + 60 * 1000L;
+        long nextTime = System.currentTimeMillis() + secs * 1000L;
         new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
 
-        Toast.makeText(this, "quiet a minute", Toast.LENGTH_SHORT).show();
-    }
-
-    private void quiet_five_minutes() {
-
-        new BeQuiet(this, true);
-        QuietTask qt = new QuietTask("Five Mins", 0, 0, 0, 0,
-                new boolean[7], true,  PHONE_VIBRATE, false);
-        long nextTime = System.currentTimeMillis() + 360 * 1000L;
-        new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
-
-        Toast.makeText(this, "quiet five minutes", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "quiet minute "+secs+" secs", Toast.LENGTH_SHORT).show();
     }
 
     private void createNotification() {

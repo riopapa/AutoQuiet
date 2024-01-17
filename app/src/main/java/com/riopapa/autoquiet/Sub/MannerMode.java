@@ -28,7 +28,7 @@ public class MannerMode {
                 am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 //                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
             } catch (InterruptedException e) {

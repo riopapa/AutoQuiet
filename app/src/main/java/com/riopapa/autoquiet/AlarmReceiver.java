@@ -67,8 +67,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         quietTasks = new QuietTaskGetPut().get(context);
         caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-        Log.w("on Receive", "case="+caseSFO+" several="+several+" qt="+qt.subject+" "+
-                qt.begHour+":"+qt.begMin);
+//        Log.w("on Receive", "case="+caseSFO+" several="+several+" qt="+qt.subject+" "+
+//                qt.begHour+":"+qt.begMin);
         if (readyTTS == null)
             readyTTS = new ReadyTTS();
         if (sounds == null)
@@ -109,7 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "T":   // onetime
                 Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
-                new BeQuiet(context, false);
+                new BeQuiet(context, 1);
                 new ScheduleNextTask(mContext, "toss");
                 break;
             default:
@@ -150,9 +150,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             start_Normal();
         }
 
-        Intent intent = new Intent(mContext, NotificationService.class);
-        intent.putExtra("operation", STOP_SPEAK);
-        showNotification.show(mContext, intent);
+//        Intent intent = new Intent(mContext, NotificationService.class);
+//        intent.putExtra("operation", STOP_SPEAK);
+//        showNotification.show(mContext, intent);
     }
 
     private void say_Started99() {
@@ -197,30 +197,32 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void bell_Several(String subject) {
         int gapSec = secRemaining(System.currentTimeMillis());
-        Log.w("bell_Several="+several, subject +" calc remain="+gapSec);
-        if (gapSec < 60 && gapSec > 0 && several > 0)
+        if (gapSec < 60 && gapSec > 5 && several > 0)
             sounds.beep(mContext, (subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                int remain = secRemaining(System.currentTimeMillis()) - 2;
-                if (several > 0) {
-                    if (remain > 60) {
-                        remain = 20;
+                int afterSec = secRemaining(System.currentTimeMillis()) - 2;
+                if (several > 0 && afterSec > 5) {
+                    if (afterSec > 60) {
+                        afterSec = 20;
                     } else if (isSilentNow()) {
                         new VibratePhone(mContext);
-                        remain = remain / 2;
+                        afterSec = afterSec / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         if (subject.contains(TOSS_BEEP)) {
-                            s += subject + ((remain > 0) ? (" 시작 " + remain + " 초 전 ") : "");
+                            s += subject + afterSec + " 초 전 ";
                             s += (several == 0) ? " 이예요":"";
                         } else
                             s += " " + subject + " 를 " + ((several== 0)? "꼬옥":"") + " 확인하세요, ";
                         myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                        remain = remain / 2;
+                        if (afterSec < 20)
+                            afterSec = 10;
+                        else
+                            afterSec = afterSec / 2;
                     }
-                    if (remain > 3) {
-                        long nextTime = System.currentTimeMillis() + remain * 1000L;
+                    if (afterSec > 5) {
+                        long nextTime = System.currentTimeMillis() + afterSec * 1000L;
                         new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
                         NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
 
@@ -260,17 +262,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.w("start_Normal", say);
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
             }
-        }, 2000);
+        }, 1000);
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-            new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
             if (qt.alarmType == PHONE_OFF)
-                new BeQuiet(mContext, true);
+                new BeQuiet(mContext, 0);
+            new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
             new ScheduleNextTask(mContext, "Normal()");
             }
-        }, 15000);
+        }, 5000);
     }
 
     String addPostPosition(String s) {
@@ -282,11 +284,16 @@ public class AlarmReceiver extends BroadcastReceiver {
     void finish_Task() {
         new MannerMode().turn2Normal(mContext);
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        new BeQuiet(mContext, false);
-        if (!qt.sayDate)
-            finish_Normal();
-        else
-            finish_Several();
+        new BeQuiet(mContext, 2);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+            if (!qt.sayDate)
+                finish_Normal();
+            else
+                finish_Several();
+            }
+        }, 1000);
     }
 
     private void finish_Normal() {
@@ -300,7 +307,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             quietTasks.set(qtIdx, qt);
             mainRecycleAdapter.notifyItemChanged(qtIdx);
         }
-        new ScheduleNextTask(mContext, "FinishNormal()");
+        new ScheduleNextTask(mContext, "Fin Normal");
         new Utils(mContext).deleteOldLogFiles();
     }
 

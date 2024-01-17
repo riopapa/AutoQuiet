@@ -34,7 +34,6 @@ import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -103,10 +102,10 @@ public class ActivityMain extends AppCompatActivity {
         Log.w("Main", "onResume");
         new Utils(mContext).deleteOldLogFiles();
 
-        showMainList();
+        setUpMainAdapter();
         new VarsGetPut().put(vars, mContext);
         if (currIdx == -1)
-            currIdx = mainRecycleAdapter.getItemCount() / 2;
+            currIdx = mainRecycleAdapter.getItemCount() / 4;
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
 
@@ -140,7 +139,7 @@ public class ActivityMain extends AppCompatActivity {
             return true;
 
         } else if (menuItem == R.id.action_sort) {
-            mainRecycleAdapter.sort();
+            mainRecycleAdapter.sort("Sort Button");
             return true;
 
         } else if (menuItem == R.id.action_setting) {
@@ -156,7 +155,7 @@ public class ActivityMain extends AppCompatActivity {
                     .setIcon(R.drawable.danger)
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
                         new ClearAllTasks(getApplicationContext());
-                        showMainList();
+                        setUpMainAdapter();
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
@@ -171,7 +170,7 @@ public class ActivityMain extends AppCompatActivity {
         mainRecycleAdapter.notifyDataSetChanged();
     }
 
-    private void showMainList() {
+    public void setUpMainAdapter() {
 //
         mainRecyclerView = findViewById(R.id.mainRecycler);
 
@@ -210,7 +209,7 @@ public class ActivityMain extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mainRecycleAdapter.sort();
+        mainRecycleAdapter.sort("onPause");
         new ScheduleNextTask(mContext, "onPause");
         super.onPause();
     }
