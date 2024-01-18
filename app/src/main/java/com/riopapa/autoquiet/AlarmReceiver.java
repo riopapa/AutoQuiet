@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
-import com.riopapa.autoquiet.Sub.BeQuiet;
+import com.riopapa.autoquiet.Sub.AdjVolumes;
 import com.riopapa.autoquiet.Sub.MannerMode;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ReadyTTS;
@@ -109,7 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "T":   // onetime
                 Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
-                new BeQuiet(context, 1);
+                new AdjVolumes(context, AdjVolumes.VOL.COND_ON);
                 new ScheduleNextTask(mContext, "toss");
                 break;
             default:
@@ -262,13 +262,13 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.w("start_Normal", say);
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
             }
-        }, 1000);
+        }, 800);
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
             if (qt.alarmType == PHONE_OFF)
-                new BeQuiet(mContext, 0);
+                new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);   // force all off
             new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
             new ScheduleNextTask(mContext, "Normal()");
             }
@@ -284,7 +284,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     void finish_Task() {
         new MannerMode().turn2Normal(mContext);
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        new BeQuiet(mContext, 2);
+        new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

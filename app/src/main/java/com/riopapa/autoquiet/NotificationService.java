@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
-import com.riopapa.autoquiet.Sub.BeQuiet;
+import com.riopapa.autoquiet.Sub.AdjVolumes;
 import com.riopapa.autoquiet.models.QuietTask;
 
 public class NotificationService extends Service {
@@ -100,7 +100,7 @@ public class NotificationService extends Service {
 
     private void quiet_minute(int secs) {
 
-        new BeQuiet(this, 0);
+        new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
         QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
                 new boolean[7], true,  PHONE_VIBRATE, false);
         long nextTime = System.currentTimeMillis() + secs * 1000L;
