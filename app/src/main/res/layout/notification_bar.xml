@@ -80,9 +80,18 @@
         android:layout_height = "wrap_content">
 
         <ImageView
+            android:id="@+id/volumes"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/volumes" />
+
+        <ImageView
             android:id="@+id/state_iconN"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_gravity="center"
             android:layout_marginStart="6dp"
             android:layout_marginBottom="4dp"
             android:src="@drawable/auto_quite" />

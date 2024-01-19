@@ -375,7 +375,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         return (int) ((toDay.getTimeInMillis() - time)/1000);
     }
 
-    boolean isSilentNow() {
+    public static boolean isSilentNow() {
         AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);

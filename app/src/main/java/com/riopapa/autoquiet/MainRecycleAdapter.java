@@ -269,21 +269,19 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         if (quietTasks == null || quietTasks.size() == 0)
             return;
+        // generate sort key
         for (int i = 1; i < quietTasks.size(); i++) {   // start 1 except 0 : 바로 조용히
             QuietTask qt = quietTasks.get(i);
             if (qt.active) {
                 if (qt.endHour == 99) {
                     CalcNextBegEnd cal = new CalcNextBegEnd(qt);
                     qt.sortKey = cal.begTime;
-
-//                    qt.sortKey = CalculateNext.calc(false, qt.begHour, qt.begMin, qt.week, 0);
-
                 } else if (qt.agenda) {
                     qt.sortKey = qt.calBegDate;
                 } else
                     qt.sortKey = (long) i * 10;
             } else if (qt.alarmType < PHONE_VIBRATE) {
-                qt.sortKey = System.currentTimeMillis() + 9999999999L + (long) i * 1000;
+                qt.sortKey = System.currentTimeMillis() + 99999999L + qt.begHour * 100L + qt.begMin;
             } else {
                 qt.sortKey = 10000 + (long) i * 10;
             }

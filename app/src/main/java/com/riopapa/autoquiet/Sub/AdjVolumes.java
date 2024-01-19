@@ -1,8 +1,11 @@
 package com.riopapa.autoquiet.Sub;
 
+import static com.riopapa.autoquiet.AlarmReceiver.isSilentNow;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.util.Log;
 
 public class AdjVolumes {
 
@@ -22,6 +25,7 @@ public class AdjVolumes {
                 nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
                 sVol = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                 aVol = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+
                 if (mVol > 9 || nVol > 9) {
                     sharedEditor.putInt("ring", rVol);
                     sharedEditor.putInt("music", mVol);
@@ -38,20 +42,18 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 3, 0);
                 break;
             case COND_ON:
-                int rVolNow = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-                int mVolNow = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                if (rVolNow < 10 || mVolNow < 10) {
-                    rVol = sharedPref.getInt("ring", 12);
-                    mVol = sharedPref.getInt("music", 12);
-                    nVol = sharedPref.getInt("notify", 12);
-                    sVol = sharedPref.getInt("system", 4);
-                    aVol = sharedPref.getInt("alarm", 12);
-                    audioManager.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
-                    audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, nVol, 0);
-                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sVol, 0);
-                    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, aVol, 0);
-                }
+                if (isSilentNow())
+                    return;
+                rVol = sharedPref.getInt("ring", 12);
+                mVol = sharedPref.getInt("music", 12);
+                nVol = sharedPref.getInt("notify", 12);
+                sVol = sharedPref.getInt("system", 4);
+                aVol = sharedPref.getInt("alarm", 12);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, nVol, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sVol, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, aVol, 0);
                 break;
             case FORCE_ON:
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
