@@ -281,7 +281,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 } else
                     qt.sortKey = (long) i * 10;
             } else if (qt.alarmType < PHONE_VIBRATE) {
-                qt.sortKey = System.currentTimeMillis() + 99999999L + qt.begHour * 100L + qt.begMin;
+                qt.sortKey = System.currentTimeMillis() + 999999L + qt.begHour * 100L + qt.begMin;
             } else {
                 qt.sortKey = 10000 + (long) i * 10;
             }
