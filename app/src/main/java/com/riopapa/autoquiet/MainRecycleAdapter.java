@@ -280,9 +280,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                     qt.sortKey = qt.calBegDate;
                 } else
                     qt.sortKey = (long) i * 10;
-            } else if (qt.alarmType < PHONE_VIBRATE) {
-                qt.sortKey = System.currentTimeMillis() + 999999L + qt.begHour * 100L + qt.begMin;
-            } else {
+            } else if (qt.alarmType < PHONE_VIBRATE) {  // alert, oneTime, but inactive ...
+                qt.sortKey = System.currentTimeMillis() + 9999999999L + qt.begHour * 100L + qt.begMin;
+            } else {    // beg + end normal
                 qt.sortKey = 10000 + (long) i * 10;
             }
 
