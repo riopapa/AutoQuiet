@@ -115,11 +115,11 @@ public class NotificationService extends Service {
         Paint txtPaint = new Paint();
         txtPaint.setTextAlign(Paint.Align.LEFT);
         txtPaint.setAntiAlias(true);
-        txtPaint.setTextSize(24);
+        txtPaint.setTextSize(20);
         txtPaint.setColor(0xFFFFFFFF);
         txtPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         txtPaint.setStrokeWidth(4);
-        txtPaint.setTypeface(mContext.getResources().getFont(R.font.nanumbarungothic));
+//        txtPaint.setTypeface(mContext.getResources().getFont(R.font.nanumbarungothic));
         Paint linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         linePaint.setTextAlign(Paint.Align.LEFT);
@@ -139,9 +139,9 @@ public class NotificationService extends Service {
     void drawVolume(Canvas canvas, String s, int yPos, int vol, Paint txtPaint, Paint lnPaint) {
         final int shift = 40;
         canvas.drawText(s, 8, yPos+6, txtPaint);
-        lnPaint.setStrokeWidth(12);
+        lnPaint.setStrokeWidth(8);
         canvas.drawLine(shift, yPos, shift+vol * 4, yPos, lnPaint);
-        lnPaint.setStrokeWidth(3);
+        lnPaint.setStrokeWidth(2);
         canvas.drawLine(shift+vol*4, yPos, shift+(15-vol) * 4, yPos, lnPaint);
     }
 

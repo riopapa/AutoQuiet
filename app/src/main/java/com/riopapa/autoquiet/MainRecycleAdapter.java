@@ -291,7 +291,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
         mainRecycleAdapter.notifyDataSetChanged();
         new QuietTaskGetPut().put(quietTasks);
-        Toast.makeText(context, "Sorted by "+msg, Toast.LENGTH_SHORT).show();
+        if (!msg.equals(""))
+            Toast.makeText(context, "Sorted by "+msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

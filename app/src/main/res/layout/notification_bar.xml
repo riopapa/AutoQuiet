@@ -10,25 +10,25 @@
     <LinearLayout
         android:background="#00000000"
         android:orientation="horizontal"
-        android:layout_marginBottom="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="1dp"
         android:layout_width = "match_parent"
-        android:layout_weight="2"
         android:layout_height = "wrap_content">
 
         <ImageView
             android:id="@+id/state_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="1dp"
             android:layout_marginStart="6dp"
+            android:layout_gravity="center"
             android:src="@drawable/auto_quite" />
 
         <TextView
             android:id="@+id/calSubject"
-            android:padding="4dp"
+            android:padding="2dp"
             android:layout_width="0dp"
-            android:layout_weight="8"
+            android:layout_weight="6"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,21 +36,20 @@
             android:textStyle="bold"
             android:background="#00000000"
             android:text="@string/subject_name"
-            android:textSize="@dimen/notification_text" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/beg_time"
-            android:padding="4dp"
+            android:padding="2dp"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textStyle="bold"
             android:background="#00000000"
             android:text="@string/subject_name"
-            android:textSize="@dimen/notification_text" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/a_minute"
@@ -65,7 +64,7 @@
             android:layout_gravity="center"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="4dp"
+            android:layout_margin="2dp"
             android:visibility="gone"
             android:src="@drawable/right_now" />
 
@@ -76,15 +75,15 @@
         android:layout_marginBottom="4dp"
         android:layout_marginStart="4dp"
         android:layout_width = "match_parent"
-        android:layout_weight="2"
         android:layout_height = "wrap_content">
 
         <ImageView
             android:id="@+id/volumes"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginBottom="4dp"
+            android:layout_gravity="center"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/volumes" />
 
         <ImageView
@@ -92,8 +91,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:layout_marginStart="6dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/auto_quite" />
 
         <TextView
@@ -106,7 +105,7 @@
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:padding="4dp"
+            android:padding="2dp"
             android:background="#82222222"
             android:text="@string/subject_name"
             android:textSize="@dimen/notification_text" />
@@ -114,17 +113,17 @@
         <ImageView
             android:id="@+id/five_minute"
             android:layout_gravity="center"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="4dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="2dp"
             android:src="@drawable/alarm_5off"
             />
 
         <TextView
             android:id="@+id/beg_timeN"
-            android:padding="4dp"
+            android:padding="2dp"
             android:layout_width="0dp"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -209,7 +209,7 @@ public class ActivityMain extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mainRecycleAdapter.sort("onPause");
+        mainRecycleAdapter.sort("");
         new ScheduleNextTask(mContext, "onPause");
         super.onPause();
     }
