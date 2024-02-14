@@ -323,7 +323,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     public void toggleWeek(View v) {
         int i = v.getId();
-        if (alarmType == BELL_SEVERAL) {
+        if (alarmType == BELL_SEVERAL || alarmType == BELL_ONETIME) {
             for (int wk = 0; wk < 7; wk++) {
                 week[wk] = i == wk;
                 weekView[wk].setBackgroundColor((week[wk]) ? colorOnBack : colorOffBack);
