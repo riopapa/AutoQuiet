@@ -123,7 +123,7 @@ public class NotificationService extends Service {
         Paint linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         linePaint.setTextAlign(Paint.Align.LEFT);
-        linePaint.setColor(0xFFFFFFFF);
+        linePaint.setColor(0xFF00FFFF);
         int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
@@ -139,10 +139,10 @@ public class NotificationService extends Service {
     void drawVolume(Canvas canvas, String s, int yPos, int vol, Paint txtPaint, Paint lnPaint) {
         final int shift = 40;
         canvas.drawText(s, 8, yPos+6, txtPaint);
-        lnPaint.setStrokeWidth(8);
+        lnPaint.setStrokeWidth(12);
         canvas.drawLine(shift, yPos, shift+vol * 4, yPos, lnPaint);
         lnPaint.setStrokeWidth(2);
-        canvas.drawLine(shift+vol*4, yPos, shift+(15-vol) * 4, yPos, lnPaint);
+        canvas.drawLine(shift+vol*4, yPos, shift+(15-vol) * 4, yPos, txtPaint);
     }
 
     private void quiet_minute(int secs) {

@@ -323,10 +323,19 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     public void toggleWeek(View v) {
         int i = v.getId();
-        week[i] ^= true;
-        weekView[i].setBackgroundColor((week[i]) ? colorOnBack:colorOffBack);
-        weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD: Typeface.NORMAL);
-        v.invalidate();
+        if (alarmType == BELL_SEVERAL) {
+            for (int wk = 0; wk < 7; wk++) {
+                week[wk] = i == wk;
+                weekView[wk].setBackgroundColor((week[wk]) ? colorOnBack : colorOffBack);
+                weekView[wk].setTypeface(null, (week[wk]) ? Typeface.BOLD : Typeface.NORMAL);
+                weekView[wk].invalidate();
+            }
+        } else {
+            week[i] ^= true;
+            weekView[i].setBackgroundColor((week[i]) ? colorOnBack : colorOffBack);
+            weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD : Typeface.NORMAL);
+            v.invalidate();
+        }
     }
 
     private void number_Clicked(View v) {
