@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -109,7 +111,7 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
 
-        waitLoop(); // not to be killed
+        reLoad_Again(); // not to be killed
 
     }
 
@@ -187,9 +189,20 @@ public class ActivityMain extends AppCompatActivity {
     TimerTask timerTask = null;
     static long count = 0;
     static long lastTime;
+
+    void reLoad_Again() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(ActivityMain.this, ActivityMain.class);
+                startActivity(intent);
+            }
+        }, 28 * 60 * 1000);
+    }
+
     void waitLoop() {
 
-        final long LOOP_INTERVAL = 20 * 60 * 1000;
+        final long LOOP_INTERVAL = 10 * 60 * 1000;
 
         if (timerTask != null)
             timerTask.cancel();

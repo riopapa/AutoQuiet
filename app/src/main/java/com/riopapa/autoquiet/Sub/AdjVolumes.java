@@ -47,7 +47,7 @@ public class AdjVolumes {
                 rVol = sharedPref.getInt("ring", 12);
                 mVol = sharedPref.getInt("music", 12);
                 nVol = sharedPref.getInt("notify", 12);
-                sVol = sharedPref.getInt("system", 4);
+                sVol = sharedPref.getInt("system", 5);
                 aVol = sharedPref.getInt("alarm", 12);
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
@@ -59,7 +59,7 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 12, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 4, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 5, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 12, 0);
                 break;
             default:    // force Off

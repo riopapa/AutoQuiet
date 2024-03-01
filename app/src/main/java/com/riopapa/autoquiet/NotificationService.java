@@ -68,9 +68,9 @@ public class NotificationService extends Service {
 
 //        Log.w("onStartCommand","operation = "+operation);
         if (operation == A_MINUTE) {
-            quiet_minute(60);
+            quiet_minute(66);
         } else if (operation == FIVE_MINUTES) {
-            quiet_minute(60*5);
+            quiet_minute(66*5);
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -97,14 +97,14 @@ public class NotificationService extends Service {
             iconN = intent.getIntExtra("iconN", 0);
             iconNow = intent.getIntExtra("iconNow", 0);
             if (icon == 0)
-                return START_NOT_STICKY;
+                return START_STICKY;
             if (iconN == 0)
                 iconN = R.drawable.auto_quite;
             updateRemoteViews();
             show_Volumes();
         }
         startForeground(100, mBuilder.build());
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     private void show_Volumes() {
