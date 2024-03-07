@@ -35,9 +35,9 @@ import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Locale;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -46,7 +46,9 @@ public class ActivityMain extends AppCompatActivity {
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
     public static int currIdx = -1;
+    public static long nextAlertTime;
     RecyclerView mainRecyclerView;
+
 
     public static ArrayList<QuietTask> quietTasks;
 
@@ -111,7 +113,7 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
 
-        reLoad_Again(); // not to be killed
+//        reLoad_Again(); // not to be killed
 
     }
 
@@ -185,40 +187,52 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    Timer timer = new Timer();
-    TimerTask timerTask = null;
-    static long count = 0;
-    static long lastTime;
+    long nextDelayInterval;
+    SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
 
     void reLoad_Again() {
+        nextDelayInterval = 180 * 60 * 1000;
+        long nowTime = System.currentTimeMillis();
+        long nextTime = nowTime + nextDelayInterval;
+        if (nextTime > nextAlertTime - 5 * 60 * 1000 &&
+                nextTime < nextAlertTime + 5 * 60 * 1000 ) {
+            nextDelayInterval = nextAlertTime - 5 * 60 * 1000 - nowTime;
+            while (nextDelayInterval < 0)
+                nextDelayInterval += 3 * 60 * 1000;
+        }
+        Log.e("reload", "Next Reload Time is "+sdf.format(nowTime+nextDelayInterval));
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(ActivityMain.this, ActivityMain.class);
-                startActivity(intent);
+                if (nextTime < nextAlertTime - 5 * 60 * 1000 ||
+                        nextTime > nextAlertTime + 5 * 60 * 1000 ) {
+                    Intent intent = new Intent(ActivityMain.this, ActivityMain.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
             }
-        }, 28 * 60 * 1000);
+        }, nextDelayInterval);
     }
-
-    void waitLoop() {
-
-        final long LOOP_INTERVAL = 10 * 60 * 1000;
-
-        if (timerTask != null)
-            timerTask.cancel();
-        if (timer != null)
-            timer.cancel();
-
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run () {
-                Log.w("waiting..", count++ +", "+ (System.currentTimeMillis()-lastTime));
-                lastTime = System.currentTimeMillis();
-            }
-        };
-        timer.schedule(timerTask, 1000, LOOP_INTERVAL);
-    }
+//
+//    void waitLoop() {
+//
+//        final long LOOP_INTERVAL = 10 * 60 * 1000;
+//
+//        if (timerTask != null)
+//            timerTask.cancel();
+//        if (timer != null)
+//            timer.cancel();
+//
+//        timer = new Timer();
+//        timerTask = new TimerTask() {
+//            @Override
+//            public void run () {
+//                Log.w("waiting..", count++ +", "+ (System.currentTimeMillis()-lastTime));
+//                lastTime = System.currentTimeMillis();
+//            }
+//        };
+//        timer.schedule(timerTask, 1000, LOOP_INTERVAL);
+//    }
 
     @Override
     protected void onPause() {

@@ -57,6 +57,13 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        if (intent == null) {
+            Log.e("onStart","Intent param is null");
+            createNotification();
+            updateRemoteViews();
+            show_Volumes();
+            return START_STICKY;
+        }
         createNotification();
 
         int operation = -1;
@@ -65,7 +72,6 @@ public class NotificationService extends Service {
         } catch (Exception e) {
             Log.e("operation", e.toString());
         }
-
 //        Log.w("onStartCommand","operation = "+operation);
         if (operation == A_MINUTE) {
             quiet_minute(66);
@@ -77,7 +83,7 @@ public class NotificationService extends Service {
             try {
                 pendingIntent.send();
             } catch(PendingIntent.CanceledException e) {
-                e.printStackTrace();
+                Log.e("startCommand","errror oItent "+e);
             }
         } else if (operation == STOP_SPEAK) {
             stop_repeat = false;

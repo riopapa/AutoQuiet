@@ -1,6 +1,7 @@
 package com.riopapa.autoquiet;
 
 
+import static com.riopapa.autoquiet.ActivityMain.nextAlertTime;
 import static com.riopapa.autoquiet.AlarmReceiver.showNotification;
 
 import android.content.Context;
@@ -35,6 +36,7 @@ public class ScheduleNextTask {
         new Utils(context).log("ScheduleNextTask",msg);
         updateNotyBar(context);
 
+        nextAlertTime = nxtTsk.nextTime;
         new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
                 nxtTsk.nextTime, nxtTsk.caseSFO, nxtTsk.several);
 

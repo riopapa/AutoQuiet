@@ -72,6 +72,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     public final static int BELL_SEVERAL = 1;
     public final static int BELL_EVENT = 2;
     public final static int BELL_ONETIME = 3;
+
     public final static int PHONE_VIBRATE = 5;
     public final static int PHONE_OFF = 6;
 
@@ -376,7 +377,14 @@ public class ActivityAddEdit extends AppCompatActivity {
             else
                 quietTasks.set(currIdx, qT);
         }
+        mainRecycleAdapter.sort("Saved");
         new QuietTaskGetPut().put(quietTasks);
+        for (int i = 2; i < quietTasks.size(); i++) {
+            if (!quietTasks.get(i).active && quietTasks.get(i).alarmType < PHONE_VIBRATE) {
+                currIdx = i - 1;
+                break;
+            }
+        }
         new ScheduleNextTask(context, "Task Saved ");
     }
 
@@ -484,7 +492,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (id == R.id.action_save) {
             finish();
             save_QuietTask();
-            mainRecycleAdapter.notifyItemChanged(currIdx);
+//            mainRecycleAdapter.notifyItemChanged(currIdx);
 
         } else if (id == R.id.action_delete) {
             finish();
