@@ -46,7 +46,6 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
         mContext = this;
-        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_bar);
     }
 
     @Override
@@ -58,10 +57,10 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent == null) {
-            Log.e("onStart","Intent param is null");
-            createNotification();
-            updateRemoteViews();
-            show_Volumes();
+            Log.e("onStart","Intent param is null flags="+flags+" id="+startId);
+//            createNotification();
+//            updateRemoteViews();
+//            show_Volumes();
             return START_STICKY;
         }
         createNotification();
@@ -163,6 +162,8 @@ public class NotificationService extends Service {
     }
 
     private void createNotification() {
+
+        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_bar);
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);

@@ -1,5 +1,6 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.vars;
 
 import android.content.Context;
@@ -28,7 +29,6 @@ public class ActivityAddAgenda extends AppCompatActivity {
     private ActivityAddAgendaBinding binding;
     private String mTitle;
     Context context;
-    private ArrayList<QuietTask> quietTasks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

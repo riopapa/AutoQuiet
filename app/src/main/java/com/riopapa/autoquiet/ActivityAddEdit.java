@@ -2,6 +2,7 @@ package com.riopapa.autoquiet;
 
 import static com.riopapa.autoquiet.ActivityMain.currIdx;
 import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
+import static com.riopapa.autoquiet.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.ActivityMain.vars;
 
 import android.app.Dialog;
@@ -30,7 +31,6 @@ import com.riopapa.autoquiet.databinding.ActivityAddEditBinding;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -44,7 +44,6 @@ public class ActivityAddEdit extends AppCompatActivity {
     private final TextView[] weekView = new TextView[7];
     private boolean agenda, sayDate;
     private QuietTask qT;
-    private ArrayList<QuietTask> quietTasks;
     private ActivityAddEditBinding binding;
     private int colorOn, colorOnBack, colorOffBack, BGColorOn, BGColorOff;
     private Context context;
@@ -146,7 +145,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         endHour = qT.endHour;
         endMin = qT.endMin;
         end99 = qT.endHour == 99;
-        active = qT.active;
+        active = true;  // let it active
         alarmType = qT.alarmType;
         sayDate = qT.sayDate;
         week = qT.week;
@@ -378,14 +377,13 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.set(currIdx, qT);
         }
         mainRecycleAdapter.sort("Saved");
-        new QuietTaskGetPut().put(quietTasks);
         for (int i = 2; i < quietTasks.size(); i++) {
             if (!quietTasks.get(i).active && quietTasks.get(i).alarmType < PHONE_VIBRATE) {
                 currIdx = i - 1;
                 break;
             }
         }
-        new ScheduleNextTask(context, "Task Saved ");
+//        new ScheduleNextTask(context, "Task Saved ");
     }
 
     private boolean getScreen2Vars() {
@@ -399,7 +397,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         }
 
         subject = binding.etSubject.getText().toString().trim();
-        if (subject.length() == 0)
+        if (subject.isEmpty())
             subject = getString(R.string.no_subject);
         if (end99) {
             begHour =  Integer.parseInt(binding.numHH1.getText().toString()) * 10
@@ -419,7 +417,6 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void save_AlarmTask() {
 
-//        long nextTime = CalculateNext.calc(false, begHour, begMin, week, 0);
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
         CalcNextBegEnd calBE = new CalcNextBegEnd(qT);
@@ -490,10 +487,8 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            finish();
             save_QuietTask();
-//            mainRecycleAdapter.notifyItemChanged(currIdx);
-
+            finish();
         } else if (id == R.id.action_delete) {
             finish();
             quietTasks.remove(currIdx);
