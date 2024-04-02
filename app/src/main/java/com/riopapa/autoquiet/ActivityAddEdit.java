@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import com.riopapa.autoquiet.databinding.ActivityAddEditBinding;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -51,30 +53,30 @@ public class ActivityAddEdit extends AppCompatActivity {
     private Dialog dialog;
     final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
 
-    final public String[] alarmTypeNames = { "의미 없음",
-        "벨과 제목을 여러 번 울려줌",
-        "벨과 제목을 한 번 알려 줌",
-        "한번만 울리고 끄읏",
-        "벨 한 번 울린 후 사라짐",
-        "종료 시각까지 진동",
-        "종료 시각까지 조용",
+    final int[] alarmTypeNames = { 0,
+        R.string.bell_several_time,
+        R.string.bell_once_a_week,
+        R.string.bell_one_time,
+        R.string.phone_vibrate,
+        R.string.phone_work,
+        R.string.phone_off
     };
     public final static int[] alarmIcons = { 0,
             R.drawable.bell_several,
-            R.drawable.bell_event,
+            R.drawable.bell_weekly,
             R.drawable.bell_onetime,
-            R.drawable.bell_once_gone,
             R.drawable.phone_vibrate,
-            R.drawable.phone_off,
+            R.drawable.phone_work,
+            R.drawable.phone_off
     };
 
     public final static int BELL_SEVERAL = 1;
-    public final static int BELL_EVENT = 2;
+    public final static int BELL_WEEKLY = 2;
     public final static int BELL_ONETIME = 3;
 
-    public final static int PHONE_VIBRATE = 5;
+    public final static int PHONE_VIBRATE = 4;
+    public final static int PHONE_WORK = 5;
     public final static int PHONE_OFF = 6;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
+
         build_QuietTask();
         TextView alarm_Type = findViewById(R.id.typeDesc);
         alarm_Type.setOnClickListener(v -> dialog.show());
@@ -124,11 +127,13 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (checkedId == R.id.radio_bell_subject_several)
             alarmType = BELL_SEVERAL;
         else if (checkedId == R.id.radio_bell_event)
-            alarmType = BELL_EVENT;
+            alarmType = BELL_WEEKLY;
         else if (checkedId == R.id.radio_bee_one_time)
             alarmType = BELL_ONETIME;
         else if (checkedId == R.id.radio_vibrate_start_end)
             alarmType = PHONE_VIBRATE;
+        else if (checkedId == R.id.radio_work_vibrate)
+            alarmType = PHONE_WORK;
         else
             alarmType = PHONE_OFF;
         dialog.dismiss();
@@ -256,9 +261,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         });
     }
 
-
     private void showTimeForm() {
-        binding.typeDesc.setText(alarmTypeNames[alarmType]);
+        binding.typeDesc.setText(getResources().getString(alarmTypeNames[alarmType]));
         binding.alarmType.setImageResource((agenda)? R.drawable.calendar: alarmIcons[alarmType]);
         if (alarmType < PHONE_VIBRATE) { // end99
             end99 = true;

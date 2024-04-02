@@ -5,11 +5,10 @@ import static com.riopapa.autoquiet.AlarmReceiver.isSilentNow;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.util.Log;
 
 public class AdjVolumes {
 
-    public enum VOL { COND_OFF, COND_ON, FORCE_ON, FORCE_OFF}
+    public enum VOL { COND_OFF, COND_ON, FORCE_ON, FORCE_OFF, WORK}
     int rVol, mVol, nVol, sVol, aVol;
 
     // 0: off, 1: conditional on, 2: force to on
@@ -61,6 +60,13 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 5, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 12, 0);
+                break;
+            case WORK:
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 2, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 2, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 1, 0);
                 break;
             default:    // force Off
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0);

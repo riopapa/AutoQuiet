@@ -1,10 +1,9 @@
 package com.riopapa.autoquiet.Sub;
 
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_WORK;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ScheduleNextTask.AHEAD_TIME;
-
-import android.util.Log;
 
 import com.riopapa.autoquiet.models.QuietTask;
 
@@ -16,7 +15,7 @@ public class NextTwoTasks {
 
     public long nextTime, nextTimeN;
     public int saveIdx, icon, iconN, sHour, sHourN, sMin, sMinN, several;
-    public String subject, subjectN, caseSFO, beginOrEnd, beginOrEndN;
+    public String subject, subjectN, caseSFOW, beginOrEnd, beginOrEndN;
     QuietTask qt;
     public NextTwoTasks(ArrayList<QuietTask> quietTasks) {
 
@@ -69,7 +68,8 @@ public class NextTwoTasks {
                 }
                 if (qt.endHour != 99 && nowTime < nxtFinish) {
                     several = (qt.sayDate) ? 3 : 0;
-                    String s = nxtFinish + "_" + ((idx == 0) ? "O_ " : "F_") + qt.subject + "_" +
+                    String wf = (qt.alarmType == PHONE_WORK) ? "W":"F";  // Work, Finish
+                    String s = nxtFinish + "_" + ((idx == 0) ? "O_ " : wf+"_") + qt.subject + "_" +
                             several + "_" + alarmIcons[qt.alarmType] + "_" +
                             idx + "_" + qt.endHour + "_" + qt.endMin + "_" +
                             "까지";
@@ -83,7 +83,7 @@ public class NextTwoTasks {
         String [] sSecond = nextTasks.get(1).split("_");
 
         nextTime = Long.parseLong(sFirst[0]);   nextTimeN = Long.parseLong(sSecond[0]);
-        caseSFO = sFirst[1];
+        caseSFOW = sFirst[1];
         subject = sFirst[2]; subjectN = sSecond[2];
         several = Integer.parseInt(sFirst[3]);  // no several from sSecond
         icon = Integer.parseInt(sFirst[4]);  iconN = Integer.parseInt(sSecond[4]);

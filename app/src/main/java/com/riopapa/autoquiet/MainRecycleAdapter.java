@@ -1,5 +1,6 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.currIdx;
@@ -188,6 +189,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         if (!gCalendar) {
             holder.lvAlarmType.setImageResource(alarmIcons[qt.alarmType]);
+            holder.lvAlarmType.setAlpha((active)? 1f: 0.6f);
             holder.llCalInfo.setVisibility(View.GONE);
             holder.llBegEndTime.setVisibility(View.VISIBLE);
             holder.llWeekFlag.setVisibility(View.VISIBLE);
@@ -268,7 +270,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         // generate sort key
         for (int i = 1; i < quietTasks.size(); i++) {   // start 1 except 0 : 바로 조용히
             QuietTask qt = quietTasks.get(i);
-            if (qt.active) {
+            if (qt.alarmType == BELL_SEVERAL) {
+                qt.sortKey = 90000000L + qt.begHour * 100L + qt.begMin;
+            } else if (qt.active) {
                 if (qt.endHour == 99) {
                     CalcNextBegEnd cal = new CalcNextBegEnd(qt);
                     qt.sortKey = cal.begTime;

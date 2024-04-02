@@ -1,10 +1,11 @@
 package com.riopapa.autoquiet;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_EVENT;
+import static com.riopapa.autoquiet.ActivityAddEdit.BELL_WEEKLY;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_WORK;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.mContext;
 import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
@@ -45,9 +46,8 @@ public class AlarmReceiver extends BroadcastReceiver {
     QuietTask qt;
     int qtIdx;
     int several;
-    String caseSFO;
+    String caseSFOW;
     Vars vars;
-    final int STOP_SPEAK = 1022;
     final String TOSS_BEEP = "삐이";
     final String TTSId = "tId";
     int icon;
@@ -65,7 +65,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Bundle args = intent.getBundleExtra("DATA");
         qt = (QuietTask) args.getSerializable("quietTask");
         quietTasks = new QuietTaskGetPut().get(context);
-        caseSFO = Objects.requireNonNull(intent.getExtras()).getString("case");
+        caseSFOW = Objects.requireNonNull(intent.getExtras()).getString("case");
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
 //        Log.w("on Receive", "case="+caseSFO+" several="+several+" qt="+qt.subject+" "+
 //                qt.begHour+":"+qt.begMin);
@@ -76,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (showNotification == null)
             showNotification = new ShowNotification();
         vars = new VarsGetPut().get(context);
-        if (!caseSFO.equals("T")) {  // toss quiet a min
+        if (!caseSFOW.equals("T")) {  // toss quiet a min
             qtIdx = -1;
             for (int i = 1; i < quietTasks.size(); i++) {
                 QuietTask qT1 = quietTasks.get(i);
@@ -95,25 +95,26 @@ public class AlarmReceiver extends BroadcastReceiver {
             icon = alarmIcons[qt.alarmType];
         }
 
-        assert caseSFO != null;
+        assert caseSFOW != null;
 
-        switch (caseSFO) {
-            case "S":   // beg?
+        switch (caseSFOW) {
+            case "S":   // start
                 start_Task();
                 break;
-            case "F":   // end
+            case "F":   // finish
+            case "W":   // work
                 finish_Task();
-                break;
-            case "O":   // onetime
-                only_OneTime(context);
                 break;
             case "T":   // onetime
                 Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
                 new AdjVolumes(context, AdjVolumes.VOL.COND_ON);
                 new ScheduleNextTask(mContext, "toss");
                 break;
+            case "O":   // onetime
+                only_OneTime(context);
+                break;
             default:
-                new Utils(context).log("Alarm Receive","Case Error " + caseSFO);
+                new Utils(context).log("Alarm Receive","Case Error " + caseSFOW);
         }
     }
 
@@ -161,7 +162,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if      (qt.alarmType == BELL_SEVERAL) {
             bell_Several(subject);
-        } else if (qt.alarmType == BELL_EVENT)
+        } else if (qt.alarmType == BELL_WEEKLY)
             bellEvent(subject);
         else if (qt.alarmType == BELL_ONETIME)
             bellOneTime(subject);
@@ -258,8 +259,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                String say = addPostPosition(qt.subject) + "시작 됩니다";
-                Log.w("start_Normal", say);
+                String say = (qt.alarmType == PHONE_WORK) ? qt.subject : addPostPosition(qt.subject) + "시작 됩니다";
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
             }
         }, 800);
@@ -267,10 +267,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-            if (qt.alarmType == PHONE_OFF)
-                new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);   // force all off
-            new MannerMode().turn2Quiet(mContext, qt.alarmType == PHONE_VIBRATE);
-            new ScheduleNextTask(mContext, "Normal()");
+                if ((qt.alarmType == PHONE_WORK))
+                    new AdjVolumes(mContext, AdjVolumes.VOL.WORK);
+                else {
+                    new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);
+                    new MannerMode().turn2Quiet(mContext, qt.alarmType != PHONE_OFF);
+                }
+                new ScheduleNextTask(mContext, "Norm");
             }
         }, 5000);
     }
@@ -288,12 +291,20 @@ public class AlarmReceiver extends BroadcastReceiver {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-            if (!qt.sayDate)
-                finish_Normal();
-            else
+            if (!qt.sayDate) {
+                if (caseSFOW.equals("W"))
+                    finish_Work();
+                else
+                    finish_Normal();
+            } else
                 finish_Several();
             }
-        }, 1000);
+        }, 500);
+    }
+
+    private void finish_Work() {
+        sounds.beep(mContext, Sounds.BEEP.INFO);
+        new ScheduleNextTask(mContext, "Fin Work");
     }
 
     private void finish_Normal() {

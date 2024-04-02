@@ -33,12 +33,12 @@ public class ScheduleNextTask {
 
         msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
 
-        new Utils(context).log("ScheduleNextTask",msg);
+        new Utils(context).log("SchdNextTask",msg);
         updateNotyBar(context);
 
         nextAlertTime = nxtTsk.nextTime;
         new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
-                nxtTsk.nextTime, nxtTsk.caseSFO, nxtTsk.several);
+                nxtTsk.nextTime, nxtTsk.caseSFOW, nxtTsk.several);
 
     }
 
@@ -50,8 +50,9 @@ public class ScheduleNextTask {
         intent.putExtra("stop_repeat", false);
         intent.putExtra("icon", nxtTsk.icon);
         int iconNow = nxtTsk.icon;
-        if (nxtTsk.caseSFO.equals("S"))
+        if (nxtTsk.caseSFOW.equals("S"))
             iconNow = R.drawable.phone_normal;
+
         intent.putExtra("iconNow", iconNow);
 
         intent.putExtra("begN", timeInfoN);

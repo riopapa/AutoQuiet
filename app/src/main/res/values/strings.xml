@@ -36,5 +36,13 @@
     <string name="click_to_stop_speaking">Click to stop speaking</string>
     <string name = "action_sort">소트</string>
 
+    <string name="bell_several_time">벨과 제목을 여러 번 울려줌</string>
+    <string name="bell_once_a_week">매주 할일 한번 알려줌</string>
+    <string name="bell_one_time">한번만 울리고 사라짐</string>
+    <string name="phone_vibrate">종료시각까지 진동만</string>
+    <string name="phone_work">일할 때는 소리 작게</string>
+    <string name="phone_off">종료 시각까지 조용히</string>
+
     <string name="com.crashlytics.android.build_id">1</string>
+
 </resources>

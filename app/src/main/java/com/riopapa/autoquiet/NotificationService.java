@@ -57,7 +57,7 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent == null) {
-            Log.e("onStart","Intent param is null flags="+flags+" id="+startId);
+//            Log.e("onStart","Intent param is null flags="+flags+" id="+startId);
 //            createNotification();
 //            updateRemoteViews();
 //            show_Volumes();
