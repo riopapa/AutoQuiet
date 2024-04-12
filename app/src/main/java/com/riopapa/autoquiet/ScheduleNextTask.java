@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
+import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class ScheduleNextTask {
         intent.putExtra("endN", nxtTsk.beginOrEndN);
         intent.putExtra("subjectN", nxtTsk.subjectN);
         intent.putExtra("iconN", nxtTsk.iconN);
+        if (showNotification == null)
+            showNotification = new ShowNotification();
         showNotification.show(context, intent);
 
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);

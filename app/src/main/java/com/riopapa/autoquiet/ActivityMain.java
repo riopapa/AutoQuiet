@@ -71,14 +71,12 @@ public class ActivityMain extends AppCompatActivity {
         }
 
 // If you have access to the external storage, do whatever you need
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-            }
+        if (!Environment.isExternalStorageManager()) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+            intent.setData(uri);
+            startActivity(intent);
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission", "Required for READ_CALENDAR");
@@ -143,7 +141,7 @@ public class ActivityMain extends AppCompatActivity {
             return true;
 
         } else if (menuItem == R.id.action_sort) {
-            mainRecycleAdapter.sort("Sort Button");
+            mainRecycleAdapter.sort();
             return true;
 
         } else if (menuItem == R.id.action_setting) {

@@ -1,6 +1,8 @@
 package com.riopapa.autoquiet;
 
+import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
 import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.ActivityAddEdit.BELL_WEEKLY;
 import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
 import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ActivityMain.currIdx;
@@ -263,14 +265,14 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         return quietTasks.size();
     }
 
-    public void sort(String msg) {
+    public void sort() {
 
         if (quietTasks == null || quietTasks.isEmpty())
             return;
         // generate sort key
         for (int i = 1; i < quietTasks.size(); i++) {   // start 1 except 0 : 바로 조용히
             QuietTask qt = quietTasks.get(i);
-            if (qt.alarmType == BELL_SEVERAL) {
+            if (qt.alarmType == BELL_SEVERAL || qt.alarmType == BELL_ONETIME || qt.alarmType == BELL_WEEKLY) {
                 qt.sortKey = 90000000L + qt.begHour * 100L + qt.begMin;
             } else if (qt.active) {
                 if (qt.endHour == 99) {
@@ -291,8 +293,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
         mainRecycleAdapter.notifyDataSetChanged();
         new QuietTaskGetPut().put(quietTasks);
-        if (!msg.isEmpty())
-            Toast.makeText(mContext, "Sorted by "+msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

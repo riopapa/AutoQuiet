@@ -167,30 +167,37 @@ public class AlarmReceiver extends BroadcastReceiver {
         else if (qt.alarmType == BELL_ONETIME)
             bellOneTime(subject);
         else {
-            String say = subject + " 를 확인 하시지요";
+            String say = subject + " 에러 확인";
             myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
+            new ScheduleNextTask(mContext, "ended Err");
         }
     }
 
     private void bellOneTime(String subject) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                String say = subject + " 를 알려 드립니다";
-                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                setInactive(qtIdx);
-                new ScheduleNextTask(mContext, "ended1");
-            }
-        }, 1500);
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (mVol < 5)
+            new VibratePhone(mContext, 1);
+        else {
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    String say = subject + " 체크";
+                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
+                    setInactive(qtIdx);
+                    new ScheduleNextTask(mContext, "ended1");
+                }
+            }, 1500);
+        }
     }
 
     private void bellEvent(String subject) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                String say = subject + " 를 확인 하세요.";
+                String say = subject + " 를 확인";
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                new ScheduleNextTask(mContext, "end 2");
+                new ScheduleNextTask(mContext, "event");
             }
         }, 1500);
 
@@ -207,7 +214,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     if (afterSec > 60) {
                         afterSec = 20;
                     } else if (isSilentNow()) {
-                        new VibratePhone(mContext);
+                        new VibratePhone(mContext, 0);
                         afterSec = afterSec / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
@@ -224,23 +231,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     }
                     if (afterSec > 5) {
                         long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                        new AlarmTime().request(mContext, qt, nextTime, "S", several);   // several 0 : no more
-                        NextTwoTasks nxtTsk = new NextTwoTasks(quietTasks);
-
-                        Intent intent = new Intent(mContext, NotificationService.class);
-                        intent.putExtra("beg", nowTimeToString(nextTime));
-                        intent.putExtra("end", "다시");
-                        intent.putExtra("stop_repeat", true);
-                        intent.putExtra("subject", qt.subject);
-                        intent.putExtra("icon", icon);
-                        intent.putExtra("iconNow", nxtTsk.icon);
-
-                        SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-                        intent.putExtra("begN", sharedPref.getString("begN", "없음"));
-                        intent.putExtra("endN", nxtTsk.beginOrEnd);
-                        intent.putExtra("subjectN", nxtTsk.subject);
-                        intent.putExtra("icon", nxtTsk.icon);
-                        showNotification.show(mContext, intent);
+                        new AlarmTime().request(mContext, qt, nextTime, "S", several);
                     } else {
                         setInactive(qtIdx);
                         new ScheduleNextTask(mContext, "end3");
@@ -286,7 +277,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void finish_Task() {
         new MannerMode().turn2Normal(mContext);
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
+        if (!qt.sayDate)
+            sounds.beep(mContext, Sounds.BEEP.NOTY);
         new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
         new Timer().schedule(new TimerTask() {
             @Override

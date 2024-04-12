@@ -380,13 +380,13 @@ public class ActivityAddEdit extends AppCompatActivity {
             else
                 quietTasks.set(currIdx, qT);
         }
-        mainRecycleAdapter.sort("Saved");
-        for (int i = 2; i < quietTasks.size(); i++) {
-            if (!quietTasks.get(i).active && quietTasks.get(i).alarmType < PHONE_VIBRATE) {
-                currIdx = i - 1;
-                break;
-            }
-        }
+        mainRecycleAdapter.sort();
+//        for (int i = 2; i < quietTasks.size(); i++) {
+//            if (!quietTasks.get(i).active && quietTasks.get(i).alarmType < PHONE_VIBRATE) {
+//                currIdx = i - 1;
+//                break;
+//            }
+//        }
 //        new ScheduleNextTask(context, "Task Saved ");
     }
 
@@ -434,7 +434,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         c.setTimeInMillis(nextTime);
         int nextDays = c.get(Calendar.DAY_OF_YEAR);
         int nextHourMin = begHour * 60 + begMin;
-        if ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHourMin > nextHourMin)) {
+        if ((alarmType == BELL_SEVERAL  || alarmType == BELL_ONETIME) &&
+                ((nextDays - nowDays) > 5 || (nextDays == nowDays) & (nowHourMin > nextHourMin))) {
             week = new boolean[7];
             int weekDay = c.get(Calendar.DAY_OF_WEEK);
             if (weekDay > 6)

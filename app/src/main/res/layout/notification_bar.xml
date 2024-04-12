@@ -25,19 +25,28 @@
             android:layout_gravity="center"
             android:src="@drawable/auto_quite" />
 
+        <ImageView
+            android:id="@+id/volume_on"
+            android:layout_gravity="center"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/volume_on" />
+
         <TextView
             android:id="@+id/calSubject"
-            android:padding="2dp"
             android:layout_width="0dp"
-            android:layout_weight="6"
-            android:textColor="@color/colorNotification"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textStyle="bold"
+            android:layout_weight="6"
             android:background="#00000000"
+            android:padding="2dp"
             android:text="@string/subject_name"
-            android:textSize="12sp" />
+            android:textAlignment="center"
+            android:textColor="@color/colorNotification"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/beg_time"
@@ -79,22 +88,22 @@
         android:layout_height = "wrap_content">
 
         <ImageView
-            android:id="@+id/volumes"
+            android:id="@+id/state_iconN"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/auto_quite" />
+
+        <ImageView
+            android:id="@+id/volume_now"
             android:layout_gravity="center"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginStart="2dp"
             android:layout_marginBottom="2dp"
             android:src="@drawable/volumes" />
-
-        <ImageView
-            android:id="@+id/state_iconN"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="2dp"
-            android:layout_marginBottom="2dp"
-            android:src="@drawable/auto_quite" />
 
         <TextView
             android:id="@+id/calSubjectN"

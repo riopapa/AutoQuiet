@@ -55,11 +55,11 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, aVol, 0);
                 break;
             case FORCE_ON:
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 12, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 10, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 11, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 5, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 12, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 8, 0);
                 break;
             case WORK:
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);

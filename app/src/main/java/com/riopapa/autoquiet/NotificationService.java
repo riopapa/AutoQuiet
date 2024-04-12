@@ -39,6 +39,7 @@ public class NotificationService extends Service {
     final int A_MINUTE = 166;
     final int FIVE_MINUTES = 555;
     final int VOLUMES = 666;
+    final int VOLUME_ON = 678;
 
     public NotificationService(){}      // do not remove
 
@@ -90,6 +91,8 @@ public class NotificationService extends Service {
             new ScheduleNextTask(this, "stopped, next is");
         } else if (operation == VOLUMES) {
             show_Volumes();
+        } else if (operation == VOLUME_ON) {
+            volume_On();
         } else {
             beg = intent.getStringExtra("beg");
             begN = intent.getStringExtra("begN");
@@ -120,10 +123,10 @@ public class NotificationService extends Service {
         Paint txtPaint = new Paint();
         txtPaint.setTextAlign(Paint.Align.LEFT);
         txtPaint.setAntiAlias(true);
-        txtPaint.setTextSize(20);
+        txtPaint.setTextSize(32);
         txtPaint.setColor(0xFFFFFFFF);
         txtPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        txtPaint.setStrokeWidth(4);
+        txtPaint.setStrokeWidth(2);
 //        txtPaint.setTypeface(mContext.getResources().getFont(R.font.nanumbarungothic));
         Paint linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -132,11 +135,11 @@ public class NotificationService extends Service {
         int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-        drawVolume(canvas, "R", 28, rVol, txtPaint, linePaint);
-        drawVolume(canvas, "M", 64, mVol, txtPaint, linePaint);
-        drawVolume(canvas, "N", 100, nVol, txtPaint, linePaint);
+        drawVolume(canvas, "♬", 30, mVol, txtPaint, linePaint);
+        drawVolume(canvas, "☎", 72, rVol, txtPaint, linePaint);
+        drawVolume(canvas, "N", 120, nVol, txtPaint, linePaint);
 
-        mRemoteViews.setImageViewBitmap(R.id.volumes, bitmap);
+        mRemoteViews.setImageViewBitmap(R.id.volume_now, bitmap);
         mNotificationManager.notify(100,mBuilder.build());
 
     }
@@ -145,11 +148,15 @@ public class NotificationService extends Service {
         final int shift = 40;
         canvas.drawText(s, 8, yPos+6, txtPaint);
         lnPaint.setStrokeWidth(12);
-        canvas.drawLine(shift, yPos, shift+vol * 4, yPos, lnPaint);
+        canvas.drawLine(shift, yPos, shift+vol * 5, yPos, lnPaint);
         lnPaint.setStrokeWidth(2);
-        canvas.drawLine(shift+vol*4, yPos, shift+(15-vol) * 4, yPos, txtPaint);
+        canvas.drawLine(shift+vol*5, yPos, shift + 15 * 5, yPos, txtPaint);
     }
 
+    private void volume_On() {
+        new AdjVolumes(this, AdjVolumes.VOL.FORCE_ON);
+        show_Volumes();
+    }
     private void quiet_minute(int secs) {
 
         new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
@@ -196,11 +203,18 @@ public class NotificationService extends Service {
         mBuilder.setContentIntent(oneP);
         mRemoteViews.setOnClickPendingIntent(R.id.a_minute, oneP);
 
+        Intent vOnI = new Intent(this, NotificationService.class);
+        vOnI.putExtra("operation", VOLUME_ON);
+        PendingIntent vOnP = PendingIntent.getService(mContext, VOLUME_ON, vOnI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(vOnP);
+        mRemoteViews.setOnClickPendingIntent(R.id.volume_on, vOnP);
+
+
         Intent volI = new Intent(this, NotificationService.class);
         volI.putExtra("operation", VOLUMES);
         PendingIntent volP = PendingIntent.getService(mContext, VOLUMES, volI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(volP);
-        mRemoteViews.setOnClickPendingIntent(R.id.volumes, volP);
+        mRemoteViews.setOnClickPendingIntent(R.id.volume_now, volP);
 
     }
 
