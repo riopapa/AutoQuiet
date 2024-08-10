@@ -428,28 +428,30 @@
             android:layout_height = "wrap_content"
             android:layout_gravity = "center_vertical"
             android:text = "활성화"
+            android:gravity="end"
             android:textColor="#235E23"
             android:textSize = "16sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
-        <TextView
-            android:id = "@+id/tVDate"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:layout_marginStart = "12dp"
-            android:gravity = "center"
-            android:padding = "2dp"
-            android:text = "날짜 말하기 (반복)"
-            android:textColor="#235E23"
-            android:textSize = "14sp"
-            android:textStyle = "bold" />
-
         <Switch
             android:id = "@+id/say_date"
-            android:layout_width = "80dp"
+            android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
-            android:text = ""
-            android:textSize = "2sp"
+            android:text = "날짜 반복 말하기"
+            android:gravity="end"
+            android:textColor="#235E23"
+            android:textSize = "16sp"
+            tools:ignore = "UseSwitchCompatOrMaterialXml" />
+
+        <Switch
+            android:id = "@+id/swVibrate"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_vertical"
+            android:text = "떨기"
+            android:gravity="end"
+            android:textColor="#235E23"
+            android:textSize = "16sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>

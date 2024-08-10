@@ -75,7 +75,16 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="날짜"
-                android:textSize="10sp"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/rmdVibrate"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="떰"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

@@ -37,7 +37,7 @@ public class NotificationService extends Service {
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 144;
     final int A_MINUTE = 166;
-    final int FIVE_MINUTES = 555;
+    final int MAKE_SILENT = 555;
     final int VOLUMES = 666;
     final int VOLUME_ON = 678;
 
@@ -74,9 +74,9 @@ public class NotificationService extends Service {
         }
 //        Log.w("onStartCommand","operation = "+operation);
         if (operation == A_MINUTE) {
-            quiet_minute(66);
-        } else if (operation == FIVE_MINUTES) {
-            quiet_minute(66*5);
+            quiet_minute(20 * 60);
+        } else if (operation == MAKE_SILENT) {
+            make_silent();
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -90,9 +90,10 @@ public class NotificationService extends Service {
             updateRemoteViews();
             new ScheduleNextTask(this, "stopped, next is");
         } else if (operation == VOLUMES) {
-            show_Volumes();
+            updateRemoteViews();
         } else if (operation == VOLUME_ON) {
             volume_On();
+            updateRemoteViews();
         } else {
             beg = intent.getStringExtra("beg");
             begN = intent.getStringExtra("begN");
@@ -103,13 +104,12 @@ public class NotificationService extends Service {
             subjectN = intent.getStringExtra("subjectN");
             icon = intent.getIntExtra("icon", 0);
             iconN = intent.getIntExtra("iconN", 0);
-            iconNow = intent.getIntExtra("iconNow", 0);
+            iconNow = intent.getIntExtra("iconNow", R.drawable.auto_quite);
             if (icon == 0)
                 return START_STICKY;
             if (iconN == 0)
                 iconN = R.drawable.auto_quite;
             updateRemoteViews();
-            show_Volumes();
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -156,7 +156,9 @@ public class NotificationService extends Service {
     private void volume_On() {
         new AdjVolumes(this, AdjVolumes.VOL.FORCE_ON);
         show_Volumes();
+        updateRemoteViews();
     }
+
     private void quiet_minute(int secs) {
 
         new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
@@ -166,6 +168,14 @@ public class NotificationService extends Service {
         new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
         Toast.makeText(this, "quiet minute "+secs+" secs", Toast.LENGTH_SHORT).show();
         show_Volumes();
+        updateRemoteViews();
+    }
+
+    private void make_silent() {
+        // while 만보 적용, 사무실 ...
+        new AdjVolumes(this, AdjVolumes.VOL.WORK);
+        show_Volumes();
+        updateRemoteViews();
     }
 
     private void createNotification() {
@@ -176,7 +186,7 @@ public class NotificationService extends Service {
         mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
         mBuilder = new NotificationCompat.Builder(mContext,"default")
-                .setSmallIcon(iconNow)
+                .setSmallIcon(R.drawable.auto_quite)
                 .setContent(mRemoteViews)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(false)
@@ -192,10 +202,10 @@ public class NotificationService extends Service {
         mRemoteViews.setOnClickPendingIntent(R.id.right_now, rightNowP);
 
         Intent toss5 = new Intent(this, NotificationService.class);
-        toss5.putExtra("operation", FIVE_MINUTES);
-        PendingIntent fiveP = PendingIntent.getService(mContext, FIVE_MINUTES, toss5, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        toss5.putExtra("operation", MAKE_SILENT);
+        PendingIntent fiveP = PendingIntent.getService(mContext, MAKE_SILENT, toss5, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(fiveP);
-        mRemoteViews.setOnClickPendingIntent(R.id.five_minute, fiveP);
+        mRemoteViews.setOnClickPendingIntent(R.id.make_silent, fiveP);
 
         Intent tossI = new Intent(this, NotificationService.class);
         tossI.putExtra("operation", A_MINUTE);
@@ -229,9 +239,8 @@ public class NotificationService extends Service {
         mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
         mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
         mNotificationManager.notify(100,mBuilder.build());
-
+        show_Volumes();
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

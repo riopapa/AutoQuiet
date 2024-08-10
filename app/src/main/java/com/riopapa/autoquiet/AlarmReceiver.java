@@ -54,11 +54,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     ReadyTTS readyTTS = null;
     Sounds sounds = null;
     public static ShowNotification showNotification;
-
+    AudioManager mAudioManager;
+    int mVol;
     @Override
     public void onReceive(Context context, Intent intent) {
 
         mContext = context;
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 
         // bundle contains saved scheduled quietTask info
 
@@ -160,6 +162,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String subject = qt.subject;
 
+        if (qt.vibrate)
+            new VibratePhone(mContext, 1);
+
         if      (qt.alarmType == BELL_SEVERAL) {
             bell_Several(subject);
         } else if (qt.alarmType == BELL_WEEKLY)
@@ -175,28 +180,26 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void bellOneTime(String subject) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (mVol < 5)
-            new VibratePhone(mContext, 1);
-        else {
+        if (!isSilentNow()) {
             new Timer().schedule(new TimerTask() {
                 public void run() {
                     String say = subject + " 체크";
                     myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
                     setInactive(qtIdx);
-                    new ScheduleNextTask(mContext, "ended1");
                 }
             }, 1500);
         }
+        new ScheduleNextTask(mContext, "ended1");
     }
 
     private void bellEvent(String subject) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                String say = subject + " 를 확인";
-                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
+                if (!isSilentNow()) {
+                    String say = subject + " 를 확인";
+                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
+                }
                 new ScheduleNextTask(mContext, "event");
             }
         }, 1500);
@@ -220,9 +223,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         if (subject.contains(TOSS_BEEP)) {
                             s += subject + afterSec + " 초 전 ";
-                            s += (several == 0) ? " 이예요":"";
+                            s += (several == 0) ? " 이예요" : "";
                         } else
-                            s += " " + subject + " 를 " + ((several== 0)? "꼬옥":"") + " 확인하세요, ";
+                            s += " " + subject + " 를 " + ((several == 0) ? "꼬옥" : "") + " 확인하세요, ";
                         myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, TTSId);
                         if (afterSec < 20)
                             afterSec = 10;
@@ -277,9 +280,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     void finish_Task() {
         new MannerMode().turn2Normal(mContext);
+        new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
         if (!qt.sayDate)
             sounds.beep(mContext, Sounds.BEEP.NOTY);
-        new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -378,9 +381,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         return (int) ((toDay.getTimeInMillis() - time)/1000);
     }
 
-    public static boolean isSilentNow() {
-        AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+    public boolean isSilentNow() {
+        mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
-                mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
+                mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE ||
+                mVol < 4);
     }
 }

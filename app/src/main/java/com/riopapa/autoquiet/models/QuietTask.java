@@ -15,6 +15,7 @@ public class QuietTask implements Serializable {
     // if endHour == 99 알람 정보를 소리내는 용도
     public boolean active;  // 해당 task 를 잠시 죽일 떄 사용
     public boolean sayDate; // 현재 일자, 시각을 말할찌 여부
+    public boolean vibrate;
 
     public boolean[] week = {true, true, true, true, true, true, true};
     public int alarmType;
@@ -39,6 +40,7 @@ public class QuietTask implements Serializable {
         this.agenda = false;
         this.sayDate = sayDate;
         this.sortKey = System.currentTimeMillis();
+        this.vibrate = false;
         System.arraycopy(week, 0, this.week, 0, 7);
     }
 
@@ -68,6 +70,7 @@ public class QuietTask implements Serializable {
         this.week = new boolean[7];
         this.week[weekNbr] = true;
         this.sayDate = false;
+        this.vibrate = true;
     }
 
 }

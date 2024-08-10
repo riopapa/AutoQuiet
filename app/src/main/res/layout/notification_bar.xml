@@ -120,13 +120,13 @@
             android:textSize="@dimen/notification_text" />
 
         <ImageView
-            android:id="@+id/five_minute"
+            android:id="@+id/make_silent"
             android:layout_gravity="center"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="0dp"
-            android:background="#82222222"
-            android:src="@drawable/alarm_5off"
+            android:background="#FF222222"
+            android:src="@drawable/speak_off"
             />
 
         <TextView

@@ -1,7 +1,5 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.AlarmReceiver.isSilentNow;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -41,7 +39,8 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 3, 0);
                 break;
             case COND_ON:
-                if (isSilentNow())
+                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
+                    audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE)
                     return;
                 rVol = sharedPref.getInt("ring", 12);
                 mVol = sharedPref.getInt("music", 12);
@@ -55,16 +54,16 @@ public class AdjVolumes {
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, aVol, 0);
                 break;
             case FORCE_ON:
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 10, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 11, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 12, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 5, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 8, 0);
                 break;
             case WORK:
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 2, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 2, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 1, 0);
                 break;

@@ -40,7 +40,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
     private int begHour, begMin, endHour, endMin, sHour;
-    private boolean active, end99, am;
+    private boolean active, end99, am, vibrate;
     private int alarmType;
     private boolean[] week = new boolean[7];
     private final TextView[] weekView = new TextView[7];
@@ -159,6 +159,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         am = begHour < 12;
         if (begHour > 12)
             sHour = begHour - 12;
+        vibrate = qT.vibrate;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
@@ -241,6 +242,12 @@ public class ActivityAddEdit extends AppCompatActivity {
         binding.amPm.setOnClickListener(v -> {
             am = !am;
             show_ResultTime();
+        });
+
+        binding.swVibrate.setOnClickListener(v -> {
+            vibrate = !vibrate;
+            binding.swVibrate.setChecked(vibrate);
+            v.invalidate();
         });
 
         binding.numHH1.setOnClickListener(v -> {
@@ -375,19 +382,14 @@ public class ActivityAddEdit extends AppCompatActivity {
         } else {
             qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);
+            qT.vibrate = vibrate;
+
             if (currIdx == -1)
                 quietTasks.add(qT);
             else
                 quietTasks.set(currIdx, qT);
         }
         mainRecycleAdapter.sort();
-//        for (int i = 2; i < quietTasks.size(); i++) {
-//            if (!quietTasks.get(i).active && quietTasks.get(i).alarmType < PHONE_VIBRATE) {
-//                currIdx = i - 1;
-//                break;
-//            }
-//        }
-//        new ScheduleNextTask(context, "Task Saved ");
     }
 
     private boolean getScreen2Vars() {
@@ -423,6 +425,8 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
+        qT.vibrate = vibrate;
+
         CalcNextBegEnd calBE = new CalcNextBegEnd(qT);
         long nextTime = calBE.begTime;
         long nowTime = System.currentTimeMillis();
@@ -445,6 +449,8 @@ public class ActivityAddEdit extends AppCompatActivity {
         }
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
+        qT.vibrate = vibrate;
+
         if (currIdx == -1)
             quietTasks.add(qT);
         else
@@ -505,6 +511,8 @@ public class ActivityAddEdit extends AppCompatActivity {
             QuietTask qtNew = new QuietTask(qT.subject,
                     begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);
+            qtNew.vibrate= vibrate;
+
             quietTasks.add(++currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks);
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
