@@ -172,7 +172,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         else if (qt.alarmType == BELL_ONETIME)
             bellOneTime(subject);
         else {
-            String say = subject + " 에러 확인";
+            String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
             myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
             new ScheduleNextTask(mContext, "ended Err");
         }
