@@ -111,7 +111,7 @@ public class Utils {
         return s.substring(s.lastIndexOf(".")+1);
     }
 
-    void deleteOldLogFiles() {     // remove older than 5 days
+    public void deleteOldLogFiles() {     // remove older than 5 days
 
         String oldDate = PREFIX + sdfDate.format(System.currentTimeMillis() - 4*24*60*60*1000L);
         if (packageDir == null) packageDir = getPackageDirectory();

@@ -1,7 +1,5 @@
 package com.riopapa.autoquiet;
 
-import static com.riopapa.autoquiet.AlarmReceiver.showNotification;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -93,8 +90,7 @@ public class ActivityMain extends AppCompatActivity {
 
         NotificationService notificationService = new NotificationService();
         Intent intent = new Intent(mContext, notificationService.getClass());
-        showNotification = new ShowNotification();
-        showNotification.show(mContext, intent);
+        new ShowNotification().show(mContext, intent);
     }
 
     @Override
