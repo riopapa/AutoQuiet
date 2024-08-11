@@ -24,8 +24,10 @@ import android.widget.Toast;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.AdjVolumes;
+import com.riopapa.autoquiet.Sub.BellOneTime;
+import com.riopapa.autoquiet.Sub.BellSeveral;
+import com.riopapa.autoquiet.Sub.BellWeekly;
 import com.riopapa.autoquiet.Sub.MannerMode;
-import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ReadyTTS;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.Sounds;
@@ -48,7 +50,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     int several;
     String caseSFOW;
     Vars vars;
-    final String TOSS_BEEP = "삐이";
     final String TTSId = "tId";
     int icon;
     ReadyTTS readyTTS = null;
@@ -152,10 +153,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         else {
             start_Normal();
         }
-
-//        Intent intent = new Intent(mContext, NotificationService.class);
-//        intent.putExtra("operation", STOP_SPEAK);
-//        showNotification.show(mContext, intent);
     }
 
     private void say_Started99() {
@@ -163,11 +160,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         String subject = qt.subject;
 
         if      (qt.alarmType == BELL_SEVERAL) {
-            bell_Several(subject);
+            new BellSeveral().go(mAudioManager, qt, several, qtIdx);
+
         } else if (qt.alarmType == BELL_WEEKLY)
-            bellEvent(subject);
+            new BellWeekly().go(mAudioManager, qt);
+
         else if (qt.alarmType == BELL_ONETIME)
-            bellOneTime(subject);
+            new BellOneTime().go(mAudioManager, qt, qtIdx);
+
         else {
             String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
             myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
@@ -175,80 +175,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    private void bellOneTime(String subject) {
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
-        if (isSilentNow()) {
-            new VibratePhone(mContext, (qt.vibrate)? 1:0);
-        } else {
-            new Timer().schedule(new TimerTask() {
-                public void run() {
-                    String say = subject + " 체크";
-                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                    setInactive(qtIdx);
-                }
-            }, 1500);
-        }
-        new ScheduleNextTask(mContext, "ended1");
-    }
-
-    private void bellEvent(String subject) {
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                if (isSilentNow()) {
-                    new VibratePhone(mContext, (qt.vibrate)? 1:0);
-                } else {
-                    String say = subject + " 를 확인";
-                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                }
-                new ScheduleNextTask(mContext, "event");
-            }
-        }, 1500);
-
-    }
-
-    private void bell_Several(String subject) {
-        int gapSec = secRemaining(System.currentTimeMillis());
-        if (gapSec < 60 && gapSec > 5 && several > 0)
-            sounds.beep(mContext, (subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                int afterSec = secRemaining(System.currentTimeMillis()) - 2;
-                if (several > 0 && afterSec > 5) {
-                    if (afterSec > 60) {
-                        afterSec = 20;
-                    } else if (isSilentNow()) {
-                        new VibratePhone(mContext, (qt.vibrate)? 1:0);
-                        afterSec = afterSec / 2;
-                    } else {
-                        String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
-                        if (subject.contains(TOSS_BEEP)) {
-                            s += subject + afterSec + " 초 전 ";
-                            s += (several == 0) ? " 이예요" : "";
-                        } else
-                            s += " " + subject + " 를 " + ((several == 0) ? "꼬옥" : "") + " 확인하세요, ";
-                        myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                        if (afterSec < 20)
-                            afterSec = 10;
-                        else
-                            afterSec = afterSec / 2;
-                    }
-                    if (afterSec > 5) {
-                        long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                        new AlarmTime().request(mContext, qt, nextTime, "S", several);
-                    } else {
-                        setInactive(qtIdx);
-                        new ScheduleNextTask(mContext, "end3");
-                    }
-                } else {
-                    Log.w("a Schedule ","New task");
-                    setInactive(qtIdx);
-                    new ScheduleNextTask(mContext, "end F");
-                }
-            }
-        }, 600);
-
-    }
     private void start_Normal() {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
@@ -361,11 +287,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     }
 
-
-    String nowDateToString(long time) {
-        String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
-        return s + s;
-    }
     String nowDateTimeToString(long time) {
         String s =  new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
         return s + s;
@@ -373,19 +294,5 @@ public class AlarmReceiver extends BroadcastReceiver {
     String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
-    }
-    int secRemaining(long time) {
-        Calendar toDay = Calendar.getInstance();
-        toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
-        toDay.set(Calendar.MINUTE, qt.begMin);
-        toDay.set(Calendar.SECOND, 0);
-        return (int) ((toDay.getTimeInMillis() - time)/1000);
-    }
-
-    public boolean isSilentNow() {
-        mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        return (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
-                mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE ||
-                mVol < 4);
     }
 }

@@ -10,7 +10,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,6 @@ import com.riopapa.autoquiet.databinding.ActivityAddEditBinding;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -231,9 +229,9 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (agenda) {
             SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
             String s = sdfDate.format(qT.calBegDate);
-            if (!qT.calLocation.equals(""))
+            if (!qT.calLocation.isEmpty())
                 s += "\n" + qT.calLocation;
-            if (!qT.calDesc.equals(""))
+            if (!qT.calDesc.isEmpty())
                 s += "\n" + qT.calDesc;
             binding.typeDesc.setText(s);
         } else
@@ -244,6 +242,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             show_ResultTime();
         });
 
+        binding.swVibrate.setChecked(vibrate);
         binding.swVibrate.setOnClickListener(v -> {
             vibrate = !vibrate;
             binding.swVibrate.setChecked(vibrate);
