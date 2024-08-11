@@ -1,7 +1,7 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
-import static com.riopapa.autoquiet.ActivityMain.quietTasks;
-import static com.riopapa.autoquiet.ActivityMain.vars;
+import static com.riopapa.autoquiet.activity.ActivityMain.quietTasks;
+import static com.riopapa.autoquiet.activity.ActivityMain.vars;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 import com.riopapa.autoquiet.databinding.ActivityAddAgendaBinding;
 import com.riopapa.autoquiet.models.GCal;
 import com.riopapa.autoquiet.models.QuietTask;

@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ActivityMain"
+            android:name=".activity.ActivityMain"
             android:exported="true"
             android:enabled="true"
             android:launchMode="singleInstance">
@@ -41,11 +41,11 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityAddEdit" />
-        <activity android:name=".ActivityAddAgenda" />
-        <activity android:name=".ActivityGCalShow" />
-        <activity android:name=".ActivityOneTime" />
-        <activity android:name=".ActivityPrefer" />
+        <activity android:name=".activity.ActivityAddEdit" />
+        <activity android:name=".activity.ActivityAddAgenda" />
+        <activity android:name=".activity.ActivityGCalShow" />
+        <activity android:name=".activity.ActivityOneTime" />
+        <activity android:name=".activity.ActivityPrefer" />
 
         <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="false">
             <intent-filter>

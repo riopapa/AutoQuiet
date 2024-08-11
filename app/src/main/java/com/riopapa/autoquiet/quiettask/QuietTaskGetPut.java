@@ -1,4 +1,4 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.quiettask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.riopapa.autoquiet.Sub.ClearAllTasks;
+import com.riopapa.autoquiet.activity.ActivityMain;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;
@@ -22,7 +23,7 @@ public class QuietTaskGetPut {
         prefsEditor.apply();
     }
 
-    ArrayList<QuietTask> get(Context context) {
+    public ArrayList<QuietTask> get(Context context) {
 
         ArrayList<QuietTask> list;
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);

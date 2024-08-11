@@ -1,15 +1,15 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.adapter;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_WEEKLY;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
-import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
-import static com.riopapa.autoquiet.ActivityMain.currIdx;
-import static com.riopapa.autoquiet.ActivityMain.mContext;
-import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
-import static com.riopapa.autoquiet.ActivityMain.pActivity;
-import static com.riopapa.autoquiet.ActivityMain.quietTasks;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_WEEKLY;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.alarmIcons;
+import static com.riopapa.autoquiet.activity.ActivityMain.currIdx;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityMain.mainRecycleAdapter;
+import static com.riopapa.autoquiet.activity.ActivityMain.pActivity;
+import static com.riopapa.autoquiet.activity.ActivityMain.quietTasks;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,11 +30,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.riopapa.autoquiet.activity.ActivityAddEdit;
+import com.riopapa.autoquiet.activity.ActivityOneTime;
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 import com.riopapa.autoquiet.Sub.ClearAllTasks;
 import com.riopapa.autoquiet.Sub.MyItemTouchHelperAdapter;
 import com.riopapa.autoquiet.Sub.NameColor;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
+import com.riopapa.autoquiet.Vars;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;

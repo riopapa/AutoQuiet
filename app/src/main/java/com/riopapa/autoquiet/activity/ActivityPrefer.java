@@ -1,4 +1,4 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
 import android.os.Bundle;
 
@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
+import com.riopapa.autoquiet.Vars;
 
 public class ActivityPrefer extends AppCompatActivity {
 

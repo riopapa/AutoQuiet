@@ -1,6 +1,6 @@
-package com.riopapa.autoquiet.Sub;
+package com.riopapa.autoquiet.quiettask;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 
 import com.riopapa.autoquiet.models.QuietTask;
 

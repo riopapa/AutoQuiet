@@ -1,7 +1,7 @@
 package com.riopapa.autoquiet;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
-import static com.riopapa.autoquiet.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -22,6 +22,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.AdjVolumes;
+import com.riopapa.autoquiet.activity.ActivityMain;
+import com.riopapa.autoquiet.activity.ActivityOneTime;
 import com.riopapa.autoquiet.models.QuietTask;
 
 public class NotificationService extends Service {

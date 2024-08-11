@@ -1,14 +1,14 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityMain.mContext;
-import static com.riopapa.autoquiet.ActivityMain.quietTasks;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
 
 import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 
-import com.riopapa.autoquiet.QuietTaskGetPut;
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 import com.riopapa.autoquiet.ScheduleNextTask;
 import com.riopapa.autoquiet.models.QuietTask;
 

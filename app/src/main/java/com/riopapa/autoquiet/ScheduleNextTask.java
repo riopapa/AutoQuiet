@@ -1,7 +1,7 @@
 package com.riopapa.autoquiet;
 
 
-import static com.riopapa.autoquiet.ActivityMain.nextAlertTime;
+import static com.riopapa.autoquiet.activity.ActivityMain.nextAlertTime;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import com.riopapa.autoquiet.Sub.AlarmTime;
 import com.riopapa.autoquiet.Sub.NextTwoTasks;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.models.QuietTask;
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 
 import java.util.ArrayList;
 

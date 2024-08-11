@@ -1,11 +1,11 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 
 import android.content.Context;
 
-import com.riopapa.autoquiet.QuietTaskGetPut;
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.models.QuietTask;
 

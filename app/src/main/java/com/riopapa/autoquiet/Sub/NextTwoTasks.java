@@ -1,8 +1,8 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_WORK;
-import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static com.riopapa.autoquiet.ScheduleNextTask.AHEAD_TIME;
 
 import com.riopapa.autoquiet.models.QuietTask;

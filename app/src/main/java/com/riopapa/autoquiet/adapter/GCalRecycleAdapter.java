@@ -1,4 +1,4 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.autoquiet.activity.ActivityAddAgenda;
+import com.riopapa.autoquiet.activity.ActivityMain;
+import com.riopapa.autoquiet.R;
+import com.riopapa.autoquiet.Vars;
 import com.riopapa.autoquiet.models.GCal;
 import com.riopapa.autoquiet.Sub.NameColor;
 import com.riopapa.autoquiet.Sub.VarsGetPut;

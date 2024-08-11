@@ -1,7 +1,7 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +10,10 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
+import com.riopapa.autoquiet.R;
+import com.riopapa.autoquiet.ScheduleNextTask;
+import com.riopapa.autoquiet.Vars;
 import com.riopapa.autoquiet.databinding.ActivityOneTimeBinding;
 import com.riopapa.autoquiet.models.QuietTask;
 import com.riopapa.autoquiet.Sub.MannerMode;

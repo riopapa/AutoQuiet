@@ -3,7 +3,7 @@ package com.riopapa.autoquiet.Sub;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.riopapa.autoquiet.ActivityMain;
+import com.riopapa.autoquiet.activity.ActivityMain;
 import com.riopapa.autoquiet.Vars;
 
 public class SharedPrefer {

@@ -1,6 +1,6 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

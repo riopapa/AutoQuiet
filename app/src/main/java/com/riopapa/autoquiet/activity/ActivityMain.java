@@ -1,4 +1,4 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,12 +24,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.autoquiet.NotificationService;
+import com.riopapa.autoquiet.R;
+import com.riopapa.autoquiet.ScheduleNextTask;
 import com.riopapa.autoquiet.Sub.ClearAllTasks;
 import com.riopapa.autoquiet.Sub.MyItemTouchHelper;
 import com.riopapa.autoquiet.Sub.Permission;
 import com.riopapa.autoquiet.Sub.SharedPrefer;
 import com.riopapa.autoquiet.Sub.ShowNotification;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
+import com.riopapa.autoquiet.Utils;
+import com.riopapa.autoquiet.Vars;
+import com.riopapa.autoquiet.adapter.MainRecycleAdapter;
 import com.riopapa.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;

@@ -1,8 +1,8 @@
 package com.riopapa.autoquiet;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.alarmIcons;
-import static com.riopapa.autoquiet.ActivityMain.mContext;
-import static com.riopapa.autoquiet.ActivityMain.quietTasks;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.alarmIcons;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityMain.quietTasks;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
 
 import android.content.BroadcastReceiver;
@@ -17,11 +17,11 @@ import android.widget.Toast;
 import com.riopapa.autoquiet.Sub.AdjVolumes;
 import com.riopapa.autoquiet.Sub.MannerMode;
 import com.riopapa.autoquiet.Sub.ReadyTTS;
-import com.riopapa.autoquiet.Sub.Sounds;
 import com.riopapa.autoquiet.Sub.TaskFinish;
 import com.riopapa.autoquiet.Sub.TaskStart;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

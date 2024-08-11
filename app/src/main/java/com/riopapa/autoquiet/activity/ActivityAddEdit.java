@@ -1,9 +1,9 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
-import static com.riopapa.autoquiet.ActivityMain.currIdx;
-import static com.riopapa.autoquiet.ActivityMain.mainRecycleAdapter;
-import static com.riopapa.autoquiet.ActivityMain.quietTasks;
-import static com.riopapa.autoquiet.ActivityMain.vars;
+import static com.riopapa.autoquiet.activity.ActivityMain.currIdx;
+import static com.riopapa.autoquiet.activity.ActivityMain.mainRecycleAdapter;
+import static com.riopapa.autoquiet.activity.ActivityMain.quietTasks;
+import static com.riopapa.autoquiet.activity.ActivityMain.vars;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -24,9 +24,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.Sub.CalcNextBegEnd;
 import com.riopapa.autoquiet.Sub.NameColor;
-import com.riopapa.autoquiet.Sub.QuietTaskDefault;
+import com.riopapa.autoquiet.quiettask.QuietTaskDefault;
 import com.riopapa.autoquiet.databinding.ActivityAddEditBinding;
 import com.riopapa.autoquiet.models.QuietTask;
 

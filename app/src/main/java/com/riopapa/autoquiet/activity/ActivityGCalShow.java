@@ -1,4 +1,4 @@
-package com.riopapa.autoquiet;
+package com.riopapa.autoquiet.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,7 +9,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.Sub.VerticalSpacingItemDecorator;
+import com.riopapa.autoquiet.adapter.GCalRecycleAdapter;
 
 public class ActivityGCalShow extends AppCompatActivity  {
 

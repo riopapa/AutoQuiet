@@ -1,12 +1,12 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_ONETIME;
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_SEVERAL;
-import static com.riopapa.autoquiet.ActivityAddEdit.BELL_WEEKLY;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_OFF;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_VIBRATE;
-import static com.riopapa.autoquiet.ActivityAddEdit.PHONE_WORK;
-import static com.riopapa.autoquiet.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.BELL_WEEKLY;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
+import static com.riopapa.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.myTTS;
 import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
 

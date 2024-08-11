@@ -1,6 +1,6 @@
 package com.riopapa.autoquiet.Sub;
 
-import static com.riopapa.autoquiet.ActivityMain.mContext;
+import static com.riopapa.autoquiet.activity.ActivityMain.mContext;
 
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
