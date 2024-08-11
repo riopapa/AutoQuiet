@@ -162,9 +162,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String subject = qt.subject;
 
-        if (qt.vibrate)
-            new VibratePhone(mContext, 1);
-
         if      (qt.alarmType == BELL_SEVERAL) {
             bell_Several(subject);
         } else if (qt.alarmType == BELL_WEEKLY)
@@ -180,7 +177,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void bellOneTime(String subject) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        if (!isSilentNow()) {
+        if (isSilentNow()) {
+            new VibratePhone(mContext, (qt.vibrate)? 1:0);
+        } else {
             new Timer().schedule(new TimerTask() {
                 public void run() {
                     String say = subject + " 체크";
@@ -196,7 +195,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (!isSilentNow()) {
+                if (isSilentNow()) {
+                    new VibratePhone(mContext, (qt.vibrate)? 1:0);
+                } else {
                     String say = subject + " 를 확인";
                     myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
                 }
@@ -217,7 +218,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     if (afterSec > 60) {
                         afterSec = 20;
                     } else if (isSilentNow()) {
-                        new VibratePhone(mContext, 0);
+                        new VibratePhone(mContext, (qt.vibrate)? 1:0);
                         afterSec = afterSec / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
