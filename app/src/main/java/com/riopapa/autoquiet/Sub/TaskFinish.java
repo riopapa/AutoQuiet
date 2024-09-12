@@ -75,11 +75,15 @@ public class TaskFinish {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (several > 0) {
-                    String s= "";
                     long now = System.currentTimeMillis();
-                    s +=  (qt.sayDate)? nowDateTimeToString(now) : nowTimeToString(now);
-                    s += " " + new AddSuffixStr().add(qt.subject) + ((several == 1) ? mContext.getString(R.string.has_finished) : " 끄으읏");
-                    myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, "finishS");
+                    String[] joins;
+                    String nowTime = (qt.sayDate)? nowDateTimeToString(now) : nowTimeToString(now);
+                    joins = new String[]{nowTime,  new AddSuffixStr().add(qt.subject),
+                            ""+several,
+                            ((several == 1) ? mContext.getString(R.string.has_finished) : " 끄으읏 ")
+                            };
+                    myTTS.speak(String.join(" , ", joins),
+                            TextToSpeech.QUEUE_FLUSH, null, "finishS");
 
                     long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 200) * 1000;
                     new AlarmTime().request(mContext, qt, nextTime, "F", --several);

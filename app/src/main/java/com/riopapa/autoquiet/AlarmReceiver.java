@@ -18,6 +18,7 @@ import com.riopapa.autoquiet.Sub.AdjVolumes;
 import com.riopapa.autoquiet.Sub.MannerMode;
 import com.riopapa.autoquiet.Sub.ReadyTTS;
 import com.riopapa.autoquiet.Sub.TaskFinish;
+import com.riopapa.autoquiet.Sub.TaskOneTIme;
 import com.riopapa.autoquiet.Sub.TaskStart;
 import com.riopapa.autoquiet.Sub.VarsGetPut;
 import com.riopapa.autoquiet.models.QuietTask;
@@ -92,32 +93,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new ScheduleNextTask(mContext, "toss");
                 break;
             case "O":   // onetime
-                only_OneTime(context);
+                new TaskOneTIme().go(context, qt);
                 break;
             default:
                 new Utils(context).log("Alarm Receive","Case Error " + caseSFOW);
         }
     }
 
-    private void only_OneTime(Context context) {
-        new MannerMode().turn2Normal(context);
-//        if (vars.sharedManner) {
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
-                                " 입니다. 무음 모드가 끝났습니다";
-                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                }
-            }, 2000);
-        qt.active = false;
-        quietTasks.set(0, qt);
-        new QuietTaskGetPut().put(quietTasks);
-        new ScheduleNextTask(context, "After oneTime");
-    }
-
-    String nowTimeToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdfTime.format(time);
-    }
 }

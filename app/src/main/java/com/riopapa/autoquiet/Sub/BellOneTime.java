@@ -8,6 +8,7 @@ import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
 import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.quiettask.QuietTaskGetPut;
 import com.riopapa.autoquiet.ScheduleNextTask;
 import com.riopapa.autoquiet.models.QuietTask;
@@ -28,6 +29,8 @@ public class BellOneTime {
                     myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "one");
                     qt.active = false;
                     quietTasks.set(qtIdx, qt);
+                    NotificationHelper notificationHelper = new NotificationHelper(mContext);
+                    notificationHelper.sendNotification(R.drawable.bell_onetime, "OneTime Check", qt.subject);
                     new QuietTaskGetPut().put(quietTasks);
                 }
             }, 1500);

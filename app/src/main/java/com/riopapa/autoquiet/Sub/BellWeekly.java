@@ -7,6 +7,7 @@ import static com.riopapa.autoquiet.Sub.ReadyTTS.sounds;
 import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 
+import com.riopapa.autoquiet.R;
 import com.riopapa.autoquiet.ScheduleNextTask;
 import com.riopapa.autoquiet.models.QuietTask;
 
@@ -24,6 +25,8 @@ public class BellWeekly {
                 } else {
                     String say = qt.subject + " 를 확인";
                     myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
+                    NotificationHelper notificationHelper = new NotificationHelper(mContext);
+                    notificationHelper.sendNotification(R.drawable.bell_weekly, "Weekly Check", qt.subject);
                 }
                 new ScheduleNextTask(mContext, "event");
             }
