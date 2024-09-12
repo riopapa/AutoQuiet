@@ -30,7 +30,8 @@ public class BellOneTime {
                     qt.active = false;
                     quietTasks.set(qtIdx, qt);
                     NotificationHelper notificationHelper = new NotificationHelper(mContext);
-                    notificationHelper.sendNotification(R.drawable.bell_onetime, "OneTime Check", qt.subject);
+                    notificationHelper.sendNotification(R.drawable.bell_onetime,
+                            qt.subject, "OneTime Check");
                     new QuietTaskGetPut().put(quietTasks);
                 }
             }, 1500);

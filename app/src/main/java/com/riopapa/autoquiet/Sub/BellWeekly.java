@@ -26,7 +26,8 @@ public class BellWeekly {
                     String say = qt.subject + " 를 확인";
                     myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
                     NotificationHelper notificationHelper = new NotificationHelper(mContext);
-                    notificationHelper.sendNotification(R.drawable.bell_weekly, "Weekly Check", qt.subject);
+                    notificationHelper.sendNotification(R.drawable.bell_weekly,
+                            qt.subject, "Weekly Check");
                 }
                 new ScheduleNextTask(mContext, "event");
             }
