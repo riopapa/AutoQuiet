@@ -77,7 +77,8 @@ public class TaskFinish {
                 if (several > 0) {
                     long now = System.currentTimeMillis();
                     String[] joins;
-                    String nowTime = (qt.sayDate)? nowDateTimeToString(now) : nowTimeToString(now);
+                    String nowTime = (qt.sayDate)? nowDateTimeToString(now) + " "
+                                    + nowDateTimeToString(now): nowTimeToString(now);
                     joins = new String[]{nowTime,  new AddSuffixStr().add(qt.subject),
                             ""+several,
                             ((several == 1) ? mContext.getString(R.string.has_finished) : " 끄으읏 ")
@@ -119,11 +120,10 @@ public class TaskFinish {
 
     }
 
-    String nowDateTimeToString(long time) {
-        String s =  new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
-        return s + s;
+    public static String nowDateTimeToString(long time) {
+        return new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
     }
-    String nowTimeToString(long time) {
+    public static String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
