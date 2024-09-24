@@ -43,7 +43,8 @@
     <string name="phone_work">일할 때는 소리 작게</string>
     <string name="phone_off">종료 시각까지 조용히</string>
 
-    <string name="com.crashlytics.android.build_id">1</string>
-    <string name="has_finished">끝났어요</string>
+    <string name="finishing_started">끝나는 중</string>
+    <string name="finished">" 끄으읏 "</string>
+    <string name="finishing_completed">끝났어요</string>
 
 </resources>

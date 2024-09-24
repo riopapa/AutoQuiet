@@ -7,9 +7,9 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.riopapa.autoquiet"
+        applicationId "better.life.autoquiet"
         minSdkVersion 30 // android 10:29, 11:30, 12:31, 13:32 (note 20 ultra 23.7.30)
-        targetSdk 30
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -27,7 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildFeatures { viewBinding = true}
-    namespace 'com.riopapa.autoquiet'
+    namespace 'better.life.autoquiet'
 //
 //    viewBinding {
 //        enabled = true
