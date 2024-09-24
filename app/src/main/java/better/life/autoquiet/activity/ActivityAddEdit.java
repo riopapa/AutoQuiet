@@ -509,7 +509,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
         } else if (id == R.id.action_copy) {
             getScreen2Vars();
-            QuietTask qtNew = new QuietTask(qT.subject,
+            QuietTask qtNew = new QuietTask(subject,
                     begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);
             qtNew.vibrate= vibrate;
