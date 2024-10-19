@@ -32,6 +32,7 @@ import java.util.TimerTask;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    public enum CASE { TOSS, START, FINISH, ONE_TIME, WORK}
     QuietTask qt;
     int qtIdx;
     int several;
@@ -89,7 +90,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 break;
             case "T":   // onetime
                 Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
-                new AdjVolumes(context, AdjVolumes.VOL.COND_ON);
+                new AdjVolumes(context, AdjVolumes.VOL.FORCE_ON);
                 new ScheduleNextTask(mContext, "toss");
                 break;
             case "O":   // onetime

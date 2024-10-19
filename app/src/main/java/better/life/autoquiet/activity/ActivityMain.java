@@ -52,7 +52,6 @@ public class ActivityMain extends AppCompatActivity {
     public static long nextAlertTime;
     RecyclerView mainRecyclerView;
 
-
     public static ArrayList<QuietTask> quietTasks;
 
     @Override
@@ -237,7 +236,14 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onPause() {
 //        mainRecycleAdapter.sort("");
-        new ScheduleNextTask(mContext, "onPause");
+        new ScheduleNextTask(mContext, "");
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mainRecyclerView != null)
+            mainRecyclerView = null;
     }
 }

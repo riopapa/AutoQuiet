@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "better.life.autoquiet"
         minSdkVersion 30 // android 10:29, 11:30, 12:31, 13:32 (note 20 ultra 23.7.30)
-        targetSdk 33
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 

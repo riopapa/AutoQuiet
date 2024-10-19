@@ -60,10 +60,6 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent == null) {
-//            Log.e("onStart","Intent param is null flags="+flags+" id="+startId);
-//            createNotification();
-//            updateRemoteViews();
-//            show_Volumes();
             return START_STICKY;
         }
         createNotification();
@@ -175,7 +171,7 @@ public class NotificationService extends Service {
 
     private void make_silent() {
         // while 만보 적용, 사무실 ...
-        new AdjVolumes(this, AdjVolumes.VOL.WORK);
+        new AdjVolumes(this, AdjVolumes.VOL.WORK_ON);
         show_Volumes();
         updateRemoteViews();
     }
@@ -189,10 +185,13 @@ public class NotificationService extends Service {
         mNotificationManager.createNotificationChannel(mNotificationChannel);
         mBuilder = new NotificationCompat.Builder(mContext,"default")
                 .setSmallIcon(R.drawable.auto_quite)
+                .setPriority(NotificationCompat.PRIORITY_HIGH) // added 24.09.30
+                .setLocalOnly(true)  // Ensures notification is local to the device
                 .setContent(mRemoteViews)
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(false)
-                .setOngoing(true);
+                .setOngoing(true)
+        ;
 
         Intent mainIntent = new Intent(mContext, ActivityMain.class);
         mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(mContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
@@ -232,7 +231,10 @@ public class NotificationService extends Service {
 
     void updateRemoteViews() {
 
-        mBuilder.setSmallIcon(iconNow);
+//        mBuilder.setSmallIcon(iconNow)
+//                .setContentText(subject)
+//                .setContentTitle(beg + " "+end)
+//        ;
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);

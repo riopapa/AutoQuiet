@@ -16,8 +16,8 @@ import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import java.util.ArrayList;
 
 public class ScheduleNextTask {
-    static String timeInfo, msg;
-    static String timeInfoN;
+    String timeInfo;
+    String timeInfoN;
 
     public final static int AHEAD_TIME = 40000;
     ArrayList<QuietTask> quietTasks;
@@ -32,9 +32,11 @@ public class ScheduleNextTask {
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
 
-        msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
 
-        new Utils(context).log("SchdNextTask",msg);
+        if (headInfo.isEmpty()) {
+            String msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
+            new Utils(context).log("SchdNextTask", msg);
+        }
         updateNotyBar(context);
 
         nextAlertTime = nxtTsk.nextTime;
@@ -43,7 +45,7 @@ public class ScheduleNextTask {
 
     }
 
-    private static void updateNotyBar(Context context) {
+    private void updateNotyBar(Context context) {
         Intent intent = new Intent(context, NotificationService.class);
         intent.putExtra("beg", timeInfo);
         intent.putExtra("end", nxtTsk.beginOrEnd);

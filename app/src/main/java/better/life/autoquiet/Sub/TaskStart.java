@@ -65,7 +65,7 @@ public class TaskStart {
             @Override
             public void run() {
                 if ((qt.alarmType == PHONE_WORK))
-                    new AdjVolumes(mContext, AdjVolumes.VOL.WORK);
+                    new AdjVolumes(mContext, AdjVolumes.VOL.WORK_ON);
                 else {
                     new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);
                     new MannerMode().turn2Quiet(mContext, qt.alarmType != PHONE_OFF);
