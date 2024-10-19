@@ -1,4 +1,4 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.calendar;
 
 import android.content.Context;
 import android.database.Cursor;

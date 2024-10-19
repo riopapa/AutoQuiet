@@ -1,14 +1,17 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.Sub.ReadyTTS.myTTS;
-import static better.life.autoquiet.Sub.ReadyTTS.sounds;
+import static better.life.autoquiet.common.ReadyTTS.myTTS;
+import static better.life.autoquiet.common.ReadyTTS.sounds;
 
-import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.Sub.NotificationHelper;
+import better.life.autoquiet.common.VibratePhone;
+import better.life.autoquiet.common.IsSilent;
+import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
@@ -16,11 +19,11 @@ import java.util.TimerTask;
 
 public class BellWeekly {
 
-    public void go(AudioManager mAudioManager, QuietTask qt) {
+    public void go(QuietTask qt) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (new IsSilent().now(mAudioManager)) {
+                if (new IsSilent().now()) {
                     new VibratePhone(mContext, (qt.vibrate)? 1:0);
                 } else {
                     String say = qt.subject + " 를 확인";

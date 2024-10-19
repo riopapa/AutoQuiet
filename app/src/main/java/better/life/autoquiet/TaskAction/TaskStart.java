@@ -1,4 +1,4 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
@@ -7,13 +7,16 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.Sub.ReadyTTS.myTTS;
-import static better.life.autoquiet.Sub.ReadyTTS.sounds;
+import static better.life.autoquiet.common.ReadyTTS.myTTS;
+import static better.life.autoquiet.common.ReadyTTS.sounds;
 
-import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 
 import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.Sub.AddSuffixStr;
+import better.life.autoquiet.Sub.AdjVolumes;
+import better.life.autoquiet.Sub.MannerMode;
+import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
@@ -22,27 +25,27 @@ import java.util.TimerTask;
 public class TaskStart {
 
     QuietTask qt;
-    public void go(AudioManager mAudioManager, QuietTask qT, int several, int qtIdx) {
+    public void go(QuietTask qT, int several, int qtIdx) {
         this.qt = qT;
         if (qt.alarmType < PHONE_VIBRATE)
-            say_Started99(mAudioManager, several, qtIdx);
+            say_Started99(several, qtIdx);
         else {
             start_Normal();
         }
     }
 
-    private void say_Started99(AudioManager mAudioManager, int several, int qtIdx) {
+    private void say_Started99(int several, int qtIdx) {
 
         String subject = qt.subject;
 
         if      (qt.alarmType == BELL_SEVERAL) {
-            new BellSeveral().go(mAudioManager, qt, several, qtIdx);
+            new BellSeveral().go(qt, several, qtIdx);
 
         } else if (qt.alarmType == BELL_WEEKLY)
-            new BellWeekly().go(mAudioManager, qt);
+            new BellWeekly().go(qt);
 
         else if (qt.alarmType == BELL_ONETIME)
-            new BellOneTime().go(mAudioManager, qt, qtIdx);
+            new BellOneTime().go(qt, qtIdx);
 
         else {
             String say = subject + "AlarmType 에러 확인 "+qt.alarmType;

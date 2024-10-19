@@ -1,19 +1,18 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.quiettask;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 
 import android.content.Context;
 
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
-public class ClearAllTasks {
+public class QuietTaskNew {
 
-    public ClearAllTasks(Context context) {
+    public QuietTaskNew(Context context) {
 
         boolean [] week;
         ArrayList<QuietTask> quietTasks = new ArrayList<>();

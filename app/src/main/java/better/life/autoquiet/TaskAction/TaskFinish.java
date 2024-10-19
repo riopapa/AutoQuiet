@@ -1,11 +1,11 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.Sub.ReadyTTS.myTTS;
-import static better.life.autoquiet.Sub.ReadyTTS.sounds;
+import static better.life.autoquiet.common.ReadyTTS.myTTS;
+import static better.life.autoquiet.common.ReadyTTS.sounds;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,12 @@ import android.speech.tts.TextToSpeech;
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.Sub.AddSuffixStr;
+import better.life.autoquiet.Sub.AdjVolumes;
+import better.life.autoquiet.Sub.AlarmTime;
+import better.life.autoquiet.Sub.MannerMode;
+import better.life.autoquiet.Sub.ShowNotification;
+import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.QuietTask;
 
@@ -120,6 +126,10 @@ public class TaskFinish {
             }
         }, 1200);
 
+    }
+
+    public static String nowTimeDateToString(long time) {
+        return new SimpleDateFormat(" HH:mm MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
     }
 
     public static String nowDateTimeToString(long time) {

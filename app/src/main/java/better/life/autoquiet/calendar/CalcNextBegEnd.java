@@ -1,7 +1,5 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.calendar;
 
-
-import android.util.Log;
 
 import better.life.autoquiet.models.QuietTask;
 

@@ -1,7 +1,8 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.common;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
+import android.media.AudioAttributes;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
@@ -27,6 +28,12 @@ public class ReadyTTS {
 
     private void initializeTTS() {
 
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
+        myTTS.setAudioAttributes(audioAttributes);
+
         myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
@@ -49,5 +56,4 @@ public class ReadyTTS {
         myTTS.setPitch(1.2f);
         myTTS.setSpeechRate(1.3f);
     }
-
 }

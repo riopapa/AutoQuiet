@@ -15,7 +15,7 @@ import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.databinding.ActivityAddAgendaBinding;
 import better.life.autoquiet.models.GCal;
 import better.life.autoquiet.models.QuietTask;
-import better.life.autoquiet.Sub.GetAgenda;
+import better.life.autoquiet.calendar.GetAgenda;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;
 

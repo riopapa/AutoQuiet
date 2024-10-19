@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import better.life.autoquiet.Sub.ClearAllTasks;
+
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.models.QuietTask;
 
@@ -31,7 +31,7 @@ public class QuietTaskGetPut {
         String json = sharedPref.getString("silentInfo", "");
         if (json.isEmpty()) {
             list = new ArrayList<>();
-            new ClearAllTasks(context);
+            new QuietTaskNew(context);
         } else {
             Type type = new TypeToken<List<QuietTask>>() {
             }.getType();

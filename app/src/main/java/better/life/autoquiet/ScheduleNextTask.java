@@ -32,7 +32,6 @@ public class ScheduleNextTask {
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
 
-
         if (headInfo.isEmpty()) {
             String msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
             new Utils(context).log("SchdNextTask", msg);

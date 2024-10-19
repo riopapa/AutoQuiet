@@ -1,4 +1,4 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.common;
 
 import android.app.Activity;
 import android.content.Context;

@@ -34,8 +34,8 @@ import better.life.autoquiet.activity.ActivityAddEdit;
 import better.life.autoquiet.activity.ActivityOneTime;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.R;
-import better.life.autoquiet.Sub.CalcNextBegEnd;
-import better.life.autoquiet.Sub.ClearAllTasks;
+import better.life.autoquiet.calendar.CalcNextBegEnd;
+import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelperAdapter;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;
@@ -269,7 +269,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         if (quietTasks == null) {
             quietTasks = new QuietTaskGetPut().get(mContext);
             if (quietTasks == null)
-                new ClearAllTasks(mContext);
+                new QuietTaskNew(mContext);
         }
         return quietTasks.size();
     }

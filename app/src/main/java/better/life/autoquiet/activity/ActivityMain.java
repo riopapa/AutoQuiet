@@ -27,10 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
-import better.life.autoquiet.Sub.ClearAllTasks;
+import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
-import better.life.autoquiet.Sub.Permission;
-import better.life.autoquiet.Sub.SharedPrefer;
+import better.life.autoquiet.common.Permission;
+import better.life.autoquiet.common.SharedPrefer;
 import better.life.autoquiet.Sub.ShowNotification;
 import better.life.autoquiet.Sub.VarsGetPut;
 import better.life.autoquiet.Utils;
@@ -157,7 +157,7 @@ public class ActivityMain extends AppCompatActivity {
                     .setMessage(R.string.reset_table)
                     .setIcon(R.drawable.danger)
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-                        new ClearAllTasks(getApplicationContext());
+                        new QuietTaskNew(getApplicationContext());
                         setUpMainAdapter();
                     })
                     .setNegativeButton(android.R.string.cancel, null)

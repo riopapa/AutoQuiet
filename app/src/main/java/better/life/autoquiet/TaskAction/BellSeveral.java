@@ -1,14 +1,16 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.Sub.ReadyTTS.myTTS;
-import static better.life.autoquiet.Sub.ReadyTTS.sounds;
+import static better.life.autoquiet.common.ReadyTTS.myTTS;
+import static better.life.autoquiet.common.ReadyTTS.sounds;
 
-import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 
+import better.life.autoquiet.Sub.AlarmTime;
+import better.life.autoquiet.common.VibratePhone;
+import better.life.autoquiet.common.IsSilent;
+import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
@@ -21,7 +23,7 @@ import java.util.TimerTask;
 
 public class BellSeveral {
 
-    public void go(AudioManager mAudioManager, QuietTask qt, int several, int qtIdx) {
+    public void go(QuietTask qt, int several, int qtIdx) {
 
         int gapSec = secRemaining(qt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && several > 0)
@@ -32,7 +34,7 @@ public class BellSeveral {
                 if (several > 0 && afterSec > 5) {
                     if (afterSec > 60) {
                         afterSec = 20;
-                    } else if (new IsSilent().now(mAudioManager)) {
+                    } else if (new IsSilent().now()) {
                         new VibratePhone(mContext, (qt.vibrate)? 1:0);
                         afterSec = afterSec / 2;
                     } else {
@@ -44,17 +46,10 @@ public class BellSeveral {
                         else
                             afterSec = afterSec / 2;
                     }
-                    if (afterSec > 5) {
-                        long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                        new AlarmTime().request(mContext, qt, nextTime, "S", several);
-                    } else {
-                        qt.active = false;
-                        quietTasks.set(qtIdx, qt);
-                        new QuietTaskGetPut().put(quietTasks);
-                        new ScheduleNextTask(mContext, "end3");
-                    }
+                    long nextTime = System.currentTimeMillis() + afterSec * 1000L;
+                    new AlarmTime().request(mContext, qt, nextTime, "S", several);
                 } else {
-                    Log.w("a Schedule ","New task");
+//                    Log.w("a Schedule ","New task");
                     qt.active = false;
                     quietTasks.set(qtIdx, qt);
                     new QuietTaskGetPut().put(quietTasks);

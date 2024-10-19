@@ -5,17 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.pm.PackageManager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
-import better.life.autoquiet.R;
+import better.life.autoquiet.TaskAction.TaskFinish;
 
 public class NotificationHelper extends ContextWrapper {
     private static final String CHANNEL_ID = "channel_id";
@@ -49,7 +42,7 @@ public class NotificationHelper extends ContextWrapper {
                 this, CHANNEL_ID)
                 .setSmallIcon(bellType)
                 .setContentTitle(title + " "
-                    + TaskFinish.nowDateTimeToString(System.currentTimeMillis()))
+                    + TaskFinish.nowTimeDateToString(System.currentTimeMillis()))
                 .setContentText(text)
                 .setAutoCancel(true)
                 ;
