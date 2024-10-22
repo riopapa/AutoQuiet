@@ -1,5 +1,6 @@
 package better.life.autoquiet;
 
+import static better.life.autoquiet.AlarmReceiver.several;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
@@ -19,6 +20,8 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+
+import java.util.Objects;
 
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.AdjVolumes;
@@ -174,6 +177,8 @@ public class NotificationService extends Service {
         new AdjVolumes(this, AdjVolumes.VOL.WORK_ON);
         show_Volumes();
         updateRemoteViews();
+        if (several > 0)
+            new ScheduleNextTask(mContext, "make Silent");
     }
 
     private void createNotification() {

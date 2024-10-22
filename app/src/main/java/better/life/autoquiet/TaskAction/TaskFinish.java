@@ -129,7 +129,7 @@ public class TaskFinish {
     }
 
     public static String nowTimeDateToString(long time) {
-        return new SimpleDateFormat(" HH:mm MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
+        return new SimpleDateFormat(" HH:mm MM 월 d 일 ", Locale.getDefault()).format(time);
     }
 
     public static String nowDateTimeToString(long time) {

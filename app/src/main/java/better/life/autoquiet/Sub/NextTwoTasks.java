@@ -28,10 +28,7 @@ public class NextTwoTasks {
             qt = quietTasks.get(idx);
             if (qt.active) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
                 int WK = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
-
                 for (int i = WK; ; ) {
                     if (qt.week[i]) {
                         cal.set(Calendar.HOUR_OF_DAY, qt.begHour);
@@ -39,6 +36,8 @@ public class NextTwoTasks {
                         nxtStart = cal.getTimeInMillis();
                         cal.set(Calendar.HOUR_OF_DAY, qt.endHour);
                         cal.set(Calendar.MINUTE, qt.endMin);
+                        cal.set(Calendar.SECOND, 0);
+                        cal.set(Calendar.MILLISECOND, 0);
                         if (qt.endHour == 99)
                             nxtFinish = 0;
                         else {

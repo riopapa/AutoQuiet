@@ -29,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     QuietTask qt;
     int qtIdx;
-    int several;
+    public static int several;
     String caseSFOW;
     Vars vars;
     final String TTSId = "tId";
