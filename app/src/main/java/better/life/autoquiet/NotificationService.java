@@ -77,7 +77,12 @@ public class NotificationService extends Service {
         if (operation == A_MINUTE) {
             quiet_minute(20 * 60);
         } else if (operation == MAKE_SILENT) {
-            make_silent();
+            if (several > 0) {
+                several = 0;
+                new ScheduleNextTask(mContext, "make Silent");
+            }
+            else
+                make_silent();
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
@@ -177,8 +182,6 @@ public class NotificationService extends Service {
         new AdjVolumes(this, AdjVolumes.VOL.WORK_ON);
         show_Volumes();
         updateRemoteViews();
-        if (several > 0)
-            new ScheduleNextTask(mContext, "make Silent");
     }
 
     private void createNotification() {
