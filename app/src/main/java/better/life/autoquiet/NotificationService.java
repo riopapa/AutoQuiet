@@ -89,7 +89,7 @@ public class NotificationService extends Service {
             try {
                 pendingIntent.send();
             } catch(PendingIntent.CanceledException e) {
-                Log.e("startCommand","errror oItent "+e);
+                Log.e("startCommand","errror RIGHT_NOW "+e);
             }
         } else if (operation == STOP_SPEAK) {
             stop_repeat = false;
@@ -140,20 +140,17 @@ public class NotificationService extends Service {
         linePaint.setColor(0xFF00FFFF);
         int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        int nVol = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-        drawVolume(canvas, "♬", 30, mVol, txtPaint, linePaint);
-        drawVolume(canvas, "☎", 72, rVol, txtPaint, linePaint);
-        drawVolume(canvas, "N", 120, nVol, txtPaint, linePaint);
+        drawVolume(canvas, "M", 40, mVol, txtPaint, linePaint);
+        drawVolume(canvas, "R", 100, rVol, txtPaint, linePaint);
 
         mRemoteViews.setImageViewBitmap(R.id.volume_now, bitmap);
         mNotificationManager.notify(100,mBuilder.build());
-
     }
 
     void drawVolume(Canvas canvas, String s, int yPos, int vol, Paint txtPaint, Paint lnPaint) {
         final int shift = 40;
         canvas.drawText(s, 8, yPos+6, txtPaint);
-        lnPaint.setStrokeWidth(12);
+        lnPaint.setStrokeWidth(20);
         canvas.drawLine(shift, yPos, shift+vol * 5, yPos, lnPaint);
         lnPaint.setStrokeWidth(2);
         canvas.drawLine(shift+vol*5, yPos, shift + 15 * 5, yPos, txtPaint);
@@ -227,7 +224,6 @@ public class NotificationService extends Service {
         PendingIntent vOnP = PendingIntent.getService(mContext, VOLUME_ON, vOnI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(vOnP);
         mRemoteViews.setOnClickPendingIntent(R.id.volume_on, vOnP);
-
 
         Intent volI = new Intent(this, NotificationService.class);
         volI.putExtra("operation", VOLUMES);

@@ -16,29 +16,20 @@ public class AdjVolumes {
         switch (OnOff) {
             case COND_OFF:
 
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 3, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
                 break;
 
             case FORCE_ON:
 
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 2, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 12, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 5, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 8, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
                 break;
 
             case WORK_ON:
 
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 1, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
                 break;
 
             default:    // force Off
