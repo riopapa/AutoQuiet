@@ -3,8 +3,8 @@ package better.life.autoquiet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
+
+import better.life.autoquiet.activity.ActivityMain;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -12,10 +12,9 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-
-            new Handler(Looper.getMainLooper()).postDelayed(() ->
-                    new ScheduleNextTask(context, "After Boot"), 10000);
+            Intent i = new Intent(context, ActivityMain.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
     }
-
 }

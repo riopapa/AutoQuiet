@@ -6,10 +6,12 @@ import static better.life.autoquiet.activity.ActivityMain.nextAlertTime;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.NextTwoTasks;
 import better.life.autoquiet.Sub.ShowNotification;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
@@ -41,7 +43,17 @@ public class ScheduleNextTask {
         nextAlertTime = nxtTsk.nextTime;
         new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
                 nxtTsk.nextTime, nxtTsk.caseSFOW, nxtTsk.several);
-
+//        NextTask nextTask = new NextTask();
+//        nextTask.subject = nxtTsk.subject;
+//        nextTask.begHour = nxtTsk.sHour;
+//        nextTask.begMin = nxtTsk.sMin;
+//        nextTask.time = nxtTsk.nextTime;
+//        nextTask.caseSFOW = nxtTsk.caseSFOW;
+//
+//        Bundle args = new Bundle();
+//        args.putSerializable("nextTask", nextTask);
+//        SharedPreferences sharedPref = context.getSharedPreferences("next", Context.MODE_PRIVATE);
+//        sharedPref.edit().putString("next", args.toString()).apply();
     }
 
     private void updateNotyBar(Context context) {
