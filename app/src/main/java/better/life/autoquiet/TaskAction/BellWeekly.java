@@ -23,15 +23,13 @@ public class BellWeekly {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (new IsSilent().now()) {
-                    new VibratePhone(mContext, (qt.vibrate)? 1:0);
-                } else {
-                    String say = qt.subject + " 를 확인";
-                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
-                    NotificationHelper notificationHelper = new NotificationHelper(mContext);
-                    notificationHelper.sendNotification(R.drawable.bell_weekly,
-                            qt.subject, "Weekly Check");
-                }
+                if (qt.vibrate)
+                    new VibratePhone(mContext, 1);
+                String say = qt.subject + " 를 확인";
+                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
+                NotificationHelper notificationHelper = new NotificationHelper(mContext);
+                notificationHelper.sendNotification(R.drawable.bell_weekly,
+                        qt.subject, "Weekly Check");
                 new ScheduleNextTask(mContext, "event");
             }
         }, 1500);

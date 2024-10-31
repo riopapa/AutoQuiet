@@ -23,23 +23,20 @@ public class BellOneTime {
 
     public void go(QuietTask qt, int qtIdx) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
-        if (new IsSilent().now()) {
+        if (qt.vibrate)
             new VibratePhone(mContext, (qt.vibrate)? 1:0);
-        } else {
-            new Timer().schedule(new TimerTask() {
-                public void run() {
-                    String say = qt.subject + " 체크";
-                    myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "one");
-                    qt.active = false;
-                    quietTasks.set(qtIdx, qt);
-                    NotificationHelper notificationHelper = new NotificationHelper(mContext);
-                    notificationHelper.sendNotification(R.drawable.bell_onetime,
-                            qt.subject, "OneTime Check");
-                    new QuietTaskGetPut().put(quietTasks);
-                }
-            }, 1500);
-        }
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+                String say = qt.subject + " 체크";
+                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "one");
+                qt.active = false;
+                quietTasks.set(qtIdx, qt);
+                NotificationHelper notificationHelper = new NotificationHelper(mContext);
+                notificationHelper.sendNotification(R.drawable.bell_onetime,
+                        qt.subject, "OneTime Check");
+                new QuietTaskGetPut().put(quietTasks);
+            }
+        }, 1500);
         new ScheduleNextTask(mContext, "ended1");
     }
-
 }

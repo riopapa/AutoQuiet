@@ -98,7 +98,7 @@ public class NextTwoTasks {
         }
         sSecond = nextTasks.get(1).split("_");
         nextTimeN = Long.parseLong(sSecond[1]);
-        caseSFOW = sFirst[1];
+        caseSFOW = sFirst[2];
         subject = sFirst[3]; subjectN = sSecond[3];
         several = Integer.parseInt(sFirst[4]);  // no several from sSecond
         icon = Integer.parseInt(sFirst[5]);  iconN = Integer.parseInt(sSecond[5]);

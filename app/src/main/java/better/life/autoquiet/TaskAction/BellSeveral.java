@@ -31,11 +31,12 @@ public class BellSeveral {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 int afterSec = secRemaining(qt, System.currentTimeMillis()) - 2;
+                if (qt.vibrate)
+                    new VibratePhone(mContext, 1);
                 if (several > 0 && afterSec > 5) {
                     if (afterSec > 60) {
                         afterSec = 20;
                     } else if (new IsSilent().now()) {
-                        new VibratePhone(mContext, (qt.vibrate)? 1:0);
                         afterSec = afterSec / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
