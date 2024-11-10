@@ -3,8 +3,10 @@ package better.life.autoquiet.Sub;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
+import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.ScheduleNextTask.AHEAD_TIME;
 
+import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -90,6 +92,9 @@ public class NextTwoTasks {
         String[] sFirst, sSecond;   // 1730289363612 9
         while (true) {
             sFirst = nextTasks.get(0).split("_");
+            if (sFirst.length != 10)
+                new Utils(mContext).log("NextTwoTasks", "sFirst.length != 10 \n"
+                        + nextTasks.get(0));
             nextTime = Long.parseLong(sFirst[1]);
             if (nextTime < nowTime) {
                 nextTasks.remove(0);

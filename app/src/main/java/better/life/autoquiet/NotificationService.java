@@ -4,6 +4,7 @@ import static better.life.autoquiet.AlarmReceiver.several;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +12,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.media.AudioManager;
@@ -42,7 +44,7 @@ public class NotificationService extends Service {
     final int RIGHT_NOW = 100;
     final int STOP_SPEAK = 144;
     final int A_MINUTE = 166;
-    final int MAKE_SILENT = 555;
+    public final static int MAKE_SILENT = 555;
     final int VOLUMES = 666;
     final int VOLUME_ON = 678;
 
@@ -193,9 +195,10 @@ public class NotificationService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_HIGH) // added 24.09.30
                 .setLocalOnly(true)  // Ensures notification is local to the device
                 .setContent(mRemoteViews)
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(false)
+                .setCategory(Notification.CATEGORY_EVENT)
                 .setOngoing(true)
+                .setAutoCancel(false)
+                .setOnlyAlertOnce(false)
         ;
 
         Intent mainIntent = new Intent(mContext, ActivityMain.class);

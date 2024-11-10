@@ -10,7 +10,6 @@ import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.NotificationHelper;
 import better.life.autoquiet.common.VibratePhone;
-import better.life.autoquiet.common.IsSilent;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.QuietTask;
 
@@ -29,7 +28,7 @@ public class BellWeekly {
                 myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
                 notificationHelper.sendNotification(R.drawable.bell_weekly,
-                        qt.subject, "Weekly Check");
+                        qt.subject, "Weekly Check, Press to Stop Repeat");
                 new ScheduleNextTask(mContext, "event");
             }
         }, 1500);

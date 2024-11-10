@@ -90,5 +90,4 @@ public class ScheduleNextTask {
         return (String.valueOf(100 + hour)).substring(1) + ":"
                 + (String.valueOf(100 + min)).substring(1);
     }
-
 }
