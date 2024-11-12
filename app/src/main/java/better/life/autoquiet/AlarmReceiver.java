@@ -3,19 +3,17 @@ package better.life.autoquiet;
 import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.ReadyTTS.myTTS;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Toast;
 
 import better.life.autoquiet.Sub.AdjVolumes;
-import better.life.autoquiet.common.ReadyTTS;
+import better.life.autoquiet.common.MyTTS;
 import better.life.autoquiet.TaskAction.TaskFinish;
 import better.life.autoquiet.TaskAction.TaskOneTIme;
 import better.life.autoquiet.TaskAction.TaskStart;
@@ -34,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     Vars vars;
     final String TTSId = "tId";
     int icon;
-    ReadyTTS readyTTS = null;
+    public static MyTTS myTTS = null;
     public static AudioManager mAudioManager;
 
     @Override
@@ -49,8 +47,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         caseSFOW = Objects.requireNonNull(intent.getExtras()).getString("case");
 
         several = Objects.requireNonNull(intent.getExtras()).getInt("several", -1);
-        if (readyTTS == null)
-            readyTTS = new ReadyTTS();
+        if (myTTS == null)
+            myTTS = new MyTTS();
         vars = new VarsGetPut().get(context);
         if (!caseSFOW.equals("T")) {  // toss quiet a min
             qtIdx = -1;
@@ -64,8 +62,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             if (qtIdx == -1) {
                 String err = "quiet task index Error " + qt.subject;
-                myTTS.speak(err, TextToSpeech.QUEUE_FLUSH, null, TTSId);
-                Log.w("Quiet Idx Err", qt.subject);
+                myTTS.sayTask(err);
+                Log.e("Quiet Idx Err", qt.subject);
             }
 
             icon = alarmIcons[qt.alarmType];

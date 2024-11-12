@@ -2,15 +2,12 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.ReadyTTS.myTTS;
-import static better.life.autoquiet.common.ReadyTTS.sounds;
+import static better.life.autoquiet.common.MyTTS.sounds;
 
-import android.speech.tts.TextToSpeech;
-
+import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.NotificationHelper;
 import better.life.autoquiet.common.VibratePhone;
-import better.life.autoquiet.common.IsSilent;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.ScheduleNextTask;
@@ -28,7 +25,7 @@ public class BellOneTime {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = qt.subject + " 체크";
-                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "one");
+                AlarmReceiver.myTTS.sayTask(say);
                 qt.active = false;
                 quietTasks.set(qtIdx, qt);
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
@@ -39,4 +36,5 @@ public class BellOneTime {
         }, 1500);
         new ScheduleNextTask(mContext, "ended1");
     }
+
 }

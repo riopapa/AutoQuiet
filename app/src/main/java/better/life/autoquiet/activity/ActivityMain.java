@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,6 +52,7 @@ public class ActivityMain extends AppCompatActivity {
     public static int currIdx = -1;
     public static long nextAlertTime;
     RecyclerView mainRecyclerView;
+    public static AudioManager mAudioManager;
 
     public static ArrayList<QuietTask> quietTasks;
 
@@ -61,6 +63,8 @@ public class ActivityMain extends AppCompatActivity {
         pActivity = this;
         vars = new Vars();
         new SharedPrefer().get(vars);
+
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 
         new Utils(mContext).deleteOldLogFiles();
         setContentView(R.layout.activity_main);

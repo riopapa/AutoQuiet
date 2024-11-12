@@ -13,17 +13,13 @@ public class ShowNotification {
 
     public void show(Context context, Intent intent) {
 
-        if (!isServiceRunning(context)) {
+        try {
+            context.startService(intent);  // if started
+        } catch (Exception e) {
             try {
-                startForegroundService(context, intent);    // if not started already
-            } catch (Exception e) {
-                Log.e("s ForegroundService","show error \n"+e);
-            }
-        } else {
-            try {
-                context.startService(intent);  // if started
-            } catch (Exception e) {
-                Log.e("s Service","show error \n"+e);
+                context.startForegroundService(intent);    // if not started already
+            } catch (Exception e1) {
+                Log.e("ShowNotification", "show error \n" + e + e1);
             }
         }
     }

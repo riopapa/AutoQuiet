@@ -2,11 +2,9 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.ReadyTTS.myTTS;
-import static better.life.autoquiet.common.ReadyTTS.sounds;
+import static better.life.autoquiet.common.MyTTS.sounds;
 
-import android.speech.tts.TextToSpeech;
-
+import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.IsSilent;
@@ -41,7 +39,7 @@ public class BellSeveral {
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         s += " " + qt.subject + " 를 " + " 확인하세요, ";
-                        myTTS.speak(s, TextToSpeech.QUEUE_FLUSH, null, "svrl");
+                        AlarmReceiver.myTTS.sayTask(s);
                         if (afterSec < 20)
                             afterSec = 10;
                         else

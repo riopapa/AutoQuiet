@@ -7,11 +7,9 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.common.ReadyTTS.myTTS;
-import static better.life.autoquiet.common.ReadyTTS.sounds;
+import static better.life.autoquiet.common.MyTTS.sounds;
 
-import android.speech.tts.TextToSpeech;
-
+import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.AdjVolumes;
@@ -49,7 +47,7 @@ public class TaskStart {
 
         else {
             String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
-            myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "99");
+            AlarmReceiver.myTTS.sayTask(say);
             new ScheduleNextTask(mContext, "ended Err");
         }
     }
@@ -60,7 +58,7 @@ public class TaskStart {
             @Override
             public void run() {
                 String say = (qt.alarmType == PHONE_WORK) ? qt.subject : new AddSuffixStr().add(qt.subject) + "시작 됩니다";
-                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "startN");
+                AlarmReceiver.myTTS.sayTask(say);
             }
         }, 800);
 

@@ -1,11 +1,9 @@
 package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.common.ReadyTTS.myTTS;
-import static better.life.autoquiet.common.ReadyTTS.sounds;
+import static better.life.autoquiet.common.MyTTS.sounds;
 
-import android.speech.tts.TextToSpeech;
-
+import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.NotificationHelper;
@@ -25,7 +23,7 @@ public class BellWeekly {
                 if (qt.vibrate)
                     new VibratePhone(mContext, 1);
                 String say = qt.subject + " 를 확인";
-                myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "now");
+                AlarmReceiver.myTTS.sayTask(say);
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
                 notificationHelper.sendNotification(R.drawable.bell_weekly,
                         qt.subject, "Weekly Check, Press to Stop Repeat");
