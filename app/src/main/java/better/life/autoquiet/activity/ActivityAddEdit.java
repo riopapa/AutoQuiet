@@ -40,7 +40,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private String subject;
     private int begHour, begMin, endHour, endMin, sHour;
-    private boolean active, end99, am, vibrate;
+    private boolean active, end99, am, vibrate, nextDay;
     private int alarmType;
     private boolean[] week = new boolean[7];
     private final TextView[] weekView = new TextView[7];
@@ -160,6 +160,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         if (begHour > 12)
             sHour = begHour - 12;
         vibrate = qT.vibrate;
+        nextDay = qT.nextDay;
 
         findViewById(R.id.num0).setOnClickListener(this::number_Clicked);
         findViewById(R.id.num1).setOnClickListener(this::number_Clicked);
@@ -248,6 +249,12 @@ public class ActivityAddEdit extends AppCompatActivity {
         binding.swVibrate.setOnClickListener(v -> {
             vibrate = !vibrate;
             binding.swVibrate.setChecked(vibrate);
+            v.invalidate();
+        });
+        binding.swNextDay.setChecked(nextDay);
+        binding.swNextDay.setOnClickListener(v -> {
+            nextDay = !nextDay;
+            binding.swNextDay.setChecked(nextDay);
             v.invalidate();
         });
 
@@ -384,6 +391,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);
             qT.vibrate = vibrate;
+            qT.nextDay = nextDay;
 
             if (currIdx == -1)
                 quietTasks.add(qT);
@@ -427,6 +435,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
         qT.vibrate = vibrate;
+        qT.nextDay = nextDay;
 
         CalcNextBegEnd calBE = new CalcNextBegEnd(qT);
         long nextTime = calBE.begTime;
@@ -451,6 +460,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);
         qT.vibrate = vibrate;
+        qT.nextDay = nextDay;
 
         if (currIdx == -1)
             quietTasks.add(qT);
@@ -513,6 +523,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                     begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);
             qtNew.vibrate= vibrate;
+            qtNew.nextDay = nextDay;
 
             quietTasks.add(++currIdx, qtNew);
             new QuietTaskGetPut().put(quietTasks);

@@ -15,6 +15,8 @@ import androidx.core.app.NotificationCompat;
 
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.TaskAction.TaskFinish;
+import better.life.autoquiet.activity.ActivityAddEdit;
+import better.life.autoquiet.activity.ActivityMain;
 
 public class NotificationHelper extends ContextWrapper {
     private static final String CHANNEL_ID = "channel_id";
@@ -44,17 +46,17 @@ public class NotificationHelper extends ContextWrapper {
 
     public void sendNotification(int bellType, String title, String text) {
 
-//        Intent intent = new Intent(this, NotificationService.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, MAKE_SILENT,
-//                intent, PendingIntent.FLAG_IMMUTABLE);
+        Intent intent = new Intent(this, ActivityMain.class); // Replace with your target activity
+        intent.putExtra("id", NOTIFICATION_ID); // Pass data if needed
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 this, CHANNEL_ID)
                 .setSmallIcon(bellType)
                 .setContentTitle(title + " "
                     + TaskFinish.nowTimeDateToString(System.currentTimeMillis()))
                 .setContentText(text)
-//                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 ;
 

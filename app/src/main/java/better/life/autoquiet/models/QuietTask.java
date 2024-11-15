@@ -25,7 +25,7 @@ public class QuietTask implements Serializable {
     public String calLocation;
     public String calName;
     public boolean calTaskRepeat;
-
+    public boolean nextDay;
     public long sortKey;    // 0번째 바로 조용히 는 -1
 
     // normal QuietTask replaced

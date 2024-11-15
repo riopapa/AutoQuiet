@@ -424,23 +424,34 @@
 
         <Switch
             android:id = "@+id/swActive"
-            android:layout_width = "100dp"
+            android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_gravity = "center_vertical"
             android:text = "활성화"
             android:gravity="end"
             android:textColor="#235E23"
-            android:textSize = "16sp"
+            android:textSize = "14sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id = "@+id/say_date"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
-            android:text = "날짜 반복 말하기"
+            android:text = "날짜 반복"
             android:gravity="end"
             android:textColor="#235E23"
-            android:textSize = "16sp"
+            android:textSize = "14sp"
+            tools:ignore = "UseSwitchCompatOrMaterialXml" />
+
+        <Switch
+            android:id = "@+id/swNextDay"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:layout_gravity = "center_vertical"
+            android:text = "내일"
+            android:gravity="end"
+            android:textColor="#235E23"
+            android:textSize = "14sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
         <Switch
@@ -451,7 +462,7 @@
             android:text = "떨기"
             android:gravity="end"
             android:textColor="#235E23"
-            android:textSize = "16sp"
+            android:textSize = "14sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>

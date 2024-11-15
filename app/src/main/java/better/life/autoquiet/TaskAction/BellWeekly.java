@@ -26,11 +26,10 @@ public class BellWeekly {
                 AlarmReceiver.myTTS.sayTask(say);
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
                 notificationHelper.sendNotification(R.drawable.bell_weekly,
-                        qt.subject, "Weekly Check, Press to Stop Repeat");
+                        qt.subject, "Weekly Check "+qt.subject);
                 new ScheduleNextTask(mContext, "event");
             }
         }, 1500);
-
     }
 
 }

@@ -13,6 +13,7 @@ import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,7 +27,18 @@ public class BellOneTime {
             public void run() {
                 String say = qt.subject + " 체크";
                 AlarmReceiver.myTTS.sayTask(say);
-                qt.active = false;
+                if (qt.nextDay) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(System.currentTimeMillis());
+                    int WKStart = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
+                    qt.week[WKStart] = false;
+                    if (WKStart < 5)
+                        WKStart++;
+                    else
+                        WKStart = 1;
+                    qt.week[WKStart] = true;
+                } else
+                    qt.active = false;
                 quietTasks.set(qtIdx, qt);
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
                 notificationHelper.sendNotification(R.drawable.bell_onetime,
