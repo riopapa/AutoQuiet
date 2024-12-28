@@ -1,7 +1,6 @@
 package better.life.autoquiet.Sub;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 
 public class AdjVolumes {
@@ -15,22 +14,18 @@ public class AdjVolumes {
 
         switch (OnOff) {
             case COND_OFF:
-
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 2, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
-                break;
-
-            case FORCE_ON:
-
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 12, 0);
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
-                break;
-
             case WORK_ON:
 
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
                 break;
+
+            case FORCE_ON:
+
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 11, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, 0);
+                break;
+
 
             default:    // force Off
 

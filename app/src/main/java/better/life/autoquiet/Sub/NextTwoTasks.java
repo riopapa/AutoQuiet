@@ -22,7 +22,7 @@ public class NextTwoTasks {
     public String subject, subjectN, caseSFOW, beginOrEnd, beginOrEndN;
     QuietTask qt;
 
-    SimpleDateFormat sdfDateTime = new SimpleDateFormat("MM-dd(EEE) HH:mm", Locale.getDefault());
+//    SimpleDateFormat sdfDateTime = new SimpleDateFormat("YY-MM-dd(EEE) HH:mm", Locale.getDefault());
 
     public NextTwoTasks(ArrayList<QuietTask> quietTasks) {
 
@@ -70,7 +70,8 @@ public class NextTwoTasks {
                         several = 2;
                     } else
                         several = 0;
-                    String [] s = new String[] {sdfDateTime.format(nxtStart), nxtStart + "",
+                    String [] s = new String[] {
+                            nxtStart + "",
                             "S", qt.subject, several+"", alarmIcons[qt.alarmType] + "",
                             idx+"", qt.begHour + "", qt.begMin+"","시작"};
                     String s0 = String.join("_", s);
@@ -79,7 +80,8 @@ public class NextTwoTasks {
                 if (qt.endHour != 99 && nowTime < nxtFinish) {
                     several = (qt.sayDate) ? 3 : 0;
                     String wf = (qt.alarmType == PHONE_WORK) ? "W":"F";  // Work, Finish
-                    String [] s = new String[] {sdfDateTime.format(nxtFinish), nxtFinish + "",
+                    String [] s = new String[] {
+                            nxtFinish + "",
                             (idx == 0) ? "O" : wf, qt.subject, several+"", alarmIcons[qt.alarmType] + "",
                             idx+"", qt.endHour + "", qt.endMin + "","까지"};
                     String s0 = String.join("_", s);
@@ -92,24 +94,24 @@ public class NextTwoTasks {
         String[] sFirst, sSecond;   // 1730289363612 9
         while (true) {
             sFirst = nextTasks.get(0).split("_");
-            if (sFirst.length != 10)
-                new Utils(mContext).log("NextTwoTasks", "sFirst.length != 10 \n"
+            if (sFirst.length != 9)
+                new Utils(mContext).log("NextTwoTasks", "sFirst.length != 9\n"
                         + nextTasks.get(0));
-            nextTime = Long.parseLong(sFirst[1]);
+            nextTime = Long.parseLong(sFirst[0]);
             if (nextTime < nowTime) {
                 nextTasks.remove(0);
             } else
                 break;
         }
         sSecond = nextTasks.get(1).split("_");
-        nextTimeN = Long.parseLong(sSecond[1]);
-        caseSFOW = sFirst[2];
-        subject = sFirst[3]; subjectN = sSecond[3];
-        several = Integer.parseInt(sFirst[4]);  // no several from sSecond
-        icon = Integer.parseInt(sFirst[5]);  iconN = Integer.parseInt(sSecond[5]);
-        saveIdx = Integer.parseInt(sFirst[6]);
-        sHour = Integer.parseInt(sFirst[7]);  sHourN = Integer.parseInt(sSecond[7]);
-        sMin = Integer.parseInt(sFirst[8]);  sMinN = Integer.parseInt(sSecond[8]);
-        beginOrEnd = sFirst[9]; beginOrEndN = sSecond[9];
+        nextTimeN = Long.parseLong(sSecond[0]);
+        caseSFOW = sFirst[1];
+        subject = sFirst[2]; subjectN = sSecond[2];
+        several = Integer.parseInt(sFirst[3]);  // no several from sSecond
+        icon = Integer.parseInt(sFirst[4]);  iconN = Integer.parseInt(sSecond[4]);
+        saveIdx = Integer.parseInt(sFirst[5]);
+        sHour = Integer.parseInt(sFirst[6]);  sHourN = Integer.parseInt(sSecond[6]);
+        sMin = Integer.parseInt(sFirst[7]);  sMinN = Integer.parseInt(sSecond[7]);
+        beginOrEnd = sFirst[8]; beginOrEndN = sSecond[8];
     }
 }

@@ -33,27 +33,10 @@ public class ScheduleNextTask {
 
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
-
-//        if (headInfo.isEmpty()) {
-//            String msg = headInfo + "\n" + timeInfo + " " + nxtTsk.subject;
-//            new Utils(context).log("SchdNextTask", msg);
-//        }
         updateNotyBar(context);
-
         nextAlertTime = nxtTsk.nextTime;
         new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
                 nxtTsk.nextTime, nxtTsk.caseSFOW, nxtTsk.several);
-//        NextTask nextTask = new NextTask();
-//        nextTask.subject = nxtTsk.subject;
-//        nextTask.begHour = nxtTsk.sHour;
-//        nextTask.begMin = nxtTsk.sMin;
-//        nextTask.time = nxtTsk.nextTime;
-//        nextTask.caseSFOW = nxtTsk.caseSFOW;
-//
-//        Bundle args = new Bundle();
-//        args.putSerializable("nextTask", nextTask);
-//        SharedPreferences sharedPref = context.getSharedPreferences("next", Context.MODE_PRIVATE);
-//        sharedPref.edit().putString("next", args.toString()).apply();
     }
 
     private void updateNotyBar(Context context) {
