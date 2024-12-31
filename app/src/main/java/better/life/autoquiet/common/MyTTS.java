@@ -64,11 +64,12 @@ public class MyTTS {
     }
 
     public void sayTask (String say) {
-        if (isBlueToothActive())
-            setVolume2EarPhone();
-        else 
-            setVolume2NormalRingTone();
-        myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "i");
+//        if (isBlueToothActive())
+//           setVolume2EarPhone();
+//        else 
+//            setVolume2NormalRingTone();
+        if (sounds.setAudio(mContext))
+            myTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "i");
     }
 
     void setVolume2EarPhone() {

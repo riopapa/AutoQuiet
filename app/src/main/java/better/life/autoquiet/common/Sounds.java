@@ -1,7 +1,10 @@
 package better.life.autoquiet.common;
 
+import static better.life.autoquiet.common.MyTTS.myTTS;
+
 import android.content.Context;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.SoundPool;
 
 import better.life.autoquiet.R;
@@ -9,6 +12,29 @@ import better.life.autoquiet.R;
 public class Sounds {
 
     public enum BEEP {NOTY, ALARM, INFO, BBEEPP, TOSS}
+
+    public boolean setAudio(Context context) {
+
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
+        int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (rVol > 5 && mVol < 5) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+            myTTS.setAudioAttributes(audioAttributes);
+            return true;
+        } else if (rVol < 5 && mVol > 5) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+            myTTS.setAudioAttributes(audioAttributes);
+            return true;
+        }
+        return false;
+    }
 
     public void beep(Context context, BEEP e) {
 

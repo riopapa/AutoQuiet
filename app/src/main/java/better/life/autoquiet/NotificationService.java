@@ -127,7 +127,6 @@ public class NotificationService extends Service {
 
         Bitmap bitmap = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         Paint txtPaint = new Paint();
         txtPaint.setTextAlign(Paint.Align.LEFT);
         txtPaint.setAntiAlias(true);
@@ -140,6 +139,8 @@ public class NotificationService extends Service {
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         linePaint.setTextAlign(Paint.Align.LEFT);
         linePaint.setColor(0xFF00FFFF);
+
+        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
         int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         drawVolume(canvas, "M", 40, mVol, txtPaint, linePaint);
