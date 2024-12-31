@@ -53,7 +53,7 @@ public class TaskFinish {
                 } else
                     finish_Several();
             }
-        }, 500);
+        }, 800);
     }
 
     private void finish_Work() {
@@ -123,7 +123,6 @@ public class TaskFinish {
 
             }
         }, 1200);
-
     }
 
     public static String nowTimeDateToString(long time) {

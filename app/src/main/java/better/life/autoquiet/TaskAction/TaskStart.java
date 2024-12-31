@@ -60,7 +60,7 @@ public class TaskStart {
                 String say = (qt.alarmType == PHONE_WORK) ? qt.subject : new AddSuffixStr().add(qt.subject) + "시작 됩니다";
                 AlarmReceiver.myTTS.sayTask(say);
             }
-        }, 800);
+        }, 500);
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -73,7 +73,7 @@ public class TaskStart {
                 }
                 new ScheduleNextTask(mContext, "Norm");
             }
-        }, 5000);
+        }, 6000);
     }
 
 }
