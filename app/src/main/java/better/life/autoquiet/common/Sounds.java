@@ -1,6 +1,7 @@
 package better.life.autoquiet.common;
 
-import static better.life.autoquiet.common.MyTTS.myTTS;
+import static better.life.autoquiet.common.MyTTS.mAM;
+import static better.life.autoquiet.common.MyTTS.mTTS;
 
 import android.content.Context;
 import android.media.AudioAttributes;
@@ -12,28 +13,50 @@ import better.life.autoquiet.R;
 public class Sounds {
 
     public enum BEEP {NOTY, ALARM, INFO, BBEEPP, TOSS}
+    public static int soundType = 0, soundNow = 0;
+    public MyTTS myTTS;
+    public AudioManager mAM;
 
-    public boolean setAudio(Context context) {
+    public Sounds(Context context) {
+        myTTS = new MyTTS();
+        setSoundNow(context);
+        mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+    }
 
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-        int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (rVol > 5 && mVol < 5) {
+    public boolean checkAudio(Context context) {
+
+        setSoundNow(context);
+        if (soundNow == soundType)
+            return true;
+        soundType = soundNow;
+        if (soundType == 1) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build();
-            myTTS.setAudioAttributes(audioAttributes);
+            mTTS.setAudioAttributes(audioAttributes);
             return true;
-        } else if (rVol < 5 && mVol > 5) {
+        } else if (soundType == 2) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build();
-            myTTS.setAudioAttributes(audioAttributes);
+            mTTS.setAudioAttributes(audioAttributes);
             return true;
         }
         return false;
+    }
+
+    private static void setSoundNow(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int rVol = audioManager.getStreamVolume(AudioManager.STREAM_RING);
+        int mVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (rVol > 5 && mVol < 5)
+            soundNow = 1;
+        else if (rVol < 5 && mVol < 5)
+            soundNow = 0;
+        else
+            soundNow = 2;
     }
 
     public void beep(Context context, BEEP e) {
@@ -62,4 +85,11 @@ public class Sounds {
 //            handler.postDelayed(() -> soundPool.play(soundNbr, 1f, 1f, 1, 0, 1f), 500);
         });
     }
+    public boolean isQuiet() {
+        int ringVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
+        return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
+                mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE ||
+                ringVol < 4);
+    }
+
 }

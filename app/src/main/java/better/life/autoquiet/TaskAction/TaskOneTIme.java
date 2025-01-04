@@ -1,10 +1,10 @@
 package better.life.autoquiet.TaskAction;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 import android.content.Context;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.models.QuietTask;
@@ -24,7 +24,7 @@ public class TaskOneTIme {
             public void run() {
                 String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
                         " 입니다. 무음 모드가 끝났습니다";
-                AlarmReceiver.myTTS.sayTask(say);
+                sounds.myTTS.sayTask(say);
             }
         }, 2000);
         qt.active = false;

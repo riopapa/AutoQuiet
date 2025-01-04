@@ -28,7 +28,7 @@ public class NextTwoTasks {
 
         ArrayList<String> nextTasks = new ArrayList<>();
 
-        final long nowTime = System.currentTimeMillis();
+        final long nowTime = System.currentTimeMillis()+ 30000;
         long nxtStart, nxtFinish;
 
         for (int idx = 0; idx < quietTasks.size(); idx++) {

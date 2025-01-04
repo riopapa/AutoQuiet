@@ -1,10 +1,9 @@
 package better.life.autoquiet.TaskAction;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.MyTTS.sounds;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.NotificationHelper;
 import better.life.autoquiet.common.VibratePhone;
@@ -22,11 +21,11 @@ public class BellOneTime {
     public void go(QuietTask qt, int qtIdx) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         if (qt.vibrate)
-            new VibratePhone(mContext, (qt.vibrate)? 1:0);
+            new VibratePhone(mContext, 1);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = qt.subject + " 체크";
-                AlarmReceiver.myTTS.sayTask(say);
+                sounds.myTTS.sayTask(say);
                 if (qt.nextDay) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(System.currentTimeMillis());

@@ -1,6 +1,7 @@
 package better.life.autoquiet;
 
 
+import static better.life.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
 import static better.life.autoquiet.activity.ActivityMain.nextAlertTime;
 
 import android.content.Context;
@@ -30,7 +31,8 @@ public class ScheduleNextTask {
         quietTasks = new QuietTaskGetPut().get(context);
 
         nxtTsk = new NextTwoTasks(quietTasks);
-
+        if (quietTasks.get(nxtTsk.saveIdx).alarmType == BELL_ONETIME)
+            nxtTsk.nextTime -= 30000;
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
         updateNotyBar(context);

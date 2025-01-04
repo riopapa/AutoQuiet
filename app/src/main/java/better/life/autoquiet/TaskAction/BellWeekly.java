@@ -1,9 +1,8 @@
 package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.common.MyTTS.sounds;
+import static better.life.autoquiet.AlarmReceiver.sounds;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.NotificationHelper;
@@ -23,7 +22,7 @@ public class BellWeekly {
                 if (qt.vibrate)
                     new VibratePhone(mContext, 1);
                 String say = qt.subject + " 를 확인";
-                AlarmReceiver.myTTS.sayTask(say);
+                sounds.myTTS.sayTask(say);
                 NotificationHelper notificationHelper = new NotificationHelper(mContext);
                 notificationHelper.sendNotification(R.drawable.bell_weekly,
                         qt.subject, "Weekly Check "+qt.subject);

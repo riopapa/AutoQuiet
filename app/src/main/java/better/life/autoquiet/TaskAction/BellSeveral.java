@@ -2,12 +2,10 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.MyTTS.sounds;
+import static better.life.autoquiet.AlarmReceiver.sounds;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.common.VibratePhone;
-import better.life.autoquiet.common.IsSilent;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.ScheduleNextTask;
@@ -34,12 +32,12 @@ public class BellSeveral {
                 if (several > 0 && afterSec > 5) {
                     if (afterSec > 60) {
                         afterSec = 20;
-                    } else if (new IsSilent().now()) {
+                    } else if (sounds.isQuiet()) {
                         afterSec = afterSec / 2;
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         s += " " + qt.subject + " 를 " + " 확인하세요, ";
-                        AlarmReceiver.myTTS.sayTask(s);
+                        sounds.myTTS.sayTask(s);
                         if (afterSec < 20)
                             afterSec = 10;
                         else

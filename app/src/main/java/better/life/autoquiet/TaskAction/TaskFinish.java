@@ -1,16 +1,15 @@
 package better.life.autoquiet.TaskAction;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.common.MyTTS.sounds;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
@@ -64,7 +63,7 @@ public class TaskFinish {
     private void finish_Normal() {
         sounds.beep(mContext, Sounds.BEEP.INFO);
         String s = new AddSuffixStr().add(qt.subject) + mContext.getString(R.string.finishing_completed);
-        AlarmReceiver.myTTS.sayTask(s);
+        sounds.myTTS.sayTask(s);
         if (qt.agenda) { // delete if agenda based
             quietTasks.remove(qtIdx);
         } else if (qt.alarmType < PHONE_VIBRATE) {
@@ -90,7 +89,7 @@ public class TaskFinish {
                                     : R.string.finished);
                     joins = new String[]{nowTime,  new AddSuffixStr().add(qt.subject),
                             "", ending};
-                    AlarmReceiver.myTTS.sayTask(String.join(" , ", joins));
+                    sounds.myTTS.sayTask(String.join(" , ", joins));
 
                     long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 200) * 1000;
                     new AlarmTime().request(mContext, qt, nextTime, "F", --several);

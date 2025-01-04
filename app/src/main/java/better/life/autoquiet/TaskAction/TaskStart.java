@@ -1,5 +1,6 @@
 package better.life.autoquiet.TaskAction;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_WEEKLY;
@@ -7,9 +8,7 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.common.MyTTS.sounds;
 
-import better.life.autoquiet.AlarmReceiver;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.AdjVolumes;
@@ -47,7 +46,7 @@ public class TaskStart {
 
         else {
             String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
-            AlarmReceiver.myTTS.sayTask(say);
+            sounds.myTTS.sayTask(say);
             new ScheduleNextTask(mContext, "ended Err");
         }
     }
@@ -58,7 +57,7 @@ public class TaskStart {
             @Override
             public void run() {
                 String say = (qt.alarmType == PHONE_WORK) ? qt.subject : new AddSuffixStr().add(qt.subject) + "시작 됩니다";
-                AlarmReceiver.myTTS.sayTask(say);
+                sounds.myTTS.sayTask(say);
             }
         }, 500);
 
