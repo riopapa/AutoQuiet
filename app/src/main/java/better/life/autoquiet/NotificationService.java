@@ -12,7 +12,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.media.AudioManager;
@@ -22,8 +21,6 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-
-import java.util.Objects;
 
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.AdjVolumes;
@@ -36,7 +33,8 @@ public class NotificationService extends Service {
     NotificationCompat.Builder mBuilder = null;
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
-    private RemoteViews mRemoteViews;
+    RemoteViews mRemoteViews;
+
     String beg, subject, end, begN, subjectN, endN;
     int icon, iconN, iconNow;
     boolean stop_repeat = false;
@@ -57,9 +55,7 @@ public class NotificationService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    public IBinder onBind(Intent intent) {return null;}
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -75,7 +71,7 @@ public class NotificationService extends Service {
         } catch (Exception e) {
             Log.e("operation", e.toString());
         }
-//        Log.w("onStartCommand","operation = "+operation);
+
         if (operation == A_MINUTE) {
             quiet_minute(20 * 60);
         } else if (operation == MAKE_SILENT) {
@@ -239,10 +235,6 @@ public class NotificationService extends Service {
 
     void updateRemoteViews() {
 
-//        mBuilder.setSmallIcon(iconNow)
-//                .setContentText(subject)
-//                .setContentTitle(beg + " "+end)
-//        ;
         mRemoteViews.setImageViewResource(R.id.state_icon, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);

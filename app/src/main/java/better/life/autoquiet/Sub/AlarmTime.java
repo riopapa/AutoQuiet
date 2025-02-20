@@ -29,10 +29,10 @@ public class AlarmTime {
             alarmManager.cancel(pendingIntent);
             new Utils(context).log("req1",StartFinish+" TASK Canceled : "+ quietTask.subject);
         } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //                if (alarmManager.canScheduleExactAlarms())
-//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, nextTime, pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, nextTime, pendingIntent);
 //            }
 //            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
         }

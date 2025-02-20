@@ -1,9 +1,5 @@
 package better.life.autoquiet.Sub;
 
-
-import static better.life.autoquiet.NotificationService.MAKE_SILENT;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -54,7 +50,7 @@ public class NotificationHelper extends ContextWrapper {
                 this, CHANNEL_ID)
                 .setSmallIcon(bellType)
                 .setContentTitle(title + " "
-                    + TaskFinish.nowTimeDateToString(System.currentTimeMillis()))
+                    + TaskFinish.nowDateTimeToString(System.currentTimeMillis()))
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

@@ -74,7 +74,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             case "W":   // work
                 new TaskFinish().go(qt, several, qtIdx, caseSFOW);
                 break;
-            case "T":   // onetime
+            case "T":   // onetime released
                 Toast.makeText(mContext, "Quiet released", Toast.LENGTH_SHORT).show();
                 new AdjVolumes(context, AdjVolumes.VOL.FORCE_ON);
                 new ScheduleNextTask(mContext, "toss");

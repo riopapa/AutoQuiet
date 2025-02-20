@@ -198,6 +198,23 @@ public class ActivityAddEdit extends AppCompatActivity {
             binding.weekFlag.setVisibility(View.GONE);
         else {
             binding.weekFlag.setVisibility(View.VISIBLE);
+            if (alarmType == BELL_ONETIME) {        // 현재 시각으로 설정
+                week = new boolean[7];
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(System.currentTimeMillis());
+                int weekDay = c.get(Calendar.DAY_OF_WEEK) - 1;
+                if (weekDay > 6)
+                    weekDay = 0;
+                week[weekDay] = true;
+                begHour = c.get(Calendar.HOUR_OF_DAY);
+                if (begHour > 12) {
+                    am = false;
+                    sHour = begHour - 12;
+                } else {
+                    am = true;
+                    sHour = begHour;
+                }
+            }
             for (int i = 0; i < 7; i++) {
                 weekView[i].setId(i);
                 weekView[i].setWidth(xSize);
@@ -274,6 +291,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             numPos = 4;
             show_ResultTime();
         });
+
     }
 
     private void showTimeForm() {

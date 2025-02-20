@@ -31,8 +31,8 @@ public class ScheduleNextTask {
         quietTasks = new QuietTaskGetPut().get(context);
 
         nxtTsk = new NextTwoTasks(quietTasks);
-        if (quietTasks.get(nxtTsk.saveIdx).alarmType == BELL_ONETIME)
-            nxtTsk.nextTime -= 30000;
+//        if (quietTasks.get(nxtTsk.saveIdx).alarmType == BELL_ONETIME)
+//            nxtTsk.nextTime -= 30000;
         timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
         updateNotyBar(context);
