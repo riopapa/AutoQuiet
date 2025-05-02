@@ -24,7 +24,7 @@ public class TaskOneTIme {
             public void run() {
                 String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
                         " 입니다. 무음 모드가 끝났습니다";
-                sounds.myTTS.sayTask(say);
+                sounds.sayTask(say);
             }
         }, 2000);
         qt.active = false;

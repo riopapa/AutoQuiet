@@ -19,7 +19,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
-<!--    <queries>-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!--    <queries>-->
 <!--        <package android:name="viva.republica.toss" />-->
 <!--    </queries>-->
 
@@ -63,6 +65,9 @@
         </receiver>
 
         <service android:enabled="true" android:name=".NotificationService" />
+
+        <service android:name=".common.FloatingClockService" />
+
     </application>
 
 </manifest>

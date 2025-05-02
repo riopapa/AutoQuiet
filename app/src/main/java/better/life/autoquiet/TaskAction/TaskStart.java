@@ -46,9 +46,10 @@ public class TaskStart {
 
         else {
             String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
-            sounds.myTTS.sayTask(say);
+            sounds.sayTask(say);
             new ScheduleNextTask(mContext, "ended Err");
         }
+
     }
 
     private void start_Normal() {
@@ -57,9 +58,9 @@ public class TaskStart {
             @Override
             public void run() {
                 String say = (qt.alarmType == PHONE_WORK) ? qt.subject : new AddSuffixStr().add(qt.subject) + "시작 됩니다";
-                sounds.myTTS.sayTask(say);
+                sounds.sayTask(say);
             }
-        }, 500);
+        }, 1000);
 
         new Timer().schedule(new TimerTask() {
             @Override

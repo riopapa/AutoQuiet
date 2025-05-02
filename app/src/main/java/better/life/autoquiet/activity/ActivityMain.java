@@ -99,6 +99,8 @@ public class ActivityMain extends AppCompatActivity {
         new ShowNotification().show(mContext, intent);
     }
 
+    private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;
+
     @Override
     public void onResume() {
 
@@ -112,10 +114,26 @@ public class ActivityMain extends AppCompatActivity {
             currIdx = mainRecycleAdapter.getItemCount() / 4;
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
         super.onResume();
-
-//        reLoad_Again(); // not to be killed
-
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE);
+        }
     }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
+//            if (Settings.canDrawOverlays(this)) {
+//                // Permission granted, proceed to show the overlay
+////                showFloatingClock();
+//            } else {
+//                // Permission denied, handle accordingly (e.g., show a message)
+//            }
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

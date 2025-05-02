@@ -101,22 +101,22 @@ public class ActivityAddAgenda extends AppCompatActivity {
 
     void addAgenda(int id, int before, int after) {
 
-        SimpleDateFormat sdfDateHour = new SimpleDateFormat("MM-dd(EEE) HH:mm", Locale.getDefault());
-        StringBuilder sb  = new StringBuilder();
-        sb.append("Following Tasks Added");
-        int qId = (int) (gCal.begTime & 0x7ffffff);
-        for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
-            if (gCals.get(i).id == id) {
-                GCal gC = gCals.get(i);
-                QuietTask q = new QuietTask(mTitle, gC.begTime + (long) before * 60 * 1000, gC.endTime + (long) after * 60 * 1000,
-                        qId, gC.calName, gC.desc, gC.location, true, 5, gC.repeat);
-                sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calBegDate));
-                quietTasks.add(q);
-            }
-        }
-        Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
-        new QuietTaskGetPut().put(quietTasks);
-        new VarsGetPut().put(vars, context);
-        finish();
+//        SimpleDateFormat sdfDateHour = new SimpleDateFormat("MM-dd(EEE) HH:mm", Locale.getDefault());
+//        StringBuilder sb  = new StringBuilder();
+//        sb.append("Following Tasks Added");
+//        int qId = (int) (gCal.begTime & 0x7ffffff);
+//        for (int i = 0; i < gCals.size(); i++) {    // if repeat item add all
+//            if (gCals.get(i).id == id) {
+//                GCal gC = gCals.get(i);
+//                QuietTask q = new QuietTask(mTitle, gC.begTime + (long) before * 60 * 1000, gC.endTime + (long) after * 60 * 1000,
+//                        qId, gC.calName, gC.desc, gC.location, true, 5, gC.repeat);
+//                sb.append("\n").append(q.subject).append(" ").append(sdfDateHour.format(q.calBegDate));
+//                quietTasks.add(q);
+//            }
+//        }
+//        Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
+//        new QuietTaskGetPut().put(quietTasks);
+//        new VarsGetPut().put(vars, context);
+//        finish();
     }
 }

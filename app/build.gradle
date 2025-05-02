@@ -36,6 +36,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-perf:21.0.5'
+
 
     /* duplicate 가 나올 때 */
     modules {

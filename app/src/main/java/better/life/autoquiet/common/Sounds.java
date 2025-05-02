@@ -1,24 +1,64 @@
 package better.life.autoquiet.common;
 
-import static better.life.autoquiet.common.MyTTS.mAM;
-import static better.life.autoquiet.common.MyTTS.mTTS;
+import static better.life.autoquiet.activity.ActivityMain.mContext;
 
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
+
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import better.life.autoquiet.R;
 
 public class Sounds {
 
     public enum BEEP {NOTY, ALARM, INFO, BBEEPP, TOSS}
     public static int soundType = 0, soundNow = 0;
-    public MyTTS myTTS;
-    public AudioManager mAM;
+    public static TextToSpeech mTTS;
+    public static AudioManager mAM;
+    int rVol, mVol;
+    static String ttsID = "";
 
     public Sounds(Context context) {
-        myTTS = new MyTTS();
+        mTTS = new TextToSpeech(mContext, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                        ttsID = utteranceId;
+                    }
+
+                    @Override
+                    // this method will always called from a background thread.
+                    public void onDone(String utteranceId) {
+                        if (mTTS.isSpeaking())
+                            return;
+                        mTTS.stop();
+                        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+                        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                    }
+                });
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build();
+                mTTS.setAudioAttributes(audioAttributes);
+
+                mTTS.setLanguage(Locale.getDefault());
+                mTTS.setPitch(1.2f);
+                mTTS.setSpeechRate(1.3f);
+            }
+        });
+
         setSoundNow(context);
         mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
@@ -90,6 +130,27 @@ public class Sounds {
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE ||
                 ringVol < 4);
+    }
+
+    public void sayTask (String say) {
+        getCurrVolumes();
+        setVolumeTo(12,12);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "i");
+            }
+        }, 500);
+    }
+
+    public void setVolumeTo(int rVol, int mVol) {
+        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
+    }
+
+    public void getCurrVolumes() {
+        rVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
+        mVol = mAM.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
 }

@@ -4,8 +4,11 @@ import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
+import android.content.Intent;
+
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.NotificationHelper;
+import better.life.autoquiet.common.FloatingClockService;
 import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -25,7 +28,7 @@ public class BellOneTime {
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = qt.subject + " 체크";
-                sounds.myTTS.sayTask(say);
+                sounds.sayTask(say);
                 if (qt.nextDay) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(System.currentTimeMillis());
@@ -39,13 +42,19 @@ public class BellOneTime {
                 } else
                     qt.active = false;
                 quietTasks.set(qtIdx, qt);
-                NotificationHelper notificationHelper = new NotificationHelper(mContext);
-                notificationHelper.sendNotification(R.drawable.bell_onetime,
-                        qt.subject, "OneTime Check");
+                if (qt.clock) {
+                    Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
+                    mContext.startService(serviceIntent);
+                }
+                if (qt.vibrate)
+                    new VibratePhone(mContext, 1);
+
+//                NotificationHelper notificationHelper = new NotificationHelper(mContext);
+//                notificationHelper.sendNotification(R.drawable.bell_onetime,
+//                        qt.subject, "OneTime Check");
                 new QuietTaskGetPut().put(quietTasks);
             }
         }, 1500);
         new ScheduleNextTask(mContext, "ended1");
     }
-
 }

@@ -16,6 +16,7 @@ public class QuietTask implements Serializable {
     public boolean active;  // 해당 task 를 잠시 죽일 떄 사용
     public boolean sayDate; // 현재 일자, 시각을 말할찌 여부
     public boolean vibrate;
+    public boolean clock;
 
     public boolean[] week = {true, true, true, true, true, true, true};
     public int alarmType;
@@ -28,8 +29,12 @@ public class QuietTask implements Serializable {
     public boolean nextDay;
     public long sortKey;    // 0번째 바로 조용히 는 -1
 
+    public QuietTask() {}
+
     // normal QuietTask replaced
-    public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin, boolean[] week, boolean active, int alarmType, boolean sayDate) {
+    public QuietTask(String subject, int begHour, int begMin, int endHour, int endMin,
+                     boolean[] week, boolean active, int alarmType,
+                     boolean sayDate) {
         this.subject = subject;
         this.begHour = begHour;
         this.begMin = begMin;
@@ -46,7 +51,9 @@ public class QuietTask implements Serializable {
 
 
     // QuietTask from calendar
-    public QuietTask(String title, long beg, long end, int id, String calName, String desc, String location, boolean active, int alarmType, boolean taskRepeat) {
+    public QuietTask(String title, long beg, long end, int id, String calName, String desc,
+                     String location, boolean active, int alarmType,
+                     boolean taskRepeat, boolean clock) {
         SimpleDateFormat sdfHour = new SimpleDateFormat("HH", Locale.getDefault());
         SimpleDateFormat sdfMin = new SimpleDateFormat("mm", Locale.getDefault());
         this.agenda = true;
@@ -71,6 +78,7 @@ public class QuietTask implements Serializable {
         this.week[weekNbr] = true;
         this.sayDate = false;
         this.vibrate = true;
+        this.clock = clock;
     }
 
 }

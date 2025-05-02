@@ -37,7 +37,7 @@ public class BellSeveral {
                     } else {
                         String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         s += " " + qt.subject + " 를 " + " 확인하세요, ";
-                        sounds.myTTS.sayTask(s);
+                        sounds.sayTask(s);
                         if (afterSec < 20)
                             afterSec = 10;
                         else

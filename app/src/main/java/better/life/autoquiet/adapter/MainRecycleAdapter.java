@@ -78,7 +78,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         View viewLine;
 //        ImageView lvVibrate, lvBegLoop, lvEndLoop, lvgCal;
         ImageView lvAlarmType;
-        TextView rmdSubject, rmdDate, rmdVibrate, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
+        TextView rmdSubject, rmdDate, rmdVibrate, rmdClock, ltWeek0, ltWeek1, ltWeek2, ltWeek3, ltWeek4, ltWeek5, ltWeek6,
                 tvBegTime, tvEndTime, tvCalRight, tvCalLeft;
         LinearLayout llCalInfo;
         LinearLayout llBegEndTime;
@@ -92,6 +92,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             this.rmdSubject = itemView.findViewById(R.id.rmdSubject);
             this.rmdDate = itemView.findViewById(R.id.rmdDate);
             this.rmdVibrate = itemView.findViewById(R.id.rmdVibrate);
+            this.rmdClock = itemView.findViewById(R.id.rmdClock);
             this.ltWeek0 = itemView.findViewById(R.id.lt_week0);
             this.ltWeek1 = itemView.findViewById(R.id.lt_week1);
             this.ltWeek2 = itemView.findViewById(R.id.lt_week2);
@@ -188,6 +189,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         holder.rmdVibrate.setVisibility((qt.vibrate)? View.VISIBLE : View.INVISIBLE);
         holder.rmdVibrate.setTextColor((active) ? colorOn : colorOff);
+
+        holder.rmdClock.setVisibility((qt.clock)? View.VISIBLE : View.INVISIBLE);
+        holder.rmdClock.setTextColor((active) ? colorOn : colorOff);
 
         String txt = buildHourMin(qt.begHour, qt.begMin);
         holder.tvBegTime.setText(txt);

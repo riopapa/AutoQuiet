@@ -63,7 +63,7 @@ public class TaskFinish {
     private void finish_Normal() {
         sounds.beep(mContext, Sounds.BEEP.INFO);
         String s = new AddSuffixStr().add(qt.subject) + mContext.getString(R.string.finishing_completed);
-        sounds.myTTS.sayTask(s);
+        sounds.sayTask(s);
         if (qt.agenda) { // delete if agenda based
             quietTasks.remove(qtIdx);
         } else if (qt.alarmType < PHONE_VIBRATE) {
@@ -89,7 +89,7 @@ public class TaskFinish {
                                     : R.string.finished);
                     joins = new String[]{nowTime,  new AddSuffixStr().add(qt.subject),
                             "", ending};
-                    sounds.myTTS.sayTask(String.join(" , ", joins));
+                    sounds.sayTask(String.join(" , ", joins));
 
                     long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 200) * 1000;
                     new AlarmTime().request(mContext, qt, nextTime, "F", --several);

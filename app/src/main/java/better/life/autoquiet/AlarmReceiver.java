@@ -59,7 +59,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             if (qtIdx == -1) {
                 String err = "quiet task index Error " + qt.subject;
-                sounds.myTTS.sayTask(err);
+                sounds.sayTask(err);
                 Log.e("Quiet Idx Err", qt.subject);
             }
 
