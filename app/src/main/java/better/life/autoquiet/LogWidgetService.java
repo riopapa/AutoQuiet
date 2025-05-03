@@ -1,5 +1,6 @@
 package better.life.autoquiet;
 
+import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static better.life.autoquiet.activity.ActivityMain.ACTION_NORM;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
@@ -53,6 +54,9 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         Intent fIntent = new Intent();
         fIntent.setAction(ACTION_NORM);
         views.setOnClickFillInIntent(R.id.wLine, fIntent);
+
+        views.setImageViewResource(R.id.wType, alarmIcons[nt.alarmType]);
+
         return views;
     }
 
