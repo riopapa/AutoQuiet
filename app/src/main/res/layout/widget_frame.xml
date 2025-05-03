@@ -19,7 +19,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:layout_margin="2dp"
-            android:src="@drawable/clock" />
+            android:src="@drawable/auto_quite" />
         <ImageView
             android:id="@+id/start_clock"
             android:layout_width="0dp"

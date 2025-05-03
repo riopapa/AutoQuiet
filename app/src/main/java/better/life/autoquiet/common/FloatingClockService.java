@@ -1,5 +1,7 @@
 package better.life.autoquiet.common;
 
+import static better.life.autoquiet.activity.ActivityMain.mContext;
+
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -23,7 +25,7 @@ import better.life.autoquiet.R;
 public class FloatingClockService extends Service {
 
     private WindowManager mWindowManager;
-    private View mFloatingView, backGround;
+    private View mFloatingView;
     private TextView timeTextView;
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -59,7 +61,6 @@ public class FloatingClockService extends Service {
 
         timeTextView = mFloatingView.findViewById(R.id.timeTextView);
         ImageView closeButton = mFloatingView.findViewById(R.id.closeButton);
-        backGround = mFloatingView.findViewById(R.id.backGround);
 
         mUpdateTimeTask = new Runnable() {
             @Override
@@ -73,7 +74,11 @@ public class FloatingClockService extends Service {
                     timeTextView.setTextColor(0xFFFF0000);
                 else
                     timeTextView.setTextColor(0xFFFFFFFF);
-                mHandler.postDelayed(this, 1000);
+                comparisonResult = sec.compareTo("56");
+                if (comparisonResult > 0)
+                    new VibratePhone(mContext, 2);
+                long nxtDelay = 1009 - (System.currentTimeMillis() % 1000);
+                mHandler.postDelayed(this, nxtDelay);
             }
         };
         mHandler.postDelayed(mUpdateTimeTask, 1000);

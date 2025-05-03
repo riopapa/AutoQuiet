@@ -10,9 +10,9 @@ public class VibratePhone {
 
         // 0 : short, 1: long
         final long[][] pattern = {{100, 20, 200, 400, 500, 550}, {100, 120, 100, 300, 300, 250,
-                100, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250}};
-        VibratorManager vibratorManager =
-                null;
+                100, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250},
+                {100,100,100,100}};
+        VibratorManager vibratorManager = null;
         Vibrator vibrator = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);

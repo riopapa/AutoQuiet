@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import better.life.autoquiet.activity.ActivityMain;
+import better.life.autoquiet.common.FloatingClockService;
 
 public class LogWidgetProvider extends AppWidgetProvider {
 
@@ -22,16 +23,28 @@ public class LogWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         String action = intent.getAction();
-        if (ACTION_CLOCK.equals(action) || ACTION_NORM.equals(action)) {
+        if (ACTION_CLOCK.equals(action)) {
+            Intent serviceIntent = new Intent(context, FloatingClockService.class);
+            context.startService(serviceIntent);
+        } else if (ACTION_NORM.equals(action)) {
             appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-            Intent intentStock = new Intent(context, ActivityMain.class);
-            intentStock.setAction(action);
-            intentStock.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intentStock);
-//        } else if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)) {
-            onUpdate(context, AppWidgetManager.getInstance(context), intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS));
+            Intent intentA = new Intent(context, ActivityMain.class);
+            intentA.setAction(action);
+            intentA.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentA);
+        } else
+            update_All_Widgets(context);
+
+    }
+
+    public static void update_All_Widgets(Context context) {
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        for (int widget : appWidgetIds) {
+            updateWidgetStatus(context, appWidgetManager, widget);
         }
-//        update_All_Widgets(context);
     }
 
     @Override
@@ -39,16 +52,6 @@ public class LogWidgetProvider extends AppWidgetProvider {
         // Update each widget
         for (int appWidgetId : appWidgetIds) {
             updateWidgetStatus(context, appWidgetManager, appWidgetId);
-        }
-    }
-
-    public static void update_All_Widgets(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        // Loop through all widgets and update each one
-        for (int widgetId : appWidgetIds) {
-            updateWidgetStatus(context, appWidgetManager, widgetId);
         }
     }
 
@@ -63,28 +66,21 @@ public class LogWidgetProvider extends AppWidgetProvider {
         views.setScrollPosition(R.id.widget_lines, 0);
 
         // Set pending intent template for list items (when clicked)
-        Intent lineIntent = new Intent(context, ActivityMain.class);
-        lineIntent.setAction(ACTION_NORM); // This action will be received by ActivityMain
-        // Put necessary extras here that apply to a list item click if needed
-        // Don't put widget ID here, it will be added by the system along with position
-
-        PendingIntent clickPendingIntentTemplate =
-                PendingIntent.getActivity(context, 0, lineIntent,
+        Intent mInt = new Intent(context, ActivityMain.class);
+        mInt.setAction(ACTION_NORM);
+        PendingIntent mPInt = PendingIntent.getActivity(context, 0, mInt,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        views.setPendingIntentTemplate(R.id.widget_lines, clickPendingIntentTemplate);
+        views.setPendingIntentTemplate(R.id.widget_lines, mPInt);
 
-
-        // Set click listener for the start_clock button (assuming it's not part of the list items)
-        Intent sGroupIntent = new Intent(context, ActivityMain.class); // Or a BroadcastReceiver if you prefer
-        sGroupIntent.setAction(ACTION_CLOCK); // This action will be received by ActivityMain
-        sGroupIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        // Use a different request code than 0 if you have multiple different pending intents
-        PendingIntent sGroupPIntent = PendingIntent.getActivity(context, appWidgetId, // Using getActivity as onReceive starts Activity
-                sGroupIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        Intent cInt = new Intent(context, LogWidgetProvider.class);
+        cInt.setAction(ACTION_CLOCK);
+        cInt.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent mediaPIntent = PendingIntent.getBroadcast(context, appWidgetId,
+                cInt, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
-        views.setOnClickPendingIntent(R.id.start_clock, sGroupPIntent);
+        views.setOnClickPendingIntent(R.id.start_clock, mediaPIntent);
 
-        // *** IMPORTANT: Apply the views to the widget ***
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 

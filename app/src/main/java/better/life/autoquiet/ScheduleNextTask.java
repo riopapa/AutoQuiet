@@ -40,10 +40,11 @@ public class ScheduleNextTask {
         nextAlertTime = nxtTsk.nextTime;
         new AlarmTime().request(context, quietTasks.get(nxtTsk.idx),
                 nxtTsk.nextTime, nxtTsk.caseSFOW, nxtTsk.several);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lines);
+        LogWidgetProvider.update_All_Widgets(context);
+//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+//        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
+//        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+//        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lines);
     }
 
     private void updateNotyBar(Context context) {

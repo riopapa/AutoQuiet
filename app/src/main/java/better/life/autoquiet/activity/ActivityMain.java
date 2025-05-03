@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.common.FloatingClockService;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
@@ -60,6 +61,8 @@ public class ActivityMain extends AppCompatActivity {
 
     public static ArrayList<QuietTask> quietTasks;
     public static ArrayList<NextTask> nextTasks;
+
+    String action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +107,12 @@ public class ActivityMain extends AppCompatActivity {
         Intent intent = new Intent(mContext, notificationService.getClass());
         new ShowNotification().show(mContext, intent);
 
-        nextTasks = new ArrayList<>();
-        NextTask nt = new NextTask();
-        nt.subject = "Init";
-        nt.hour = 12; nt.min = 34;
-        nextTasks.add(nt);
+//        nextTasks = new ArrayList<>();
+//        NextTask nt = new NextTask();
+//        nt.subject = "Init";
+//        nt.hour = 12; nt.min = 34;
+//        nextTasks.add(nt);F.
+
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;
@@ -116,6 +120,7 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     public void onResume() {
 
+        super.onResume();
         vars = new VarsGetPut().get(mContext);
         Log.w("Main", "onResume");
         new Utils(mContext).deleteOldLogFiles();
@@ -125,7 +130,6 @@ public class ActivityMain extends AppCompatActivity {
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 4;
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
-        super.onResume();
         if (!Settings.canDrawOverlays(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
