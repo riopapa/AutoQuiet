@@ -235,13 +235,13 @@ public class NotificationService extends Service {
 
     void updateRemoteViews() {
 
-        mRemoteViews.setImageViewResource(R.id.state_icon, icon);
+        mRemoteViews.setImageViewResource(R.id.wState, icon);
         mRemoteViews.setTextViewText(R.id.calSubject, subject);
         mRemoteViews.setTextViewText(R.id.beg_time, beg + " "+end);
 
         mRemoteViews.setImageViewResource(R.id.state_iconN, iconN);
-        mRemoteViews.setTextViewText(R.id.calSubjectN, subjectN);
-        mRemoteViews.setTextViewText(R.id.beg_timeN, begN+" "+endN);
+        mRemoteViews.setTextViewText(R.id.wSubject, subjectN);
+        mRemoteViews.setTextViewText(R.id.wTime, begN+" "+endN);
         mNotificationManager.notify(100,mBuilder.build());
         show_Volumes();
     }

@@ -1,18 +1,19 @@
 package better.life.autoquiet;
 
 
-import static better.life.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
 import static better.life.autoquiet.activity.ActivityMain.nextAlertTime;
+import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.util.Log;
 
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.NextTwoTasks;
 import better.life.autoquiet.Sub.ShowNotification;
-import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
@@ -37,8 +38,12 @@ public class ScheduleNextTask {
         timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
         updateNotyBar(context);
         nextAlertTime = nxtTsk.nextTime;
-        new AlarmTime().request(context, quietTasks.get(nxtTsk.saveIdx),
+        new AlarmTime().request(context, quietTasks.get(nxtTsk.idx),
                 nxtTsk.nextTime, nxtTsk.caseSFOW, nxtTsk.several);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lines);
     }
 
     private void updateNotyBar(Context context) {

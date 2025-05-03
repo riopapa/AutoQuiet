@@ -1,15 +1,10 @@
 package better.life.autoquiet.models;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class NextTask implements Serializable {
 
-    public String subject, caseSFOW;
-    public int begHour, begMin;
+    public String subject, caseSFOW, beginOrEnd;
+    public int several, idx, alarmType, hour, min;
     public long time;
-
-    public NextTask() {}
 }

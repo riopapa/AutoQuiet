@@ -27,7 +27,7 @@ public class AlarmTime {
                 , intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         if (!quietTask.active) {
             alarmManager.cancel(pendingIntent);
-            new Utils(context).log("req1",StartFinish+" TASK Canceled : "+ quietTask.subject);
+//            new Utils(context).log("req1",StartFinish+" TASK Canceled : "+ quietTask.subject);
         } else {
 //            alarmManager.set(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

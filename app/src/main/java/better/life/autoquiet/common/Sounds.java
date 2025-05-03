@@ -121,8 +121,6 @@ public class Sounds {
         int soundNbr = soundPool1.load(context, soundID, 1);
         soundPool1.setOnLoadCompleteListener((soundPool, f1, f2) -> {
             soundPool.play(soundNbr, 1f, 1f, 1, 0, 1f);
-//            Handler handler = new Handler(Looper.getMainLooper());
-//            handler.postDelayed(() -> soundPool.play(soundNbr, 1f, 1f, 1, 0, 1f), 500);
         });
     }
     public boolean isQuiet() {

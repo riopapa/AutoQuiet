@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
 import better.life.autoquiet.common.Permission;
@@ -53,7 +54,12 @@ public class ActivityMain extends AppCompatActivity {
     public static long nextAlertTime;
     RecyclerView mainRecyclerView;
 
+    public static final String ACTION_CLOCK = "c";
+    public static final String ACTION_NORM = "n";
+    public final static String WIDGET_CALL = "widget";
+
     public static ArrayList<QuietTask> quietTasks;
+    public static ArrayList<NextTask> nextTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +103,12 @@ public class ActivityMain extends AppCompatActivity {
         NotificationService notificationService = new NotificationService();
         Intent intent = new Intent(mContext, notificationService.getClass());
         new ShowNotification().show(mContext, intent);
+
+        nextTasks = new ArrayList<>();
+        NextTask nt = new NextTask();
+        nt.subject = "Init";
+        nt.hour = 12; nt.min = 34;
+        nextTasks.add(nt);
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;

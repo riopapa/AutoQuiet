@@ -46,5 +46,6 @@
     <string name="finishing_started">끝나는 중</string>
     <string name="finished">" 끄으읏 "</string>
     <string name="finishing_completed">끝났어요</string>
+    <string name="app_widget_description">AutoQuiet Widget</string>
 
 </resources>

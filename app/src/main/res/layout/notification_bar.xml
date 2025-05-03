@@ -17,7 +17,7 @@
         android:layout_height = "wrap_content">
 
         <ImageView
-            android:id="@+id/state_icon"
+            android:id="@+id/wState"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="1dp"
@@ -106,7 +106,7 @@
             android:src="@drawable/volumes" />
 
         <TextView
-            android:id="@+id/calSubjectN"
+            android:id="@+id/wSubject"
             android:layout_margin="0dp"
             android:layout_width="0dp"
             android:layout_weight="8"
@@ -130,7 +130,7 @@
             />
 
         <TextView
-            android:id="@+id/beg_timeN"
+            android:id="@+id/wTime"
             android:padding="2dp"
             android:layout_width="0dp"
             android:layout_weight="5"
