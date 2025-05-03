@@ -69,15 +69,15 @@ public class FloatingClockService extends Service {
                 String currentTime = sdf.format(new Date());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 2);
-                int comparisonResult = sec.compareTo("50");
-                if (comparisonResult > 0)
+                int compVal = sec.compareTo("50");
+                if (compVal > 0)
                     timeTextView.setTextColor(0xFFFF0000);
                 else
                     timeTextView.setTextColor(0xFFFFFFFF);
-                comparisonResult = sec.compareTo("56");
-                if (comparisonResult > 0)
+                compVal = sec.compareTo("56");
+                if (compVal > 0)
                     new VibratePhone(mContext, 2);
-                long nxtDelay = 1009 - (System.currentTimeMillis() % 1000);
+                long nxtDelay = 1002 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
         };
