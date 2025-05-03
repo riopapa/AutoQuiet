@@ -2,7 +2,6 @@
     android:height="48dp"
     android:viewportHeight="24"
     android:viewportWidth="24"
-    android:tint="#fff"
     android:width="48dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
   <path android:strokeColor="#17584E"

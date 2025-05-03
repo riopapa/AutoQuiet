@@ -200,7 +200,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
 
-        holder.viewLine.setBackgroundColor( ResourcesCompat.getColor(mContext.getResources(), (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
+        holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(mContext.getResources(),
+                (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
             holder.lvAlarmType.setImageResource(alarmIcons[qt.alarmType]);

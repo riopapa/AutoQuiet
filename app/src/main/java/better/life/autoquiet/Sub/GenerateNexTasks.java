@@ -24,69 +24,69 @@ public class GenerateNexTasks {
 
         for (int idx = 0; idx < quietTasks.size(); idx++) {
             qt = quietTasks.get(idx);
-            if (qt.active) {
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, -1); // calculate from yesterday
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                int WKStart = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
-                for (int wkNbr = WKStart; ; ) {
-                    if (qt.week[wkNbr]) {
-                        cal.set(Calendar.HOUR_OF_DAY, qt.begHour);
-                        cal.set(Calendar.MINUTE, qt.begMin);
-                        nxtStart = cal.getTimeInMillis();
-                        if (qt.endHour == 99)
-                            nxtFinish = 0;
-                        else {
-                            Calendar cal2 = (Calendar) cal.clone();
-                            cal2.set(Calendar.HOUR_OF_DAY, qt.endHour);
-                            cal2.set(Calendar.MINUTE, qt.endMin);
-                            if (qt.begHour > qt.endHour) {
-                                cal2.add(Calendar.DATE, 1);
-                            }
-                            nxtFinish = cal2.getTimeInMillis();
+            if (!qt.active)
+                continue;
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1); // calculate from yesterday
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            int WKStart = cal.get(Calendar.DAY_OF_WEEK) - 1; // 1 for sunday
+            for (int wkNbr = WKStart; ; ) {
+                if (qt.week[wkNbr]) {
+                    cal.set(Calendar.HOUR_OF_DAY, qt.begHour);
+                    cal.set(Calendar.MINUTE, qt.begMin);
+                    nxtStart = cal.getTimeInMillis();
+                    if (qt.endHour == 99)
+                        nxtFinish = 0;
+                    else {
+                        Calendar cal2 = (Calendar) cal.clone();
+                        cal2.set(Calendar.HOUR_OF_DAY, qt.endHour);
+                        cal2.set(Calendar.MINUTE, qt.endMin);
+                        if (qt.begHour > qt.endHour) {
+                            cal2.add(Calendar.DATE, 1);
                         }
-                        if (nowTime < nxtStart || nowTime < nxtFinish)
-                            break;
+                        nxtFinish = cal2.getTimeInMillis();
                     }
-                    wkNbr++;
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                    if (wkNbr == 7)
-                        wkNbr = 0;
+                    if (nowTime < nxtStart || nowTime < nxtFinish)
+                        break;
                 }
+                wkNbr++;
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+                if (wkNbr == 7)
+                    wkNbr = 0;
+            }
 
-                if (nowTime < nxtStart) {
-                    if (qt.alarmType == BELL_SEVERAL) {
-                        nxtStart -= AHEAD_TIME + AHEAD_TIME + AHEAD_TIME;
-                        several = 2;
-                    } else
-                        several = 0;
-                    NextTask nt = new NextTask();
-                    nt.time = nxtStart;
-                    nt.caseSFOW = "S";
-                    nt.subject = qt.subject;
-                    nt.several = several;
-                    nt.alarmType = qt.alarmType;
-                    nt.idx = idx;
-                    nt.hour = qt.begHour;
-                    nt.min = qt.begMin;
-                    nt.beginOrEnd = "시작";
-                    nTs.add(nt);
-                }
-                if (qt.endHour != 99 && nowTime < nxtFinish) {
-                    several = (qt.sayDate) ? 3 : 0;
-                    NextTask nt = new NextTask();
-                    nt.time = nxtFinish;
-                    nt.caseSFOW = "S";
-                    nt.subject = qt.subject;
-                    nt.several = several;
-                    nt.alarmType = qt.alarmType;
-                    nt.idx = idx;
-                    nt.hour = qt.begHour;
-                    nt.min = qt.begMin;
-                    nt.beginOrEnd = "까지";
-                    nTs.add(nt);
-                }
+            if (nowTime < nxtStart) {
+                if (qt.alarmType == BELL_SEVERAL) {
+                    nxtStart -= AHEAD_TIME + AHEAD_TIME + AHEAD_TIME;
+                    several = 2;
+                } else
+                    several = 0;
+                NextTask nt = new NextTask();
+                nt.time = nxtStart;
+                nt.caseSFOW = "S";
+                nt.subject = qt.subject;
+                nt.several = several;
+                nt.alarmType = qt.alarmType;
+                nt.idx = idx;
+                nt.hour = qt.begHour;
+                nt.min = qt.begMin;
+                nt.beginOrEnd = (qt.endHour == 99)? "" : "시작";
+                nTs.add(nt);
+            }
+            if (qt.endHour != 99 && nowTime < nxtFinish) {
+                several = (qt.sayDate) ? 3 : 0;
+                NextTask nt = new NextTask();
+                nt.time = nxtFinish;
+                nt.caseSFOW = "S";
+                nt.subject = qt.subject;
+                nt.several = several;
+                nt.alarmType = qt.alarmType;
+                nt.idx = idx;
+                nt.hour = qt.endHour;
+                nt.min = qt.endMin;
+                nt.beginOrEnd = "까지";
+                nTs.add(nt);
             }
         }
 

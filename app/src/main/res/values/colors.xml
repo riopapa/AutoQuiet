@@ -14,9 +14,9 @@
     <color name="cal_Right">#051E47</color>
 
     <color name="itemNormalBorder">#788887</color>
-    <color name="itemNormalFill">#F1F8E9</color>
+    <color name="itemNormalFill">#9FCF67</color>
     <color name="itemSelectBorder">#91BABA</color>
-    <color name="itemSelectFill">#CAD3C0</color>
+    <color name="itemSelectFill">#697D54</color>
 
     <color name="itemAgendaFill">#CAF1A3</color>
 
@@ -25,7 +25,7 @@
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>
     <color name="colorOnBack">#05B3A1</color>
-    <color name="colorOff">#98AFC7</color>
+    <color name="colorOff">#076C62</color>
     <color name="colorActive">#0000A0</color>
     <color name="BackGroundActiveOn">#EDF1E9</color>
     <color name="BackGroundActiveOff">#5E615B</color>
@@ -40,5 +40,11 @@
     <color name="nameBokji">#80CCFF90</color>
     <color name="nameEvents">#807FDDFA</color>
     <color name="nameOthers">#801F2DA6</color>
+
+    <color name="widget_line0u">#FF455550</color>
+    <color name="widget_line0d">#FF35594E</color>
+    <color name="widget_line1u">#FF554540</color>
+    <color name="widget_line1d">#FF654550</color>
+    <color name="white">#FFF</color>
 
 </resources>

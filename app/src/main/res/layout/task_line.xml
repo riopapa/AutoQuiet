@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/one_reminder"
     android:layout_margin="2dp"
+    android:background="#888"
     android:orientation="horizontal"
     android:baselineAligned="false">
 
