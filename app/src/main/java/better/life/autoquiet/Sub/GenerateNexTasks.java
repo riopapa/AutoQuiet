@@ -3,11 +3,9 @@ package better.life.autoquiet.Sub;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Locale;
 
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
@@ -17,7 +15,6 @@ public class GenerateNexTasks {
     QuietTask qt;
     int several;
     ArrayList <NextTask> nTs;
-    final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd, HH:mm", Locale.getDefault());
 
     public void gen(ArrayList<QuietTask> quietTasks) {
         nTs = new ArrayList<>();
@@ -74,7 +71,6 @@ public class GenerateNexTasks {
             several = 0;
         NextTask nt = new NextTask();
         nt.time = setTime;
-        nt.timeS = sdf.format(setTime);
         nt.SFO = SFO;
         nt.subject = qt.subject;
         nt.several = several;
