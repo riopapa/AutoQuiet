@@ -55,7 +55,7 @@ public class BellSeveral {
                     new ScheduleNextTask(mContext, "end F");
                 }
             }
-        }, 600);
+        }, 800);
 
     }
 
