@@ -1,4 +1,4 @@
-package better.life.autoquiet;
+package better.life.autoquiet.widget;
 
 import static better.life.autoquiet.activity.ActivityMain.ACTION_CLOCK;
 import static better.life.autoquiet.activity.ActivityMain.ACTION_NORM;
@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
+import better.life.autoquiet.R;
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.common.FloatingClockService;
 

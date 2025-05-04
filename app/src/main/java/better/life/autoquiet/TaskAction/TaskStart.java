@@ -9,13 +9,12 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
-import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.AdjVolumes;
 import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
-import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
 import java.util.TimerTask;

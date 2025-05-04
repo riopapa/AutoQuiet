@@ -16,15 +16,13 @@ import android.media.AudioManager;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
-import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.AdjVolumes;
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.activity.ActivityOneTime;
-import better.life.autoquiet.models.QuietTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 
 public class NotificationService extends Service {
 

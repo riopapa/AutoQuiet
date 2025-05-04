@@ -62,7 +62,7 @@
 
         <service android:name=".common.FloatingClockService" />
 
-        <receiver android:name=".LogWidgetProvider" android:exported="false">
+        <receiver android:name=".widget.LogWidgetProvider" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="c" /> <!-- ACTION_CLOCK-->
@@ -71,7 +71,7 @@
                 android:resource="@xml/my_widget_info" />
         </receiver>
 
-        <service android:name=".LogWidgetService"
+        <service android:name=".widget.LogWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="true" />
 

@@ -10,7 +10,7 @@ import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
-import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;

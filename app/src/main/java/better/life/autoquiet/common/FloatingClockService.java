@@ -40,7 +40,7 @@ public class FloatingClockService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_clock_layout, null);
+        mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_clock, null);
 
         // Set layout parameters
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -73,7 +73,7 @@ public class FloatingClockService extends Service {
                 if (compVal > 0)
                     timeTextView.setTextColor(0xFFFF0000);
                 else
-                    timeTextView.setTextColor(0xFFFFFFFF);
+                    timeTextView.setTextColor(0xFF00FFFF);
                 compVal = sec.compareTo("55");
                 if (compVal > 0)
                     new VibratePhone(mContext, 2);

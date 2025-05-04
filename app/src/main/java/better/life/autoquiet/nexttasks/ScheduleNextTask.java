@@ -1,4 +1,4 @@
-package better.life.autoquiet;
+package better.life.autoquiet.nexttasks;
 
 
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
@@ -7,9 +7,9 @@ import android.content.Context;
 import android.util.Log;
 
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.Sub.GenerateNexTasks;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.widget.LogWidgetProvider;
 
 import java.util.ArrayList;
 

@@ -5,7 +5,7 @@ import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 import android.content.Context;
 
-import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;

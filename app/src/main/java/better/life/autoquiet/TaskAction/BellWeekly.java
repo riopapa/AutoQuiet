@@ -5,14 +5,11 @@ import static better.life.autoquiet.AlarmReceiver.sounds;
 
 import android.content.Intent;
 
-import better.life.autoquiet.R;
-import better.life.autoquiet.ScheduleNextTask;
-import better.life.autoquiet.Sub.NotificationHelper;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.common.FloatingClockService;
 import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
-import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
 import java.util.TimerTask;

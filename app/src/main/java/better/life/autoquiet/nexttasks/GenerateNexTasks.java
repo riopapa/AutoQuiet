@@ -1,4 +1,4 @@
-package better.life.autoquiet.Sub;
+package better.life.autoquiet.nexttasks;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;

@@ -1,4 +1,4 @@
-package better.life.autoquiet;
+package better.life.autoquiet.widget;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static better.life.autoquiet.activity.ActivityMain.ACTION_NORM;
@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
+
+import better.life.autoquiet.R;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 
 public class LogWidgetService extends RemoteViewsService {

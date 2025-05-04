@@ -41,10 +41,10 @@
     <color name="nameEvents">#807FDDFA</color>
     <color name="nameOthers">#801F2DA6</color>
 
-    <color name="widget_line0u">#FF455550</color>
-    <color name="widget_line0d">#FF35594E</color>
-    <color name="widget_line1u">#FF554540</color>
-    <color name="widget_line1d">#FF654550</color>
+    <color name="widget_line0u">#FF56396D</color>
+    <color name="widget_line0d">#3C2052</color>
+    <color name="widget_line1u">#763874</color>
+    <color name="widget_line1d">#592250</color>
     <color name="white">#FFF</color>
 
 </resources>

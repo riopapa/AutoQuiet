@@ -6,18 +6,11 @@ import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-
-import better.life.autoquiet.NotificationService;
 import better.life.autoquiet.R;
-import better.life.autoquiet.ScheduleNextTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.AdjVolumes;
-import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Sub.MannerMode;
-import better.life.autoquiet.Sub.ShowNotification;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.NextTask;
