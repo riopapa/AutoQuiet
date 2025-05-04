@@ -21,10 +21,6 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <!--    <queries>-->
-<!--        <package android:name="viva.republica.toss" />-->
-<!--    </queries>-->
-
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
@@ -69,7 +65,7 @@
         <receiver android:name=".LogWidgetProvider" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="c" />
+                <action android:name="c" /> <!-- ACTION_CLOCK-->
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/my_widget_info" />
