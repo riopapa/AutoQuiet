@@ -103,9 +103,9 @@ public class ActivityMain extends AppCompatActivity {
 
         new VarsGetPut().put(vars, mContext);
 
-        NotificationService notificationService = new NotificationService();
-        Intent intent = new Intent(mContext, notificationService.getClass());
-        new ShowNotification().show(mContext, intent);
+//        NotificationService notificationService = new NotificationService();
+//        Intent intent = new Intent(mContext, notificationService.getClass());
+//        new ShowNotification().show(mContext, intent);
 
 //        nextTasks = new ArrayList<>();
 //        NextTask nt = new NextTask();
@@ -271,7 +271,7 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onPause() {
 //        mainRecycleAdapter.sort("");
-        new ScheduleNextTask(mContext, "");
+        new ScheduleNextTask(mContext, "main");
         super.onPause();
     }
 

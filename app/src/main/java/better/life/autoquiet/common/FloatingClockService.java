@@ -74,7 +74,7 @@ public class FloatingClockService extends Service {
                     timeTextView.setTextColor(0xFFFF0000);
                 else
                     timeTextView.setTextColor(0xFFFFFFFF);
-                compVal = sec.compareTo("56");
+                compVal = sec.compareTo("55");
                 if (compVal > 0)
                     new VibratePhone(mContext, 2);
                 long nxtDelay = 1002 - (System.currentTimeMillis() % 1000);

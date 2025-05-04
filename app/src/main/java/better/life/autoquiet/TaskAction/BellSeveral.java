@@ -7,6 +7,7 @@ import static better.life.autoquiet.AlarmReceiver.sounds;
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
@@ -19,24 +20,24 @@ import java.util.TimerTask;
 
 public class BellSeveral {
 
-    public void go(QuietTask qt, int several, int qtIdx) {
+    public void go(NextTask nt) {
 
-        int gapSec = secRemaining(qt, System.currentTimeMillis());
-        if (gapSec < 60 && gapSec > 5 && several > 0)
-            sounds.beep(mContext, (qt.subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
+        int gapSec = secRemaining(nt, System.currentTimeMillis());
+        if (gapSec < 60 && gapSec > 5 && nt.several > 0)
+            sounds.beep(mContext, (nt.subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                int afterSec = secRemaining(qt, System.currentTimeMillis()) - 2;
-                if (qt.vibrate)
+                int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;
+                if (nt.vibrate)
                     new VibratePhone(mContext, 1);
-                if (several > 0 && afterSec > 5) {
+                if (nt.several > 0 && afterSec > 5) {
                     if (afterSec > 60) {
                         afterSec = 20;
                     } else if (sounds.isQuiet()) {
                         afterSec = afterSec / 2;
                     } else {
-                        String s = (qt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
-                        s += " " + qt.subject + " 를 " + " 확인하세요, ";
+                        String s = (nt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
+                        s += " " + nt.subject + " 를 " + " 확인하세요, ";
                         sounds.sayTask(s);
                         if (afterSec < 20)
                             afterSec = 10;
@@ -44,11 +45,12 @@ public class BellSeveral {
                             afterSec = afterSec / 2;
                     }
                     long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                    new AlarmTime().request(mContext, qt, nextTime, "S", several);
+                    new AlarmTime().request(mContext, nt, nextTime, "S", nt.several);
                 } else {
 //                    Log.w("a Schedule ","New task");
+                    QuietTask qt = quietTasks.get(nt.idx);
                     qt.active = false;
-                    quietTasks.set(qtIdx, qt);
+                    quietTasks.set(nt.idx, qt);
                     new QuietTaskGetPut().put(quietTasks);
                     new ScheduleNextTask(mContext, "end F");
                 }
@@ -57,10 +59,10 @@ public class BellSeveral {
 
     }
 
-    int secRemaining(QuietTask qt, long time) {
+    int secRemaining(NextTask nt, long time) {
         Calendar toDay = Calendar.getInstance();
-        toDay.set(Calendar.HOUR_OF_DAY, qt.begHour);
-        toDay.set(Calendar.MINUTE, qt.begMin);
+        toDay.set(Calendar.HOUR_OF_DAY, nt.hour);
+        toDay.set(Calendar.MINUTE, nt.min);
         toDay.set(Calendar.SECOND, 0);
         return (int) ((toDay.getTimeInMillis() - time)/1000);
     }

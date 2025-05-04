@@ -6,12 +6,10 @@ import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
 import better.life.autoquiet.models.NextTask;
-import android.widget.RemoteViews;
 
 public class LogWidgetService extends RemoteViewsService {
     @Override
@@ -51,7 +49,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_line);
         NextTask nt = nextTasks.get(position);
         views.setTextViewText(R.id.wSubject, nt.subject);
-        time = buildHourMin(nt.hour, nt.min) + " " + nt.beginOrEnd;
+        time = buildHourMin(nt.hour, nt.min) + " " + nt.suffix;
         views.setTextViewText(R.id.wTime, time);
         int colorU = (position % 2) == 0 ?
                 ContextCompat.getColor(context,R.color.widget_line0u)

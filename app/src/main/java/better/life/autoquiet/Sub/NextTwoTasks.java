@@ -16,15 +16,14 @@ public class NextTwoTasks {
 
     public NextTwoTasks(ArrayList<QuietTask> quietTasks) {
 
-        new GenerateNexTasks().gen(quietTasks);
         NextTask nt1 = nextTasks.get(0);
         NextTask nt2 = nextTasks.get(1);
         nextTime = nt1.time;
-        caseSFOW = nt1.caseSFOW;
+        caseSFOW = nt1.SFO;
         subject = nt1.subject;
         several = nt1.several;  // no several from sSecond
         icon = alarmIcons[nt1.alarmType];
-        beginOrEnd = nt1.beginOrEnd;
+        beginOrEnd = nt1.suffix;
         sHour = nt1.hour;
         sMin = nt1.min;
 
@@ -33,7 +32,7 @@ public class NextTwoTasks {
         iconN = alarmIcons[nt2.alarmType];
         sHourN = nt2.hour;
         sMinN = nt2.min;
-        beginOrEndN = nt2.beginOrEnd;
+        beginOrEndN = nt2.suffix;
     }
 
 }

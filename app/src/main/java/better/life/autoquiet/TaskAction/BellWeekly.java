@@ -11,6 +11,7 @@ import better.life.autoquiet.Sub.NotificationHelper;
 import better.life.autoquiet.common.FloatingClockService;
 import better.life.autoquiet.common.VibratePhone;
 import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
@@ -18,21 +19,21 @@ import java.util.TimerTask;
 
 public class BellWeekly {
 
-    public void go(QuietTask qt) {
+    public void go(NextTask nt) {
         sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (qt.clock) {
+                if (nt.clock) {
                     Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
                     mContext.startService(serviceIntent);
                 }
-                if (qt.vibrate)
+                if (nt.vibrate)
                     new VibratePhone(mContext, 1);
-                String say = qt.subject + " 를 확인";
+                String say = nt.subject + " 를 확인";
                 sounds.sayTask(say);
 //                NotificationHelper notificationHelper = new NotificationHelper(mContext);
 //                notificationHelper.sendNotification(R.drawable.bell_weekly,
-//                        qt.subject, "Weekly Check "+qt.subject);
+//                        nt.subject, "Weekly Check "+nt.subject);
                 new ScheduleNextTask(mContext, "event");
             }
         }, 1500);

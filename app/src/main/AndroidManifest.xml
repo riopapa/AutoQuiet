@@ -64,7 +64,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:enabled="true" android:name=".NotificationService" />
+<!--        <service android:enabled="true" android:name=".NotificationService" />-->
 
         <service android:name=".common.FloatingClockService" />
 

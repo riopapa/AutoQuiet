@@ -1,7 +1,5 @@
 package better.life.autoquiet;
 
-import static better.life.autoquiet.AlarmReceiver.several;
-import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
 import android.app.Notification;
@@ -72,14 +70,14 @@ public class NotificationService extends Service {
             Log.e("operation", e.toString());
         }
 
-        if (operation == A_MINUTE) {
-            quiet_minute(20 * 60);
-        } else if (operation == MAKE_SILENT) {
-            if (several > 0) {
-                several = 0;
-                new ScheduleNextTask(mContext, "make Silent");
-            }
-            else
+//        if (operation == A_MINUTE) {
+//            quiet_minute(20 * 60);
+        if (operation == MAKE_SILENT) {
+//            if (several > 0) {
+//                several = 0;
+//                new ScheduleNextTask(mContext, "make Silent");
+//            }
+//            else
                 make_silent();
         } else if (operation == RIGHT_NOW) {
             Intent oIntent = new Intent(mContext, ActivityOneTime.class);
@@ -99,21 +97,21 @@ public class NotificationService extends Service {
             volume_On();
             updateRemoteViews();
         } else {
-            beg = intent.getStringExtra("beg");
-            begN = intent.getStringExtra("begN");
-            end = intent.getStringExtra("end");
-            endN = intent.getStringExtra("endN");
-            stop_repeat = intent.getBooleanExtra("stop_repeat", false);
-            subject = intent.getStringExtra("subject");
-            subjectN = intent.getStringExtra("subjectN");
-            icon = intent.getIntExtra("icon", 0);
-            iconN = intent.getIntExtra("iconN", 0);
-            iconNow = intent.getIntExtra("iconNow", R.drawable.auto_quite);
-            if (icon == 0)
-                return START_STICKY;
-            if (iconN == 0)
-                iconN = R.drawable.auto_quite;
-            updateRemoteViews();
+//            beg = intent.getStringExtra("beg");
+//            begN = intent.getStringExtra("begN");
+//            end = intent.getStringExtra("end");
+//            endN = intent.getStringExtra("endN");
+//            stop_repeat = intent.getBooleanExtra("stop_repeat", false);
+//            subject = intent.getStringExtra("subject");
+//            subjectN = intent.getStringExtra("subjectN");
+//            icon = intent.getIntExtra("icon", 0);
+//            iconN = intent.getIntExtra("iconN", 0);
+//            iconNow = intent.getIntExtra("iconNow", R.drawable.auto_quite);
+//            if (icon == 0)
+//                return START_STICKY;
+//            if (iconN == 0)
+//                iconN = R.drawable.auto_quite;
+//            updateRemoteViews();
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -161,17 +159,17 @@ public class NotificationService extends Service {
         updateRemoteViews();
     }
 
-    private void quiet_minute(int secs) {
-
-        new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
-        QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
-                new boolean[7], true,  PHONE_VIBRATE, false);
-        long nextTime = System.currentTimeMillis() + secs * 1000L;
-        new AlarmTime().request(mContext, qt, nextTime, "T", 1);   // several 0 : no more
-        Toast.makeText(this, "quiet minute "+secs+" secs", Toast.LENGTH_SHORT).show();
-        show_Volumes();
-        updateRemoteViews();
-    }
+//    private void quiet_minute(int secs) {
+//
+//        new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
+//        QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
+//                new boolean[7], true,  PHONE_VIBRATE, false);
+//        long nextTime = System.currentTimeMillis() + secs * 1000L;
+//        new AlarmTime().request(mContext, qt, nextTime, "O", 1);   // several 0 : no more
+//        Toast.makeText(this, "quiet minute "+secs+" secs", Toast.LENGTH_SHORT).show();
+//        show_Volumes();
+//        updateRemoteViews();
+//    }
 
     private void make_silent() {
         // while 만보 적용, 사무실 ...

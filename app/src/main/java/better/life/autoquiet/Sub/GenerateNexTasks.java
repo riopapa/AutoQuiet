@@ -1,11 +1,14 @@
 package better.life.autoquiet.Sub;
 
-import static better.life.autoquiet.ScheduleNextTask.AHEAD_TIME;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
@@ -15,9 +18,10 @@ public class GenerateNexTasks {
     QuietTask qt;
     int several;
 
-    void gen(ArrayList<QuietTask> quietTasks) {
+    public void gen(ArrayList<QuietTask> quietTasks) {
         ArrayList <NextTask> nTs;
         nTs = new ArrayList<>();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd, HH:mm", Locale.getDefault());
         final long nowTime = System.currentTimeMillis()+ 30000;
         final long farTime = nowTime + 36*60*60*1000;
         long nxtStart, nxtFinish;
@@ -58,37 +62,49 @@ public class GenerateNexTasks {
 
             if (nowTime < nxtStart) {
                 if (qt.alarmType == BELL_SEVERAL) {
-                    nxtStart -= AHEAD_TIME + AHEAD_TIME + AHEAD_TIME;
+                    nxtStart += 12000;
                     several = 2;
                 } else
                     several = 0;
                 NextTask nt = new NextTask();
                 nt.time = nxtStart;
-                nt.caseSFOW = "S";
+                nt.timeS = sdf.format(nxtStart);
+                nt.SFO = "S";
                 nt.subject = qt.subject;
                 nt.several = several;
                 nt.alarmType = qt.alarmType;
                 nt.idx = idx;
                 nt.hour = qt.begHour;
                 nt.min = qt.begMin;
-                nt.beginOrEnd = (qt.endHour == 99)? "" : "시작";
+                nt.suffix = (qt.endHour == 99)? "" : "시작";
+                nt.vibrate = qt.vibrate;
+                nt.sayDate = qt.sayDate;
+                nt.clock = qt.clock;
                 nTs.add(nt);
             }
             if (qt.endHour != 99 && nowTime < nxtFinish) {
                 several = (qt.sayDate) ? 3 : 0;
                 NextTask nt = new NextTask();
                 nt.time = nxtFinish;
-                nt.caseSFOW = "S";
+                nt.timeS = sdf.format(nxtFinish);
+                nt.SFO = "F";
                 nt.subject = qt.subject;
                 nt.several = several;
                 nt.alarmType = qt.alarmType;
                 nt.idx = idx;
                 nt.hour = qt.endHour;
                 nt.min = qt.endMin;
-                nt.beginOrEnd = "까지";
+                nt.suffix = "까지";
+                nt.vibrate = qt.vibrate;
+                nt.sayDate = qt.sayDate;
                 nTs.add(nt);
             }
         }
+
+//        for (NextTask nt: nTs) {
+//            String [] ss = {nt.timeS, ""+nt.hour, ""+nt.min, nt.subject, ""+ nt.alarmType, nt.suffix, ""+ nt.idx};
+//            Log.w("nTs "+nt.idx, String.join(", ", ss));
+//        }
 
         nextTasks = new ArrayList<>();
         for (NextTask nt: nTs) {
@@ -96,6 +112,13 @@ public class GenerateNexTasks {
                 nextTasks.add(nt);
         }
         nextTasks.sort((nt1, nt2) -> Long.compare(nt1.time, nt2.time));
+        Log.w("nxt ", "---");
+//
+//        for (NextTask nt: nextTasks) {
+//            String [] ss = {nt.timeS, ""+nt.hour, ""+nt.min, nt.subject, ""+ nt.alarmType, nt.suffix, ""+ nt.idx};
+//            Log.w("nxt "+nt.idx, String.join(", ", ss));
+//        }
+
     }
 
 }

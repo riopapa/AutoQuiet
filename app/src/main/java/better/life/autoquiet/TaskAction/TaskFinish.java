@@ -20,6 +20,7 @@ import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.Sub.ShowNotification;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.Utils;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -29,25 +30,22 @@ import java.util.TimerTask;
 
 public class TaskFinish {
 
-    int several, qtIdx;
-    QuietTask qt;
+    NextTask nt;
 
-    public void go(QuietTask qT, int severalTimes, int idx, String caseSFOW) {
-        several = severalTimes;
-        qtIdx = idx;
-        this.qt = qT;
+    public void go(NextTask nt) {
+        this.nt = nt;
 
         new MannerMode().turn2Normal(mContext);
         new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
-        if (!qt.sayDate)
+        if (!nt.sayDate)
             sounds.beep(mContext, Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (!qt.sayDate) {
-                    if (caseSFOW.equals("W"))
-                        finish_Work();
-                    else
+                if (!nt.sayDate) {
+//                    if (caseSFOW.equals("W"))
+//                        finish_Work();
+//                    else
                         finish_Normal();
                 } else
                     finish_Several();
@@ -55,21 +53,15 @@ public class TaskFinish {
         }, 800);
     }
 
-    private void finish_Work() {
-        sounds.beep(mContext, Sounds.BEEP.INFO);
-        new ScheduleNextTask(mContext, "Fin Work");
-    }
-
     private void finish_Normal() {
         sounds.beep(mContext, Sounds.BEEP.INFO);
-        String s = new AddSuffixStr().add(qt.subject) + mContext.getString(R.string.finishing_completed);
+        String s = new AddSuffixStr().add(nt.subject) + mContext.getString(R.string.finishing_completed);
         sounds.sayTask(s);
-        if (qt.agenda) { // delete if agenda based
-            quietTasks.remove(qtIdx);
-        } else if (qt.alarmType < PHONE_VIBRATE) {
+        if (nt.alarmType < PHONE_VIBRATE) {
+            QuietTask qt = quietTasks.get(nt.idx);
             qt.active = false;
-            quietTasks.set(qtIdx, qt);
-            mainRecycleAdapter.notifyItemChanged(qtIdx);
+            quietTasks.set(nt.idx, qt);
+            mainRecycleAdapter.notifyItemChanged(nt.idx);
         }
         new ScheduleNextTask(mContext, "Fin Normal");
         new Utils(mContext).deleteOldLogFiles();
@@ -78,47 +70,47 @@ public class TaskFinish {
     private void finish_Several() {
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (several > 0) {
-                    long now = System.currentTimeMillis();
-                    String[] joins;
-                    String nowTime = (qt.sayDate)? nowDateTimeToString(now) + " "
-                                    + nowDateTimeToString(now): nowTimeToString(now);
-                    String ending = mContext.getString(
-                            (several == 1) ? R.string.finishing_completed :
-                            (several > 1) ? R.string.finishing_started
-                                    : R.string.finished);
-                    joins = new String[]{nowTime,  new AddSuffixStr().add(qt.subject),
-                            "", ending};
-                    sounds.sayTask(String.join(" , ", joins));
-
-                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 200) * 1000;
-                    new AlarmTime().request(mContext, qt, nextTime, "F", --several);
-                    SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
-                    sharedPref.edit().putInt("several", several).apply();
-                    String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
-                    String endN = sharedPref.getString("endN", "시작");
-                    String subjectN = sharedPref.getString("subjectN", "Next Item");
-                    int icon = sharedPref.getInt("icon", R.drawable.next_task);
-                    int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
-
-                    Intent intent = new Intent(mContext, NotificationService.class);
-                    intent.putExtra("beg", nowTimeToString(nextTime));
-                    intent.putExtra("end", "반복" + several);
-                    intent.putExtra("stop_repeat", true);
-                    intent.putExtra("subject", qt.subject);
-                    intent.putExtra("icon", icon);
-                    intent.putExtra("iconNow", icon);
-                    intent.putExtra("begN", begN);
-                    intent.putExtra("endN", endN);
-                    intent.putExtra("subjectN", subjectN);
-                    intent.putExtra("iconN", iconN);
-                    new ShowNotification().show(mContext, intent);
-
-                } else {
-                    if (qt.agenda)
-                        quietTasks.remove(qtIdx);
-                    new ScheduleNextTask(mContext, "say_FinDate");
-                }
+//                if (several > 0) {
+//                    long now = System.currentTimeMillis();
+//                    String[] joins;
+//                    String nowTime = (nt.sayDate)? nowDateTimeToString(now) + " "
+//                                    + nowDateTimeToString(now): nowTimeToString(now);
+//                    String ending = mContext.getString(
+//                            (several == 1) ? R.string.finishing_completed :
+//                            (several > 1) ? R.string.finishing_started
+//                                    : R.string.finished);
+//                    joins = new String[]{nowTime,  new AddSuffixStr().add(nt.subject),
+//                            "", ending};
+//                    sounds.sayTask(String.join(" , ", joins));
+//
+//                    long nextTime = System.currentTimeMillis() + ((several == 1) ? 30 : 200) * 1000;
+//                    new AlarmTime().request(mContext, nt, nextTime, "F", --several);
+//                    SharedPreferences sharedPref = mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+//                    sharedPref.edit().putInt("several", several).apply();
+//                    String begN = sharedPref.getString("begN", nowTimeToString(nextTime));
+//                    String endN = sharedPref.getString("endN", "시작");
+//                    String subjectN = sharedPref.getString("subjectN", "Next Item");
+//                    int icon = sharedPref.getInt("icon", R.drawable.next_task);
+//                    int iconN = sharedPref.getInt("iconN", R.drawable.next_task);
+//
+//                    Intent intent = new Intent(mContext, NotificationService.class);
+//                    intent.putExtra("beg", nowTimeToString(nextTime));
+//                    intent.putExtra("end", "반복" + several);
+//                    intent.putExtra("stop_repeat", true);
+//                    intent.putExtra("subject", nt.subject);
+//                    intent.putExtra("icon", icon);
+//                    intent.putExtra("iconNow", icon);
+//                    intent.putExtra("begN", begN);
+//                    intent.putExtra("endN", endN);
+//                    intent.putExtra("subjectN", subjectN);
+//                    intent.putExtra("iconN", iconN);
+//                    new ShowNotification().show(mContext, intent);
+//
+//                } else {
+//                    if (nt.agenda)
+//                        quietTasks.remove(ntIdx);
+//                    new ScheduleNextTask(mContext, "say_FinDate");
+//                }
 
             }
         }, 1200);

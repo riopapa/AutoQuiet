@@ -406,7 +406,7 @@ public class ActivityAddEdit extends AppCompatActivity {
 
     private void save_QuietTask() {
 
-        if (getScreen2Vars()) return;
+        if (verifyInput()) return;
 
         if (end99)
             save_AlarmTask();
@@ -427,7 +427,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         mainRecycleAdapter.sort();
     }
 
-    private boolean getScreen2Vars() {
+    private boolean verifyInput() {
         int any = 0;
         for (int i = 0; i < 7; i++) {
             if (week[i]) any++;
@@ -546,7 +546,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             new QuietTaskGetPut().put(quietTasks);
 
         } else if (id == R.id.action_copy) {
-            getScreen2Vars();
+            verifyInput();
             QuietTask qtNew = new QuietTask(subject,
                     begHour, begMin, endHour, endMin,
                     week, active, alarmType, sayDate);

@@ -32,18 +32,19 @@ public class LogWidgetProvider extends AppWidgetProvider {
             intentA.setAction(action);
             intentA.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intentA);
-        } else
-            update_All_Widgets(context);
-
+        }
+        update_All_Widgets(context);
     }
 
     public static void update_All_Widgets(Context context) {
 
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, LogWidgetProvider.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        for (int widget : appWidgetIds) {
-            updateWidgetStatus(context, appWidgetManager, widget);
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+        ComponentName cn = new ComponentName(context, LogWidgetProvider.class);
+        mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.widget_lines);
+
+        int[] appWidgetIds = mgr.getAppWidgetIds(cn);
+        for (int appWidgetId : appWidgetIds) {
+            updateWidgetStatus(context, mgr, appWidgetId);
         }
     }
 
@@ -80,12 +81,7 @@ public class LogWidgetProvider extends AppWidgetProvider {
         );
         views.setOnClickPendingIntent(R.id.start_clock, mediaPIntent);
 
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
-
-
-
-
 
 }

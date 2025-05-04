@@ -14,6 +14,7 @@ import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.AdjVolumes;
 import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.Timer;
@@ -21,31 +22,30 @@ import java.util.TimerTask;
 
 public class TaskStart {
 
-    QuietTask qt;
-    public void go(QuietTask qT, int several, int qtIdx) {
-        this.qt = qT;
-        if (qt.alarmType < PHONE_VIBRATE)
-            say_Started99(several, qtIdx);
+    NextTask nt;
+    
+    public void go(NextTask nt) {
+        this.nt = nt;
+        if (nt.alarmType < PHONE_VIBRATE)
+            say_Started99();
         else {
             start_Normal();
         }
     }
 
-    private void say_Started99(int several, int qtIdx) {
+    private void say_Started99() {
 
-        String subject = qt.subject;
+        if      (nt.alarmType == BELL_SEVERAL) {
+            new BellSeveral().go(nt);
 
-        if      (qt.alarmType == BELL_SEVERAL) {
-            new BellSeveral().go(qt, several, qtIdx);
+        } else if (nt.alarmType == BELL_WEEKLY)
+            new BellWeekly().go(nt);
 
-        } else if (qt.alarmType == BELL_WEEKLY)
-            new BellWeekly().go(qt);
-
-        else if (qt.alarmType == BELL_ONETIME)
-            new BellOneTime().go(qt, qtIdx);
+        else if (nt.alarmType == BELL_ONETIME)
+            new BellOneTime().go(nt);
 
         else {
-            String say = subject + "AlarmType 에러 확인 "+qt.alarmType;
+            String say = nt.subject + "AlarmType 에러 확인 "+nt.alarmType;
             sounds.sayTask(say);
             new ScheduleNextTask(mContext, "ended Err");
         }
@@ -57,7 +57,7 @@ public class TaskStart {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                String say = (qt.alarmType == PHONE_WORK) ? qt.subject : new AddSuffixStr().add(qt.subject) + "시작 됩니다";
+                String say = (nt.alarmType == PHONE_WORK) ? nt.subject : new AddSuffixStr().add(nt.subject) + "시작 됩니다";
                 sounds.sayTask(say);
             }
         }, 1000);
@@ -65,11 +65,11 @@ public class TaskStart {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if ((qt.alarmType == PHONE_WORK))
+                if ((nt.alarmType == PHONE_WORK))
                     new AdjVolumes(mContext, AdjVolumes.VOL.WORK_ON);
                 else {
                     new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);
-                    new MannerMode().turn2Quiet(mContext, qt.alarmType != PHONE_OFF);
+                    new MannerMode().turn2Quiet(mContext, nt.alarmType != PHONE_OFF);
                 }
                 new ScheduleNextTask(mContext, "Norm");
             }
