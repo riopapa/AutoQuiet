@@ -24,7 +24,7 @@ public class BellSeveral {
 
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
-            sounds.beep(mContext, (nt.subject.contains("삐이")) ? Sounds.BEEP.TOSS:Sounds.BEEP.NOTY);
+            sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;
@@ -47,7 +47,6 @@ public class BellSeveral {
                     long nextTime = System.currentTimeMillis() + afterSec * 1000L;
                     new AlarmTime().request(mContext, nt, nextTime, "S", nt.several);
                 } else {
-//                    Log.w("a Schedule ","New task");
                     QuietTask qt = quietTasks.get(nt.idx);
                     qt.active = false;
                     quietTasks.set(nt.idx, qt);
@@ -66,7 +65,6 @@ public class BellSeveral {
         toDay.set(Calendar.SECOND, 0);
         return (int) ((toDay.getTimeInMillis() - time)/1000);
     }
-
 
     String nowDateToString(long time) {
         String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);

@@ -11,8 +11,6 @@ import static better.life.autoquiet.activity.ActivityMain.mContext;
 
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
-import better.life.autoquiet.Sub.AdjVolumes;
-import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 
@@ -52,25 +50,22 @@ public class TaskStart {
     }
 
     private void start_Normal() {
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
+        sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                String say = (nt.alarmType == PHONE_WORK) ? nt.subject : new AddSuffixStr().add(nt.subject) + "시작 됩니다";
-                sounds.sayTask(say);
+            String say = (nt.alarmType == PHONE_WORK) ? nt.subject
+                    : new AddSuffixStr().add(nt.subject) + "시작 됩니다";
+            sounds.sayTask(say);
             }
         }, 1000);
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if ((nt.alarmType == PHONE_WORK))
-                    new AdjVolumes(mContext, AdjVolumes.VOL.WORK_ON);
-                else {
-                    new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_OFF);
-                    new MannerMode().turn2Quiet(mContext, nt.alarmType != PHONE_OFF);
-                }
-                new ScheduleNextTask(mContext, "Norm");
+            if (nt.alarmType == PHONE_OFF)
+                sounds.setSilentMode();
+            new ScheduleNextTask(mContext, "Norm Start");
             }
         }, 6000);
     }

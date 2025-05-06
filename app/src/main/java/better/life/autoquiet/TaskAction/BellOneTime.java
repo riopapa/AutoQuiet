@@ -19,7 +19,7 @@ import java.util.TimerTask;
 public class BellOneTime {
 
     public void go(NextTask nt) {
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
+        sounds.beep(Sounds.BEEP.NOTY);
         if (nt.vibrate)
             new VibratePhone(mContext, 1);
         new Timer().schedule(new TimerTask() {

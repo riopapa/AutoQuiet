@@ -7,7 +7,7 @@
     <color name="black">#000000</color>
     <color name="notification_back">#8F619EDD</color>
     <color name="notification_back2">#8F0E3154</color>
-    <color name="colorNotification">#EAEAA0</color>
+    <color name="widgetText">#EAEAD0</color>
     <color name="num_button">#042B28</color>
     <color name="colorSelected">#DCE7E5</color>
     <color name="cal_Left">#8F021425</color>
@@ -41,10 +41,8 @@
     <color name="nameEvents">#807FDDFA</color>
     <color name="nameOthers">#801F2DA6</color>
 
-    <color name="widget_line0u">#FF56396D</color>
-    <color name="widget_line0d">#3C2052</color>
-    <color name="widget_line1u">#763874</color>
-    <color name="widget_line1d">#592250</color>
+    <color name="widget_line0">#472E50</color>
+    <color name="widget_line1">#5D1C76</color>
     <color name="white">#FFF</color>
 
 </resources>

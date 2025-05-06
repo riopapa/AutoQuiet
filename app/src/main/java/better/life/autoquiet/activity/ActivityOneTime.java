@@ -1,5 +1,6 @@
 package better.life.autoquiet.activity;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 
@@ -16,7 +17,6 @@ import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Vars;
 import better.life.autoquiet.databinding.ActivityOneTimeBinding;
 import better.life.autoquiet.models.QuietTask;
-import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.Sub.VarsGetPut;
 
 import java.util.ArrayList;
@@ -160,7 +160,7 @@ public class ActivityOneTime extends AppCompatActivity {
         new QuietTaskGetPut().put(quietTasks);
         vars.sharedManner = manner;
         new VarsGetPut().put(vars, this);
-        new MannerMode().turn2Quiet(this, vibrate);
+        sounds.setSilentMode();
         new ScheduleNextTask(this, "Quit RightNow");
     }
 

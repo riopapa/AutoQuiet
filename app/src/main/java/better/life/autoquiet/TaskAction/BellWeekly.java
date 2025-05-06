@@ -17,7 +17,7 @@ import java.util.TimerTask;
 public class BellWeekly {
 
     public void go(NextTask nt) {
-        sounds.beep(mContext, Sounds.BEEP.NOTY);
+        sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (nt.clock) {

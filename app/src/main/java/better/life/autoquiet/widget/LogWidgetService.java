@@ -55,19 +55,19 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         time = buildHourMin(nt.hour, nt.min) + " " + nt.suffix;
         views.setTextViewText(R.id.wTime, time);
         int colorU = (position % 2) == 0 ?
-                ContextCompat.getColor(context,R.color.widget_line0u)
-                : ContextCompat.getColor(context,R.color.widget_line1u);
-        int colorD = (position % 2) == 0 ?
-                ContextCompat.getColor(context,R.color.widget_line0d)
-                : ContextCompat.getColor(context,R.color.widget_line1d);
-        views.setInt(R.id.lineUp, "setBackgroundColor", colorU);
-        views.setInt(R.id.lineDn, "setBackgroundColor", colorD);
+                ContextCompat.getColor(context,R.color.widget_line0)
+                : ContextCompat.getColor(context,R.color.widget_line1);
         Intent fIntent = new Intent();
         fIntent.setAction(ACTION_NORM);
         views.setOnClickFillInIntent(R.id.wLine, fIntent);
 
         views.setImageViewResource(R.id.wType, alarmIcons[nt.alarmType]);
         views.setInt(R.id.wType, "setColorFilter",(ContextCompat.getColor(context, R.color.white)));
+
+        views.setInt(R.id.lineUp, "setBackgroundColor", colorU);
+        views.setInt(R.id.wSubject, "setBackgroundColor", colorU);
+        views.setInt(R.id.wTime, "setBackgroundColor", colorU);
+        views.setInt(R.id.wType, "setBackgroundColor", colorU);
 
         return views;
     }

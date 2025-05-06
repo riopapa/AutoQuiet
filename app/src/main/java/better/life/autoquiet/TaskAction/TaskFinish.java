@@ -9,8 +9,6 @@ import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import better.life.autoquiet.R;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
-import better.life.autoquiet.Sub.AdjVolumes;
-import better.life.autoquiet.Sub.MannerMode;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.NextTask;
@@ -27,19 +25,15 @@ public class TaskFinish {
 
     public void go(NextTask nt) {
         this.nt = nt;
-
-        new MannerMode().turn2Normal(mContext);
-        new AdjVolumes(mContext, AdjVolumes.VOL.FORCE_ON);
+        sounds.setNormalMode();
+        sounds.setVolumeTo(12);
         if (!nt.sayDate)
-            sounds.beep(mContext, Sounds.BEEP.NOTY);
+            sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!nt.sayDate) {
-//                    if (caseSFOW.equals("W"))
-//                        finish_Work();
-//                    else
-                        finish_Normal();
+                    finish_Normal();
                 } else
                     finish_Several();
             }
@@ -47,7 +41,6 @@ public class TaskFinish {
     }
 
     private void finish_Normal() {
-        sounds.beep(mContext, Sounds.BEEP.INFO);
         String s = new AddSuffixStr().add(nt.subject) + mContext.getString(R.string.finishing_completed);
         sounds.sayTask(s);
         if (nt.alarmType < PHONE_VIBRATE) {
@@ -120,5 +113,4 @@ public class TaskFinish {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }
-
 }

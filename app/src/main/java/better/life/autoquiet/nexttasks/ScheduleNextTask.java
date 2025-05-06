@@ -21,7 +21,7 @@ public class ScheduleNextTask {
         quietTasks = new QuietTaskGetPut().get(context);
 
         new GenerateNexTasks().gen(quietTasks);
-        Log.w("schedule Next "+headInfo, "Next Tasks : " + nextTasks.size());
+//        Log.w("schedule Next "+headInfo, "Next Tasks : " + nextTasks.size());
 //        timeInfo = getHourMin(nxtTsk.sHour, nxtTsk.sMin);
 //        timeInfoN = getHourMin(nxtTsk.sHourN, nxtTsk.sMinN);
 //        updateNotyBar(context);
