@@ -14,7 +14,7 @@ import better.life.autoquiet.R;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 
-public class LogWidgetService extends RemoteViewsService {
+public class WidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new ListRemoteViewsFactory(this.getApplicationContext(), intent);

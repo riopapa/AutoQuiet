@@ -5,11 +5,10 @@
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
     <color name="black">#000000</color>
-    <color name="notification_back">#8F619EDD</color>
-    <color name="notification_back2">#8F0E3154</color>
+    <color name="white">#FFF</color>
+
     <color name="widgetText">#EAEAD0</color>
-    <color name="num_button">#042B28</color>
-    <color name="colorSelected">#DCE7E5</color>
+    <color name="num_button">#05554E</color>
     <color name="cal_Left">#8F021425</color>
     <color name="cal_Right">#051E47</color>
 
@@ -17,6 +16,7 @@
     <color name="itemNormalFill">#9FCF67</color>
     <color name="itemSelectBorder">#91BABA</color>
     <color name="itemSelectFill">#697D54</color>
+    <color name="colorSelected">#66AFA2</color>
 
     <color name="itemAgendaFill">#CAF1A3</color>
 
@@ -32,8 +32,6 @@
     <color name="colorTransparent">#00000000</color>
     <color name="headerBackground">#FBB117</color>
 
-    <color name="colorNotifications">#FBB117</color>
-
     <color name="nameRioPapa">#80F4FF81</color>
     <color name="nameRioMama">#80FF80AB</color>
     <color name="nameDigital">#80CCFF90</color>
@@ -43,6 +41,5 @@
 
     <color name="widget_line0">#472E50</color>
     <color name="widget_line1">#5D1C76</color>
-    <color name="white">#FFF</color>
 
 </resources>

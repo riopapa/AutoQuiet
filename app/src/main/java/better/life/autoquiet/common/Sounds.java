@@ -77,13 +77,7 @@ public class Sounds {
     public void beep(BEEP e) {
 
         getCurrVolumes();
-//        if (beepMP != null) {
-//            if (beepMP.isPlaying()) {
-//                beepMP.stop();
-//            }
-//            beepMP.release();
-//            beepMP = null; // Set to null after releasing
-//        }
+
         int soundID;
         switch (e) {
             case NOTY:    soundID = R.raw.tympani_bing; break;
@@ -96,7 +90,6 @@ public class Sounds {
             beepMP.setDataSource(context,
                     Uri.parse("android.resource://" + context.getPackageName() + "/" + soundID));
         } catch (Exception err) {
-            err.printStackTrace();
         }
         beepMP.setAudioAttributes(beepAttr);
         beepMP.prepareAsync();

@@ -5,7 +5,7 @@ import android.media.AudioManager;
 
 public class AdjVolumes {
 
-    public enum VOL { COND_OFF, FORCE_ON, FORCE_OFF, WORK_ON}
+    public enum VOL { COND_OFF, FORCE_ON, WORK_ON}
 //    int rVol, mVol, nVol, sVol, aVol;
 
     // 0: off, 1: conditional on, 2: force to on

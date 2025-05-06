@@ -1,12 +1,12 @@
 package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.AlarmReceiver.sounds;
+import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
-import android.content.Context;
-
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
+import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
 import java.text.SimpleDateFormat;
@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TaskOneTIme {
-    public void go(Context context, QuietTask qt) {
+    public void go(NextTask nt) {
         sounds.setNormalMode();
 //        if (vars.sharedManner) {
         new Timer().schedule(new TimerTask() {
@@ -26,10 +26,11 @@ public class TaskOneTIme {
                 sounds.sayTask(say);
             }
         }, 2000);
+        QuietTask qt = quietTasks.get(nt.idx);
         qt.active = false;
         quietTasks.set(0, qt);
         new QuietTaskGetPut().put(quietTasks);
-        new ScheduleNextTask(context, "After oneTime");
+        new ScheduleNextTask(mContext, "After oneTime");
     }
 
     String nowTimeToString(long time) {

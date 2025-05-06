@@ -12,16 +12,11 @@ public class VibratePhone {
         final long[][] pattern = {{100, 20, 200, 400, 500, 550}, {100, 120, 100, 300, 300, 250,
                 100, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250, 0, 120, 100, 300, 300, 250},
                 {100,100,100,100}};
-        VibratorManager vibratorManager = null;
-        Vibrator vibrator = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-        }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            vibrator = vibratorManager.getDefaultVibrator();
-        }
-        assert vibrator != null;
-        VibrationEffect vibrationEffect = VibrationEffect.createWaveform(pattern[type], -1);
+        VibratorManager vibratorManager =
+                (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+        Vibrator vibrator = vibratorManager.getDefaultVibrator();
+        VibrationEffect vibrationEffect =
+                VibrationEffect.createWaveform(pattern[type], -1);
         vibrator.cancel();
         vibrator.vibrate(vibrationEffect);
     }

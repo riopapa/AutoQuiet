@@ -90,7 +90,6 @@ public class TaskFinish {
 //                    intent.putExtra("endN", endN);
 //                    intent.putExtra("subjectN", subjectN);
 //                    intent.putExtra("iconN", iconN);
-//                    new ShowNotification().show(mContext, intent);
 //
 //                } else {
 //                    if (nt.agenda)
@@ -102,15 +101,15 @@ public class TaskFinish {
         }, 1200);
     }
 
-    public static String nowTimeDateToString(long time) {
-        return new SimpleDateFormat(" HH:mm MM 월 d 일 ", Locale.getDefault()).format(time);
-    }
+//    public static String nowTimeDateToString(long time) {
+//        return new SimpleDateFormat(" HH:mm MM 월 d 일 ", Locale.getDefault()).format(time);
+//    }
 
     public static String nowDateTimeToString(long time) {
         return new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
     }
-    public static String nowTimeToString(long time) {
-        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdfTime.format(time);
-    }
+//    public static String nowTimeToString(long time) {
+//        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//        return sdfTime.format(time);
+//    }
 }

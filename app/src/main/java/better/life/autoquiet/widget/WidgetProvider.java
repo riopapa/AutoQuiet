@@ -16,7 +16,7 @@ import better.life.autoquiet.R;
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.common.FloatingClockService;
 
-public class LogWidgetProvider extends AppWidgetProvider {
+public class WidgetProvider extends AppWidgetProvider {
 
     int appWidgetId;
     @Override
@@ -40,7 +40,7 @@ public class LogWidgetProvider extends AppWidgetProvider {
     public static void update_All_Widgets(Context context) {
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-        ComponentName cn = new ComponentName(context, LogWidgetProvider.class);
+        ComponentName cn = new ComponentName(context, WidgetProvider.class);
         mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.widget_lines);
 
         int[] appWidgetIds = mgr.getAppWidgetIds(cn);
@@ -60,7 +60,7 @@ public class LogWidgetProvider extends AppWidgetProvider {
     public static void updateWidgetStatus(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_frame);
 
-        Intent intent = new Intent(context, LogWidgetService.class);
+        Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         // When using setRemoteAdapter, it's recommended to set data like this for uniqueness
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))); // Add unique data URN
@@ -74,7 +74,7 @@ public class LogWidgetProvider extends AppWidgetProvider {
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setPendingIntentTemplate(R.id.widget_lines, mPInt);
 
-        Intent cInt = new Intent(context, LogWidgetProvider.class);
+        Intent cInt = new Intent(context, WidgetProvider.class);
         cInt.setAction(ACTION_CLOCK);
         cInt.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent mediaPIntent = PendingIntent.getBroadcast(context, appWidgetId,

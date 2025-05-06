@@ -1,5 +1,6 @@
 package better.life.autoquiet;
 
+import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
 import android.app.Notification;
@@ -32,7 +33,7 @@ public class NotificationService extends Service {
     RemoteViews mRemoteViews;
 
     String beg, subject, end, begN, subjectN, endN;
-    int icon, iconN, iconNow;
+    int icon, iconN;
     boolean stop_repeat = false;
 
     final int RIGHT_NOW = 100;
@@ -94,22 +95,6 @@ public class NotificationService extends Service {
         } else if (operation == VOLUME_ON) {
             volume_On();
             updateRemoteViews();
-        } else {
-//            beg = intent.getStringExtra("beg");
-//            begN = intent.getStringExtra("begN");
-//            end = intent.getStringExtra("end");
-//            endN = intent.getStringExtra("endN");
-//            stop_repeat = intent.getBooleanExtra("stop_repeat", false);
-//            subject = intent.getStringExtra("subject");
-//            subjectN = intent.getStringExtra("subjectN");
-//            icon = intent.getIntExtra("icon", 0);
-//            iconN = intent.getIntExtra("iconN", 0);
-//            iconNow = intent.getIntExtra("iconNow", R.drawable.auto_quite);
-//            if (icon == 0)
-//                return START_STICKY;
-//            if (iconN == 0)
-//                iconN = R.drawable.auto_quite;
-//            updateRemoteViews();
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -157,21 +142,9 @@ public class NotificationService extends Service {
         updateRemoteViews();
     }
 
-//    private void quiet_minute(int secs) {
-//
-//        new AdjVolumes(this, AdjVolumes.VOL.COND_OFF);
-//        QuietTask qt = new QuietTask("One min", 0, 0, 0, 0,
-//                new boolean[7], true,  PHONE_VIBRATE, false);
-//        long nextTime = System.currentTimeMillis() + secs * 1000L;
-//        new AlarmTime().request(mContext, qt, nextTime, "O", 1);   // several 0 : no more
-//        Toast.makeText(this, "quiet minute "+secs+" secs", Toast.LENGTH_SHORT).show();
-//        show_Volumes();
-//        updateRemoteViews();
-//    }
-
     private void make_silent() {
         // while 만보 적용, 사무실 ...
-        new AdjVolumes(this, AdjVolumes.VOL.WORK_ON);
+        sounds.setSilentMode();
         show_Volumes();
         updateRemoteViews();
     }

@@ -7,17 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.databinding.ActivityAddAgendaBinding;
 import better.life.autoquiet.models.GCal;
-import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.calendar.GetAgenda;
 import better.life.autoquiet.Sub.NameColor;
-import better.life.autoquiet.Sub.VarsGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +23,6 @@ import java.util.Locale;
 public class ActivityAddAgenda extends AppCompatActivity {
 
     private GCal gCal;
-    private ArrayList<GCal> gCals;
     private ActivityAddAgendaBinding binding;
     private String mTitle;
     Context context;
@@ -38,7 +34,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
         setContentView(binding.getRoot());
         context = this;
         quietTasks = new QuietTaskGetPut().get(this);
-        gCals = new GetAgenda().get(this);
+        ArrayList<GCal> gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);
         gCal = gCals.get(currIdx);

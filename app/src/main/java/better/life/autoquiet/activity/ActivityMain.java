@@ -53,12 +53,9 @@ public class ActivityMain extends AppCompatActivity {
 
     public static final String ACTION_CLOCK = "c";
     public static final String ACTION_NORM = "n";
-    public final static String WIDGET_CALL = "widget";
 
     public static ArrayList<QuietTask> quietTasks;
     public static ArrayList<NextTask> nextTasks;
-
-    String action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,17 +95,6 @@ public class ActivityMain extends AppCompatActivity {
         }
 
         new VarsGetPut().put(vars, mContext);
-
-//        NotificationService notificationService = new NotificationService();
-//        Intent intent = new Intent(mContext, notificationService.getClass());
-//        new ShowNotification().show(mContext, intent);
-
-//        nextTasks = new ArrayList<>();
-//        NextTask nt = new NextTask();
-//        nt.subject = "Init";
-//        nt.hour = 12; nt.min = 34;
-//        nextTasks.add(nt);F.
-
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;

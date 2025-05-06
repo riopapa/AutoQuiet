@@ -498,14 +498,14 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void save_AgendaTask() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(qT.calBegDate);
-        c.set(Calendar.HOUR_OF_DAY, begHour);
-        c.set(Calendar.MINUTE, begMin);
-        long begDate = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, endHour);
-        c.set(Calendar.MINUTE, endMin);
-        long endDate = c.getTimeInMillis();
+//        Calendar c = Calendar.getInstance();
+//        c.setTimeInMillis(qT.calBegDate);
+//        c.set(Calendar.HOUR_OF_DAY, begHour);
+//        c.set(Calendar.MINUTE, begMin);
+//        long begDate = c.getTimeInMillis();
+//        c.set(Calendar.HOUR_OF_DAY, endHour);
+//        c.set(Calendar.MINUTE, endMin);
+//        long endDate = c.getTimeInMillis();
 //        QuietTask qAgenda = new QuietTask(subject, begDate, endDate,
 //                qT.calId, qT.calName, qT.calDesc, qT.calLocation,
 //                true, 5, true); // 5: vibrate
