@@ -20,7 +20,6 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
-import better.life.autoquiet.Sub.AdjVolumes;
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.activity.ActivityOneTime;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
@@ -92,9 +91,6 @@ public class NotificationService extends Service {
             new ScheduleNextTask(this, "stopped, next is");
         } else if (operation == VOLUMES) {
             updateRemoteViews();
-        } else if (operation == VOLUME_ON) {
-            volume_On();
-            updateRemoteViews();
         }
         startForeground(100, mBuilder.build());
         return START_STICKY;
@@ -134,12 +130,6 @@ public class NotificationService extends Service {
         canvas.drawLine(shift, yPos, shift+vol * 5, yPos, lnPaint);
         lnPaint.setStrokeWidth(2);
         canvas.drawLine(shift+vol*5, yPos, shift + 15 * 5, yPos, txtPaint);
-    }
-
-    private void volume_On() {
-        new AdjVolumes(this, AdjVolumes.VOL.FORCE_ON);
-        show_Volumes();
-        updateRemoteViews();
     }
 
     private void make_silent() {

@@ -22,40 +22,38 @@ public class BellSeveral {
 
     public void go(NextTask nt) {
 
+        if (nt.vibrate)
+            new VibratePhone(mContext, 1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
             sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;
-                if (nt.vibrate)
-                    new VibratePhone(mContext, 1);
-                if (nt.several > 0 && afterSec > 5) {
-                    if (afterSec > 60) {
-                        afterSec = 20;
-                    } else if (sounds.isQuiet()) {
-                        afterSec = afterSec / 2;
-                    } else {
-                        String s = (nt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
-                        s += " " + nt.subject + " 를 " + " 확인하세요, ";
-                        sounds.sayTask(s);
-                        if (afterSec < 20)
-                            afterSec = 10;
-                        else
-                            afterSec = afterSec / 2;
-                    }
-                    long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                    new AlarmTime().request(mContext, nt, nextTime, "S", nt.several);
+            int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;
+            if (nt.several > 0 && afterSec > 5) {
+                if (afterSec > 60) {
+                    afterSec = 20;
+                } else if (sounds.isQuiet()) {
+                    afterSec = afterSec / 2;
                 } else {
-                    QuietTask qt = quietTasks.get(nt.idx);
-                    qt.active = false;
-                    quietTasks.set(nt.idx, qt);
-                    new QuietTaskGetPut().put(quietTasks);
-                    new ScheduleNextTask(mContext, "end F");
+                    String s = (nt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
+                    s += " " + nt.subject + " 를 " + " 확인하세요, ";
+                    sounds.sayTask(s);
+                    if (afterSec < 20)
+                        afterSec = 10;
+                    else
+                        afterSec = afterSec / 2;
                 }
+                long nextTime = System.currentTimeMillis() + afterSec * 1000L;
+                new AlarmTime().request(mContext, nt, nextTime, "S", nt.several);
+            } else {
+                QuietTask qt = quietTasks.get(nt.idx);
+                qt.active = false;
+                quietTasks.set(nt.idx, qt);
+                new QuietTaskGetPut().put(quietTasks);
             }
-        }, 800);
-
+            }
+        }, 1000);
     }
 
     int secRemaining(NextTask nt, long time) {

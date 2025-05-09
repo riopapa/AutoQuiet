@@ -1,12 +1,16 @@
 package better.life.autoquiet.common;
 
+import static better.life.autoquiet.activity.ActivityMain.mContext;
+
 import android.content.Context;
 import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -22,10 +26,32 @@ public class Sounds {
     Context context;
     int rVol, mVol;
     static String ttsID = "";
-    AudioAttributes beepAttr;
+    AudioAttributes beepAttr, ringAttr, blueAttr, musicAttr;
+    public static AudioFocusRequest mFocusGain = null;
 
     public Sounds(Context context) {
         this.context = context;
+        ringAttr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
+
+        blueAttr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
+        beepAttr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        musicAttr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+
+        mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                .build();
+
         mTTS = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -40,19 +66,16 @@ public class Sounds {
                         if (mTTS.isSpeaking())
                             return;
                         mTTS.stop();
-                        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
-                        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, mVol, 0);
+//                        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+//                        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                        mAM.abandonAudioFocusRequest(mFocusGain);
                     }
 
                     @Override
                     public void onError(String utteranceId) {
                     }
                 });
-                AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                        .build();
-                mTTS.setAudioAttributes(audioAttributes);
+                mTTS.setAudioAttributes(ringAttr);
 
                 mTTS.setLanguage(Locale.getDefault());
                 mTTS.setPitch(1.2f);
@@ -61,10 +84,8 @@ public class Sounds {
         });
 
         mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        beepAttr = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE) // Or USAGE_ASSISTANCE_SONIFICATION, etc.
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
+        beepMP = new MediaPlayer();
+        beepMP.setAudioAttributes(beepAttr);
     }
 
     public void setNormalMode() {
@@ -85,35 +106,41 @@ public class Sounds {
         }
 
         setVolumeTo(12);
-        beepMP = new MediaPlayer();
         try {
             beepMP.setDataSource(context,
                     Uri.parse("android.resource://" + context.getPackageName() + "/" + soundID));
         } catch (Exception err) {
         }
-        beepMP.setAudioAttributes(beepAttr);
-        beepMP.prepareAsync();
+//        beepMP.prepareAsync();
         beepMP.setOnPreparedListener(MediaPlayer::start);
         beepMP.setOnCompletionListener(mp -> setVolumeTo(rVol));
-
     }
 
     public boolean isQuiet() {
-        int ringVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
-                mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE ||
-                ringVol < 4);
+                mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
 
     public void sayTask (String say) {
+
+        String connectedDeviceName = BluetoothUtil.getConnectedTargetDeviceName(mContext);
+        Log.w("sayTask", connectedDeviceName + " " + say);
+        mAM.requestAudioFocus(mFocusGain);
+
         getCurrVolumes();
-        setVolumeTo(12);
+        if (connectedDeviceName == null) {
+            mTTS.setAudioAttributes(ringAttr);
+            setVolumeTo(12);
+        } else{
+            mTTS.setAudioAttributes(blueAttr);
+            mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 13, 0);
+        }
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "i");
             }
-        }, 700);    // after complete of beep
+        }, 1000);
     }
 
     public void setVolumeTo(int rVol) {
@@ -125,5 +152,4 @@ public class Sounds {
         rVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
 //        mVol = mAM.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
-
 }

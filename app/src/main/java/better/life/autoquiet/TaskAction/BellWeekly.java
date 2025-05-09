@@ -17,21 +17,18 @@ import java.util.TimerTask;
 public class BellWeekly {
 
     public void go(NextTask nt) {
+        if (nt.vibrate)
+            new VibratePhone(mContext, 1);
         sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
-                if (nt.clock) {
-                    Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
-                    mContext.startService(serviceIntent);
-                }
-                if (nt.vibrate)
-                    new VibratePhone(mContext, 1);
-                String say = nt.subject + " 를 확인";
-                sounds.sayTask(say);
-//                NotificationHelper notificationHelper = new NotificationHelper(mContext);
-//                notificationHelper.sendNotification(R.drawable.bell_weekly,
-//                        nt.subject, "Weekly Check "+nt.subject);
-                new ScheduleNextTask(mContext, "event");
+            if (nt.clock) {
+                Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
+                mContext.startService(serviceIntent);
+            }
+            String say = nt.subject + " 를 확인";
+            sounds.sayTask(say);
+            new ScheduleNextTask(mContext, "event");
             }
         }, 1500);
     }

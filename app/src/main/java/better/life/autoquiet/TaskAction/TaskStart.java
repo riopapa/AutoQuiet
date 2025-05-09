@@ -20,9 +20,10 @@ import java.util.TimerTask;
 public class TaskStart {
 
     NextTask nt;
-    
+
     public void go(NextTask nt) {
         this.nt = nt;
+
         if (nt.alarmType < PHONE_VIBRATE)
             say_Started99();
         else {
@@ -44,9 +45,7 @@ public class TaskStart {
         else {
             String say = nt.subject + "AlarmType 에러 확인 "+nt.alarmType;
             sounds.sayTask(say);
-            new ScheduleNextTask(mContext, "ended Err");
         }
-
     }
 
     private void start_Normal() {
@@ -57,17 +56,17 @@ public class TaskStart {
             String say = (nt.alarmType == PHONE_WORK) ? nt.subject
                     : new AddSuffixStr().add(nt.subject) + "시작 됩니다";
             sounds.sayTask(say);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (nt.alarmType == PHONE_OFF) {
+                        sounds.setSilentMode();
+                        new ScheduleNextTask(mContext, "Start");
+                    }
+                }
+            }, 5000);
             }
         }, 1000);
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-            if (nt.alarmType == PHONE_OFF)
-                sounds.setSilentMode();
-            new ScheduleNextTask(mContext, "Norm Start");
-            }
-        }, 6000);
     }
-
 }
