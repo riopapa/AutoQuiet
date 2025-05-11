@@ -1,15 +1,15 @@
 package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.AlarmReceiver.sounds;
 
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.common.VibratePhone;
+import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +23,7 @@ public class BellSeveral {
     public void go(NextTask nt) {
 
         if (nt.vibrate)
-            new VibratePhone(mContext, 1);
+            phoneVibrate.go(1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
             sounds.beep(Sounds.BEEP.NOTY);

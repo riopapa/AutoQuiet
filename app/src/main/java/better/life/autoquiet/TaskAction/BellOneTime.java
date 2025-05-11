@@ -2,11 +2,12 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 import android.content.Intent;
 import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.VibratePhone;
+import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -21,8 +22,8 @@ public class BellOneTime {
 
     public void go(NextTask nt) {
         if (nt.vibrate)
-            new VibratePhone(mContext, 1);
-        sounds.beep(Sounds.BEEP.NOTY);
+            phoneVibrate.go(1);
+        sounds.beep(Sounds.BEEP.INFO);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = nt.subject + " 체크";
@@ -43,10 +44,7 @@ public class BellOneTime {
                         WKStart = 1;
                     qt.week[WKStart] = true;
                 }
-                if (nt.vibrate) {
-                    new VibratePhone(mContext, 1);
-                    qt.active = false;
-                }
+                qt.active = false;
                 quietTasks.set(nt.idx, qt);
                 new QuietTaskGetPut().put(quietTasks);
             }

@@ -61,8 +61,9 @@ public class TaskStart {
                 public void run() {
                     if (nt.alarmType == PHONE_OFF) {
                         sounds.setSilentMode();
-                        new ScheduleNextTask(mContext, "Start");
-                    }
+                    } else
+                        sounds.setVibrateMode();
+                    new ScheduleNextTask(mContext, "Start");
                 }
             }, 5000);
             }

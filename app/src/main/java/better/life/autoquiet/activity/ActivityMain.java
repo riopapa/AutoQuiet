@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskNew;
@@ -50,7 +51,7 @@ public class ActivityMain extends AppCompatActivity {
     public static int currIdx = -1;
     public static long nextAlertTime;
     RecyclerView mainRecyclerView;
-
+    public static PhoneVibrate phoneVibrate = null;
     public static final String ACTION_CLOCK = "c";
     public static final String ACTION_NORM = "n";
 

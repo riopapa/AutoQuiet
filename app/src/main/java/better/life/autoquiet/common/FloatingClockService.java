@@ -1,6 +1,7 @@
 package better.life.autoquiet.common;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 
 import android.app.Service;
 import android.content.Intent;
@@ -50,9 +51,8 @@ public class FloatingClockService extends Service {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, // Allows interaction with apps behind the overlay
                 PixelFormat.TRANSLUCENT);
 
-        // Specify the initial position
         params.gravity = Gravity.TOP | Gravity.START;
-        params.x = 50;
+        params.x = 100;
         params.width = 400;
         params.y = 300;
 
@@ -76,7 +76,7 @@ public class FloatingClockService extends Service {
                     timeTextView.setTextColor(0xFF00FFFF);
                 compVal = sec.compareTo("55");
                 if (compVal > 0)
-                    new VibratePhone(mContext, 2);
+                    phoneVibrate.go(0);
                 long nxtDelay = 1002 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }

@@ -24,9 +24,9 @@ public class Sounds {
     public static AudioManager mAM;
     public static MediaPlayer beepMP;
     Context context;
-    int rVol, mVol;
+    int rVol;
     static String ttsID = "";
-    AudioAttributes beepAttr, ringAttr, blueAttr, musicAttr;
+    AudioAttributes beepAttr, ringAttr, blueAttr;
     public static AudioFocusRequest mFocusGain = null;
 
     public Sounds(Context context) {
@@ -43,10 +43,6 @@ public class Sounds {
         beepAttr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        musicAttr = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
         mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
@@ -85,15 +81,14 @@ public class Sounds {
 
         mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         beepMP = new MediaPlayer();
-        beepMP.setAudioAttributes(beepAttr);
+        beepMP.setAudioAttributes(ringAttr);
     }
 
     public void setNormalMode() {
         mAM.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
-    public void setSilentMode() {
-        mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-    }
+    public void setSilentMode() {mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);}
+    public void setVibrateMode() {mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);}
 
     public void beep(BEEP e) {
 
@@ -111,7 +106,7 @@ public class Sounds {
                     Uri.parse("android.resource://" + context.getPackageName() + "/" + soundID));
         } catch (Exception err) {
         }
-//        beepMP.prepareAsync();
+        beepMP.prepareAsync();
         beepMP.setOnPreparedListener(MediaPlayer::start);
         beepMP.setOnCompletionListener(mp -> setVolumeTo(rVol));
     }

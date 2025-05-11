@@ -2,12 +2,13 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.AlarmReceiver.sounds;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 
 import android.content.Intent;
 
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.VibratePhone;
+import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 
@@ -18,7 +19,7 @@ public class BellWeekly {
 
     public void go(NextTask nt) {
         if (nt.vibrate)
-            new VibratePhone(mContext, 1);
+            phoneVibrate.go(1);
         sounds.beep(Sounds.BEEP.NOTY);
         new Timer().schedule(new TimerTask() {
             public void run() {
