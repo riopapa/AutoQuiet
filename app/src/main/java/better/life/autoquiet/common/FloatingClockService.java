@@ -1,6 +1,5 @@
 package better.life.autoquiet.common;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 
 import android.app.Service;

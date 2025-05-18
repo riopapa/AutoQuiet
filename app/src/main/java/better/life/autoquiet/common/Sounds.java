@@ -1,6 +1,6 @@
 package better.life.autoquiet.common;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 
 import android.content.Context;
 import android.media.AudioAttributes;
@@ -10,7 +10,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.util.Log;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -19,7 +18,7 @@ import better.life.autoquiet.R;
 
 public class Sounds {
 
-    public enum BEEP {NOTY, INFO}
+    public enum BEEP {NOTY, INFO, WEEK, BACK}
     public static TextToSpeech mTTS;
     public static AudioManager mAM;
     public static MediaPlayer beepMP;
@@ -28,6 +27,7 @@ public class Sounds {
     static String ttsID = "";
     AudioAttributes beepAttr, ringAttr, blueAttr;
     public static AudioFocusRequest mFocusGain = null;
+    String blueDevice = "";
 
     public Sounds(Context context) {
         this.context = context;
@@ -35,7 +35,6 @@ public class Sounds {
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                 .build();
-
         blueAttr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
@@ -62,8 +61,10 @@ public class Sounds {
                         if (mTTS.isSpeaking())
                             return;
                         mTTS.stop();
-//                        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
-//                        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                        if (blueDevice.isEmpty()) {
+                            mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+                            mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                        }
                         mAM.abandonAudioFocusRequest(mFocusGain);
                     }
 
@@ -73,9 +74,9 @@ public class Sounds {
                 });
                 mTTS.setAudioAttributes(ringAttr);
 
-                mTTS.setLanguage(Locale.getDefault());
-                mTTS.setPitch(1.2f);
-                mTTS.setSpeechRate(1.3f);
+//                mTTS.setLanguage(Locale.getDefault());
+//                mTTS.setPitch(1.2f);
+//                mTTS.setSpeechRate(1.3f);
             }
         });
 
@@ -92,13 +93,21 @@ public class Sounds {
 
     public void beep(BEEP e) {
 
+        if (isPhoneQuiet())
+            return;
         getCurrVolumes();
 
         int soundID;
-        switch (e) {
-            case NOTY:    soundID = R.raw.tympani_bing; break;
-            default:     soundID = R.raw.wood_plank_flicks; break;
-        }
+        if (e == BEEP.NOTY) {
+            soundID = R.raw.tympani_bing;
+        } else if (e == BEEP.WEEK) {
+                soundID = R.raw.glass_drop_and_roll;
+        } else if (e == BEEP.INFO){
+            soundID = R.raw.wood_plank_flicks;
+        } else if (e == BEEP.BACK){
+            soundID = R.raw.back2normal;
+        } else
+            soundID = R.raw.manner_starting;
 
         setVolumeTo(12);
         try {
@@ -111,24 +120,28 @@ public class Sounds {
         beepMP.setOnCompletionListener(mp -> setVolumeTo(rVol));
     }
 
-    public boolean isQuiet() {
+    public boolean isPhoneQuiet() {
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
 
     public void sayTask (String say) {
 
-        String connectedDeviceName = BluetoothUtil.getConnectedTargetDeviceName(mContext);
-        Log.w("sayTask", connectedDeviceName + " " + say);
+        if (isPhoneQuiet()) {
+            phoneVibrate.go(2);
+            return;
+        }
+
+        blueDevice = BluetoothUtil.getConnectedTargetDeviceName(context);
         mAM.requestAudioFocus(mFocusGain);
 
         getCurrVolumes();
-        if (connectedDeviceName == null) {
+        if (blueDevice.isEmpty()) {
             mTTS.setAudioAttributes(ringAttr);
             setVolumeTo(12);
         } else{
             mTTS.setAudioAttributes(blueAttr);
-            mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 13, 0);
+            mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 15, 0);
         }
         new Timer().schedule(new TimerTask() {
             @Override

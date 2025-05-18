@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -31,23 +30,23 @@ public class BluetoothUtil {
             Log.w(TAG, "BLUETOOTH_CONNECT permission not granted. Request this permission at runtime.");
             // You should request the permission from the user before calling this.
             // Example: ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_CONNECT);
-            return null;
+            return "";
         }
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null) {
             Log.e(TAG, "BluetoothManager is not available.");
-            return null;
+            return "";
         }
 
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         if (bluetoothAdapter == null) {
             Log.e(TAG, "BluetoothAdapter is not available.");
-            return null;
+            return "";
         }
 
         if (!bluetoothAdapter.isEnabled()) {
             Log.d(TAG, "Bluetooth is not enabled.");
-            return null;
+            return "";
         }
 
         // Use a CountDownLatch to wait for the profile proxy to be connected
@@ -112,7 +111,7 @@ public class BluetoothUtil {
 
         if (!success) {
             Log.e(TAG, "Failed to get BluetoothHeadset profile proxy. Check permissions and Bluetooth state.");
-            return null;
+            return "";
         }
 
         try {
@@ -135,6 +134,9 @@ public class BluetoothUtil {
             }
         }
 //        Log.w("BluetoothUtil", "getConnectedTargetDeviceName: " + connectedDeviceName.get());
-        return connectedDeviceName.get();
+        String deviceName = connectedDeviceName.get();
+        if (deviceName != null)
+            return deviceName;
+        return "";
     }
 }

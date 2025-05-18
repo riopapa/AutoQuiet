@@ -9,6 +9,7 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.common.Sounds;
@@ -63,11 +64,11 @@ public class TaskStart {
                         sounds.setSilentMode();
                     } else
                         sounds.setVibrateMode();
-                    new ScheduleNextTask(mContext, "Start");
+                    new ScheduleNextTask("Start");
                 }
             }, 5000);
             }
-        }, 1000);
+        }, 2000);
 
     }
 }

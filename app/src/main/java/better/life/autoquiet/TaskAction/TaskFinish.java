@@ -4,9 +4,11 @@ import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
+import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.common.Sounds;
@@ -14,8 +16,6 @@ import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,30 +27,32 @@ public class TaskFinish {
         this.nt = nt;
         sounds.setNormalMode();
         sounds.setVolumeTo(12);
-        if (!nt.sayDate)
-            sounds.beep(Sounds.BEEP.NOTY);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!nt.sayDate) {
-                    finish_Normal();
-                } else
-                    finish_Several();
-            }
-        }, 800);
+        if (!nt.sayDate) {
+            finish_Normal();
+        } else
+            finish_Several();
+
     }
 
     private void finish_Normal() {
-        String s = new AddSuffixStr().add(nt.subject) + mContext.getString(R.string.finishing_completed);
-        sounds.sayTask(s);
-        if (nt.alarmType < PHONE_VIBRATE) {
-            QuietTask qt = quietTasks.get(nt.idx);
-            qt.active = false;
-            quietTasks.set(nt.idx, qt);
-            mainRecycleAdapter.notifyItemChanged(nt.idx);
-        }
-        new ScheduleNextTask(mContext, "Fin Normal");
-        new Utils(mContext).deleteOldLogFiles();
+        if (nt.vibrate)
+            phoneVibrate.go(1);
+        sounds.beep(Sounds.BEEP.BACK);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                String s = new AddSuffixStr().add(nt.subject) + ContextProvider.get().getString(R.string.finishing_completed);
+                sounds.sayTask(s);
+                if (nt.alarmType < PHONE_VIBRATE) {
+                    QuietTask qt = quietTasks.get(nt.idx);
+                    qt.active = false;
+                    quietTasks.set(nt.idx, qt);
+                    mainRecycleAdapter.notifyItemChanged(nt.idx);
+                }
+                new ScheduleNextTask("Fin Normal");
+                new Utils(mContext).deleteOldLogFiles();
+            }
+        }, 1800);
     }
 
     private void finish_Several() {
@@ -94,7 +96,7 @@ public class TaskFinish {
 //                } else {
 //                    if (nt.agenda)
 //                        quietTasks.remove(ntIdx);
-//                    new ScheduleNextTask(mContext, "say_FinDate");
+//                    new ScheduleNextTask("say_FinDate");
 //                }
 
             }
@@ -105,9 +107,6 @@ public class TaskFinish {
 //        return new SimpleDateFormat(" HH:mm MM 월 d 일 ", Locale.getDefault()).format(time);
 //    }
 
-    public static String nowDateTimeToString(long time) {
-        return new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
-    }
 //    public static String nowTimeToString(long time) {
 //        final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
 //        return sdfTime.format(time);

@@ -274,7 +274,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         if (quietTasks == null) {
             quietTasks = new QuietTaskGetPut().get(mContext);
             if (quietTasks == null)
-                new QuietTaskNew(mContext);
+                new QuietTaskNew();
         }
         return quietTasks.size();
     }

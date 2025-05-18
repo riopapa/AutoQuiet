@@ -30,7 +30,7 @@ public class TaskOneTIme {
         qt.active = false;
         quietTasks.set(0, qt);
         new QuietTaskGetPut().put(quietTasks);
-        new ScheduleNextTask(mContext, "After oneTime");
+        new ScheduleNextTask("After oneTime");
     }
 
     String nowTimeToString(long time) {

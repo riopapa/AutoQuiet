@@ -9,9 +9,9 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
-import better.life.autoquiet.NotificationService;
-import better.life.autoquiet.TaskAction.TaskFinish;
-import better.life.autoquiet.activity.ActivityAddEdit;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import better.life.autoquiet.activity.ActivityMain;
 
 public class NotificationHelper extends ContextWrapper {
@@ -50,7 +50,7 @@ public class NotificationHelper extends ContextWrapper {
                 this, CHANNEL_ID)
                 .setSmallIcon(bellType)
                 .setContentTitle(title + " "
-                    + TaskFinish.nowDateTimeToString(System.currentTimeMillis()))
+                    + nowDateTimeToString(System.currentTimeMillis()))
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -58,5 +58,9 @@ public class NotificationHelper extends ContextWrapper {
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    String nowDateTimeToString(long time) {
+        return new SimpleDateFormat(" MM 월 d 일 EEEE HH:mm ", Locale.getDefault()).format(time);
     }
 }

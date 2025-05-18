@@ -1,13 +1,14 @@
 package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.AlarmReceiver.sounds;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
+import android.content.Context;
 import android.content.Intent;
+
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -21,6 +22,7 @@ import java.util.TimerTask;
 public class BellOneTime {
 
     public void go(NextTask nt) {
+        Context context = ContextProvider.get();
         if (nt.vibrate)
             phoneVibrate.go(1);
         sounds.beep(Sounds.BEEP.INFO);
@@ -29,8 +31,8 @@ public class BellOneTime {
                 String say = nt.subject + " 체크";
                 sounds.sayTask(say);
                 if (nt.clock) {
-                    Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
-                    mContext.startService(serviceIntent);
+                    Intent serviceIntent = new Intent(context, FloatingClockService.class);
+                    context.startService(serviceIntent);
                 }
                 QuietTask qt = quietTasks.get(nt.idx);
                 if (qt.nextDay) {
@@ -49,6 +51,6 @@ public class BellOneTime {
                 new QuietTaskGetPut().put(quietTasks);
             }
         }, 1500);
-        new ScheduleNextTask(mContext, "BellOneTime");
+        new ScheduleNextTask("BellOneTime");
     }
 }

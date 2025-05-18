@@ -1,7 +1,6 @@
 package better.life.autoquiet;
 
 import static better.life.autoquiet.AlarmReceiver.sounds;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -46,8 +45,6 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-        mContext = this;
     }
 
     @Override
@@ -73,13 +70,13 @@ public class NotificationService extends Service {
         if (operation == MAKE_SILENT) {
 //            if (several > 0) {
 //                several = 0;
-//                new ScheduleNextTask(mContext, "make Silent");
+//                new ScheduleNextTask("make Silent");
 //            }
 //            else
                 make_silent();
         } else if (operation == RIGHT_NOW) {
-            Intent oIntent = new Intent(mContext, ActivityOneTime.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, oIntent, PendingIntent.FLAG_MUTABLE);
+            Intent oIntent = new Intent(this, ActivityOneTime.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, oIntent, PendingIntent.FLAG_MUTABLE);
             try {
                 pendingIntent.send();
             } catch(PendingIntent.CanceledException e) {
@@ -88,7 +85,7 @@ public class NotificationService extends Service {
         } else if (operation == STOP_SPEAK) {
             stop_repeat = false;
             updateRemoteViews();
-            new ScheduleNextTask(this, "stopped, next is");
+            new ScheduleNextTask("stopped, next is");
         } else if (operation == VOLUMES) {
             updateRemoteViews();
         }
@@ -141,12 +138,12 @@ public class NotificationService extends Service {
 
     private void createNotification() {
 
-        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_bar);
+        mRemoteViews = new RemoteViews(this.getPackageName(), R.layout.notification_bar);
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationChannel = new NotificationChannel("default","default", NotificationManager.IMPORTANCE_DEFAULT);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
-        mBuilder = new NotificationCompat.Builder(mContext,"default")
+        mBuilder = new NotificationCompat.Builder(this,"default")
                 .setSmallIcon(R.drawable.auto_quite)
                 .setPriority(NotificationCompat.PRIORITY_HIGH) // added 24.09.30
                 .setLocalOnly(true)  // Ensures notification is local to the device
@@ -157,36 +154,36 @@ public class NotificationService extends Service {
                 .setOnlyAlertOnce(false)
         ;
 
-        Intent mainIntent = new Intent(mContext, ActivityMain.class);
-        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(mContext, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+        Intent mainIntent = new Intent(this, ActivityMain.class);
+        mRemoteViews.setOnClickPendingIntent(R.id.ll_customNotification, PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
 
         Intent rightNowI = new Intent(this, NotificationService.class);
         rightNowI.putExtra("operation", RIGHT_NOW);
-        PendingIntent rightNowP = PendingIntent.getService(mContext, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent rightNowP = PendingIntent.getService(this, RIGHT_NOW, rightNowI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(rightNowP);
         mRemoteViews.setOnClickPendingIntent(R.id.right_now, rightNowP);
 
         Intent toss5 = new Intent(this, NotificationService.class);
         toss5.putExtra("operation", MAKE_SILENT);
-        PendingIntent fiveP = PendingIntent.getService(mContext, MAKE_SILENT, toss5, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent fiveP = PendingIntent.getService(this, MAKE_SILENT, toss5, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(fiveP);
         mRemoteViews.setOnClickPendingIntent(R.id.make_silent, fiveP);
 
         Intent tossI = new Intent(this, NotificationService.class);
         tossI.putExtra("operation", A_MINUTE);
-        PendingIntent oneP = PendingIntent.getService(mContext, A_MINUTE, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent oneP = PendingIntent.getService(this, A_MINUTE, tossI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(oneP);
         mRemoteViews.setOnClickPendingIntent(R.id.a_minute, oneP);
 
         Intent vOnI = new Intent(this, NotificationService.class);
         vOnI.putExtra("operation", VOLUME_ON);
-        PendingIntent vOnP = PendingIntent.getService(mContext, VOLUME_ON, vOnI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent vOnP = PendingIntent.getService(this, VOLUME_ON, vOnI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(vOnP);
         mRemoteViews.setOnClickPendingIntent(R.id.volume_on, vOnP);
 
         Intent volI = new Intent(this, NotificationService.class);
         volI.putExtra("operation", VOLUMES);
-        PendingIntent volP = PendingIntent.getService(mContext, VOLUMES, volI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent volP = PendingIntent.getService(this, VOLUMES, volI, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(volP);
         mRemoteViews.setOnClickPendingIntent(R.id.volume_now, volP);
 

@@ -31,7 +31,7 @@ public class QuietTaskGetPut {
         String json = sharedPref.getString("silentInfo", "");
         if (json.isEmpty()) {
             list = new ArrayList<>();
-            new QuietTaskNew(context);
+            new QuietTaskNew();
         } else {
             Type type = new TypeToken<List<QuietTask>>() {
             }.getType();

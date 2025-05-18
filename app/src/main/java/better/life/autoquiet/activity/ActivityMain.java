@@ -2,6 +2,7 @@ package better.life.autoquiet.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
@@ -62,6 +64,7 @@ public class ActivityMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        ContextProvider.init(mContext);
         pActivity = this;
         vars = new Vars();
         new SharedPrefer().get(vars);
@@ -76,7 +79,6 @@ public class ActivityMain extends AppCompatActivity {
             Log.e("Permission", "No Permission " + e);
         }
 
-// If you have access to the external storage, do whatever you need
         if (!Environment.isExternalStorageManager()) {
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -87,14 +89,21 @@ public class ActivityMain extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission", "Required for READ_CALENDAR");
         }
-//        Log.w("autoQuiet","onCreated ----- ");
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (!alarmManager.canScheduleExactAlarms()) {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+            startActivity(intent);
+        }
+
         NotificationManager notificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
-
+        ContextProvider.init(this);
+        phoneVibrate = new PhoneVibrate();
         new VarsGetPut().put(vars, mContext);
     }
 
@@ -119,20 +128,6 @@ public class ActivityMain extends AppCompatActivity {
             startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE);
         }
     }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
-//            if (Settings.canDrawOverlays(this)) {
-//                // Permission granted, proceed to show the overlay
-////                showFloatingClock();
-//            } else {
-//                // Permission denied, handle accordingly (e.g., show a message)
-//            }
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -175,7 +170,7 @@ public class ActivityMain extends AppCompatActivity {
                     .setMessage(R.string.reset_table)
                     .setIcon(R.drawable.danger)
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-                        new QuietTaskNew(getApplicationContext());
+                        new QuietTaskNew();
                         setUpMainAdapter();
                     })
                     .setNegativeButton(android.R.string.cancel, null)
@@ -204,57 +199,9 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    long nextDelayInterval;
-    SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm ", Locale.getDefault());
-
-    void reLoad_Again() {
-        nextDelayInterval = 180 * 60 * 1000;
-        long nowTime = System.currentTimeMillis();
-        long nextTime = nowTime + nextDelayInterval;
-        if (nextTime > nextAlertTime - 5 * 60 * 1000 &&
-                nextTime < nextAlertTime + 5 * 60 * 1000 ) {
-            nextDelayInterval = nextAlertTime - 5 * 60 * 1000 - nowTime;
-            while (nextDelayInterval < 0)
-                nextDelayInterval += 3 * 60 * 1000;
-        }
-        Log.e("reload", "Next Reload Time is "+sdf.format(nowTime+nextDelayInterval));
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (nextTime < nextAlertTime - 5 * 60 * 1000 ||
-                        nextTime > nextAlertTime + 5 * 60 * 1000 ) {
-                    Intent intent = new Intent(ActivityMain.this, ActivityMain.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
-        }, nextDelayInterval);
-    }
-//
-//    void waitLoop() {
-//
-//        final long LOOP_INTERVAL = 10 * 60 * 1000;
-//
-//        if (timerTask != null)
-//            timerTask.cancel();
-//        if (timer != null)
-//            timer.cancel();
-//
-//        timer = new Timer();
-//        timerTask = new TimerTask() {
-//            @Override
-//            public void run () {
-//                Log.w("waiting..", count++ +", "+ (System.currentTimeMillis()-lastTime));
-//                lastTime = System.currentTimeMillis();
-//            }
-//        };
-//        timer.schedule(timerTask, 1000, LOOP_INTERVAL);
-//    }
-
     @Override
     protected void onPause() {
-//        mainRecycleAdapter.sort("");
-        new ScheduleNextTask(mContext, "main");
+        new ScheduleNextTask("main");
         super.onPause();
     }
 

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.ContextProvider;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
@@ -46,14 +47,14 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        viewHolder.itemView.setBackground(ContextCompat.getDrawable(mContext, R.drawable.item_normal));
+        viewHolder.itemView.setBackground(ContextCompat.getDrawable(ContextProvider.get(), R.drawable.item_normal));
     }
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
-            viewHolder.itemView.setBackground(ContextCompat.getDrawable(mContext, R.drawable.item_selected));
+            viewHolder.itemView.setBackground(ContextCompat.getDrawable(ContextProvider.get(), R.drawable.item_selected));
         }
     }
 
@@ -86,7 +87,7 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
         backgroundColor = Color.parseColor("#b80f0a");
         mClearPaint = new Paint();
         mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        deleteDrawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_menu_delete);
+        deleteDrawable = ContextCompat.getDrawable(ContextProvider.get(), android.R.drawable.ic_menu_delete);
         intrinsicWidth = deleteDrawable.getIntrinsicWidth();
         intrinsicHeight = deleteDrawable.getIntrinsicHeight();
 

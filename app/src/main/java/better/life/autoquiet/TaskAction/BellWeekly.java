@@ -29,7 +29,7 @@ public class BellWeekly {
             }
             String say = nt.subject + " 를 확인";
             sounds.sayTask(say);
-            new ScheduleNextTask(mContext, "event");
+            new ScheduleNextTask("event");
             }
         }, 1500);
     }

@@ -6,14 +6,16 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import android.content.Context;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
 
 public class QuietTaskNew {
 
-    public QuietTaskNew(Context context) {
+    public QuietTaskNew() {
 
+        Context context = ContextProvider.get();
         boolean [] week;
         ArrayList<QuietTask> quietTasks = new ArrayList<>();
         week = new boolean[]{false, false, false, false, false, false, false};

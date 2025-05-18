@@ -1,6 +1,5 @@
 package better.life.autoquiet;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 
 import android.content.BroadcastReceiver;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import better.life.autoquiet.TaskAction.TaskFinish;
 import better.life.autoquiet.TaskAction.TaskOneTIme;
 import better.life.autoquiet.TaskAction.TaskStart;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
@@ -23,11 +23,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        mContext = context;
+        ContextProvider.init(context);
         if (sounds == null)
             sounds = new Sounds(context);
         if (phoneVibrate == null)
-            phoneVibrate = new PhoneVibrate(context);
+            phoneVibrate = new PhoneVibrate();
 
         Bundle args = intent.getBundleExtra("DATA");
         nt = (NextTask) args.getSerializable("nextTask");

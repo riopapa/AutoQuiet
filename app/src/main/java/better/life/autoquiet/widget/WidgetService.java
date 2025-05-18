@@ -40,7 +40,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public int getCount() {
         if (nextTasks == null)
-            new ScheduleNextTask(context, "getCount Zero");
+            new ScheduleNextTask( "getCount Zero");
         return nextTasks.size();
     }
 
