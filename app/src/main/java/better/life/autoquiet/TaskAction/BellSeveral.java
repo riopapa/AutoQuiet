@@ -1,12 +1,15 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import static better.life.autoquiet.AlarmReceiver.sounds;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
+
+import android.content.Context;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.common.PhoneVibrate;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -45,7 +48,7 @@ public class BellSeveral {
                         afterSec = afterSec / 2;
                 }
                 long nextTime = System.currentTimeMillis() + afterSec * 1000L;
-                new AlarmTime().request(mContext, nt, nextTime, "S", nt.several);
+                new AlarmTime().request(nt, nextTime, "S", nt.several);
             } else {
                 QuietTask qt = quietTasks.get(nt.idx);
                 qt.active = false;

@@ -1,11 +1,10 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.common.ContextProvider;
@@ -31,12 +30,9 @@ public class TaskFinish {
             finish_Normal();
         } else
             finish_Several();
-
     }
 
     private void finish_Normal() {
-        if (nt.vibrate)
-            phoneVibrate.go(1);
         sounds.beep(Sounds.BEEP.BACK);
         new Timer().schedule(new TimerTask() {
             @Override
@@ -50,7 +46,8 @@ public class TaskFinish {
                     mainRecycleAdapter.notifyItemChanged(nt.idx);
                 }
                 new ScheduleNextTask("Fin Normal");
-                new Utils(mContext).deleteOldLogFiles();
+                new Utils().deleteOldLogFiles();
+                phoneVibrate.go(1);
             }
         }, 1800);
     }

@@ -1,14 +1,14 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
-import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
+import android.content.Context;
 import android.content.Intent;
 
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 
@@ -24,8 +24,9 @@ public class BellWeekly {
         new Timer().schedule(new TimerTask() {
             public void run() {
             if (nt.clock) {
-                Intent serviceIntent = new Intent(mContext, FloatingClockService.class);
-                mContext.startService(serviceIntent);
+                Context context = ContextProvider.get();
+                Intent serviceIntent = new Intent(context, FloatingClockService.class);
+                context.startService(serviceIntent);
             }
             String say = nt.subject + " 를 확인";
             sounds.sayTask(say);

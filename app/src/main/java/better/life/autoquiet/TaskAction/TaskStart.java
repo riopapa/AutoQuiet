@@ -1,15 +1,13 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_ONETIME;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_WEEKLY;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_WORK;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
-import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.common.Sounds;

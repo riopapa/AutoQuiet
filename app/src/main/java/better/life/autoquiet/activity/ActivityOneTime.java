@@ -1,8 +1,8 @@
 package better.life.autoquiet.activity;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.os.Bundle;
 import android.view.Menu;

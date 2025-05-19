@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import better.life.autoquiet.AlarmReceiver;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.NextTask;
 
 public class AlarmTime {
 
-    public void request(Context context, NextTask nt,
+    public void request(NextTask nt,
                         long nextTime, String SFO, int several) {
+        Context context = ContextProvider.get();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         Intent intent = new Intent(context, AlarmReceiver.class);

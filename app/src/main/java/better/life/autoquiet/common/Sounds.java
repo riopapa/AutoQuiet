@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import better.life.autoquiet.R;
@@ -22,15 +21,13 @@ public class Sounds {
     public static TextToSpeech mTTS;
     public static AudioManager mAM;
     public static MediaPlayer beepMP;
-    Context context;
     int rVol;
     static String ttsID = "";
     AudioAttributes beepAttr, ringAttr, blueAttr;
     public static AudioFocusRequest mFocusGain = null;
     String blueDevice = "";
 
-    public Sounds(Context context) {
-        this.context = context;
+    public Sounds() {
         ringAttr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
@@ -47,6 +44,7 @@ public class Sounds {
         mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
                 .build();
 
+        Context context = ContextProvider.get();
         mTTS = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -110,6 +108,7 @@ public class Sounds {
             soundID = R.raw.manner_starting;
 
         setVolumeTo(12);
+        Context context = ContextProvider.get();
         try {
             beepMP.setDataSource(context,
                     Uri.parse("android.resource://" + context.getPackageName() + "/" + soundID));
@@ -131,7 +130,7 @@ public class Sounds {
             phoneVibrate.go(2);
             return;
         }
-
+        Context context = ContextProvider.get();
         blueDevice = BluetoothUtil.getConnectedTargetDeviceName(context);
         mAM.requestAudioFocus(mFocusGain);
 

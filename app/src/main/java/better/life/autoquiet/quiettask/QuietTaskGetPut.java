@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import better.life.autoquiet.activity.ActivityMain;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;
@@ -15,7 +16,8 @@ import java.util.List;
 
 public class QuietTaskGetPut {
     public void put(ArrayList<QuietTask> quietTasks) {
-        SharedPreferences sharedPref = ActivityMain.mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+        Context context = ContextProvider.get();
+        SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(quietTasks);

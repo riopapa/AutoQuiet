@@ -15,18 +15,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import better.life.autoquiet.common.ContextProvider;
+
 public class Utils {
 
     private final String PREFIX = "log_";
     private File packageDir;
-    private final Context context;
 
-    public Utils(Context context) {
-        this.context = context;
+    public Utils() {
         this.packageDir = getPackageDirectory();
     }
     private File getPackageDirectory() {
 
+        Context context = ContextProvider.get();
         String applicationName = getAppLabel(context);
         File directory = new File(Environment.getExternalStorageDirectory(), applicationName);
         try {

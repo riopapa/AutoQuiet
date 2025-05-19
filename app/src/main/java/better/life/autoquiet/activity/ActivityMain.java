@@ -12,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import better.life.autoquiet.R;
 import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.PhoneVibrate;
+import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskNew;
@@ -40,19 +39,14 @@ import better.life.autoquiet.Vars;
 import better.life.autoquiet.adapter.MainRecycleAdapter;
 import better.life.autoquiet.models.QuietTask;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ActivityMain extends AppCompatActivity {
 
-    public static Context mContext;
-    public static Activity pActivity;
     public static Vars vars;
     public static MainRecycleAdapter mainRecycleAdapter;
     public static int currIdx = -1;
-    public static long nextAlertTime;
-    RecyclerView mainRecyclerView;
+    public static Sounds sounds = null;
     public static PhoneVibrate phoneVibrate = null;
     public static final String ACTION_CLOCK = "c";
     public static final String ACTION_NORM = "n";
@@ -60,16 +54,17 @@ public class ActivityMain extends AppCompatActivity {
     public static ArrayList<QuietTask> quietTasks;
     public static ArrayList<NextTask> nextTasks;
 
+    RecyclerView mainRecyclerView;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
-        ContextProvider.init(mContext);
-        pActivity = this;
+        context = this;
+        ContextProvider.init(context);
         vars = new Vars();
         new SharedPrefer().get(vars);
 
-        new Utils(mContext).deleteOldLogFiles();
+        new Utils().deleteOldLogFiles();
         setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
@@ -104,7 +99,7 @@ public class ActivityMain extends AppCompatActivity {
         }
         ContextProvider.init(this);
         phoneVibrate = new PhoneVibrate();
-        new VarsGetPut().put(vars, mContext);
+        new VarsGetPut().put(vars, context);
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;
@@ -113,12 +108,12 @@ public class ActivityMain extends AppCompatActivity {
     public void onResume() {
 
         super.onResume();
-        vars = new VarsGetPut().get(mContext);
+        vars = new VarsGetPut().get(context);
         Log.w("Main", "onResume");
-        new Utils(mContext).deleteOldLogFiles();
+        new Utils().deleteOldLogFiles();
 
         setUpMainAdapter();
-        new VarsGetPut().put(vars, mContext);
+        new VarsGetPut().put(vars, context);
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 4;
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
@@ -142,14 +137,14 @@ public class ActivityMain extends AppCompatActivity {
         int menuItem = item.getItemId();
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
-            new VarsGetPut().put(vars, mContext);
+            new VarsGetPut().put(vars, context);
             intent = new Intent(this, ActivityAddEdit.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
-            new VarsGetPut().put(vars, mContext);
+            new VarsGetPut().put(vars, context);
             intent = new Intent(this, ActivityGCalShow.class);
             startActivityForResult(intent, 22);
             return true;
@@ -159,12 +154,12 @@ public class ActivityMain extends AppCompatActivity {
             return true;
 
         } else if (menuItem == R.id.action_setting) {
-            new VarsGetPut().put(vars, mContext);
+            new VarsGetPut().put(vars, context);
             startActivityForResult(new Intent(this, ActivityPrefer.class), 33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
-            new VarsGetPut().put(vars, mContext);
+            new VarsGetPut().put(vars, context);
             new AlertDialog.Builder(this)
                     .setTitle(R.string.reset_title)
                     .setMessage(R.string.reset_table)

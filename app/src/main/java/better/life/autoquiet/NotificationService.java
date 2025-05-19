@@ -1,6 +1,6 @@
 package better.life.autoquiet;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

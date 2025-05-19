@@ -11,6 +11,7 @@ import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 
@@ -39,8 +40,10 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        if (nextTasks == null)
-            new ScheduleNextTask( "getCount Zero");
+        if (nextTasks == null) {
+            context = ContextProvider.get();
+            new ScheduleNextTask("getCount Zero");
+        }
         return nextTasks.size();
     }
 

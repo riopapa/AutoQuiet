@@ -1,8 +1,7 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;

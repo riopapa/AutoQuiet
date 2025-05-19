@@ -6,11 +6,11 @@ import static better.life.autoquiet.activity.ActivityAddEdit.BELL_WEEKLY;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static better.life.autoquiet.activity.ActivityMain.currIdx;
-import static better.life.autoquiet.activity.ActivityMain.mContext;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
-import static better.life.autoquiet.activity.ActivityMain.pActivity;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -31,7 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import better.life.autoquiet.activity.ActivityAddEdit;
+import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.activity.ActivityOneTime;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.calendar.CalcNextBegEnd;
@@ -54,18 +56,20 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
     Vars vars;
-
+    Context context;
+    
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        vars = new VarsGetPut().get(mContext);
-        colorOn = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOn, null);
-        colorInactiveBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorInactiveBack, null);
-        colorOnBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOnBack, null);
-        colorOff = ResourcesCompat.getColor(mContext.getResources(), R.color.colorOff, null);
-        colorActive = ResourcesCompat.getColor(mContext.getResources(), R.color.colorActive, null);
-        colorOffBack = ResourcesCompat.getColor(mContext.getResources(), R.color.colorTransparent, null);
+        context = parent.getContext();
+        vars = new VarsGetPut().get(context);
+        colorOn = ResourcesCompat.getColor(context.getResources(), R.color.colorOn, null);
+        colorInactiveBack = ResourcesCompat.getColor(context.getResources(), R.color.colorInactiveBack, null);
+        colorOnBack = ResourcesCompat.getColor(context.getResources(), R.color.colorOnBack, null);
+        colorOff = ResourcesCompat.getColor(context.getResources(), R.color.colorOff, null);
+        colorActive = ResourcesCompat.getColor(context.getResources(), R.color.colorActive, null);
+        colorOffBack = ResourcesCompat.getColor(context.getResources(), R.color.colorTransparent, null);
 
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_line, parent, false);
 
@@ -109,12 +113,12 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 Intent intent;
                 if (currIdx != 0) {
                     vars.addNewQuiet = false;
-                    intent = new Intent(mContext, ActivityAddEdit.class);
+                    intent = new Intent(context, ActivityAddEdit.class);
                 } else {
-                    intent = new Intent(mContext, ActivityOneTime.class);
+                    intent = new Intent(context, ActivityOneTime.class);
                 }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             });
             this.llWeekFlag = itemView.findViewById(R.id.weekFlag);
             this.llCalInfo = itemView.findViewById(R.id.calInfo);
@@ -141,16 +145,16 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             vars.addNewQuiet = false;
-            new VarsGetPut().put(vars, mContext);
+            new VarsGetPut().put(vars, context);
             currIdx = getBindingAdapterPosition();
             Intent intent;
             if (currIdx != 0) {
-                intent = new Intent(mContext, ActivityAddEdit.class);
+                intent = new Intent(context, ActivityAddEdit.class);
             } else {
-                intent = new Intent(mContext, ActivityOneTime.class);
+                intent = new Intent(context, ActivityOneTime.class);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
+            context.startActivity(intent);
 
             return true;
         }
@@ -200,7 +204,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         holder.tvBegTime.setTextColor((active) ? colorOn : colorOff);
         holder.tvEndTime.setTextColor((active) ? colorOn : colorOff);
 
-        holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(mContext.getResources(),
+        holder.viewLine.setBackgroundColor(ResourcesCompat.getColor(context.getResources(),
                 (position == currIdx) ? R.color.colorSelected: R.color.itemNormalFill, null));
 
         if (!gCalendar) {
@@ -260,7 +264,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             holder.tvCalRight.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             holder.tvCalRight.setSelected(true);
 
-            holder.rmdSubject.setBackgroundColor(NameColor.get(qt.calName, mContext));
+            holder.rmdSubject.setBackgroundColor(NameColor.get(qt.calName, context));
         }
     }
 
@@ -272,7 +276,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     @Override
     public int getItemCount() {
         if (quietTasks == null) {
-            quietTasks = new QuietTaskGetPut().get(mContext);
+            context = ContextProvider.get();
+            quietTasks = new QuietTaskGetPut().get(context);
             if (quietTasks == null)
                 new QuietTaskNew();
         }
@@ -319,7 +324,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             new QuietTaskGetPut().put(quietTasks);
         } else {
             if (topLine++ < 0)
-                Toast.makeText(mContext,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
             else if (topLine > 30)
                 topLine = -1;
         }
@@ -332,7 +337,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(position);
             mainRecycleAdapter.notifyItemRemoved(position);
             new QuietTaskGetPut().put(quietTasks);
-            View pView = pActivity.findViewById(R.id.mainRecycler);
+            View pView = ((Activity) ContextProvider.get()).findViewById(R.id.mainRecycler);
             Snackbar snackbar = Snackbar
                     .make(pView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
@@ -346,7 +351,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         } else {
             if (topLine++ < 0)
-                Toast.makeText(mContext,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"바로 조용히 하기는 삭제 불가능 ... ",Toast.LENGTH_LONG).show();
             else if (topLine > 30)
                 topLine = -1;
         }

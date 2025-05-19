@@ -1,7 +1,6 @@
 package better.life.autoquiet.Sub;
 
-import static better.life.autoquiet.activity.ActivityMain.mContext;
-
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -98,8 +97,8 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             return;
         }
-
-        mBackground.setColor(mContext.getColor(R.color.colorPrimary));
+        Context context = ContextProvider.get();
+        mBackground.setColor(context.getColor(R.color.colorPrimary));
         mBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
         mBackground.draw(c);
 

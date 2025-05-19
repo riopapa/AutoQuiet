@@ -9,7 +9,8 @@ import better.life.autoquiet.Vars;
 public class SharedPrefer {
 
     public void get(Vars vars) {
-        SharedPreferences sharedPref = ActivityMain.mContext.getSharedPreferences("saved", Context.MODE_PRIVATE);
+        Context context = ContextProvider.get();
+        SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedEditor = sharedPref.edit();
         vars.sharedTimeBefore = sharedPref.getString("timeBefore", "");
         if (vars.sharedTimeBefore.equals("")) {

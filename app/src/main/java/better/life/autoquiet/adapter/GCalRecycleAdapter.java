@@ -16,6 +16,7 @@ import better.life.autoquiet.activity.ActivityAddAgenda;
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Vars;
+import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.GCal;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;
@@ -27,13 +28,13 @@ import java.util.Locale;
 public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.ViewHolder> {
 
     static Vars vars;
-    static Context context;
+    Context context;
     ArrayList<GCal> gCals;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        context = ActivityMain.mContext;
+        context = ContextProvider.get();
         vars = new VarsGetPut().get(context);
 //        gCals = new GetAgenda().get(rContext);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);

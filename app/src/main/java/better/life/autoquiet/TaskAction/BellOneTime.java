@@ -1,8 +1,8 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.AlarmReceiver.sounds;
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
+import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.content.Context;
 import android.content.Intent;
