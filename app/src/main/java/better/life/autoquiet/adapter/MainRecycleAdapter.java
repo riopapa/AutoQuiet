@@ -277,7 +277,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public int getItemCount() {
         if (quietTasks == null) {
             context = ContextProvider.get();
-            quietTasks = new QuietTaskGetPut().get(context);
+            quietTasks = new QuietTaskGetPut().get();
             if (quietTasks == null)
                 new QuietTaskNew();
         }

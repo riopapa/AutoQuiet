@@ -50,7 +50,7 @@ public class ActivityOneTime extends AppCompatActivity {
         actionBar.setIcon(R.drawable.right_now) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
-        quietTasks = new QuietTaskGetPut().get(this);
+        quietTasks = new QuietTaskGetPut().get();
         quietTask = quietTasks.get(0);
         subject = getResources().getString(R.string.Quiet_Once);
         vibrate = quietTask.alarmType == PHONE_VIBRATE;

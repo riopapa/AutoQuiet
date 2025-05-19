@@ -17,6 +17,7 @@ import java.util.List;
 public class QuietTaskGetPut {
     public void put(ArrayList<QuietTask> quietTasks) {
         Context context = ContextProvider.get();
+
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = sharedPref.edit();
         Gson gson = new Gson();
@@ -25,9 +26,11 @@ public class QuietTaskGetPut {
         prefsEditor.apply();
     }
 
-    public ArrayList<QuietTask> get(Context context) {
+    public ArrayList<QuietTask> get() {
 
+        Context context = ContextProvider.get();
         ArrayList<QuietTask> list;
+
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPref.getString("silentInfo", "");

@@ -33,7 +33,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
         binding = ActivityAddAgendaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         context = this;
-        quietTasks = new QuietTaskGetPut().get(this);
+        quietTasks = new QuietTaskGetPut().get();
         ArrayList<GCal> gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);

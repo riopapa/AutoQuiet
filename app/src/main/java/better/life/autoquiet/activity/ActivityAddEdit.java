@@ -85,7 +85,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         context = this;
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        quietTasks = new QuietTaskGetPut().get(this);
+        quietTasks = new QuietTaskGetPut().get();
         if (currIdx == -1)
             qT = new QuietTaskDefault().get();
         else
