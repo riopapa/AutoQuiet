@@ -57,14 +57,14 @@ public class BluetoothUtil {
         BluetoothProfile.ServiceListener profileListener = new BluetoothProfile.ServiceListener() {
             @Override
             public void onServiceConnected(int profile, BluetoothProfile proxy) {
-                Log.w("Connected", profile + " " + proxy);
+//                Log.w("Connected", profile + " " + proxy);
                 if (profile == BluetoothProfile.HEADSET) {
                     headsetProxy.set((BluetoothHeadset) proxy);
-                    Log.w(TAG, "BluetoothHeadset profile proxy connected.");
+//                    Log.w(TAG, "BluetoothHeadset profile proxy connected.");
 
                     // Check for BLUETOOTH_CONNECT permission again before accessing connected devices
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted after proxy connection.");
+//                        Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted after proxy connection.");
                         latch.countDown(); // Release latch even on permission issue
                         return;
                     }
@@ -74,11 +74,11 @@ public class BluetoothUtil {
                         for (BluetoothDevice device : connectedDevices) {
                             // Check for BLUETOOTH_CONNECT permission again before accessing device name
                             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                                Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted while getting device name.");
+//                                Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted while getting device name.");
                                 break; // Stop processing devices
                             }
                             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-                                Log.w(TAG, "BLUETOOTH permission lost or not granted for older SDK while getting device name.");
+//                                Log.w(TAG, "BLUETOOTH permission lost or not granted for older SDK while getting device name.");
                                 break; // Stop processing devices
                             }
 

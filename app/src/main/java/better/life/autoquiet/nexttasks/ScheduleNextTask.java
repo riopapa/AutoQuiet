@@ -3,6 +3,7 @@ package better.life.autoquiet.nexttasks;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
 import android.content.Context;
+import android.util.Log;
 
 import better.life.autoquiet.Sub.AlarmTime;
 import better.life.autoquiet.Utils;
@@ -17,13 +18,15 @@ public class ScheduleNextTask {
     ArrayList<QuietTask> quietTasks;
 
     public ScheduleNextTask(String headInfo) {
+        Log.w("ScheduleNextTask", "header="+headInfo);
+        new Utils().log("ScheduleNextTask", headInfo);
         Context context = ContextProvider.get();
         quietTasks = new QuietTaskGetPut().get();
 
         new GenerateNexTasks().gen(quietTasks);
         new AlarmTime().request(nextTasks.get(0),
                 nextTasks.get(0).time, nextTasks.get(0).SFO, nextTasks.get(0).several);
-        new Utils().log("Schedule", headInfo + " " +nextTasks.get(0).subject + " " + nextTasks.get(0).time);
+        new Utils().log("Schedule", headInfo + " " +nextTasks.get(0).subject );
         WidgetProvider.update_All_Widgets(context);
     }
 }

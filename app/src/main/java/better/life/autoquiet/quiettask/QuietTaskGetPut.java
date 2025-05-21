@@ -2,6 +2,7 @@ package better.life.autoquiet.quiettask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,6 +30,8 @@ public class QuietTaskGetPut {
     public ArrayList<QuietTask> get() {
 
         Context context = ContextProvider.get();
+        if (context == null)
+            Log.e("getput", "////// context is null -------");
         ArrayList<QuietTask> list;
 
         SharedPreferences sharedPref = context.getSharedPreferences("saved", Context.MODE_PRIVATE);

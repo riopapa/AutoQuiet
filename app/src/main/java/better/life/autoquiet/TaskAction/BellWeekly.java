@@ -20,7 +20,7 @@ public class BellWeekly {
     public void go(NextTask nt) {
         if (nt.vibrate)
             phoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.NOTY);
+        sounds.beep(Sounds.BEEP.WEEK);
         new Timer().schedule(new TimerTask() {
             public void run() {
             if (nt.clock) {
