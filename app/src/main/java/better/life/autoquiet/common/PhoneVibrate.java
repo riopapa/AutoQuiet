@@ -14,7 +14,7 @@ public class PhoneVibrate {
     public void go(int type) {
 
         // 0 : short, 1: long, 2: phone in vibrate mode
-        final long[][] vibPattern = {{70,70,70,70},
+        final long[][] vibPattern = {{30,30,30,30},
                 {100,100,100,100,100,100,100,100,100,100,100,100, 100, 200, 30, 20, 100, 200, 200, 100},
                 {100,100,100,100,100,100,100,100,100,100,100,100}
         };

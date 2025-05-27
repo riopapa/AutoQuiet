@@ -19,8 +19,8 @@ public class ScheduleNextTask {
 
     public ScheduleNextTask(String headInfo) {
         Log.w("ScheduleNextTask", "header="+headInfo);
-        new Utils().log("ScheduleNextTask", headInfo);
         Context context = ContextProvider.get();
+        new Utils().log("ScheduleNextTask", headInfo);
         quietTasks = new QuietTaskGetPut().get();
 
         new GenerateNexTasks().gen(quietTasks);

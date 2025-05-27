@@ -6,6 +6,7 @@ import static better.life.autoquiet.activity.ActivityMain.nextTasks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
@@ -18,14 +19,16 @@ import better.life.autoquiet.models.NextTask;
 public class WidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ListRemoteViewsFactory(this.getApplicationContext(), intent);
+        Context context = this.getApplicationContext();
+        ContextProvider.init(context);
+        return new ListRemoteViewsFactory(context, intent);
     }
 }
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    Context context;
-    public ListRemoteViewsFactory(Context context, Intent intent) {
-        this.context = context;
+    Context wContext;
+    public ListRemoteViewsFactory(Context wContext, Intent intent) {
+            this.wContext = wContext;
     }
 
     @Override
@@ -41,7 +44,10 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public int getCount() {
         if (nextTasks == null) {
-            context = ContextProvider.get();
+            if (wContext == null) {
+                wContext = ContextProvider.get();
+                Log.e("Context"," // is null // "+this.getClass().getName());
+            }
             new ScheduleNextTask("getCount Zero");
         }
         return nextTasks.size();
@@ -52,20 +58,20 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     public RemoteViews getViewAt(int position) {
         if (position >= nextTasks.size())
             return null;
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_line);
+        RemoteViews views = new RemoteViews(wContext.getPackageName(), R.layout.widget_line);
         NextTask nt = nextTasks.get(position);
         views.setTextViewText(R.id.wSubject, nt.subject);
         time = buildHourMin(nt.hour, nt.min) + " " + nt.suffix;
         views.setTextViewText(R.id.wTime, time);
         int colorU = (position % 2) == 0 ?
-                ContextCompat.getColor(context,R.color.widget_line0)
-                : ContextCompat.getColor(context,R.color.widget_line1);
+                ContextCompat.getColor(wContext,R.color.widget_line0)
+                : ContextCompat.getColor(wContext,R.color.widget_line1);
         Intent fIntent = new Intent();
         fIntent.setAction(ACTION_NORM);
         views.setOnClickFillInIntent(R.id.wLine, fIntent);
 
         views.setImageViewResource(R.id.wType, alarmIcons[nt.alarmType]);
-        views.setInt(R.id.wType, "setColorFilter",(ContextCompat.getColor(context, R.color.white)));
+        views.setInt(R.id.wType, "setColorFilter",(ContextCompat.getColor(wContext, R.color.white)));
 
         views.setInt(R.id.lineUp, "setBackgroundColor", colorU);
         views.setInt(R.id.wSubject, "setBackgroundColor", colorU);
@@ -83,7 +89,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getLoadingView() {
         // Return a RemoteViews for the loading R_M.
-        return new RemoteViews(context.getPackageName(), R.layout.widget_frame);
+        return new RemoteViews(wContext.getPackageName(), R.layout.widget_frame);
     }
 
     @Override

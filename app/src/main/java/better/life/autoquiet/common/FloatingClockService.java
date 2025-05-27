@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +33,7 @@ public class FloatingClockService extends Service {
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mUpdateTimeTask;
+    final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss.S", Locale.getDefault());
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -40,7 +44,8 @@ public class FloatingClockService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_clock, null);
+        FrameLayout tempParent = new FrameLayout(this);
+        mFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_clock, tempParent, false);
 
         // Set layout parameters
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -51,8 +56,8 @@ public class FloatingClockService extends Service {
                 PixelFormat.TRANSLUCENT);
 
         params.gravity = Gravity.TOP | Gravity.START;
-        params.x = 100;
-        params.width = 400;
+        params.x = 60;
+        params.width = 300;
         params.y = 300;
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -64,18 +69,20 @@ public class FloatingClockService extends Service {
         mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
                 String currentTime = sdf.format(new Date());
                 timeTextView.setText(currentTime);
-                String sec = currentTime.substring(currentTime.length() - 2);
-                int compVal = sec.compareTo("50");
+                String sec = currentTime.substring(currentTime.length() - 3);
+                int compVal = sec.compareTo("50 ");
+                timeTextView.setTextColor((compVal < 0) ?
+                        ContextCompat.getColor(FloatingClockService.this, R.color.float_norm)
+                        : ContextCompat.getColor(FloatingClockService.this, R.color.float_alert));
+                timeTextView.setBackgroundColor((compVal < 0) ?
+                        ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_back)
+                        : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm));
+                compVal = sec.compareTo("55 ");
                 if (compVal > 0)
-                    timeTextView.setTextColor(0xFFFF0000);
-                else
-                    timeTextView.setTextColor(0xFF00FFFF);
-                compVal = sec.compareTo("55");
-                if (compVal > 0)
-                    phoneVibrate.go(0);
+                    new PhoneVibrate().go(0);
                 long nxtDelay = 1002 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }

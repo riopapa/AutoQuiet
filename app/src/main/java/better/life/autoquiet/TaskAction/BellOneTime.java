@@ -34,6 +34,8 @@ public class BellOneTime {
                     Intent serviceIntent = new Intent(context, FloatingClockService.class);
                     context.startService(serviceIntent);
                 }
+                if (quietTasks == null)
+                    new QuietTaskGetPut().get();
                 QuietTask qt = quietTasks.get(nt.idx);
                 if (qt.nextDay) {
                     Calendar cal = Calendar.getInstance();

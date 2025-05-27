@@ -42,4 +42,7 @@
     <color name="widget_line0">#472E50</color>
     <color name="widget_line1">#5D1C76</color>
 
+    <color name="float_alert">#ffff0000</color>
+    <color name="float_norm">#C7C9E8</color>
+    <color name="float_norm_back">#216224</color>
 </resources>
