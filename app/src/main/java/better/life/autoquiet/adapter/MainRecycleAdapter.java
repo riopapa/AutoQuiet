@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import better.life.autoquiet.activity.ActivityAddEdit;
-import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.activity.ActivityOneTime;
 import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -277,7 +276,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public int getItemCount() {
         if (quietTasks == null) {
             context = ContextProvider.get();
-            quietTasks = new QuietTaskGetPut().get();
+            new QuietTaskGetPut().read();
             if (quietTasks == null)
                 new QuietTaskNew();
         }
@@ -311,7 +310,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
         mainRecycleAdapter.notifyDataSetChanged();
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().save();
     }
 
     @Override
@@ -321,7 +320,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(quietTask);
             quietTasks.add(toPosition, quietTask);
             notifyItemMoved(fromPosition, toPosition);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().save();
         } else {
             if (topLine++ < 0)
                 Toast.makeText(context,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
@@ -336,13 +335,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             qt = quietTasks.get(position);
             quietTasks.remove(position);
             mainRecycleAdapter.notifyItemRemoved(position);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().save();
             View pView = ((Activity) ContextProvider.get()).findViewById(R.id.mainRecycler);
             Snackbar snackbar = Snackbar
                     .make(pView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
                 quietTasks.add(position, qt);
-                new QuietTaskGetPut().put(quietTasks);
+                new QuietTaskGetPut().save();
                 mainRecycleAdapter.notifyDataSetChanged();
             });
 

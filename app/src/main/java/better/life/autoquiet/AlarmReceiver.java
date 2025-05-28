@@ -1,6 +1,7 @@
 package better.life.autoquiet;
 
 import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
+import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.content.BroadcastReceiver;
@@ -16,6 +17,7 @@ import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.PhoneVibrate;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
+import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -34,7 +36,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         Bundle args = intent.getBundleExtra("DATA");
         nt = (NextTask) args.getSerializable("nextTask");
-
+        if (quietTasks == null)
+            new QuietTaskGetPut().read();
         switch (nt.SFO) {
             case "S":   // start, from-to or 99 case
                 new TaskStart().go(nt);

@@ -35,7 +35,7 @@ public class BellOneTime {
                     context.startService(serviceIntent);
                 }
                 if (quietTasks == null)
-                    new QuietTaskGetPut().get();
+                    new QuietTaskGetPut().read();
                 QuietTask qt = quietTasks.get(nt.idx);
                 if (qt.nextDay) {
                     Calendar cal = Calendar.getInstance();
@@ -50,7 +50,7 @@ public class BellOneTime {
                 }
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
-                new QuietTaskGetPut().put(quietTasks);
+                new QuietTaskGetPut().save();
             }
         }, 1500);
         new ScheduleNextTask("BellOneTime");

@@ -4,12 +4,7 @@ import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
-import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.common.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
@@ -53,7 +48,7 @@ public class BellSeveral {
                 QuietTask qt = quietTasks.get(nt.idx);
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
-                new QuietTaskGetPut().put(quietTasks);
+                new QuietTaskGetPut().save();
             }
             }
         }, 1000);

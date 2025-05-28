@@ -86,29 +86,36 @@ public class Utils {
     final SimpleDateFormat sdfLogTime = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US);
 
     public void log(String tag, String text) {
-
-        String log = logTrace() + " {"+ tag + "} " + text;
-        Log.w(tag , log);
-        String logFile = packageDir + "/" + PREFIX + sdfDate.format(new Date())+".txt";
-        append2file(logFile, sdfLogTime.format(new Date())+" " +log);
+        new Thread(() -> {
+            final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
+            final String log6 = (traces.length>6) ?
+                    omitStr(getLastClass(traces[6].getClassName()))+"> "+traces[6].getMethodName()
+                            + "#" + traces[6].getLineNumber() + " ":"";
+            final String log5 = (traces.length>5) ?
+                    omitStr(getLastClass(traces[5].getClassName()))+"> "+traces[5].getMethodName()
+                            + "#" + traces[5].getLineNumber() + " ":"";
+            final String str = log6 + log5
+                    + omitStr(getLastClass(traces[4].getClassName()))+"> "+traces[4].getMethodName()
+                    + "#" + traces[4].getLineNumber() + " "
+                    + omitStr(getLastClass(traces[3].getClassName()))+"> "+traces[3].getMethodName()
+                    + "#" + traces[3].getLineNumber() + " {"+ tag + "} " + text;
+            String logFile = packageDir + "/" + PREFIX + sdfDate.format(new Date())+".txt";
+            append2file(logFile, sdfLogTime.format(new Date())+" " +str);
+            Log.w(tag, str);
+        }).start();
     }
 
-    private String logTrace () {
-//        int pid = android.os.Process.myPid();
-        StackTraceElement[] traces;
-        traces = Thread.currentThread().getStackTrace();
-        return traceName(traces[6].getMethodName()) + traceName(traces[5].getMethodName()) + traceClassName(traces[4].getClassName())+"> "+traces[4].getMethodName() + "#" + traces[4].getLineNumber();
-    }
-
-    private static final String[] omits = { "performResume", "performCreate", "callActivityOnResume", "access$",
-            "handleReceiver", "handleMessage", "dispatchKeyEvent", "dispatchTransformedTouchEvent","dispatchTouchEvent"};
-    private String traceName (String s) {
+    private String omitStr(String s) {
+        final String [] omits = { "beautiful-life-saychat",   "lambda",
+                "performResume", "performCreate", "callActivityOnResume", "access$",
+                "onNotificationPosted", "NotificationListener", "performCreate", "log",
+                "handleReceiver", "handleMessage", "dispatchKeyEvent", "onBindViewHolder"};
         for (String o : omits) {
-            if (s.contains(o)) return "";
+            if (s.contains(o)) return ". ";
         }
         return s + "> ";
     }
-    private String traceClassName(String s) {
+    private String getLastClass(String s) {
         return s.substring(s.lastIndexOf(".")+1);
     }
 
@@ -128,5 +135,4 @@ public class Utils {
             }
         }
     }
-
 }

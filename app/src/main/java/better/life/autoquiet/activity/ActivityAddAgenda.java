@@ -1,6 +1,5 @@
 package better.life.autoquiet.activity;
 
-import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.vars;
 
 import android.content.Context;
@@ -33,7 +32,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
         binding = ActivityAddAgendaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         context = this;
-        quietTasks = new QuietTaskGetPut().get();
+        new QuietTaskGetPut().read();
         ArrayList<GCal> gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);
@@ -111,7 +110,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
 //            }
 //        }
 //        Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
-//        new QuietTaskGetPut().put(quietTasks);
+//        new QuietTaskGetPut().put();
 //        new VarsGetPut().put(vars, context);
 //        finish();
     }

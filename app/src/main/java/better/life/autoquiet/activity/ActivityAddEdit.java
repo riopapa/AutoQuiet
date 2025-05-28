@@ -85,7 +85,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         context = this;
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        quietTasks = new QuietTaskGetPut().get();
+        new QuietTaskGetPut().read();
         if (currIdx == -1)
             qT = new QuietTaskDefault().get();
         else
@@ -543,7 +543,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
             quietTasks.remove(currIdx);
             mainRecycleAdapter.notifyItemRemoved(currIdx);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().save();
 
         } else if (id == R.id.action_copy) {
             verifyInput();
@@ -555,7 +555,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             qtNew.clock = clock;
 
             quietTasks.add(++currIdx, qtNew);
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().save();
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
             mainRecycleAdapter.notifyItemChanged(currIdx);
             mainRecycleAdapter.notifyItemChanged(currIdx+1);
@@ -577,7 +577,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.remove(currIdx);
                 mainRecycleAdapter.notifyItemRemoved(currIdx);
             }
-            new QuietTaskGetPut().put(quietTasks);
+            new QuietTaskGetPut().save();
         }
         return false;
     }

@@ -28,7 +28,7 @@ public class TaskOneTIme {
         QuietTask qt = quietTasks.get(nt.idx);
         qt.active = false;
         quietTasks.set(0, qt);
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().save();
         new ScheduleNextTask("After oneTime");
     }
 

@@ -31,7 +31,7 @@ public class QuietTaskNew {
         week = new boolean[]{true, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(context.getString(R.string.Sunday_Church), 9, 20, 10, 45, week, true, PHONE_OFF, false));
 
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().save();
     }
 
 }

@@ -50,7 +50,7 @@ public class ActivityOneTime extends AppCompatActivity {
         actionBar.setIcon(R.drawable.right_now) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
-        quietTasks = new QuietTaskGetPut().get();
+        new QuietTaskGetPut().read();
         quietTask = quietTasks.get(0);
         subject = getResources().getString(R.string.Quiet_Once);
         vibrate = quietTask.alarmType == PHONE_VIBRATE;
@@ -157,7 +157,7 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTask = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, true,  (vibrate) ? PHONE_VIBRATE:PHONE_OFF, false);
         quietTasks.set(0, quietTask);
-        new QuietTaskGetPut().put(quietTasks);
+        new QuietTaskGetPut().save();
         vars.sharedManner = manner;
         new VarsGetPut().put(vars, this);
         sounds.setSilentMode();
