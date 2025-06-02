@@ -24,7 +24,7 @@ public class BellSeveral {
             phoneVibrate.go(1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
-            sounds.beep(Sounds.BEEP.NOTY);
+            sounds.beep(Sounds.BEEP.BEEP);
         new Timer().schedule(new TimerTask() {
             public void run() {
             int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;

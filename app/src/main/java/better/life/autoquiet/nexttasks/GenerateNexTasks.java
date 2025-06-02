@@ -94,5 +94,4 @@ public class GenerateNexTasks {
         nt.clock = qt.clock;
         nTs.add(nt);
     }
-
 }

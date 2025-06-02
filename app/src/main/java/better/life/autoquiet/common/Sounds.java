@@ -22,16 +22,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import better.life.autoquiet.R;
+import better.life.autoquiet.Utils;
 
 public class Sounds {
 
     private boolean ttsReady = false;
-    public enum BEEP {NOTY, INFO, WEEK, BACK}
-    final int [] beepRes = {R.raw.beep_beep , R.raw.msg_inform, R.raw.tympani_bing, R.raw.back2normal};
+    public enum BEEP {BEEP, INFO, WEEK, BACK, START}
+    final int [] beepRes = {R.raw.beep_beep , R.raw.msg_inform, R.raw.tympani_bing, R.raw.back2normal,
+                        R.raw.manner_starting};
     final Uri [] dataSrc = new Uri[4];
     public static TextToSpeech mTTS;
     public static AudioManager mAM;
-    public static MediaPlayer beepMP;
+//    public static MediaPlayer beepMP;
     int rVol;
     AudioAttributes beepAttr, ringAttr, blueAttr;
     public static AudioFocusRequest mFocusGain = null;
@@ -68,8 +70,8 @@ public class Sounds {
                 }, 300);
             }
         });
-        beepMP = new MediaPlayer();
-        beepMP.setAudioAttributes(beepAttr);
+//        beepMP = new MediaPlayer();
+//        beepMP.setAudioAttributes(beepAttr);
     }
 
     private void initializeTTS() {
@@ -78,9 +80,15 @@ public class Sounds {
             @Override
             public void onStart(String utteranceId) {}
             @Override
-            public void onDone(String utteranceId) {}
-            @Override
             public void onError(String utteranceId) {}
+            // Inside onDone of your UtteranceProgressListener for mTTS
+            @Override
+            public void onDone(String utteranceId) {
+                if (mAM != null && mFocusGain != null) {
+                    mAM.abandonAudioFocusRequest(mFocusGain);
+                }
+                setVolumeTo(rVol); // Restore volume after TTS finishes
+            }
         });
 
             /*     Samsung voices
@@ -120,18 +128,35 @@ public class Sounds {
 
         if (isPhoneQuiet())
             return;
+        Context context = ContextProvider.get();
+        final MediaPlayer beepMP = new MediaPlayer();
+        beepMP.setAudioAttributes(beepAttr);
         getCurrVolumes();
 
-        setVolumeTo(12);
-        Context context = ContextProvider.get();
+        setVolumeTo(13);
         try {
             beepMP.setDataSource(context, dataSrc[beep.ordinal()]);
         } catch (Exception err) {
-            Log.e("sounds","source "+beep+" Error: "+err);
+            new Utils().log("sounds","setDataSource "+beep+" Error: "+err);
         }
-        beepMP.prepareAsync();
         beepMP.setOnPreparedListener(MediaPlayer::start);
-        beepMP.setOnCompletionListener(mp -> setVolumeTo(rVol));
+        beepMP.setOnErrorListener((mp, what, extra) -> {
+            Log.e("sounds", "MediaPlayer Error: " + what + ", " + extra);
+            mp.release(); // Release on error as well
+            setVolumeTo(rVol); // Restore volume even on error
+            return false; // Return false to let the system handle further
+        });
+        beepMP.setOnCompletionListener(mp -> {
+            setVolumeTo(rVol);
+            mp.release();
+        });
+
+        try {
+            beepMP.prepareAsync();
+        } catch (Exception err) {
+            beepMP.release();
+            new Utils().log("sounds","prepareAsync "+beep+" Error: "+err);
+        }
     }
 
     public boolean isPhoneQuiet() {
@@ -189,4 +214,5 @@ public class Sounds {
         rVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
 //        mVol = mAM.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
+
 }

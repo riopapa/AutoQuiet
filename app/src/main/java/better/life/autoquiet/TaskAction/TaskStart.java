@@ -48,7 +48,7 @@ public class TaskStart {
     }
 
     private void start_Normal() {
-        sounds.beep(Sounds.BEEP.NOTY);
+        sounds.beep(Sounds.BEEP.START);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

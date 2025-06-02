@@ -55,6 +55,7 @@ public class ActivityMain extends AppCompatActivity {
 
     RecyclerView mainRecyclerView;
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,7 +187,7 @@ public class ActivityMain extends AppCompatActivity {
 //
         mainRecyclerView = findViewById(R.id.mainRecycler);
 
-        mainRecycleAdapter = new MainRecycleAdapter();
+        mainRecycleAdapter = new MainRecycleAdapter(this);
         ItemTouchHelper.Callback mainCallback = new MyItemTouchHelper(mainRecycleAdapter);
         ItemTouchHelper mainItemTouchHelper = new ItemTouchHelper(mainCallback);
         mainRecycleAdapter.setTouchHelper(mainItemTouchHelper);
@@ -206,5 +207,18 @@ public class ActivityMain extends AppCompatActivity {
         super.onStop();
         if (mainRecyclerView != null)
             mainRecyclerView = null;
+    }
+    // In your Activity or Service that uses Sounds
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (Sounds.mTTS != null) {
+            Sounds.mTTS.stop();
+            Sounds.mTTS.shutdown();
+        }
+        // Also release AudioManager focus if held
+        if (Sounds.mAM != null && Sounds.mFocusGain != null) {
+            Sounds.mAM.abandonAudioFocusRequest(Sounds.mFocusGain);
+        }
     }
 }

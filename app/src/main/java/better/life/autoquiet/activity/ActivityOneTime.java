@@ -2,6 +2,7 @@ package better.life.autoquiet.activity;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_OFF;
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
+import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import java.util.Calendar;
 public class ActivityOneTime extends AppCompatActivity {
 
     QuietTask quietTask;
-    ArrayList<QuietTask> quietTasks;
     private String subject;
     private int begHour, begMin, endHour, endMin; // 0: silent 1: bell 2: manner
     private boolean vibrate, manner;

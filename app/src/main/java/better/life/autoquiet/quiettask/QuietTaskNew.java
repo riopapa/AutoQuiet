@@ -10,6 +10,7 @@ import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
+import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 public class QuietTaskNew {
 
@@ -17,7 +18,7 @@ public class QuietTaskNew {
 
         Context context = ContextProvider.get();
         boolean [] week;
-        ArrayList<QuietTask> quietTasks = new ArrayList<>();
+        quietTasks = new ArrayList<>();
         week = new boolean[]{false, false, false, false, false, false, false};
         quietTasks.add(new QuietTask(context.getString(R.string.Quiet_Once), 1,2,3,4,
                 week, false, PHONE_VIBRATE, false));

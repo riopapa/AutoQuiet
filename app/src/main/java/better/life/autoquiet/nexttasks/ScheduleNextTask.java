@@ -1,6 +1,7 @@
 package better.life.autoquiet.nexttasks;
 
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
+import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,10 +16,8 @@ import better.life.autoquiet.widget.WidgetProvider;
 import java.util.ArrayList;
 
 public class ScheduleNextTask {
-    ArrayList<QuietTask> quietTasks;
 
     public ScheduleNextTask(String headInfo) {
-        Log.w("ScheduleNextTask", "header="+headInfo);
         Context context = ContextProvider.get();
         new Utils().log("ScheduleNextTask", headInfo);
         new QuietTaskGetPut().read();

@@ -45,6 +45,7 @@ import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder>
@@ -56,7 +57,12 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     private int topLine = -1;
     Vars vars;
     Context context;
-    
+    private Activity activity;;
+
+    public MainRecycleAdapter(Activity activity) {
+        this.activity = activity;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,7 +81,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         return new ViewHolder(swipeView);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
         View viewLine;
@@ -336,7 +342,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(position);
             mainRecycleAdapter.notifyItemRemoved(position);
             new QuietTaskGetPut().save();
-            View pView = ((Activity) ContextProvider.get()).findViewById(R.id.mainRecycler);
+            View pView = activity.findViewById(R.id.mainRecycler);
             Snackbar snackbar = Snackbar
                     .make(pView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
