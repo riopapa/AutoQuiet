@@ -68,7 +68,7 @@ public class FloatingClockService extends Service {
             @Override
             public void run() {
                 SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss.SSS ", Locale.getDefault());
-                String currentTime = sdf.format(new Date());
+                String currentTime = sdf.format(System.currentTimeMillis());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
                 int compVal = sec.compareTo("50 ");

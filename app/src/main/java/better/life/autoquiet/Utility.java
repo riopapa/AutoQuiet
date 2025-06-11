@@ -12,10 +12,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 
 import better.life.autoquiet.Sub.ContextProvider;
+
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utility {
 
@@ -86,43 +92,50 @@ public class Utility {
     final SimpleDateFormat sdfLogTime = new SimpleDateFormat("MM-dd HH:mm:ss", Locale.US);
 
     public void log(String tag, String text) {
-        new Thread(() -> {
-            final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
-            StringBuilder log = new StringBuilder();
-            for (int i = 6; i > 2; i--) {
-                if (traces.length > i) {
-                    String omitStr = omitStr(getLastClass(traces[i].getClassName()));
-                    if (omitStr.isEmpty()) {
-                        omitStr = "{" + i + "} ";
-                        log.append(omitStr);
-                    } else {
-                        log.append(omitStr)
-                            .append(omitStr(getLastClass(traces[i].getClassName())))
-                            .append("_ ")
-                            .append(traces[i].getMethodName())
-                            .append("#")
-                            .append(traces[i].getLineNumber())
-                            .append(" ");
-                    }
+        final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
+        StringBuilder log = new StringBuilder();
+        for (int i = 5; i > 2; i--) {
+//            Log.w("traces "+i, traces[i].getClassName());
+//            Log.w("traces "+i, traces[i].getMethodName());
+//            Log.w("traces "+i, String.valueOf(traces[i].getLineNumber()));
+            if (traces.length > i) {
+                String omitStr = omitStr(getLastClass(traces[i].getClassName()));
+                if (omitStr.isEmpty()) {
+//                    omitStr = "{" + i + "} ";
+//                    log.append(omitStr);
+                } else {
+                    log.append(omitStr)
+                        .append("_ ")
+                        .append(traces[i].getMethodName())
+                        .append("#")
+                        .append(traces[i].getLineNumber())
+                        .append(" ");
                 }
             }
-            log.append(" {").append(tag).append("} ").append(text);
-            String logFile = packageDir + "/" + PREFIX + sdfDate.format(new Date())+".txt";
-            append2file(logFile, sdfLogTime.format(new Date())+" " +log);
+        }
+        log.append(" {").append(tag).append("} ").append(text);
+        new Thread(() -> {
+            String logFile = packageDir + "/" + PREFIX + sdfDate.format(System.currentTimeMillis())+".txt";
+            append2file(logFile, sdfLogTime.format(System.currentTimeMillis())+" " +log);
             Log.w(tag, String.valueOf(log));
         }).start();
     }
+    private static final Set<String> OMITS_SET = new HashSet<>(Arrays.asList(
+            "Activity", "better.life.autoquiet", "Thread", "$$ExternalSyntheticLambda",
+            "callActivityOnResume", "access$",
+            "onNotificationPosted", "NotificationListener", "performCreate",
+            "handleReceiver", "handleMessage", "dispatchKeyEvent", "onBindViewHolder"
+    ));
 
     private String omitStr(String s) {
-        final String [] omits = { "better.life.autoquiet", "Thread", "$$ExternalSyntheticLambda0",
-                "performResume", "performCreate", "callActivityOnResume", "access$",
-                "onNotificationPosted", "NotificationListener", "performCreate", "log",
-                "handleReceiver", "handleMessage", "dispatchKeyEvent", "onBindViewHolder"};
-        for (String o : omits) {
-            if (s.contains(o)) return "";
+        for (String o : OMITS_SET) { // Iteration order is not guaranteed and often "random"
+            if (s.contains(o)) {
+                return "";
+            }
         }
         return s + "> ";
     }
+
     private String getLastClass(String s) {
         return s.substring(s.lastIndexOf(".")+1);
     }
