@@ -5,7 +5,7 @@ import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.models.QuietTask;

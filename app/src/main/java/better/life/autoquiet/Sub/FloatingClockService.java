@@ -1,6 +1,4 @@
-package better.life.autoquiet.common;
-
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
+package better.life.autoquiet.Sub;
 
 import android.app.Service;
 import android.content.Intent;
@@ -57,8 +55,8 @@ public class FloatingClockService extends Service {
 
         params.gravity = Gravity.TOP | Gravity.START;
         params.x = 60;
-        params.width = 300;
         params.y = 300;
+        params.width = 340;
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingView, params);
@@ -69,7 +67,7 @@ public class FloatingClockService extends Service {
         mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss.SSS ", Locale.getDefault());
                 String currentTime = sdf.format(new Date());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
@@ -83,7 +81,7 @@ public class FloatingClockService extends Service {
                 compVal = sec.compareTo("55 ");
                 if (compVal > 0)
                     new PhoneVibrate().go(0);
-                long nxtDelay = 1002 - (System.currentTimeMillis() % 1000);
+                long nxtDelay = 1010 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
         };

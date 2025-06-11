@@ -65,7 +65,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".common.FloatingClockService" />
+        <service android:name=".Sub.FloatingClockService" />
 
         <receiver android:name=".widget.WidgetProvider" android:exported="false">
             <intent-filter>

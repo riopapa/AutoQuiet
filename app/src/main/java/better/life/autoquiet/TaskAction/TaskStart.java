@@ -10,7 +10,7 @@ import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 
 import java.util.Timer;
@@ -64,9 +64,9 @@ public class TaskStart {
                         sounds.setVibrateMode();
                     new ScheduleNextTask("Start");
                 }
-            }, 5000);
+            }, 10000);
             }
-        }, 2000);
+        }, 3000);
 
     }
 }

@@ -7,9 +7,9 @@ import static better.life.autoquiet.activity.ActivityMain.sounds;
 import android.content.Context;
 import android.content.Intent;
 
-import better.life.autoquiet.common.ContextProvider;
-import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.ContextProvider;
+import better.life.autoquiet.Sub.FloatingClockService;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
@@ -25,7 +25,7 @@ public class BellOneTime {
         Context context = ContextProvider.get();
         if (nt.vibrate)
             phoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.BEEP);
+        sounds.beep(Sounds.BEEP.INFO);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = nt.subject + " 체크";
@@ -51,8 +51,8 @@ public class BellOneTime {
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
                 new QuietTaskGetPut().save();
+                new ScheduleNextTask("BellOneTime");
             }
-        }, 1500);
-        new ScheduleNextTask("BellOneTime");
+        }, 2500);
     }
 }

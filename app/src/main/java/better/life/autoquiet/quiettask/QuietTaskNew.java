@@ -6,7 +6,7 @@ import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import android.content.Context;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;

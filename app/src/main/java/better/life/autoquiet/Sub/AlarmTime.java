@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import better.life.autoquiet.AlarmReceiver;
-import better.life.autoquiet.common.ContextProvider;
 import better.life.autoquiet.models.NextTask;
 
 public class AlarmTime {

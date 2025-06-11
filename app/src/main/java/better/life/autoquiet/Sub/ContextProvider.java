@@ -1,4 +1,4 @@
-package better.life.autoquiet.common;
+package better.life.autoquiet.Sub;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

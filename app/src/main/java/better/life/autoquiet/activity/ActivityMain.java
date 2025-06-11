@@ -23,17 +23,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.common.ContextProvider;
-import better.life.autoquiet.common.PhoneVibrate;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.ContextProvider;
+import better.life.autoquiet.Sub.PhoneVibrate;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
-import better.life.autoquiet.common.Permission;
-import better.life.autoquiet.common.SharedPrefer;
+import better.life.autoquiet.Sub.Permission;
+import better.life.autoquiet.Sub.SharedPrefer;
 import better.life.autoquiet.Sub.VarsGetPut;
-import better.life.autoquiet.Utils;
+import better.life.autoquiet.Utility;
 import better.life.autoquiet.Vars;
 import better.life.autoquiet.adapter.MainRecycleAdapter;
 import better.life.autoquiet.models.QuietTask;
@@ -64,7 +64,7 @@ public class ActivityMain extends AppCompatActivity {
         vars = new Vars();
         new SharedPrefer().get(vars);
 
-        new Utils().deleteOldLogFiles();
+        new Utility().deleteOldLogFiles();
         setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
@@ -108,11 +108,12 @@ public class ActivityMain extends AppCompatActivity {
     public void onResume() {
 
         super.onResume();
-        sounds = new Sounds();
+        if (sounds == null)
+            sounds = new Sounds(this);
         phoneVibrate = new PhoneVibrate();
         vars = new VarsGetPut().get(context);
         Log.w("Main", "onResume");
-        new Utils().deleteOldLogFiles();
+        new Utility().deleteOldLogFiles();
 
         setUpMainAdapter();
         new VarsGetPut().put(vars, context);
@@ -212,13 +213,5 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Sounds.mTTS != null) {
-            Sounds.mTTS.stop();
-            Sounds.mTTS.shutdown();
-        }
-        // Also release AudioManager focus if held
-        if (Sounds.mAM != null && Sounds.mFocusGain != null) {
-            Sounds.mAM.abandonAudioFocusRequest(Sounds.mFocusGain);
-        }
     }
 }

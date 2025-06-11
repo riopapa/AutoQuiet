@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import better.life.autoquiet.activity.ActivityAddEdit;
 import better.life.autoquiet.activity.ActivityOneTime;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.calendar.CalcNextBegEnd;
@@ -45,7 +45,6 @@ import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.ViewHolder>

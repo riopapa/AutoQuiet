@@ -13,10 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.activity.ActivityAddAgenda;
-import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Vars;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.models.GCal;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;

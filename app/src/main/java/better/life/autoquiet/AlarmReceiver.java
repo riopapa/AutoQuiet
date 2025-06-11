@@ -8,14 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import better.life.autoquiet.TaskAction.TaskFinish;
 import better.life.autoquiet.TaskAction.TaskOneTIme;
 import better.life.autoquiet.TaskAction.TaskStart;
-import better.life.autoquiet.common.ContextProvider;
-import better.life.autoquiet.common.PhoneVibrate;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.ContextProvider;
+import better.life.autoquiet.Sub.PhoneVibrate;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
@@ -26,12 +25,12 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if (context == null) {
-            Log.e("Context"," // is null on Receive() // "+this.getClass().getName()+ " onReceive");
-        }
+//        if (context == null) {
+//            Log.e("Context"," // is null on Receive() // "+this.getClass().getName()+ " onReceive");
+//        }
         ContextProvider.init(context);
         if (sounds == null) {
-            sounds = new Sounds();
+            sounds =  Sounds.getInstance(context.getApplicationContext());
             phoneVibrate = new PhoneVibrate();
         }
         Bundle args = intent.getBundleExtra("DATA");
@@ -49,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 new TaskOneTIme().go(nt);
                 break;
             default:
-                new Utils().log("Alarm Receive","Case Error " + nt.SFO
+                new Utility().log("Alarm Receive","Case Error " + nt.SFO
                         + " " + nt.subject);
         }
     }

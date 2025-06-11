@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.models.QuietTask;
 
 import java.lang.reflect.Type;

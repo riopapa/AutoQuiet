@@ -7,11 +7,11 @@ import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
-import better.life.autoquiet.common.Sounds;
-import better.life.autoquiet.Utils;
+import better.life.autoquiet.Sub.Sounds;
+import better.life.autoquiet.Utility;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 
@@ -25,7 +25,7 @@ public class TaskFinish {
     public void go(NextTask nt) {
         this.nt = nt;
         sounds.setNormalMode();
-        sounds.setVolumeTo(12);
+        sounds.setVolumeTo(10);
         if (!nt.sayDate) {
             finish_Normal();
         } else
@@ -46,7 +46,7 @@ public class TaskFinish {
                     mainRecycleAdapter.notifyItemChanged(nt.idx);
                 }
                 new ScheduleNextTask("Fin Normal");
-                new Utils().deleteOldLogFiles();
+                new Utility().deleteOldLogFiles();
                 phoneVibrate.go(1);
             }
         }, 1800);

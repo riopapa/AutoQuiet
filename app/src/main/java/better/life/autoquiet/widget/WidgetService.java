@@ -12,7 +12,7 @@ import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 

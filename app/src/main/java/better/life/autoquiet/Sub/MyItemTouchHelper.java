@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.common.ContextProvider;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 

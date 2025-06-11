@@ -14,7 +14,7 @@ import android.widget.RemoteViews;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.activity.ActivityMain;
-import better.life.autoquiet.common.FloatingClockService;
+import better.life.autoquiet.Sub.FloatingClockService;
 
 public class WidgetProvider extends AppWidgetProvider {
 

@@ -6,10 +6,10 @@ import static better.life.autoquiet.activity.ActivityMain.sounds;
 import android.content.Context;
 import android.content.Intent;
 
-import better.life.autoquiet.common.ContextProvider;
+import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
-import better.life.autoquiet.common.FloatingClockService;
-import better.life.autoquiet.common.Sounds;
+import better.life.autoquiet.Sub.FloatingClockService;
+import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 
 import java.util.Timer;

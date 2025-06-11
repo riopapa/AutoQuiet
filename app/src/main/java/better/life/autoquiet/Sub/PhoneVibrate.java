@@ -1,4 +1,4 @@
-package better.life.autoquiet.common;
+package better.life.autoquiet.Sub;
 
 import android.content.Context;
 import android.os.VibrationEffect;
