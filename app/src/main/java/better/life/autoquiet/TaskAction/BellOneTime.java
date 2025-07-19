@@ -25,7 +25,7 @@ public class BellOneTime {
         Context context = ContextProvider.get();
         if (nt.vibrate)
             phoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.INFO);
+        sounds.beep(Sounds.BEEP.BEEP);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = nt.subject + " 체크";

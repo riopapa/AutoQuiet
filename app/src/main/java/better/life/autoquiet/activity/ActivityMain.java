@@ -112,7 +112,7 @@ public class ActivityMain extends AppCompatActivity {
             sounds = new Sounds(this);
         phoneVibrate = new PhoneVibrate();
         vars = new VarsGetPut().get(context);
-        Log.w("Main", "onResume");
+//        Log.w("Main", "onResume");
         new Utility().deleteOldLogFiles();
 
         setUpMainAdapter();

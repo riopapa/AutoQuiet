@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import better.life.autoquiet.R;
@@ -56,7 +55,7 @@ public class FloatingClockService extends Service {
         params.gravity = Gravity.TOP | Gravity.START;
         params.x = 60;
         params.y = 300;
-        params.width = 340;
+        params.width = 300;
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingView, params);
@@ -67,21 +66,21 @@ public class FloatingClockService extends Service {
         mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss.SSS ", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
                 String currentTime = sdf.format(System.currentTimeMillis());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
                 int compVal = sec.compareTo("50 ");
                 timeTextView.setTextColor((compVal < 0) ?
-                        ContextCompat.getColor(FloatingClockService.this, R.color.float_norm)
+                        ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text)
                         : ContextCompat.getColor(FloatingClockService.this, R.color.float_alert));
                 timeTextView.setBackgroundColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_back)
-                        : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm));
+                        : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text));
                 compVal = sec.compareTo("55 ");
                 if (compVal > 0)
                     new PhoneVibrate().go(0);
-                long nxtDelay = 1010 - (System.currentTimeMillis() % 1000);
+                long nxtDelay = 1001 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
         };

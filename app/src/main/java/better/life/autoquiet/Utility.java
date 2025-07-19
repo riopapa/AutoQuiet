@@ -13,19 +13,14 @@ import java.io.IOException;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 
 import better.life.autoquiet.Sub.ContextProvider;
-
-import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utility {
 
-    private final String PREFIX = "log_";
+    private final String PREFIX = "l_";
     private File packageDir;
 
     public Utility() {
@@ -92,26 +87,20 @@ public class Utility {
     final SimpleDateFormat sdfLogTime = new SimpleDateFormat("MM-dd HH:mm:ss", Locale.US);
 
     public void log(String tag, String text) {
-        final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
+        StackTraceElement[] traces = Thread.currentThread().getStackTrace();
         StringBuilder log = new StringBuilder();
-        for (int i = 5; i > 2; i--) {
-//            Log.w("traces "+i, traces[i].getClassName());
-//            Log.w("traces "+i, traces[i].getMethodName());
-//            Log.w("traces "+i, String.valueOf(traces[i].getLineNumber()));
-            if (traces.length > i) {
-                String omitStr = omitStr(getLastClass(traces[i].getClassName()));
-                if (omitStr.isEmpty()) {
-//                    omitStr = "{" + i + "} ";
-//                    log.append(omitStr);
-                } else {
-                    log.append(omitStr)
-                        .append("_ ")
+        int traceI = Math.min(traces.length, 10) - 3;
+        for (int i = traceI; i > 2; i--) {
+            String omitStr = omitStr(getLastClass(traces[i].getClassName()));
+            if (!omitStr.isEmpty()) {
+                log.append(omitStr)
+                        .append(".")
                         .append(traces[i].getMethodName())
                         .append("#")
                         .append(traces[i].getLineNumber())
                         .append(" ");
-                }
-            }
+            } else
+                log.append("<>");
         }
         log.append(" {").append(tag).append("} ").append(text);
         new Thread(() -> {
@@ -120,20 +109,20 @@ public class Utility {
             Log.w(tag, String.valueOf(log));
         }).start();
     }
-    private static final Set<String> OMITS_SET = new HashSet<>(Arrays.asList(
-            "Activity", "better.life.autoquiet", "Thread", "$$ExternalSyntheticLambda",
-            "callActivityOnResume", "access$",
-            "onNotificationPosted", "NotificationListener", "performCreate",
-            "handleReceiver", "handleMessage", "dispatchKeyEvent", "onBindViewHolder"
-    ));
+
+    private static final Pattern OMITS_PATTERN = Pattern.compile(
+            String.join("|", Arrays.asList(
+                    "Handler", "Remote", "Activity", "better-", "handle",
+                    "callActivityOnResume", "access$", "performCreate",
+                    "handle", "dispatchKeyEvent", "onBindViewHolder"
+            ))
+    );
 
     private String omitStr(String s) {
-        for (String o : OMITS_SET) { // Iteration order is not guaranteed and often "random"
-            if (s.contains(o)) {
-                return "";
-            }
+        if (OMITS_PATTERN.matcher(s).find()) {
+            return "";
         }
-        return s + "> ";
+        return s;
     }
 
     private String getLastClass(String s) {

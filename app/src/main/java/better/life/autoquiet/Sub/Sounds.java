@@ -146,14 +146,12 @@ public class Sounds {
             @Override
             public void onDone(String utteranceId) {
 //                utility.log(SOUND_TAG, "TTS Utterance Done: " + utteranceId);
+                if (mFocusGain != null)
+                    mAM.abandonAudioFocusRequest(mFocusGain);
                 if (mAM != null) {
-                    if (blueDevice.isEmpty()) {
-                        mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
-                    } else {
+                    mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
+                    if (!blueDevice.isEmpty()) {
                         mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, rVol, 0);
-                    }
-                    if (mFocusGain != null) {
-                        mAM.abandonAudioFocusRequest(mFocusGain);
                     }
                 }
             }
@@ -335,11 +333,10 @@ public class Sounds {
         }
 
         getCurrVolumes();
+        mTTS.setAudioAttributes(ringAttr);
         if (blueDevice.isEmpty()) {
-            mTTS.setAudioAttributes(ringAttr);
             setVolumeTo(11);
         } else{
-            mTTS.setAudioAttributes(ringAttr);
             setVolumeTo(15);
         }
 
@@ -360,6 +357,7 @@ public class Sounds {
     public void setVolumeTo(int volume) {
         if (mAM != null) {
             mAM.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
+            mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, volume, 0);
         } else {
             new Utility().log(SOUND_TAG, "AudioManager is null, cannot set volume.");
         }
