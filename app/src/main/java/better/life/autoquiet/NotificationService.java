@@ -21,7 +21,6 @@ import androidx.core.app.NotificationCompat;
 
 import better.life.autoquiet.activity.ActivityMain;
 import better.life.autoquiet.activity.ActivityOneTime;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
 
 public class NotificationService extends Service {
 

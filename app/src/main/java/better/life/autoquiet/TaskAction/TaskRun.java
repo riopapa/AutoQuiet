@@ -16,7 +16,7 @@ import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.Utility;
 import better.life.autoquiet.models.QuietTask;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
@@ -28,7 +28,7 @@ import java.util.TimerTask;
 
 public final class TaskRun {
 
-    public static void go(NextTask nt) {
+    public static void start(NextTask nt) {
 
         if (nt.alarmType < PHONE_VIBRATE)
             say_Started99(nt);
@@ -41,14 +41,14 @@ public final class TaskRun {
 
         switch (nt.alarmType) {
             case BELL_SEVERAL:
-               BellType.several(nt);
+               TaskBellType.several(nt);
                break;
 
             case BELL_WEEKLY:
-                BellType.week(nt);
+                TaskBellType.week(nt);
                 break;
             case  BELL_ONETIME:
-                BellType.one(nt);
+                TaskBellType.one(nt);
                 break;
 
             default:

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.R;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Vars;
 import better.life.autoquiet.databinding.ActivityOneTimeBinding;
 import better.life.autoquiet.models.QuietTask;

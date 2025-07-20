@@ -26,7 +26,7 @@ import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.Sub.VarsGetPut;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.Sub.MyItemTouchHelper;

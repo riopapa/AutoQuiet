@@ -33,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             QuietTaskGetPut.get();
         switch (nt.SFO) {
             case "S":   // start, from-to or 99 case
-                TaskRun.go(nt);
+                TaskRun.start(nt);
                 break;
             case "F":   // finish
                 TaskRun.finish(nt);

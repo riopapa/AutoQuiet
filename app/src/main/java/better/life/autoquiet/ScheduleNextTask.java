@@ -1,4 +1,4 @@
-package better.life.autoquiet.nexttasks;
+package better.life.autoquiet;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.BELL_SEVERAL;
 import static better.life.autoquiet.activity.ActivityMain.nextTasks;
@@ -9,11 +9,9 @@ import java.util.Calendar;
 import java.util.Comparator;
 
 import better.life.autoquiet.Sub.AlarmTime;
-import better.life.autoquiet.Utility;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
-import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.widget.WidgetProvider;
 
 public final class ScheduleNextTask {

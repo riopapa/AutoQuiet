@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import better.life.autoquiet.activity.ActivityMain;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
 
 public class BootReceiver extends BroadcastReceiver {
 

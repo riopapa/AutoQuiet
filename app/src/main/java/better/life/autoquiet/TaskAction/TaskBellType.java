@@ -13,7 +13,7 @@ import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.QuietTaskGetPut;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public final class BellType {
+public final class TaskBellType {
 
     public static void one(NextTask nt) {
         Context context = ContextProvider.get();
@@ -54,7 +54,7 @@ public final class BellType {
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
                 QuietTaskGetPut.put();
-                ScheduleNextTask.request("BellType");
+                ScheduleNextTask.request("TaskBellType");
             }
         }, 2500);
     }

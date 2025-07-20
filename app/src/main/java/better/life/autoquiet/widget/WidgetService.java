@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
-import better.life.autoquiet.nexttasks.ScheduleNextTask;
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
 
 public class WidgetService extends RemoteViewsService {
