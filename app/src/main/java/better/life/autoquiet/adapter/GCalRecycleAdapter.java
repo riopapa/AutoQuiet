@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.activity.ActivityAddAgenda;
 import better.life.autoquiet.R;
-import better.life.autoquiet.Vars;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.models.GCal;
 import better.life.autoquiet.Sub.NameColor;
@@ -34,7 +33,6 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
 
         context = ContextProvider.get();
         VarsGetPut.get(context);
-//        gCals = new GetAgenda().get(rContext);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
     }

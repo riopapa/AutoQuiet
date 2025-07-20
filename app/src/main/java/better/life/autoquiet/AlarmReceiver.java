@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import better.life.autoquiet.TaskAction.TaskFinish;
-import better.life.autoquiet.TaskAction.TaskOneTIme;
-import better.life.autoquiet.TaskAction.TaskStart;
+import better.life.autoquiet.TaskAction.TaskRun;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
@@ -35,13 +33,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             QuietTaskGetPut.get();
         switch (nt.SFO) {
             case "S":   // start, from-to or 99 case
-                TaskStart.go(nt);
+                TaskRun.go(nt);
                 break;
             case "F":   // finish
-                TaskFinish.go(nt);
+                TaskRun.finish(nt);
                 break;
             case "O":   // onetime
-                TaskOneTIme.go(nt);
+                TaskRun.one(nt);
                 break;
             default:
                 new Utility().log("Alarm Receive","Case Error " + nt.SFO

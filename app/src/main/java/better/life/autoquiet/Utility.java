@@ -26,6 +26,7 @@ public class Utility {
     public Utility() {
         this.packageDir = getPackageDirectory();
     }
+
     private File getPackageDirectory() {
 
         Context context = ContextProvider.get();
@@ -42,7 +43,6 @@ public class Utility {
         }
         return directory;
     }
-
 
     private void append2file(String logFile, String textLine) {
 
@@ -91,7 +91,7 @@ public class Utility {
         StringBuilder log = new StringBuilder();
         int traceI = Math.min(traces.length, 10) - 3;
         for (int i = traceI; i > 2; i--) {
-            String omitStr = omitStr(getLastClass(traces[i].getClassName()));
+            String omitStr = omitStr(traces[i].getClassName().substring(traces[i].getClassName().lastIndexOf(".")+1));
             if (!omitStr.isEmpty()) {
                 log.append(omitStr)
                         .append(".")
@@ -123,10 +123,6 @@ public class Utility {
             return "";
         }
         return s;
-    }
-
-    private String getLastClass(String s) {
-        return s.substring(s.lastIndexOf(".")+1);
     }
 
     public void deleteOldLogFiles() {     // remove older than 5 days

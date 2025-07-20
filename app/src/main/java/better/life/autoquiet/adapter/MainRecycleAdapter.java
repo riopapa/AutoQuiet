@@ -39,7 +39,6 @@ import better.life.autoquiet.calendar.CalcNextBegEnd;
 import better.life.autoquiet.Sub.MyItemTouchHelperAdapter;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;
-import better.life.autoquiet.Vars;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
