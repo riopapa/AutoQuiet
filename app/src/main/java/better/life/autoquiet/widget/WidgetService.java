@@ -32,8 +32,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     @Override
-    public void onCreate() {
-    }
+    public void onCreate() {}
 
     @Override
     public void onDataSetChanged() {}
