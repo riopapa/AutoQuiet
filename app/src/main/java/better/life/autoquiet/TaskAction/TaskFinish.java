@@ -2,12 +2,12 @@ package better.life.autoquiet.TaskAction;
 
 import static better.life.autoquiet.activity.ActivityAddEdit.PHONE_VIBRATE;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
+import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
 import better.life.autoquiet.Sub.Sounds;
@@ -18,21 +18,18 @@ import better.life.autoquiet.models.QuietTask;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TaskFinish {
+public final class TaskFinish {
 
-    NextTask nt;
-
-    public void go(NextTask nt) {
-        this.nt = nt;
+    public static void go(NextTask nt) {
         sounds.setNormalMode();
         sounds.setVolumeTo(10);
         if (!nt.sayDate) {
-            finish_Normal();
+            finish_Normal(nt);
         } else
-            finish_Several();
+            finish_Several(nt);
     }
 
-    private void finish_Normal() {
+    private static void finish_Normal(NextTask nt) {
         sounds.beep(Sounds.BEEP.BACK);
         new Timer().schedule(new TimerTask() {
             @Override
@@ -45,14 +42,14 @@ public class TaskFinish {
                     quietTasks.set(nt.idx, qt);
                     mainRecycleAdapter.notifyItemChanged(nt.idx);
                 }
-                new ScheduleNextTask("Fin Normal");
+                ScheduleNextTask.request("Fin Normal");
                 new Utility().deleteOldLogFiles();
-                phoneVibrate.go(1);
+                PhoneVibrate.go(1);
             }
         }, 1800);
     }
 
-    private void finish_Several() {
+    private static void finish_Several(NextTask nt) {
         new Timer().schedule(new TimerTask() {
             public void run() {
 //                if (several > 0) {
@@ -93,7 +90,7 @@ public class TaskFinish {
 //                } else {
 //                    if (nt.agenda)
 //                        quietTasks.remove(ntIdx);
-//                    new ScheduleNextTask("say_FinDate");
+//                    ScheduleNextTask.request("say_FinDate");
 //                }
 
             }

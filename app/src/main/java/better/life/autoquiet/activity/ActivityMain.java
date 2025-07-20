@@ -24,15 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
-import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.Sub.Sounds;
+import better.life.autoquiet.Sub.VarsGetPut;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.models.NextTask;
-import better.life.autoquiet.quiettask.QuietTaskNew;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
 import better.life.autoquiet.Sub.Permission;
-import better.life.autoquiet.Sub.SharedPrefer;
-import better.life.autoquiet.Sub.VarsGetPut;
 import better.life.autoquiet.Utility;
 import better.life.autoquiet.Vars;
 import better.life.autoquiet.adapter.MainRecycleAdapter;
@@ -46,7 +44,6 @@ public class ActivityMain extends AppCompatActivity {
     public static MainRecycleAdapter mainRecycleAdapter;
     public static int currIdx = -1;
     public static Sounds sounds = null;
-    public static PhoneVibrate phoneVibrate = null;
     public static final String ACTION_CLOCK = "c";
     public static final String ACTION_NORM = "n";
 
@@ -61,8 +58,7 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         ContextProvider.init(context);
-        vars = new Vars();
-        new SharedPrefer().get(vars);
+        VarsGetPut.get(this);
 
         new Utility().deleteOldLogFiles();
         setContentView(R.layout.activity_main);
@@ -98,8 +94,7 @@ public class ActivityMain extends AppCompatActivity {
             startActivity(intent);
         }
         ContextProvider.init(this);
-        phoneVibrate = new PhoneVibrate();
-        new VarsGetPut().put(vars, context);
+        VarsGetPut.put(vars, context);
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;
@@ -110,13 +105,12 @@ public class ActivityMain extends AppCompatActivity {
         super.onResume();
         if (sounds == null)
             sounds = new Sounds(this);
-        phoneVibrate = new PhoneVibrate();
-        vars = new VarsGetPut().get(context);
+        VarsGetPut.get(context);
 //        Log.w("Main", "onResume");
         new Utility().deleteOldLogFiles();
 
         setUpMainAdapter();
-        new VarsGetPut().put(vars, context);
+        VarsGetPut.put(vars, context);
         if (currIdx == -1)
             currIdx = mainRecycleAdapter.getItemCount() / 4;
         mainRecyclerView.scrollToPosition((currIdx > 2) ? currIdx - 1 : currIdx);
@@ -140,14 +134,14 @@ public class ActivityMain extends AppCompatActivity {
         int menuItem = item.getItemId();
         if (menuItem == R.id.action_add) {
             vars.addNewQuiet = true;
-            new VarsGetPut().put(vars, context);
+            VarsGetPut.put(vars, context);
             intent = new Intent(this, ActivityAddEdit.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
-            new VarsGetPut().put(vars, context);
+            VarsGetPut.put(vars, context);
             intent = new Intent(this, ActivityGCalShow.class);
             startActivityForResult(intent, 22);
             return true;
@@ -157,18 +151,18 @@ public class ActivityMain extends AppCompatActivity {
             return true;
 
         } else if (menuItem == R.id.action_setting) {
-            new VarsGetPut().put(vars, context);
+            VarsGetPut.put(vars, context);
             startActivityForResult(new Intent(this, ActivityPrefer.class), 33);
             return true;
 
         } else if (menuItem == R.id.action_reset) {
-            new VarsGetPut().put(vars, context);
+            VarsGetPut.put(vars, context);
             new AlertDialog.Builder(this)
                     .setTitle(R.string.reset_title)
                     .setMessage(R.string.reset_table)
                     .setIcon(R.drawable.danger)
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
-                        new QuietTaskNew();
+                        QuietTaskGetPut.init();
                         setUpMainAdapter();
                     })
                     .setNegativeButton(android.R.string.cancel, null)
@@ -199,7 +193,7 @@ public class ActivityMain extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        new ScheduleNextTask("main");
+        ScheduleNextTask.request("main");
         super.onPause();
     }
 

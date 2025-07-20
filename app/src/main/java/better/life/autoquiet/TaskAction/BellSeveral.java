@@ -1,13 +1,13 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import better.life.autoquiet.Sub.AlarmTime;
+import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.models.QuietTask;
 
 import java.text.SimpleDateFormat;
@@ -16,12 +16,12 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BellSeveral {
+public final class BellSeveral {
 
-    public void go(NextTask nt) {
+    public static void go(NextTask nt) {
 
         if (nt.vibrate)
-            phoneVibrate.go(1);
+            PhoneVibrate.go(1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
             sounds.beep(Sounds.BEEP.BEEP);
@@ -48,13 +48,13 @@ public class BellSeveral {
                 QuietTask qt = quietTasks.get(nt.idx);
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
-                new QuietTaskGetPut().save();
+                QuietTaskGetPut.put();
             }
             }
         }, 1000);
     }
 
-    int secRemaining(NextTask nt, long time) {
+    static int secRemaining(NextTask nt, long time) {
         Calendar toDay = Calendar.getInstance();
         toDay.set(Calendar.HOUR_OF_DAY, nt.hour);
         toDay.set(Calendar.MINUTE, nt.min);
@@ -62,7 +62,7 @@ public class BellSeveral {
         return (int) ((toDay.getTimeInMillis() - time)/1000);
     }
 
-    String nowDateToString(long time) {
+    static String nowDateToString(long time) {
         String s =  new SimpleDateFormat(" MM 월 d 일 EEEE ", Locale.getDefault()).format(time);
         return s + s;
     }

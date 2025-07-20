@@ -5,13 +5,13 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 
-public class PhoneVibrate {
+public final class PhoneVibrate {
 
-    VibratorManager vibManager;
-    Vibrator vibrator = null;
-    VibrationEffect vibEffect = null;
+    private static VibratorManager vibManager;
+    private static Vibrator vibrator = null;
+    private static VibrationEffect vibEffect = null;
 
-    public void go(int type) {
+    public static void go(int type) {
 
         // 0 : short, 1: long, 2: phone in vibrate mode
         final long[][] vibPattern = {{30,30,30,30},

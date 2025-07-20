@@ -48,7 +48,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
                 wContext = ContextProvider.get();
                 Log.e("Context"," // is null // "+this.getClass().getName());
             }
-            new ScheduleNextTask("getCount Zero");
+            ScheduleNextTask.request("getCount Zero");
         }
         return nextTasks.size();
     }

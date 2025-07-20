@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Vars;
@@ -20,7 +20,6 @@ import better.life.autoquiet.databinding.ActivityOneTimeBinding;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.Sub.VarsGetPut;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ActivityOneTime extends AppCompatActivity {
@@ -38,7 +37,7 @@ public class ActivityOneTime extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        vars = new VarsGetPut().get(this);
+        VarsGetPut.get(this);
         super.onCreate(savedInstanceState);
         binding = ActivityOneTimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -50,7 +49,7 @@ public class ActivityOneTime extends AppCompatActivity {
         actionBar.setIcon(R.drawable.right_now) ;
         actionBar.setDisplayUseLogoEnabled(true) ;
         actionBar.setDisplayShowHomeEnabled(true) ;
-        new QuietTaskGetPut().read();
+        QuietTaskGetPut.get();
         quietTask = quietTasks.get(0);
         subject = getResources().getString(R.string.Quiet_Once);
         vibrate = quietTask.alarmType == PHONE_VIBRATE;
@@ -157,11 +156,11 @@ public class ActivityOneTime extends AppCompatActivity {
         quietTask = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, true,  (vibrate) ? PHONE_VIBRATE:PHONE_OFF, false);
         quietTasks.set(0, quietTask);
-        new QuietTaskGetPut().save();
+        QuietTaskGetPut.put();
         vars.sharedManner = manner;
-        new VarsGetPut().put(vars, this);
+        VarsGetPut.put(vars, this);
         sounds.setSilentMode();
-        new ScheduleNextTask("Quit RightNow");
+        ScheduleNextTask.request("Quit RightNow");
     }
 
     @Override

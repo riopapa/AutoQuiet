@@ -70,7 +70,7 @@ public class NotificationService extends Service {
         if (operation == MAKE_SILENT) {
 //            if (several > 0) {
 //                several = 0;
-//                new ScheduleNextTask("make Silent");
+//                ScheduleNextTask.request("make Silent");
 //            }
 //            else
                 make_silent();
@@ -85,7 +85,7 @@ public class NotificationService extends Service {
         } else if (operation == STOP_SPEAK) {
             stop_repeat = false;
             updateRemoteViews();
-            new ScheduleNextTask("stopped, next is");
+            ScheduleNextTask.request("stopped, next is");
         } else if (operation == VOLUMES) {
             updateRemoteViews();
         }

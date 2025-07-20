@@ -26,7 +26,6 @@ import java.util.Locale;
 
 public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.ViewHolder> {
 
-    static Vars vars;
     Context context;
     ArrayList<GCal> gCals;
     @NonNull
@@ -34,7 +33,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         context = ContextProvider.get();
-        vars = new VarsGetPut().get(context);
+        VarsGetPut.get(context);
 //        gCals = new GetAgenda().get(rContext);
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gcal_line, parent, false);
         return new ViewHolder(swipeView);
@@ -83,8 +82,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         if (position> 0 && s.equals(sdfDate.format(g0.begTime))) {
             holder.tvADate.setText("");
             holder.tvADay.setText("");
-        }
-        else {
+        } else {
             holder.tvADate.setText(sdfDate.format(g.begTime));
             holder.tvADay.setText(sdfDay.format(g.begTime));
         }
@@ -93,7 +91,7 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         holder.ivRepeat.setImageResource((g.repeat)? R.drawable.repeat: null);
         holder.tvCalLeft.setText((g.location.length()>20)?
                 g.location.substring(0,19):g.location);
-        if (g.desc.length() == 0)
+        if (g.desc.isEmpty())
             holder.tvCalRight.setVisibility(View.GONE);
         else
             holder.tvCalRight.setText((g.desc.length()> 20)? g.desc.substring(0,19):g.desc);
@@ -104,7 +102,6 @@ public class GCalRecycleAdapter extends RecyclerView.Adapter<GCalRecycleAdapter.
         holder.tvSubject.setSingleLine(true);
         holder.tvSubject.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         holder.tvSubject.setSelected(true);
-
     }
 
     @Override

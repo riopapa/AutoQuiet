@@ -8,6 +8,7 @@ import static better.life.autoquiet.activity.ActivityAddEdit.alarmIcons;
 import static better.life.autoquiet.activity.ActivityMain.currIdx;
 import static better.life.autoquiet.activity.ActivityMain.mainRecycleAdapter;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
+import static better.life.autoquiet.activity.ActivityMain.vars;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,11 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import better.life.autoquiet.activity.ActivityAddEdit;
 import better.life.autoquiet.activity.ActivityOneTime;
-import better.life.autoquiet.Sub.ContextProvider;
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.calendar.CalcNextBegEnd;
-import better.life.autoquiet.quiettask.QuietTaskNew;
 import better.life.autoquiet.Sub.MyItemTouchHelperAdapter;
 import better.life.autoquiet.Sub.NameColor;
 import better.life.autoquiet.Sub.VarsGetPut;
@@ -54,7 +53,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     private QuietTask qt;
     private int colorOn, colorOnBack, colorInactiveBack, colorOff, colorOffBack, colorActive;
     private int topLine = -1;
-    Vars vars;
     Context context;
     private Activity activity;;
 
@@ -67,7 +65,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         context = parent.getContext();
-        vars = new VarsGetPut().get(context);
+        VarsGetPut.get(context);
         colorOn = ResourcesCompat.getColor(context.getResources(), R.color.colorOn, null);
         colorInactiveBack = ResourcesCompat.getColor(context.getResources(), R.color.colorInactiveBack, null);
         colorOnBack = ResourcesCompat.getColor(context.getResources(), R.color.colorOnBack, null);
@@ -76,7 +74,6 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         colorOffBack = ResourcesCompat.getColor(context.getResources(), R.color.colorTransparent, null);
 
         View swipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_line, parent, false);
-
         return new ViewHolder(swipeView);
     }
 
@@ -149,7 +146,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             vars.addNewQuiet = false;
-            new VarsGetPut().put(vars, context);
+            VarsGetPut.put(vars, context);
             currIdx = getBindingAdapterPosition();
             Intent intent;
             if (currIdx != 0) {
@@ -279,12 +276,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
     @Override
     public int getItemCount() {
-        if (quietTasks == null) {
-            context = ContextProvider.get();
-            new QuietTaskGetPut().read();
-            if (quietTasks == null)
-                new QuietTaskNew();
-        }
+        if (quietTasks == null)
+            QuietTaskGetPut.get();
         return quietTasks.size();
     }
 
@@ -315,7 +308,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
         }
         quietTasks.sort(Comparator.comparingLong(arg0 -> arg0.sortKey));
         mainRecycleAdapter.notifyDataSetChanged();
-        new QuietTaskGetPut().save();
+        QuietTaskGetPut.put();
     }
 
     @Override
@@ -325,7 +318,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             quietTasks.remove(quietTask);
             quietTasks.add(toPosition, quietTask);
             notifyItemMoved(fromPosition, toPosition);
-            new QuietTaskGetPut().save();
+            QuietTaskGetPut.put();
         } else {
             if (topLine++ < 0)
                 Toast.makeText(context,"바로 조용히 하기는 맨 위에 있어야... ",Toast.LENGTH_LONG).show();
@@ -340,13 +333,13 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
             qt = quietTasks.get(position);
             quietTasks.remove(position);
             mainRecycleAdapter.notifyItemRemoved(position);
-            new QuietTaskGetPut().save();
+            QuietTaskGetPut.put();
             View pView = activity.findViewById(R.id.mainRecycler);
             Snackbar snackbar = Snackbar
                     .make(pView, "다시 살리려면 [복원] 을 누르세요", Snackbar.LENGTH_LONG);
             snackbar.setAction("복원", view -> {
                 quietTasks.add(position, qt);
-                new QuietTaskGetPut().save();
+                QuietTaskGetPut.put();
                 mainRecycleAdapter.notifyDataSetChanged();
             });
 

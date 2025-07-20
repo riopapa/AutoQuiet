@@ -24,11 +24,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.calendar.CalcNextBegEnd;
 import better.life.autoquiet.Sub.NameColor;
-import better.life.autoquiet.quiettask.QuietTaskDefault;
 import better.life.autoquiet.databinding.ActivityAddEditBinding;
 import better.life.autoquiet.models.QuietTask;
 
@@ -85,9 +84,9 @@ public class ActivityAddEdit extends AppCompatActivity {
         context = this;
         binding = ActivityAddEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        new QuietTaskGetPut().read();
+        QuietTaskGetPut.get();
         if (currIdx == -1)
-            qT = new QuietTaskDefault().get();
+            qT = QuietTaskGetPut.getDefault();
         else
             qT = quietTasks.get(currIdx);
         qT.active = true;
@@ -543,7 +542,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             finish();
             quietTasks.remove(currIdx);
             mainRecycleAdapter.notifyItemRemoved(currIdx);
-            new QuietTaskGetPut().save();
+            QuietTaskGetPut.put();
 
         } else if (id == R.id.action_copy) {
             verifyInput();
@@ -555,7 +554,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             qtNew.clock = clock;
 
             quietTasks.add(++currIdx, qtNew);
-            new QuietTaskGetPut().save();
+            QuietTaskGetPut.put();
             mainRecycleAdapter.notifyItemChanged(currIdx-1);
             mainRecycleAdapter.notifyItemChanged(currIdx);
             mainRecycleAdapter.notifyItemChanged(currIdx+1);
@@ -577,7 +576,7 @@ public class ActivityAddEdit extends AppCompatActivity {
                 quietTasks.remove(currIdx);
                 mainRecycleAdapter.notifyItemRemoved(currIdx);
             }
-            new QuietTaskGetPut().save();
+            QuietTaskGetPut.put();
         }
         return false;
     }

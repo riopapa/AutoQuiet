@@ -1,7 +1,5 @@
 package better.life.autoquiet.Sub;
 
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
-
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -290,7 +288,7 @@ public class Sounds {
 
     public void sayTask (String say) {
         if (isPhoneQuiet()) {
-            phoneVibrate.go(2);
+            PhoneVibrate.go(2);
             return;
         }
 
@@ -321,7 +319,7 @@ public class Sounds {
             }
         }
 
-        blueDevice = BluetoothUtil.getConnectedTargetDeviceName(context);
+        blueDevice = BluetoothUtil.getDevice(context);
 
         if (mFocusGain != null) {
             int result = mAM.requestAudioFocus(mFocusGain);

@@ -17,14 +17,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BluetoothUtil {
+public final class BluetoothUtil {
 
     private static final String TAG = "BluetoothUtil";
     private static final String EARPHONE = "联";    // earphone
     private static final String TESLA = "Tes";  // tesla
     private static final int PROFILE_PROXY_TIMEOUT_MS = 5000; // Timeout for getting profile proxy
 
-    public static String getConnectedTargetDeviceName(Context context) {
+    public static String getDevice(Context context) {
         // Check for necessary BLUETOOTH_CONNECT permission for SDK 31+
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "BLUETOOTH_CONNECT permission not granted. Request this permission at runtime.");

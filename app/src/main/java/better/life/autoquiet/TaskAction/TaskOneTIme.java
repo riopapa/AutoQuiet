@@ -6,15 +6,15 @@ import static better.life.autoquiet.activity.ActivityMain.sounds;
 import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TaskOneTIme {
-    public void go(NextTask nt) {
+public final class TaskOneTIme {
+    public static void go(NextTask nt) {
         sounds.setNormalMode();
 //        if (vars.sharedManner) {
         new Timer().schedule(new TimerTask() {
@@ -28,11 +28,11 @@ public class TaskOneTIme {
         QuietTask qt = quietTasks.get(nt.idx);
         qt.active = false;
         quietTasks.set(0, qt);
-        new QuietTaskGetPut().save();
-        new ScheduleNextTask("After oneTime");
+        QuietTaskGetPut.put();
+        ScheduleNextTask.request("After oneTime");
     }
 
-    String nowTimeToString(long time) {
+    static String nowTimeToString(long time) {
         final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdfTime.format(time);
     }

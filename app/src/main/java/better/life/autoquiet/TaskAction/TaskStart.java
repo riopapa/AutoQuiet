@@ -16,30 +16,27 @@ import better.life.autoquiet.models.NextTask;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TaskStart {
+public final class TaskStart {
 
-    NextTask nt;
-
-    public void go(NextTask nt) {
-        this.nt = nt;
+    public static void go(NextTask nt) {
 
         if (nt.alarmType < PHONE_VIBRATE)
-            say_Started99();
+            say_Started99(nt);
         else {
-            start_Normal();
+            start_Normal(nt);
         }
     }
 
-    private void say_Started99() {
+    private static void say_Started99(NextTask nt) {
 
         if      (nt.alarmType == BELL_SEVERAL) {
-            new BellSeveral().go(nt);
+            BellSeveral.go(nt);
 
         } else if (nt.alarmType == BELL_WEEKLY)
-            new BellWeekly().go(nt);
+            BellWeekly.go(nt);
 
         else if (nt.alarmType == BELL_ONETIME)
-            new BellOneTime().go(nt);
+            BellOneTime.go(nt);
 
         else {
             String say = nt.subject + "AlarmType 에러 확인 "+nt.alarmType;
@@ -47,7 +44,7 @@ public class TaskStart {
         }
     }
 
-    private void start_Normal() {
+    private static void start_Normal(NextTask nt) {
         sounds.beep(Sounds.BEEP.START);
         new Timer().schedule(new TimerTask() {
             @Override
@@ -62,11 +59,10 @@ public class TaskStart {
                         sounds.setSilentMode();
                     } else
                         sounds.setVibrateMode();
-                    new ScheduleNextTask("Start");
+                    ScheduleNextTask.request("Start");
                 }
             }, 10000);
             }
         }, 3000);
-
     }
 }

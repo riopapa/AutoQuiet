@@ -16,7 +16,7 @@ public class ActivityPrefer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        vars = new VarsGetPut().get(this);
+        VarsGetPut.get(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         if (savedInstanceState == null) {
@@ -30,7 +30,7 @@ public class ActivityPrefer extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 //        vars.utils.getPreference();
-        new VarsGetPut().put(vars, getApplicationContext());
+        VarsGetPut.put(vars, getApplicationContext());
         super.onDestroy();
     }
 

@@ -23,7 +23,7 @@ public class BootReceiver extends BroadcastReceiver {
                 nIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(nIntent);
                 new Handler(Looper.getMainLooper()).postDelayed(() ->
-                    new ScheduleNextTask("booted"), 5000);
+                    ScheduleNextTask.request("booted"), 5000);
             }, 100);
 
         }

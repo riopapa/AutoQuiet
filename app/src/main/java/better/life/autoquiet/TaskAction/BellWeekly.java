@@ -1,12 +1,12 @@
 package better.life.autoquiet.TaskAction;
 
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
 import android.content.Context;
 import android.content.Intent;
 
 import better.life.autoquiet.Sub.ContextProvider;
+import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.nexttasks.ScheduleNextTask;
 import better.life.autoquiet.Sub.FloatingClockService;
 import better.life.autoquiet.Sub.Sounds;
@@ -15,11 +15,11 @@ import better.life.autoquiet.models.NextTask;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BellWeekly {
+public final class BellWeekly {
 
-    public void go(NextTask nt) {
+    public static void go(NextTask nt) {
         if (nt.vibrate)
-            phoneVibrate.go(1);
+            PhoneVibrate.go(1);
         sounds.beep(Sounds.BEEP.WEEK);
         new Timer().schedule(new TimerTask() {
             public void run() {
@@ -30,7 +30,7 @@ public class BellWeekly {
             }
             String say = nt.subject + " 를 확인";
             sounds.sayTask(say);
-            new ScheduleNextTask("event");
+            ScheduleNextTask.request("event");
             }
         }, 1500);
     }

@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
+import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.databinding.ActivityAddAgendaBinding;
 import better.life.autoquiet.models.GCal;
 import better.life.autoquiet.calendar.GetAgenda;
@@ -32,7 +32,7 @@ public class ActivityAddAgenda extends AppCompatActivity {
         binding = ActivityAddAgendaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         context = this;
-        new QuietTaskGetPut().read();
+        QuietTaskGetPut.get();
         ArrayList<GCal> gCals = new GetAgenda().get(this);
         Intent intent = getIntent();
         int currIdx = intent.getExtras().getInt("idx", -1);
@@ -110,8 +110,8 @@ public class ActivityAddAgenda extends AppCompatActivity {
 //            }
 //        }
 //        Toast.makeText(context, sb, Toast.LENGTH_LONG).show();
-//        new QuietTaskGetPut().put();
-//        new VarsGetPut().put(vars, context);
+//        QuietTaskGetPut.put();
+//        VarsGetPut.put(vars, context);
 //        finish();
     }
 }

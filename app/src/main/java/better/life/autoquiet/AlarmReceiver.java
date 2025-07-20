@@ -1,6 +1,5 @@
 package better.life.autoquiet;
 
-import static better.life.autoquiet.activity.ActivityMain.phoneVibrate;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
@@ -13,10 +12,8 @@ import better.life.autoquiet.TaskAction.TaskFinish;
 import better.life.autoquiet.TaskAction.TaskOneTIme;
 import better.life.autoquiet.TaskAction.TaskStart;
 import better.life.autoquiet.Sub.ContextProvider;
-import better.life.autoquiet.Sub.PhoneVibrate;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.models.NextTask;
-import better.life.autoquiet.quiettask.QuietTaskGetPut;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -31,21 +28,20 @@ public class AlarmReceiver extends BroadcastReceiver {
         ContextProvider.init(context);
         if (sounds == null) {
             sounds =  Sounds.getInstance(context.getApplicationContext());
-            phoneVibrate = new PhoneVibrate();
         }
         Bundle args = intent.getBundleExtra("DATA");
         nt = (NextTask) args.getSerializable("nextTask");
         if (quietTasks == null)
-            new QuietTaskGetPut().read();
+            QuietTaskGetPut.get();
         switch (nt.SFO) {
             case "S":   // start, from-to or 99 case
-                new TaskStart().go(nt);
+                TaskStart.go(nt);
                 break;
             case "F":   // finish
-                new TaskFinish().go(nt);
+                TaskFinish.go(nt);
                 break;
             case "O":   // onetime
-                new TaskOneTIme().go(nt);
+                TaskOneTIme.go(nt);
                 break;
             default:
                 new Utility().log("Alarm Receive","Case Error " + nt.SFO
