@@ -52,7 +52,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         return nextTasks.size();
     }
 
-    String time;
     @Override
     public RemoteViews getViewAt(int position) {
         if (position >= nextTasks.size())
@@ -60,8 +59,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews views = new RemoteViews(wContext.getPackageName(), R.layout.widget_line);
         NextTask nt = nextTasks.get(position);
         views.setTextViewText(R.id.wSubject, nt.subject);
-        time = buildHourMin(nt.hour, nt.min) + " " + nt.suffix;
-        views.setTextViewText(R.id.wTime, time);
+        views.setTextViewText(R.id.wTime, nt.timeInfo);
         int colorU = (position % 2) == 0 ?
                 ContextCompat.getColor(wContext,R.color.widget_line0)
                 : ContextCompat.getColor(wContext,R.color.widget_line1);
@@ -78,11 +76,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         views.setInt(R.id.wType, "setBackgroundColor", colorU);
 
         return views;
-    }
-
-    String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
-    String int2NN (int nbr) {
-        return (String.valueOf(100 + nbr)).substring(1);
     }
 
     @Override

@@ -16,17 +16,17 @@
             android:id="@+id/be_quiet"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="32dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
-            android:layout_margin="2dp"
+            android:layout_margin="0dp"
             android:src="@drawable/auto_quite" />
         <ImageView
             android:id="@+id/start_clock"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="32dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
-            android:layout_margin="2dp"
+            android:layout_margin="0dp"
             android:src="@drawable/clock"
             />
 
@@ -35,7 +35,7 @@
         android:id="@+id/widget_lines"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="2dp"
+        android:layout_margin="1dp"
         android:divider="@null"
         />
 

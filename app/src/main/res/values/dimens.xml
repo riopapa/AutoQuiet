@@ -4,5 +4,5 @@
     <dimen name="week_size">16sp</dimen>
     <dimen name="week_time">16sp</dimen>
     <dimen name="edit_week">20sp</dimen>
-    <dimen name="widget_text">13sp</dimen>
+    <dimen name="widget_text">12sp</dimen>
 </resources>

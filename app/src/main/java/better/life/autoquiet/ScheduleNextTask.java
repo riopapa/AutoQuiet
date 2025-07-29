@@ -90,20 +90,24 @@ public final class ScheduleNextTask {
         if (SFO.equals("F")) {
             nt.hour = qt.endHour;
             nt.min = qt.endMin;
+            nt.timeInfo = buildHourMin(nt.hour, nt.min);
             if (qt.endHour != 99)
-                nt.suffix = "까지";
+                nt.timeInfo = "~" + nt.timeInfo;
         } else {
             nt.hour = qt.begHour;
             nt.min = qt.begMin;
+            nt.timeInfo = buildHourMin(nt.hour, nt.min);
             if (qt.endHour != 99)
-                nt.suffix = "시작";
-            else
-                nt.suffix = "";
+                nt.timeInfo = nt.timeInfo + "~";
         }
         nt.vibrate = qt.vibrate;
         nt.sayDate = qt.sayDate;
         nt.clock = qt.clock;
         nextAllTasks.add(nt);
+    }
+    static String buildHourMin(int hour, int min) { return int2NN(hour)+":"+int2NN(min); }
+    static String int2NN (int nbr) {
+        return (String.valueOf(100 + nbr)).substring(1);
     }
 
 }
