@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import better.life.autoquiet.MyAccessibilityService;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.Sounds;
@@ -49,7 +52,6 @@ public class ActivityMain extends AppCompatActivity {
 
     public static ArrayList<QuietTask> quietTasks;
     public static ArrayList<NextTask> nextTasks;
-
     RecyclerView mainRecyclerView;
     Context context;
 
@@ -80,6 +82,10 @@ public class ActivityMain extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.w("Permission", "Required for READ_CALENDAR");
         }
+        if (!isAccessibilityServiceEnabled(this, MyAccessibilityService.class)) {
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivity(intent);
+        }
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (!alarmManager.canScheduleExactAlarms()) {
@@ -95,6 +101,7 @@ public class ActivityMain extends AppCompatActivity {
         }
         ContextProvider.init(this);
         VarsGetPut.put(vars, context);
+
     }
 
     private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1234;
@@ -138,6 +145,7 @@ public class ActivityMain extends AppCompatActivity {
             intent = new Intent(this, ActivityAddEdit.class);
             intent.putExtra("idx", -1);
             startActivityForResult(intent, 11);
+
             return true;
 
         } else if (menuItem == R.id.action_calendar) {
@@ -172,11 +180,52 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    void movePointer(float begX, float begY, float endX, float endY, long durationMs) {
+        MyAccessibilityService service = MyAccessibilityService.instance;
+        if (service != null) {
+            service.movePointer(100f, 200f, 300f, 400f, 500, new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("MainActivity", "Pointer move completed");
+                }
+            });
+        } else {
+            Log.w("MainActivity", "AccessibilityService instance is null");
+        }
+    }
+
+    private static void inputText(String text) {
+        MyAccessibilityService service = MyAccessibilityService.instance;
+        if (service != null) {
+            service.inputText(text);
+        } else {
+            Log.w("MainActivity", "AccessibilityService instance is null");
+        }
+    }
+
+    private static void getCurrPos() {
+        MyAccessibilityService service = MyAccessibilityService.instance;
+        if (service != null) {
+            service.getCurrPos(new MyAccessibilityService.OnTouchPositionListener() {
+                @Override
+                public void onTouch(int x, int y) {
+                    // Got the touch coordinates here
+                    Log.d("MainActivity", "Touch at: " + x + ", " + y);
+                    // You can do more here, like UI update or next action
+                }
+            });
+        } else {
+            Log.w("MainActivity", "AccessibilityService instance is null");
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mainRecycleAdapter.notifyDataSetChanged();
     }
+
+
 
     public void setUpMainAdapter() {
 //
@@ -189,6 +238,35 @@ public class ActivityMain extends AppCompatActivity {
         mainItemTouchHelper.attachToRecyclerView(mainRecyclerView);
         mainRecyclerView.setAdapter(mainRecycleAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
+    public static boolean isAccessibilityServiceEnabled(
+            Context context,
+            Class<? extends android.accessibilityservice.AccessibilityService> serviceClass) {
+
+        ComponentName expectedComponentName = new ComponentName(context, serviceClass);
+        String enabledServicesSetting = Settings.Secure.getString(
+                context.getContentResolver(),
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        );
+
+        if (enabledServicesSetting == null) {
+            return false;
+        }
+
+        Log.d("AccessibilityCheck", "Expected: " + expectedComponentName.flattenToString());
+        Log.d("AccessibilityCheck", "Enabled list: " + enabledServicesSetting);
+
+        TextUtils.SimpleStringSplitter colonSplitter = new TextUtils.SimpleStringSplitter(':');
+        colonSplitter.setString(enabledServicesSetting);
+
+        for (String enabledService : colonSplitter) {
+            if (enabledService.equalsIgnoreCase(expectedComponentName.flattenToString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

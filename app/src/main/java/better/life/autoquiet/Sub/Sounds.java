@@ -25,8 +25,8 @@ import better.life.autoquiet.Utility;
 public class Sounds {
 
     private boolean ttsReady = false;
-    public enum BEEP {BEEP, INFO, WEEK, BACK, START}
-    final int [] beepRes = {R.raw.beep_beep, R.raw.wood_plank_flicks, R.raw.msg_inform, R.raw.back2normal,
+    public enum BEEP {BEEP, FLICK, WEEK, BACK, START}
+    final int [] beepRes = {R.raw.beep_beep, R.raw.wood_plank_flicks, R.raw.week_msg_inform, R.raw.back2normal,
             R.raw.manner_starting};
     // Corrected: Declare without immediate assignment, initialize in constructor
     final Uri [] dataSrc;

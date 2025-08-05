@@ -28,7 +28,7 @@ public final class TaskBellType {
         Context context = ContextProvider.get();
         if (nt.vibrate)
             PhoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.BEEP);
+        sounds.beep(Sounds.BEEP.FLICK);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = nt.subject + " 체크";
@@ -66,7 +66,7 @@ public final class TaskBellType {
             PhoneVibrate.go(1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
-            sounds.beep(Sounds.BEEP.BEEP);
+            sounds.beep(Sounds.BEEP.FLICK);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;

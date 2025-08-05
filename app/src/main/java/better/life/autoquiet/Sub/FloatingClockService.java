@@ -1,11 +1,14 @@
 package better.life.autoquiet.Sub;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,12 +17,15 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 
 import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import better.life.autoquiet.MyAccessibilityService;
 import better.life.autoquiet.R;
 
 public class FloatingClockService extends Service {
@@ -31,6 +37,7 @@ public class FloatingClockService extends Service {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mUpdateTimeTask;
     final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss.S", Locale.getDefault());
+    MyAccessibilityService service;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,14 +69,21 @@ public class FloatingClockService extends Service {
 
         timeTextView = mFloatingView.findViewById(R.id.timeTextView);
         ImageView closeButton = mFloatingView.findViewById(R.id.closeButton);
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
 
         mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
-                String currentTime = sdf.format(System.currentTimeMillis());
+                final SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
+                final String currentTime = sdf.format(System.currentTimeMillis());
+//                final SimpleDateFormat sdfX = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
+//                final String nowTime = sdfX.format(System.currentTimeMillis());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
+//                Log.w("NowTime", "is "+nowTime);
+
                 int compVal = sec.compareTo("50 ");
                 timeTextView.setTextColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text)
@@ -80,7 +94,19 @@ public class FloatingClockService extends Service {
                 compVal = sec.compareTo("55 ");
                 if (compVal > 0)
                     new PhoneVibrate().go(0);
-                long nxtDelay = 1001 - (System.currentTimeMillis() % 1000);
+                if (sec.compareTo("55 ") == 0) {
+                    final String app2Load = "kr.co.peoplefund.million";
+                    launchAndHide(FloatingClockService.this, app2Load);
+                }
+                if (sec.compareTo("00 ") == 0) {
+                    int x = screenWidth / 2;
+                    int y = 1370;  // screenHeight * 87 / 100;
+                    service.performClick(x, y);; //  (389, 1360) (54%, 87%)
+
+                    Log.e("FloatingClockService", "clicked ("+x+", "+y+")");
+                    stopSelf();
+                }
+                long nxtDelay = 1006 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
         };
@@ -116,7 +142,28 @@ public class FloatingClockService extends Service {
                 return false;
             }
         });
+        service = MyAccessibilityService.instance;
+        if (service == null) {
+            Log.e("onCreate", " ----------- AccessibilityService instance is null");
+        }
+
     }
+
+    // 크플 투자하기  (434, 1370) (60%, 87%)
+
+    private void launchAndHide(Context context, String tossApp) {
+        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(tossApp);
+        startActivity(launchIntent);
+    }
+
+    void performClick(int x, int y) {
+        if (service != null) {
+        } else {
+            Log.w("MainActivity", "AccessibilityService instance is null");
+        }
+
+    }
+
 
     @Override
     public void onDestroy() {

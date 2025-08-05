@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "better.life.autoquiet"
-        minSdkVersion 33 //
+        minSdkVersion 31 //
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -57,6 +57,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'joda-time:joda-time:2.10.10'
     implementation 'androidx.core:core:1.16.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

@@ -20,9 +20,10 @@ public final class VarsGetPut {
         String json = sharedPref.getString("vars", "");
         Type type = new TypeToken<Vars>() {
         }.getType();
-        if (json.isEmpty())
+        if (json.equals("null"))
             init();
-       vars = gson.fromJson(json, type);
+        else
+           vars = gson.fromJson(json, type);
     }
 
     public static void put(Vars vars, Context context) {
