@@ -21,7 +21,7 @@ public final class ScheduleNextTask {
         getNextTasks(quietTasks);
         new AlarmTime().request(nextTasks.get(0),
                 nextTasks.get(0).time, nextTasks.get(0).SFO, nextTasks.get(0).several);
-        new Utility().log("Schedule", headInfo + " " +nextTasks.get(0).subject );
+        new Utils().log("Schedule", headInfo + " " +nextTasks.get(0).subject );
         WidgetProvider.update_All_Widgets(ContextProvider.get());
     }
 

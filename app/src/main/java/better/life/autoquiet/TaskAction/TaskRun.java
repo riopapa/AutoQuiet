@@ -14,7 +14,7 @@ import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.R;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.PhoneVibrate;
-import better.life.autoquiet.Utility;
+import better.life.autoquiet.Utils;
 import better.life.autoquiet.models.QuietTask;
 import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.Sub.AddSuffixStr;
@@ -123,7 +123,7 @@ public final class TaskRun {
                     mainRecycleAdapter.notifyItemChanged(nt.idx);
                 }
                 ScheduleNextTask.request("Fin Normal");
-                new Utility().deleteOldLogFiles();
+                new Utils().deleteOldLogFiles();
                 PhoneVibrate.go(1);
             }
         }, 1800);

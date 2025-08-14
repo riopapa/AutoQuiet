@@ -42,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 TaskRun.one(nt);
                 break;
             default:
-                new Utility().log("Alarm Receive","Case Error " + nt.SFO
+                new Utils().log("Alarm Receive","Case Error " + nt.SFO
                         + " " + nt.subject);
         }
     }

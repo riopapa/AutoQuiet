@@ -34,7 +34,7 @@ import better.life.autoquiet.models.NextTask;
 import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.Sub.MyItemTouchHelper;
 import better.life.autoquiet.Sub.Permission;
-import better.life.autoquiet.Utility;
+import better.life.autoquiet.Utils;
 import better.life.autoquiet.Vars;
 import better.life.autoquiet.adapter.MainRecycleAdapter;
 import better.life.autoquiet.models.QuietTask;
@@ -62,7 +62,7 @@ public class ActivityMain extends AppCompatActivity {
         ContextProvider.init(context);
         VarsGetPut.get(this);
 
-        new Utility().deleteOldLogFiles();
+        new Utils().deleteOldLogFiles();
         setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext()
@@ -114,7 +114,7 @@ public class ActivityMain extends AppCompatActivity {
             sounds = new Sounds(this);
         VarsGetPut.get(context);
 //        Log.w("Main", "onResume");
-        new Utility().deleteOldLogFiles();
+        new Utils().deleteOldLogFiles();
 
         setUpMainAdapter();
         VarsGetPut.put(vars, context);

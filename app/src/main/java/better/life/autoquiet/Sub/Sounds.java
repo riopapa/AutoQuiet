@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import better.life.autoquiet.R;
-import better.life.autoquiet.Utility;
+import better.life.autoquiet.Utils;
 
 public class Sounds {
 
@@ -34,13 +34,14 @@ public class Sounds {
     private AudioManager mAM;
     private AudioFocusRequest mFocusGain = null;
     private int rVol;
-    private AudioAttributes beepAttr, ringAttr;
+    private final AudioAttributes beepAttr;
+    private final AudioAttributes ringAttr;
     private String blueDevice = "";
     private final Context context;
-    private final String SOUND_TAG = "sound";
+    private final String TAG = "sound";
     private final List<Runnable> pendingSayTasks = new CopyOnWriteArrayList<>();
     private final Object ttsInitLock = new Object();
-    final Utility utility;
+    final Utils utils;
     private static Sounds instance; // The single instance
 
     public static synchronized Sounds getInstance(Context applicationContext) {
@@ -52,22 +53,10 @@ public class Sounds {
 
     public Sounds(Context applicationContext) {
         this.context = applicationContext;
-//
-//        if (context == null) {
-//            Log.e(SOUND_TAG, "Application context is null in constructor ////////////");
-//            // Depending on your app's structure, you might throw an IllegalArgumentException here
-//            // throw new IllegalArgumentException("Application context cannot be null for Sounds initialization.");
-//            return; // Or handle this error gracefully
-//        }
-
-        // --- CORRECTED INITIALIZATION OF dataSrc HERE ---
-        // Initialize dataSrc array inside the constructor after context is available
         dataSrc = new Uri[beepRes.length]; // Allocate the array
         for (int j = 0; j < beepRes.length; j++) {
             dataSrc[j] = Uri.parse("android.resource://" + context.getPackageName() + "/" + beepRes[j]);
         }
-        // --------------------------------------------------
-
         ringAttr = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
@@ -76,20 +65,11 @@ public class Sounds {
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
-
-        utility = new Utility();
+        utils = new Utils();
         initTextToSpeech();
     }
 
-    // ... (rest of your Sounds class methods remain the same as the previous revision) ...
-
     private void initTextToSpeech() {
-//        if (mTTS != null) {
-//            mTTS.stop();
-//            mTTS.shutdown();
-//            mTTS = null;
-//            ttsReady = false;
-//        }
 
         mTTS = new TextToSpeech(context, status -> {
             synchronized (ttsInitLock) {
@@ -108,11 +88,10 @@ public class Sounds {
                         }
                         pendingSayTasks.clear();
                     });
-//                    utility.log(SOUND_TAG, "TTS initialized successfully and ready.");
 
                 } else {
                     ttsReady = false;
-                    utility.log(SOUND_TAG, "TTS initialization failed with status: " + status);
+                    utils.log(TAG, "TTS initialization failed with status: " + status);
                 }
             }
         });
@@ -120,38 +99,36 @@ public class Sounds {
 
     private void setupTTSLanguageAndListener() {
         if (mTTS == null) {
-            utility.log(SOUND_TAG, "mTTS is null during setupTTSLanguageAndListener. Cannot configure.");
+            utils.log(TAG, "mTTS is null during setupTTSLanguageAndListener. Cannot configure.");
             return;
         }
 
         int langResult = mTTS.setLanguage(Locale.KOREA);
         if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-            utility.log(SOUND_TAG, "Korean language is not supported or missing TTS data.");
+            utils.log(TAG, "Korean language is not supported or missing TTS data.");
         }
 
         mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
-                Log.d(SOUND_TAG, "TTS Utterance Started: " + utteranceId);
+                Log.w(TAG, "TTS Utterance Started: " + utteranceId);
             }
             @Override
             public void onError(String utteranceId) {
-                utility.log(SOUND_TAG, "TTS Utterance Error for ID: " + utteranceId);
+                utils.log(TAG, "TTS Utterance Error for ID: " + utteranceId);
                 if (mAM != null && mFocusGain != null) {
                     mAM.abandonAudioFocusRequest(mFocusGain);
                 }
             }
+
             @Override
             public void onDone(String utteranceId) {
-//                utility.log(SOUND_TAG, "TTS Utterance Done: " + utteranceId);
-                if (mFocusGain != null)
-                    mAM.abandonAudioFocusRequest(mFocusGain);
-                if (mAM != null) {
-                    mAM.setStreamVolume(AudioManager.STREAM_RING, rVol, 0);
-                    if (!blueDevice.isEmpty()) {
-                        mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, rVol, 0);
-                    }
-                }
+                utils.log(TAG, "TTS Utterance onDone: " + utteranceId);
+                if (!blueDevice.isEmpty())
+                    mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, rVol, 0);
+                else
+                    mAM.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
+                mAM.abandonAudioFocusRequest(mFocusGain);
             }
         });
 
@@ -161,12 +138,12 @@ public class Sounds {
             if (voice.getName().equals("ko-kr-x-kod-local")) {
                 mTTS.setVoice(voice);
                 voiceSet = true;
-                Log.d(SOUND_TAG, "Set TTS voice to: " + voice.getName());
+                Log.d(TAG, "Set TTS voice to: " + voice.getName());
                 break;
             }
         }
         if (!voiceSet) {
-            utility.log(SOUND_TAG, "Specific Korean voice 'ko-kr-x-kod-local' not found. Using default.");
+            utils.log(TAG, "Specific Korean voice 'ko-kr-x-kod-local' not found. Using default.");
         }
     }
 
@@ -214,7 +191,7 @@ public class Sounds {
         if (context != null) {
             mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         } else {
-            utility.log(SOUND_TAG, "Context is null, cannot initialize AudioManager.");
+            utils.log(TAG, "Context is null, cannot initialize AudioManager.");
         }
     }
 
@@ -222,7 +199,7 @@ public class Sounds {
         if (mAM == null) {
             initAudioManager();
             if (mAM == null) {
-                utility.log(SOUND_TAG, "AudioManager not initialized, cannot play beep.");
+                utils.log(TAG, "AudioManager not initialized, cannot play beep.");
                 return;
             }
         }
@@ -234,20 +211,19 @@ public class Sounds {
         final MediaPlayer beepMP = new MediaPlayer();
         beepMP.setAudioAttributes(beepAttr);
         getCurrVolumes();
-
         setVolumeTo(10);
 
         try {
             if (beep.ordinal() < dataSrc.length) {
                 beepMP.setDataSource(context, dataSrc[beep.ordinal()]);
             } else {
-                utility.log(SOUND_TAG, "Invalid BEEP ordinal: " + beep.ordinal());
+                utils.log(TAG, "Invalid BEEP ordinal: " + beep.ordinal());
                 beepMP.release();
                 setVolumeTo(rVol);
                 return;
             }
         } catch (Exception err) {
-            new Utility().log(SOUND_TAG,"setDataSource "+beep+" Error: "+err);
+            new Utils().log(TAG,"setDataSource "+beep+" Error: "+err);
             beepMP.release();
             setVolumeTo(rVol);
             return;
@@ -255,7 +231,7 @@ public class Sounds {
 
         beepMP.setOnPreparedListener(MediaPlayer::start);
         beepMP.setOnErrorListener((mp, what, extra) -> {
-            utility.log(SOUND_TAG, "MediaPlayer Error: " + what + ", " + extra);
+            utils.log(TAG, "MediaPlayer Error: " + what + ", " + extra);
             mp.release();
             setVolumeTo(rVol);
             return true;
@@ -269,7 +245,7 @@ public class Sounds {
             beepMP.prepareAsync();
         } catch (Exception err) {
             beepMP.release();
-            new Utility().log(SOUND_TAG,"prepareAsync "+beep+" Error: "+err);
+            new Utils().log(TAG,"prepareAsync "+beep+" Error: "+err);
             setVolumeTo(rVol);
         }
     }
@@ -278,7 +254,7 @@ public class Sounds {
         if (mAM == null) {
             initAudioManager();
             if (mAM == null) {
-                utility.log(SOUND_TAG, "AudioManager still null, cannot check phone quiet mode.");
+                utils.log(TAG, "AudioManager still null, cannot check phone quiet mode.");
                 return false;
             }
         }
@@ -294,27 +270,27 @@ public class Sounds {
 
         synchronized (ttsInitLock) {
             if (!ttsReady) {
-                utility.log(SOUND_TAG, "TTS not ready, queuing sayTask request: " + say);
+                utils.log(TAG, "TTS not ready, queuing sayTask request: " + say);
                 pendingSayTasks.add(() -> sayTask(say));
                 return;
             }
         }
 
         if (mTTS == null) {
-            utility.log(SOUND_TAG, "mTTS is null in sayTask despite ttsReady being true. Re-initializing TTS.");
+            utils.log(TAG, "mTTS is null in sayTask despite ttsReady being true. Re-initializing TTS.");
             initTextToSpeech();
             pendingSayTasks.add(() -> sayTask(say));
             return;
         }
 
         if (context == null) {
-            utility.log(SOUND_TAG, "Context is null in sayTask, cannot proceed with TTS.");
+            utils.log(TAG, "Context is null in sayTask, cannot proceed with TTS.");
             return;
         }
         if (mAM == null) {
             initAudioManager();
             if (mAM == null) {
-                utility.log(SOUND_TAG, "AudioManager not initialized in sayTask, cannot proceed with TTS.");
+                utils.log(TAG, "AudioManager not initialized in sayTask, cannot proceed with TTS.");
                 return;
             }
         }
@@ -324,10 +300,10 @@ public class Sounds {
         if (mFocusGain != null) {
             int result = mAM.requestAudioFocus(mFocusGain);
             if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-                utility.log(SOUND_TAG, "Audio focus request failed.");
+                utils.log(TAG, "Audio focus request failed.");
             }
         } else {
-            utility.log(SOUND_TAG, "AudioFocusRequest is null, skipping audio focus request.");
+            utils.log(TAG, "AudioFocusRequest is null, skipping audio focus request.");
         }
 
         getCurrVolumes();
@@ -342,12 +318,12 @@ public class Sounds {
             if (mTTS != null) {
                 int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "uniqueUtteranceId_" + System.currentTimeMillis());
                 if (result == TextToSpeech.ERROR) {
-                    utility.log(SOUND_TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
+                    utils.log(TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
                 } else {
-                    utility.log(SOUND_TAG, "TTS speaking: " + say);
+                    utils.log(TAG, "TTS speaking: " + say);
                 }
             } else {
-                utility.log(SOUND_TAG, "mTTS is null when attempting to speak: " + say);
+                utils.log(TAG, "mTTS is null when attempting to speak: " + say);
             }
         }, 1000);
     }
@@ -357,7 +333,7 @@ public class Sounds {
             mAM.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
             mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, volume, 0);
         } else {
-            new Utility().log(SOUND_TAG, "AudioManager is null, cannot set volume.");
+            new Utils().log(TAG, "AudioManager is null, cannot set volume.");
         }
     }
 
@@ -365,7 +341,7 @@ public class Sounds {
         if (mAM != null) {
             rVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
         } else {
-            utility.log(SOUND_TAG, "AudioManager is null, cannot get current volumes.");
+            utils.log(TAG, "AudioManager is null, cannot get current volumes.");
         }
     }
 

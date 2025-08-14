@@ -3,7 +3,6 @@ package better.life.autoquiet.Sub;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -78,12 +77,8 @@ public class FloatingClockService extends Service {
             public void run() {
                 final SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
                 final String currentTime = sdf.format(System.currentTimeMillis());
-//                final SimpleDateFormat sdfX = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
-//                final String nowTime = sdfX.format(System.currentTimeMillis());
                 timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
-//                Log.w("NowTime", "is "+nowTime);
-
                 int compVal = sec.compareTo("50 ");
                 timeTextView.setTextColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text)
@@ -91,21 +86,19 @@ public class FloatingClockService extends Service {
                 timeTextView.setBackgroundColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_back)
                         : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text));
-                compVal = sec.compareTo("55 ");
-                if (compVal > 0)
-                    new PhoneVibrate().go(0);
-                if (sec.compareTo("55 ") == 0) {
+                if (compVal == 0) {
                     final String app2Load = "kr.co.peoplefund.million";
-                    launchAndHide(FloatingClockService.this, app2Load);
+                    launchAndHide(app2Load);
                 }
                 if (sec.compareTo("00 ") == 0) {
                     int x = screenWidth / 2;
-                    int y = 1370;  // screenHeight * 87 / 100;
-                    service.performClick(x, y);; //  (389, 1360) (54%, 87%)
-
-                    Log.e("FloatingClockService", "clicked ("+x+", "+y+")");
+                    int y = 1380;  // screenHeight * 87 / 100;
+                    service.performClick(x, y); //  (389, 1360) (54%, 87%)
+//                    Log.e("FloatingClockService", "clicked at ("+x+", "+y+")");
                     stopSelf();
                 }
+                if (compVal >= 0)
+                    PhoneVibrate.go(0);
                 long nxtDelay = 1006 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
@@ -137,6 +130,7 @@ public class FloatingClockService extends Service {
                         mWindowManager.updateViewLayout(mFloatingView, params);
                         return true;
                     case MotionEvent.ACTION_UP:
+                        v.performClick();
                         return true;
                 }
                 return false;
@@ -151,19 +145,10 @@ public class FloatingClockService extends Service {
 
     // 크플 투자하기  (434, 1370) (60%, 87%)
 
-    private void launchAndHide(Context context, String tossApp) {
+    private void launchAndHide(String tossApp) {
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage(tossApp);
         startActivity(launchIntent);
     }
-
-    void performClick(int x, int y) {
-        if (service != null) {
-        } else {
-            Log.w("MainActivity", "AccessibilityService instance is null");
-        }
-
-    }
-
 
     @Override
     public void onDestroy() {

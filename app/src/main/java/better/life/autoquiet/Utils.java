@@ -18,12 +18,12 @@ import java.util.Locale;
 import better.life.autoquiet.Sub.ContextProvider;
 import java.util.regex.Pattern;
 
-public class Utility {
+public class Utils {
 
     private final String PREFIX = "l_";
     private File packageDir;
 
-    public Utility() {
+    public Utils() {
         this.packageDir = getPackageDirectory();
     }
 

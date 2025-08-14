@@ -59,11 +59,11 @@ public class MyAccessibilityService extends AccessibilityService {
             @Override
             public void onCompleted(@Nullable GestureDescription gestureDescription) {
                 super.onCompleted(gestureDescription);
-                DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
-                int screenWidth = displayMetrics.widthPixels;
-                int screenHeight = displayMetrics.heightPixels;
-
-                Log.w("MyService", "Click performed at (" + x + ", " + y + ") (" + screenWidth + ", " + screenHeight + ")");
+//                DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+//                int screenWidth = displayMetrics.widthPixels;
+//                int screenHeight = displayMetrics.heightPixels;
+//
+//                Log.w("MyService", "Click performed at (" + x + ", " + y + ") (" + screenWidth + ", " + screenHeight + ")");
             }
 
             @Override
