@@ -86,10 +86,10 @@ public class FloatingClockService extends Service {
                 timeTextView.setBackgroundColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_back)
                         : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text));
-                if (compVal == 0) {
-                    final String app2Load = "kr.co.peoplefund.million";
-                    launchAndHide(app2Load);
-                }
+//                if (compVal == 0) {
+//                    final String app2Load = "kr.co.peoplefund.million";
+//                    launchAndHide(app2Load);
+//                }
                 if (sec.compareTo("00 ") == 0) {
                     int x = screenWidth / 2;
                     int y = 1380;  // screenHeight * 87 / 100;

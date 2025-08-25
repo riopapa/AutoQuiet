@@ -1,4 +1,4 @@
-package better.life.autoquiet;
+package better.life.autoquiet.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import better.life.autoquiet.ScheduleNextTask;
 import better.life.autoquiet.activity.ActivityMain;
 
 public class BootReceiver extends BroadcastReceiver {

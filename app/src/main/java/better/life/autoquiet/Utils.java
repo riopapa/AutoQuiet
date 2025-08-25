@@ -91,9 +91,10 @@ public class Utils {
         StringBuilder log = new StringBuilder();
         int traceI = Math.min(traces.length, 10) - 3;
         for (int i = traceI; i > 2; i--) {
-            String omitStr = omitStr(traces[i].getClassName().substring(traces[i].getClassName().lastIndexOf(".")+1));
-            if (!omitStr.isEmpty()) {
-                log.append(omitStr)
+            String omit1 = omitStr(traces[i].getClassName().substring(traces[i].getClassName().lastIndexOf(".")+1));
+            String omit2 = omitStr(traces[i].getMethodName());
+            if (!omit1.isEmpty() && !omit2.isEmpty()) {
+                log.append(omit1)
                         .append(".")
                         .append(traces[i].getMethodName())
                         .append("#")
@@ -112,8 +113,8 @@ public class Utils {
 
     private static final Pattern OMITS_PATTERN = Pattern.compile(
             String.join("|", Arrays.asList(
-                    "Handler", "Remote", "Activity", "better-", "handle",
-                    "callActivityOnResume", "access$", "performCreate",
+                    "lambda", "Handler", "Remote", "Activity", "better-", "handle", "TaskRun",
+                    "callActivityOnResume", "access", "performCreate",
                     "handle", "dispatchKeyEvent", "onBindViewHolder"
             ))
     );

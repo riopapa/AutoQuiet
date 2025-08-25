@@ -36,13 +36,15 @@ public class Sounds {
     private int rVol;
     private final AudioAttributes beepAttr;
     private final AudioAttributes ringAttr;
-    private String blueDevice = "";
     private final Context context;
     private final String TAG = "sound";
     private final List<Runnable> pendingSayTasks = new CopyOnWriteArrayList<>();
     private final Object ttsInitLock = new Object();
-    final Utils utils;
+    public static Utils utils;
     private static Sounds instance; // The single instance
+
+    public static String blueDevice = "";
+    public static boolean isBlueToothOn = false;
 
     public static synchronized Sounds getInstance(Context applicationContext) {
         if (instance == null) {
@@ -67,6 +69,9 @@ public class Sounds {
                 .build();
         utils = new Utils();
         initTextToSpeech();
+        initAudioManager();
+        blueDevice = BluetoothUtil.getBlueDevices(context);
+        Log.w(TAG, "Sound init blueDevice = "+blueDevice);
     }
 
     private void initTextToSpeech() {
@@ -111,7 +116,6 @@ public class Sounds {
         mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
-                Log.w(TAG, "TTS Utterance Started: " + utteranceId);
             }
             @Override
             public void onError(String utteranceId) {
@@ -123,11 +127,15 @@ public class Sounds {
 
             @Override
             public void onDone(String utteranceId) {
-                utils.log(TAG, "TTS Utterance onDone: " + utteranceId);
-                if (!blueDevice.isEmpty())
+                if (isBlueToothOn) {
                     mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, rVol, 0);
-                else
+                    utils.log(TAG, "onDone: Access "+ rVol+", blueDevice="+blueDevice);
+                }
+                else {
                     mAM.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
+                    mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                    utils.log(TAG, "onDone: Ring 1 blueDevice="+blueDevice);
+                }
                 mAM.abandonAudioFocusRequest(mFocusGain);
             }
         });
@@ -161,30 +169,30 @@ public class Sounds {
     }
 
     public void setNormalMode() {
-        if (mAM == null) {
-            initAudioManager();
-        }
-        if (mAM != null) {
+//        if (mAM == null) {
+//            initAudioManager();
+//        }
+//        if (mAM != null) {
             mAM.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        }
+//        }
     }
 
     public void setSilentMode() {
-        if (mAM == null) {
-            initAudioManager();
-        }
-        if (mAM != null) {
+//        if (mAM == null) {
+//            initAudioManager();
+//        }
+//        if (mAM != null) {
             mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        }
+//        }
     }
 
     public void setVibrateMode() {
-        if (mAM == null) {
-            initAudioManager();
-        }
-        if (mAM != null) {
+//        if (mAM == null) {
+//            initAudioManager();
+//        }
+//        if (mAM != null) {
             mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-        }
+//        }
     }
 
     private void initAudioManager() {
@@ -196,17 +204,9 @@ public class Sounds {
     }
 
     public void beep(BEEP beep) {
-        if (mAM == null) {
-            initAudioManager();
-            if (mAM == null) {
-                utils.log(TAG, "AudioManager not initialized, cannot play beep.");
-                return;
-            }
-        }
 
-        if (isPhoneQuiet()) {
+        if (isPhoneQuiet())
             return;
-        }
 
         final MediaPlayer beepMP = new MediaPlayer();
         beepMP.setAudioAttributes(beepAttr);
@@ -251,13 +251,6 @@ public class Sounds {
     }
 
     public boolean isPhoneQuiet() {
-        if (mAM == null) {
-            initAudioManager();
-            if (mAM == null) {
-                utils.log(TAG, "AudioManager still null, cannot check phone quiet mode.");
-                return false;
-            }
-        }
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
@@ -295,8 +288,7 @@ public class Sounds {
             }
         }
 
-        blueDevice = BluetoothUtil.getDevice(context);
-
+//        blueDevice = BluetoothUtil.getDevice(context);
         if (mFocusGain != null) {
             int result = mAM.requestAudioFocus(mFocusGain);
             if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
@@ -308,10 +300,10 @@ public class Sounds {
 
         getCurrVolumes();
         mTTS.setAudioAttributes(ringAttr);
-        if (blueDevice.isEmpty()) {
-            setVolumeTo(11);
+        if (isBlueToothOn) {
+            setVolumeTo(14);
         } else{
-            setVolumeTo(15);
+            setVolumeTo(11);
         }
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

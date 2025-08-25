@@ -104,10 +104,14 @@ public final class TaskRun {
 
     public static void finish(NextTask nt) {
         sounds.setNormalMode();
-        sounds.setVolumeTo(10);
-        finish_Normal(nt);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sounds.setVolumeTo(10);
+                finish_Normal(nt);
+            }
+        }, 500);
     }
-
 
     private static void finish_Normal(NextTask nt) {
         sounds.beep(Sounds.BEEP.BACK);

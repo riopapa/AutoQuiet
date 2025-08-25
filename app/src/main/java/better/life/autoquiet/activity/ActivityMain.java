@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -17,15 +18,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import better.life.autoquiet.MyAccessibilityService;
 import better.life.autoquiet.R;
+import better.life.autoquiet.Sub.BtConnectedNames;
 import better.life.autoquiet.Sub.ContextProvider;
 import better.life.autoquiet.Sub.Sounds;
 import better.life.autoquiet.Sub.VarsGetPut;
@@ -40,6 +46,7 @@ import better.life.autoquiet.adapter.MainRecycleAdapter;
 import better.life.autoquiet.models.QuietTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -54,6 +61,7 @@ public class ActivityMain extends AppCompatActivity {
     public static ArrayList<NextTask> nextTasks;
     RecyclerView mainRecyclerView;
     Context context;
+    private final String TAG = "MAIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +109,7 @@ public class ActivityMain extends AppCompatActivity {
         }
         ContextProvider.init(this);
         VarsGetPut.put(vars, context);
+        checkAndGetConnectedDevices();
 
     }
 
@@ -267,6 +276,57 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void checkAndGetConnectedDevices() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 (API 31) and higher
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "BLUETOOTH_CONNECT permission already granted.");
+                // Permission is already granted, proceed to get devices
+                getConnectedBluetoothDevices();
+            } else {
+                Log.d(TAG, "Requesting BLUETOOTH_CONNECT permission.");
+                // Request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                        BLUETOOTH_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            // This part is for older Android versions
+            Log.d(TAG, "Running on an older Android version. Assuming permissions are in manifest.");
+            getConnectedBluetoothDevices();
+        }
+    }
+
+    private static final int BLUETOOTH_PERMISSION_REQUEST_CODE = 1001;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == BLUETOOTH_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted by the user
+                Log.d(TAG, "BLUETOOTH_CONNECT permission granted.");
+                getConnectedBluetoothDevices();
+            } else {
+                // Permission denied by the user
+                Log.d(TAG, "BLUETOOTH_CONNECT permission denied.");
+                Toast.makeText(this, "Bluetooth permission is required to find connected devices.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void getConnectedBluetoothDevices() {
+        // You can now safely call your utility function
+        List<String> deviceNames = BtConnectedNames.getConnectedBluetoothDeviceNames(this);
+        if (deviceNames.isEmpty()) {
+            Log.w(TAG, "No Bluetooth devices are currently connected.");
+            Toast.makeText(this, "No connected Bluetooth devices found.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.w(TAG + deviceNames.size(), "Connected devices: " + deviceNames.toString());
+            Toast.makeText(this, "Connected devices: " + deviceNames.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

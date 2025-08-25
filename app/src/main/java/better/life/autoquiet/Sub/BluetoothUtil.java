@@ -1,5 +1,7 @@
 package better.life.autoquiet.Sub;
 
+import static better.life.autoquiet.Sub.Sounds.utils;
+
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -27,25 +29,23 @@ public final class BluetoothUtil {
     public static String getDevice(Context context) {
         // Check for necessary BLUETOOTH_CONNECT permission for SDK 31+
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "BLUETOOTH_CONNECT permission not granted. Request this permission at runtime.");
-            // You should request the permission from the user before calling this.
-            // Example: ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_CONNECT);
+//            utils.log(TAG, "BLUETOOTH_CONNECT permission not granted. Request this permission at runtime.");
             return "";
         }
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null) {
-            Log.e(TAG, "BluetoothManager is not available.");
+            utils.log(TAG, "BluetoothManager is not available.");
             return "";
         }
 
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         if (bluetoothAdapter == null) {
-            Log.e(TAG, "BluetoothAdapter is not available.");
+            utils.log(TAG, "BluetoothAdapter is not available.");
             return "";
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            Log.d(TAG, "Bluetooth is not enabled.");
+            utils.log(TAG, "Bluetooth is not enabled.");
             return "";
         }
 
@@ -60,11 +60,11 @@ public final class BluetoothUtil {
 //                Log.w("Connected", profile + " " + proxy);
                 if (profile == BluetoothProfile.HEADSET) {
                     headsetProxy.set((BluetoothHeadset) proxy);
-//                    Log.w(TAG, "BluetoothHeadset profile proxy connected.");
+                    utils.log(TAG, "BluetoothHeadset profile proxy connected.");
 
                     // Check for BLUETOOTH_CONNECT permission again before accessing connected devices
                     if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-//                        Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted after proxy connection.");
+                        utils.log(TAG, "BLUETOOTH_CONNECT permission lost or not granted after proxy connection.");
                         latch.countDown(); // Release latch even on permission issue
                         return;
                     }
@@ -74,7 +74,7 @@ public final class BluetoothUtil {
                         for (BluetoothDevice device : connectedDevices) {
                             // Check for BLUETOOTH_CONNECT permission again before accessing device name
                             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-//                                Log.w(TAG, "BLUETOOTH_CONNECT permission lost or not granted while getting device name.");
+                                utils.log(TAG, "BLUETOOTH_CONNECT permission lost or not granted while getting device name.");
                                 break; // Stop processing devices
                             }
                             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
@@ -133,10 +133,23 @@ public final class BluetoothUtil {
                 }
             }
         }
-//        Log.w("BluetoothUtil", "getConnectedTargetDeviceName: " + connectedDeviceName.get());
+        utils.log("BluetoothUtil", "getConnectedTargetDeviceName: " + connectedDeviceName.get());
         String deviceName = connectedDeviceName.get();
         if (deviceName != null)
             return deviceName;
         return "";
+    }
+
+    public static String getBlueDevices(Context ctx) {
+        String blueDeviceNow = "";
+        List<String> btNames = BtConnectedNames.getConnectedBluetoothDeviceNames(ctx);
+        for (String btName : btNames) {
+            if (btName.startsWith("LX") || btName.startsWith("Tes") || btName.startsWith("Bud")) {
+                blueDeviceNow = btName;
+                break;
+            }
+        }
+        return blueDeviceNow;
+
     }
 }

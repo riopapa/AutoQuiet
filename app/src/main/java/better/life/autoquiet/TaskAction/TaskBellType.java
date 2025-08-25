@@ -73,8 +73,8 @@ public final class TaskBellType {
                 if (nt.several > 0 && afterSec > 5) {
                     if (afterSec > 60) {
                         afterSec = 20;
-                    } else if (sounds.isPhoneQuiet()) {
-                        afterSec = afterSec / 2;
+//                    } else if (sounds.isPhoneQuiet()) {
+//                        afterSec = afterSec / 2;
                     } else {
                         String s = (nt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         s += " " + nt.subject + " 를 " + " 확인하세요, ";

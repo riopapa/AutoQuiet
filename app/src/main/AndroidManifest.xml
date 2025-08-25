@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -56,13 +57,13 @@
         <activity android:name=".activity.ActivityOneTime" />
         <activity android:name=".activity.ActivityPrefer" />
 
-        <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="false">
+        <receiver android:name=".receiver.AlarmReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="better.life.autoquiet" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".BootReceiver" android:enabled="true" android:exported="false"
+            android:name=".receiver.BootReceiver" android:enabled="true" android:exported="false"
             android:label="BOOTReceiver">
             <intent-filter >
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -78,6 +79,16 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/my_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".receiver.BlueReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+            </intent-filter>
         </receiver>
 
         <service android:name=".widget.WidgetService"
