@@ -1,4 +1,4 @@
-package beautiful.life.saychat.listener;
+package better.life.autoquiet.receiver;
 
 import static better.life.autoquiet.Sub.Sounds.blueDevice;
 import static better.life.autoquiet.Sub.Sounds.isBlueToothOn;
