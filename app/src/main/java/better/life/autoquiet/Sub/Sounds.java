@@ -68,10 +68,19 @@ public class Sounds {
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
         utils = new Utils();
-        initTextToSpeech();
         initAudioManager();
+        initAudioFocusRequest(); // <-- NEW: Initialize mFocusGain here
+        initTextToSpeech();
         blueDevice = BluetoothUtil.getBlueDevices(context);
         Log.w(TAG, "Sound init blueDevice = "+blueDevice);
+    }
+
+    private void initAudioFocusRequest() {
+        if (mAM != null) {
+            mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                    .setAudioAttributes(ringAttr)
+                    .build();
+        }
     }
 
     private void initTextToSpeech() {
@@ -251,11 +260,14 @@ public class Sounds {
     }
 
     public boolean isPhoneQuiet() {
+        if (isBlueToothOn)
+            return false;
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
 
     public void sayTask (String say) {
+
         if (isPhoneQuiet()) {
             PhoneVibrate.go(2);
             return;
@@ -306,18 +318,17 @@ public class Sounds {
             setVolumeTo(11);
         }
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (mTTS != null) {
-                int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "uniqueUtteranceId_" + System.currentTimeMillis());
-                if (result == TextToSpeech.ERROR) {
-                    utils.log(TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
-                } else {
-                    utils.log(TAG, "TTS speaking: " + say);
-                }
+        if (mTTS != null) {
+            int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "uniqueUtteranceId_" + System.currentTimeMillis());
+            if (result == TextToSpeech.ERROR) {
+                utils.log(TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
+                setVolumeTo(1);
             } else {
-                utils.log(TAG, "mTTS is null when attempting to speak: " + say);
+                utils.log(TAG, "TTS speaking: " + say);
             }
-        }, 1000);
+        } else {
+            utils.log(TAG, "mTTS is null when attempting to speak: " + say);
+        }
     }
 
     public void setVolumeTo(int volume) {
