@@ -1,5 +1,7 @@
 package better.life.autoquiet.Sub;
 
+import static better.life.autoquiet.Sub.Sounds.utils;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,9 +30,17 @@ public class AlarmTime {
         try {
             alarmManager.cancel(pendingIntent);
         } catch (Exception e) {
-            e.printStackTrace();
+            utils.log("alarmTime",e.getMessage());
         } finally {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, nextTime, pendingIntent);
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, nextTime, pendingIntent);
+            try {alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC, nextTime, pendingIntent
+                );
+            } catch (SecurityException e) {
+                alarmManager.set(
+                        AlarmManager.RTC, nextTime, pendingIntent
+                );
+            }
         }
     }
 }

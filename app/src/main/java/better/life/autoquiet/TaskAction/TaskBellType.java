@@ -28,17 +28,21 @@ public final class TaskBellType {
         Context context = ContextProvider.get();
         if (nt.vibrate)
             PhoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.FLICK);
+        sounds.dingDong(Sounds.BEEP.FLICK);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 String say = nt.subject + " 체크";
-                sounds.sayTask(say);
+                sounds.sayText(say);
                 if (nt.clock) {
                     Intent serviceIntent = new Intent(context, FloatingClockService.class);
                     context.startService(serviceIntent);
                 }
                 if (quietTasks == null)
                     QuietTaskGetPut.get();
+
+                if (nt.idx < 0 || nt.idx >= quietTasks.size())
+                    return;
+
                 QuietTask qt = quietTasks.get(nt.idx);
                 if (qt.nextDay) {
                     Calendar cal = Calendar.getInstance();
@@ -66,7 +70,7 @@ public final class TaskBellType {
             PhoneVibrate.go(1);
         int gapSec = secRemaining(nt, System.currentTimeMillis());
         if (gapSec < 60 && gapSec > 5 && nt.several > 0)
-            sounds.beep(Sounds.BEEP.FLICK);
+            sounds.dingDong(Sounds.BEEP.FLICK);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 int afterSec = secRemaining(nt, System.currentTimeMillis()) - 2;
@@ -78,7 +82,7 @@ public final class TaskBellType {
                     } else {
                         String s = (nt.sayDate) ? nowDateToString(System.currentTimeMillis()) : "";
                         s += " " + nt.subject + " 를 " + " 확인하세요, ";
-                        sounds.sayTask(s);
+                        sounds.sayText(s);
                         if (afterSec < 20)
                             afterSec = 10;
                         else
@@ -101,7 +105,8 @@ public final class TaskBellType {
         toDay.set(Calendar.HOUR_OF_DAY, nt.hour);
         toDay.set(Calendar.MINUTE, nt.min);
         toDay.set(Calendar.SECOND, 0);
-        return (int) ((toDay.getTimeInMillis() - time)/1000);
+        int sec = (int)((toDay.getTimeInMillis() - time)/1000);
+        return Math.max(sec, 1);
     }
 
     static String nowDateToString(long time) {
@@ -112,7 +117,7 @@ public final class TaskBellType {
     public static void week(NextTask nt) {
         if (nt.vibrate)
             PhoneVibrate.go(1);
-        sounds.beep(Sounds.BEEP.WEEK);
+        sounds.dingDong(Sounds.BEEP.WEEK);
         new Timer().schedule(new TimerTask() {
             public void run() {
                 if (nt.clock) {
@@ -121,7 +126,7 @@ public final class TaskBellType {
                     context.startService(serviceIntent);
                 }
                 String say = nt.subject + " 를 확인";
-                sounds.sayTask(say);
+                sounds.sayText(say);
                 ScheduleNextTask.request("event");
             }
         }, 1500);

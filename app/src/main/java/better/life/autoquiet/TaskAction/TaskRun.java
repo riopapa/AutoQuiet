@@ -53,18 +53,18 @@ public final class TaskRun {
 
             default:
                 String say = nt.subject + "AlarmType 에러 확인 "+nt.alarmType;
-                sounds.sayTask(say);
+                sounds.sayText(say);
         }
     }
 
     private static void start_Normal(NextTask nt) {
-        sounds.beep(Sounds.BEEP.START);
+        sounds.dingDong(Sounds.BEEP.START);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
             String say = (nt.alarmType == PHONE_WORK) ? nt.subject
                     : new AddSuffixStr().add(nt.subject) + "시작 됩니다";
-            sounds.sayTask(say);
+            sounds.sayText(say);
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -87,7 +87,7 @@ public final class TaskRun {
             public void run() {
                 String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
                         " 입니다. 무음 모드가 끝났습니다";
-                sounds.sayTask(say);
+                sounds.sayText(say);
             }
         }, 2000);
         QuietTask qt = quietTasks.get(nt.idx);
@@ -114,12 +114,12 @@ public final class TaskRun {
     }
 
     private static void finish_Normal(NextTask nt) {
-        sounds.beep(Sounds.BEEP.BACK);
+        sounds.dingDong(Sounds.BEEP.BACK);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 String s = new AddSuffixStr().add(nt.subject) + ContextProvider.get().getString(R.string.finishing_completed);
-                sounds.sayTask(s);
+                sounds.sayText(s);
                 if (nt.alarmType < PHONE_VIBRATE) {
                     QuietTask qt = quietTasks.get(nt.idx);
                     qt.active = false;

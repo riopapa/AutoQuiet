@@ -89,7 +89,7 @@ public class Utils {
     public void log(String tag, String text) {
         StackTraceElement[] traces = Thread.currentThread().getStackTrace();
         StringBuilder log = new StringBuilder();
-        int traceI = Math.min(traces.length, 10) - 3;
+        int traceI = Math.min(Math.min(traces.length, 10) - 4, 4);
         for (int i = traceI; i > 2; i--) {
             String omit1 = omitStr(traces[i].getClassName().substring(traces[i].getClassName().lastIndexOf(".")+1));
             String omit2 = omitStr(traces[i].getMethodName());

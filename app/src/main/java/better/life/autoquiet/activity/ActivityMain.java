@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -18,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -109,7 +107,7 @@ public class ActivityMain extends AppCompatActivity {
         }
         ContextProvider.init(this);
         VarsGetPut.put(vars, context);
-        checkAndGetConnectedDevices();
+//        checkAndGetConnectedDevices();
 
     }
 
@@ -119,8 +117,8 @@ public class ActivityMain extends AppCompatActivity {
     public void onResume() {
 
         super.onResume();
-        if (sounds == null)
-            sounds = new Sounds(this);
+//        if (sounds == null)
+        sounds = new Sounds(this);
         VarsGetPut.get(context);
 //        Log.w("Main", "onResume");
         new Utils().deleteOldLogFiles();
@@ -188,20 +186,20 @@ public class ActivityMain extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    void movePointer(float begX, float begY, float endX, float endY, long durationMs) {
-        MyAccessibilityService service = MyAccessibilityService.instance;
-        if (service != null) {
-            service.movePointer(100f, 200f, 300f, 400f, 500, new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("MainActivity", "Pointer move completed");
-                }
-            });
-        } else {
-            Log.w("MainActivity", "AccessibilityService instance is null");
-        }
-    }
+//
+//    void movePointer(float begX, float begY, float endX, float endY, long durationMs) {
+//        MyAccessibilityService service = MyAccessibilityService.instance;
+//        if (service != null) {
+//            service.movePointer(100f, 200f, 300f, 400f, 500, new Runnable() {
+//                @Override
+//                public void run() {
+//                    Log.d("MainActivity", "Pointer move completed");
+//                }
+//            });
+//        } else {
+//            Log.w("MainActivity", "AccessibilityService instance is null");
+//        }
+//    }
 
     private static void inputText(String text) {
         MyAccessibilityService service = MyAccessibilityService.instance;
@@ -212,21 +210,21 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    private static void getCurrPos() {
-        MyAccessibilityService service = MyAccessibilityService.instance;
-        if (service != null) {
-            service.getCurrPos(new MyAccessibilityService.OnTouchPositionListener() {
-                @Override
-                public void onTouch(int x, int y) {
-                    // Got the touch coordinates here
-                    Log.d("MainActivity", "Touch at: " + x + ", " + y);
-                    // You can do more here, like UI update or next action
-                }
-            });
-        } else {
-            Log.w("MainActivity", "AccessibilityService instance is null");
-        }
-    }
+//    private static void getCurrPos() {
+//        MyAccessibilityService service = MyAccessibilityService.instance;
+//        if (service != null) {
+//            service.getCurrPos(new MyAccessibilityService.OnTouchPositionListener() {
+//                @Override
+//                public void onTouch(int x, int y) {
+//                    // Got the touch coordinates here
+//                    Log.d("MainActivity", "Touch at: " + x + ", " + y);
+//                    // You can do more here, like UI update or next action
+//                }
+//            });
+//        } else {
+//            Log.w("MainActivity", "AccessibilityService instance is null");
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,7 +246,6 @@ public class ActivityMain extends AppCompatActivity {
         mainRecyclerView.setAdapter(mainRecycleAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
 
     public static boolean isAccessibilityServiceEnabled(
             Context context,
@@ -279,23 +276,16 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void checkAndGetConnectedDevices() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Android 12 (API 31) and higher
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "BLUETOOTH_CONNECT permission already granted.");
-                // Permission is already granted, proceed to get devices
-                getConnectedBluetoothDevices();
-            } else {
-                Log.d(TAG, "Requesting BLUETOOTH_CONNECT permission.");
-                // Request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.BLUETOOTH_CONNECT},
-                        BLUETOOTH_PERMISSION_REQUEST_CODE);
-            }
-        } else {
-            // This part is for older Android versions
-            Log.d(TAG, "Running on an older Android version. Assuming permissions are in manifest.");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+//            Log.d(TAG, "BLUETOOTH_CONNECT permission already granted.");
+            // Permission is already granted, proceed to get devices
             getConnectedBluetoothDevices();
+        } else {
+//            Log.d(TAG, "Requesting BLUETOOTH_CONNECT permission.");
+            // Request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                    BLUETOOTH_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -324,8 +314,9 @@ public class ActivityMain extends AppCompatActivity {
             Log.w(TAG, "No Bluetooth devices are currently connected.");
             Toast.makeText(this, "No connected Bluetooth devices found.", Toast.LENGTH_SHORT).show();
         } else {
-            Log.w(TAG + deviceNames.size(), "Connected devices: " + deviceNames.toString());
-            Toast.makeText(this, "Connected devices: " + deviceNames.toString(), Toast.LENGTH_LONG).show();
+
+            Log.w(TAG + deviceNames.size(), "Connected devices: " + deviceNames);
+            Toast.makeText(this, "Connected devices: " + deviceNames, Toast.LENGTH_LONG).show();
         }
     }
 

@@ -1,5 +1,7 @@
 package better.life.autoquiet.Sub;
 
+import static better.life.autoquiet.NotificationService.isBlueToothOn;
+
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -43,8 +45,7 @@ public class Sounds {
     public static Utils utils;
     private static Sounds instance; // The single instance
 
-    public static String blueDevice = "";
-    public static boolean isBlueToothOn = false;
+    private boolean isMute = false;
 
     public static synchronized Sounds getInstance(Context applicationContext) {
         if (instance == null) {
@@ -69,16 +70,23 @@ public class Sounds {
                 .build();
         utils = new Utils();
         initAudioManager();
-        initAudioFocusRequest(); // <-- NEW: Initialize mFocusGain here
         initTextToSpeech();
-        blueDevice = BluetoothUtil.getBlueDevices(context);
-        Log.w(TAG, "Sound init blueDevice = "+blueDevice);
+//        blueDevice = BluetoothUtil.getBlueDevices(context);
+//        Log.w(TAG, "Sound init blueDevice = "+blueDevice);
     }
 
-    private void initAudioFocusRequest() {
+    private void setFocusRequest() {
         if (mAM != null) {
+            AudioAttributes attr = isBlueToothOn ?
+                    new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+                    : new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+
             mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
-                    .setAudioAttributes(ringAttr)
+                    .setAudioAttributes(attr)
                     .build();
         }
     }
@@ -92,7 +100,6 @@ public class Sounds {
                     mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
                             .setAudioAttributes(ringAttr)
                             .build();
-
                     setupTTSLanguageAndListener();
                     ttsReady = true;
 
@@ -105,7 +112,7 @@ public class Sounds {
 
                 } else {
                     ttsReady = false;
-                    utils.log(TAG, "TTS initialization failed with status: " + status);
+                    utils.log(TAG, "#a TTS failed " + status);
                 }
             }
         });
@@ -113,39 +120,37 @@ public class Sounds {
 
     private void setupTTSLanguageAndListener() {
         if (mTTS == null) {
-            utils.log(TAG, "mTTS is null during setupTTSLanguageAndListener. Cannot configure.");
+            utils.log(TAG, "#b mTTS is null");
             return;
         }
 
         int langResult = mTTS.setLanguage(Locale.KOREA);
         if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
-            utils.log(TAG, "Korean language is not supported or missing TTS data.");
+            utils.log(TAG, "#k Korean");
         }
 
         mTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
-            public void onStart(String utteranceId) {
-            }
+            public void onStart(String utteranceId) {}
             @Override
             public void onError(String utteranceId) {
-                utils.log(TAG, "TTS Utterance Error for ID: " + utteranceId);
+                utils.log(TAG, "#e TTS Utterance Error");
                 if (mAM != null && mFocusGain != null) {
                     mAM.abandonAudioFocusRequest(mFocusGain);
                 }
             }
-
             @Override
             public void onDone(String utteranceId) {
-                if (isBlueToothOn) {
-                    mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, rVol, 0);
-                    utils.log(TAG, "onDone: Access "+ rVol+", blueDevice="+blueDevice);
-                }
-                else {
-                    mAM.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
-                    mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                    utils.log(TAG, "onDone: Ring 1 blueDevice="+blueDevice);
-                }
-                mAM.abandonAudioFocusRequest(mFocusGain);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    mAM.abandonAudioFocusRequest(mFocusGain);
+                    if (!isBlueToothOn) {
+                        mAM.setStreamVolume(AudioManager.STREAM_RING, 1, 0);
+                        mAM.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+//                        utils.log(TAG, "#o onDone " + blueDevice);
+                    } else if (isMute) {
+                        mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    }
+                }, 2000);
             }
         });
 
@@ -178,30 +183,15 @@ public class Sounds {
     }
 
     public void setNormalMode() {
-//        if (mAM == null) {
-//            initAudioManager();
-//        }
-//        if (mAM != null) {
-            mAM.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//        }
+        mAM.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     public void setSilentMode() {
-//        if (mAM == null) {
-//            initAudioManager();
-//        }
-//        if (mAM != null) {
-            mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//        }
+        mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     }
 
     public void setVibrateMode() {
-//        if (mAM == null) {
-//            initAudioManager();
-//        }
-//        if (mAM != null) {
-            mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-//        }
+        mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
     }
 
     private void initAudioManager() {
@@ -212,25 +202,25 @@ public class Sounds {
         }
     }
 
-    public void beep(BEEP beep) {
+    public void dingDong(BEEP beep) {
 
         if (isPhoneQuiet())
             return;
-
         final MediaPlayer beepMP = new MediaPlayer();
         beepMP.setAudioAttributes(beepAttr);
-        getCurrVolumes();
-        setVolumeTo(10);
-
         try {
-            if (beep.ordinal() < dataSrc.length) {
-                beepMP.setDataSource(context, dataSrc[beep.ordinal()]);
-            } else {
-                utils.log(TAG, "Invalid BEEP ordinal: " + beep.ordinal());
-                beepMP.release();
-                setVolumeTo(rVol);
-                return;
-            }
+            beepMP.setDataSource(context, dataSrc[beep.ordinal()]);
+            beepMP.setOnPreparedListener(MediaPlayer::start);
+            beepMP.setOnErrorListener((mp, what, extra) -> {
+                utils.log(TAG, "#m MediaPlayer Error: " + what + ", " + extra);
+                mp.release();
+                return true;
+            });
+            beepMP.setOnCompletionListener(mp -> {
+                if (!isBlueToothOn)
+                    setVolumeTo(rVol);
+                mp.release();
+            });
         } catch (Exception err) {
             new Utils().log(TAG,"setDataSource "+beep+" Error: "+err);
             beepMP.release();
@@ -238,45 +228,33 @@ public class Sounds {
             return;
         }
 
-        beepMP.setOnPreparedListener(MediaPlayer::start);
-        beepMP.setOnErrorListener((mp, what, extra) -> {
-            utils.log(TAG, "MediaPlayer Error: " + what + ", " + extra);
-            mp.release();
-            setVolumeTo(rVol);
-            return true;
-        });
-        beepMP.setOnCompletionListener(mp -> {
-            setVolumeTo(rVol);
-            mp.release();
-        });
-
         try {
+            getCurrVolumes();
+            if (!isBlueToothOn)
+                setVolumeTo(10);
             beepMP.prepareAsync();
         } catch (Exception err) {
             beepMP.release();
             new Utils().log(TAG,"prepareAsync "+beep+" Error: "+err);
-            setVolumeTo(rVol);
         }
     }
 
     public boolean isPhoneQuiet() {
-        if (isBlueToothOn)
-            return false;
         return (mAM.getRingerMode() == AudioManager.RINGER_MODE_SILENT ||
                 mAM.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE);
     }
 
-    public void sayTask (String say) {
+    public void sayText(String say) {
 
-        if (isPhoneQuiet()) {
+        isMute = isPhoneQuiet();
+        if (!isBlueToothOn && isMute) {
             PhoneVibrate.go(2);
             return;
         }
-
         synchronized (ttsInitLock) {
             if (!ttsReady) {
                 utils.log(TAG, "TTS not ready, queuing sayTask request: " + say);
-                pendingSayTasks.add(() -> sayTask(say));
+                pendingSayTasks.add(() -> sayText(say));
                 return;
             }
         }
@@ -284,10 +262,9 @@ public class Sounds {
         if (mTTS == null) {
             utils.log(TAG, "mTTS is null in sayTask despite ttsReady being true. Re-initializing TTS.");
             initTextToSpeech();
-            pendingSayTasks.add(() -> sayTask(say));
+            pendingSayTasks.add(() -> sayText(say));
             return;
         }
-
         if (context == null) {
             utils.log(TAG, "Context is null in sayTask, cannot proceed with TTS.");
             return;
@@ -299,26 +276,28 @@ public class Sounds {
                 return;
             }
         }
-
-//        blueDevice = BluetoothUtil.getDevice(context);
-        if (mFocusGain != null) {
-            int result = mAM.requestAudioFocus(mFocusGain);
-            if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-                utils.log(TAG, "Audio focus request failed.");
-            }
-        } else {
-            utils.log(TAG, "AudioFocusRequest is null, skipping audio focus request.");
+        setFocusRequest();
+        AudioAttributes attr = isBlueToothOn ?
+                new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+                : new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+        mFocusGain = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                .setAudioAttributes(attr)
+                .build();
+        int res = mAM.requestAudioFocus(mFocusGain);
+        if (res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+            utils.log(TAG, "Audio focus request failed.");
         }
-
-        getCurrVolumes();
-        mTTS.setAudioAttributes(ringAttr);
-        if (isBlueToothOn) {
-            setVolumeTo(14);
-        } else{
-            setVolumeTo(11);
-        }
-
         if (mTTS != null) {
+            mTTS.setAudioAttributes(attr);
+            if (isBlueToothOn) {
+                setVolumeTo(14);
+            } else{
+                setVolumeTo(10);
+            }
             int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "uniqueUtteranceId_" + System.currentTimeMillis());
             if (result == TextToSpeech.ERROR) {
                 utils.log(TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");

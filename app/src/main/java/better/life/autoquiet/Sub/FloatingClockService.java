@@ -1,5 +1,7 @@
 package better.life.autoquiet.Sub;
 
+import static better.life.autoquiet.Sub.Sounds.utils;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -77,8 +79,15 @@ public class FloatingClockService extends Service {
             public void run() {
                 final SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
                 final String currentTime = sdf.format(System.currentTimeMillis());
-                timeTextView.setText(currentTime);
                 String sec = currentTime.substring(currentTime.length() - 3);
+                if (sec.compareTo("00 ") == 0) {
+                    int x = screenWidth / 2;
+                    int y = 1380;  // screenHeight * 87 / 100;
+                    service.performClick(x, y); //  (389, 1360) (54%, 87%)
+                    utils.log("click", "clicked at ("+x+", "+y+")");
+                    stopSelf();
+                }
+                timeTextView.setText(currentTime);
                 int compVal = sec.compareTo("50 ");
                 timeTextView.setTextColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text)
@@ -86,20 +95,9 @@ public class FloatingClockService extends Service {
                 timeTextView.setBackgroundColor((compVal < 0) ?
                         ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_back)
                         : ContextCompat.getColor(FloatingClockService.this, R.color.float_norm_text));
-//                if (compVal == 0) {
-//                    final String app2Load = "kr.co.peoplefund.million";
-//                    launchAndHide(app2Load);
-//                }
-                if (sec.compareTo("00 ") == 0) {
-                    int x = screenWidth / 2;
-                    int y = 1380;  // screenHeight * 87 / 100;
-                    service.performClick(x, y); //  (389, 1360) (54%, 87%)
-//                    Log.e("FloatingClockService", "clicked at ("+x+", "+y+")");
-                    stopSelf();
-                }
                 if (compVal >= 0)
                     PhoneVibrate.go(0);
-                long nxtDelay = 1006 - (System.currentTimeMillis() % 1000);
+                long nxtDelay = 1001 - (System.currentTimeMillis() % 1000);
                 mHandler.postDelayed(this, nxtDelay);
             }
         };

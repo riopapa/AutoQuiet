@@ -24,6 +24,8 @@ import better.life.autoquiet.activity.ActivityOneTime;
 
 public class NotificationService extends Service {
 
+    public static String blueDevice = "";
+    public static boolean isBlueToothOn = false;
     NotificationCompat.Builder mBuilder = null;
     NotificationChannel mNotificationChannel = null;
     NotificationManager mNotificationManager;
@@ -103,7 +105,6 @@ public class NotificationService extends Service {
         txtPaint.setColor(0xFFFFFFFF);
         txtPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         txtPaint.setStrokeWidth(2);
-//        txtPaint.setTypeface(mContext.getResources().getFont(R.font.nanumbarungothic));
         Paint linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         linePaint.setTextAlign(Paint.Align.LEFT);
