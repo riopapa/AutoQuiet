@@ -3,7 +3,6 @@ package better.life.autoquiet.Sub;
 import static better.life.autoquiet.Sub.Sounds.utils;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -37,8 +36,8 @@ public class FloatingClockService extends Service {
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mUpdateTimeTask;
-    final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss.S", Locale.getDefault());
     MyAccessibilityService service;
+    final SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -77,12 +76,11 @@ public class FloatingClockService extends Service {
         mUpdateTimeTask = new Runnable() {
             @Override
             public void run() {
-                final SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss ", Locale.getDefault());
                 final String currentTime = sdf.format(System.currentTimeMillis());
                 String sec = currentTime.substring(currentTime.length() - 3);
                 if (sec.compareTo("00 ") == 0) {
                     int x = screenWidth / 2;
-                    int y = 1380;  // screenHeight * 87 / 100;
+                    int y = screenHeight * 87 / 100;
                     service.performClick(x, y); //  (389, 1360) (54%, 87%)
                     utils.log("click", "clicked at ("+x+", "+y+")");
                     stopSelf();
@@ -136,16 +134,8 @@ public class FloatingClockService extends Service {
         });
         service = MyAccessibilityService.instance;
         if (service == null) {
-            Log.e("onCreate", " ----------- AccessibilityService instance is null");
+            utils.log("FloatSVC", " -------  instance is null");
         }
-
-    }
-
-    // 크플 투자하기  (434, 1370) (60%, 87%)
-
-    private void launchAndHide(String tossApp) {
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(tossApp);
-        startActivity(launchIntent);
     }
 
     @Override
