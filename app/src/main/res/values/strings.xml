@@ -27,13 +27,10 @@
     <string name="update_table"> 수정</string>
     <string name="add_table"> 추가</string>
     <string name="no_subject">제목이 없어요</string>
-    <string name="at_least_one_day_selected">적어도 하루는 선택해야 하지 않을까요?</string>
-    <string name="date_time">23:59 까지</string>
+    <string name="at_least_one_day_selected">하나는 골라</string>
     <string name="subject_name">Weekly DayTime</string>
-    <string name="startFinish">시작</string>
     <string name="reset_table">이미 설정되어 있는 테이블을 다 삭제하고 초기화 합니다</string>
     <string name="reset_title">데이터 초기화</string>
-    <string name="click_to_stop_speaking">Click to stop speaking</string>
     <string name = "action_sort">소트</string>
 
     <string name="bell_several_time">벨과 제목을 여러 번 울려줌</string>
@@ -43,9 +40,19 @@
     <string name="phone_work">일할 때는 소리 작게</string>
     <string name="phone_off">종료 시각까지 조용히</string>
 
-    <string name="finishing_started">끝나는 중</string>
-    <string name="finished">" 끄으읏 "</string>
     <string name="finishing_completed">끝났어요</string>
     <string name="app_widget_description">AutoQuiet Widget</string>
+
+    <string name="am">오전</string>
+    <string name="pm">오후</string>
+    <string name="changed_to_weekday">요일을 %1$s(으)로 바꿈</string>
+    <string name="active">활성화</string>
+    <string name="repeat_date">날짜 반복</string>
+    <string name="tomorrow">내일</string>
+    <string name="vibrate">떨기</string>
+    <string name="date_format">MM-dd(EEE)</string>
+    <string name="arrow_back">←</string>
+    <string name="arrow_fore">→</string>
+    <string name="clock">시계</string>
 
 </resources>

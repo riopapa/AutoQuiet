@@ -58,9 +58,9 @@ public final class TaskBellType {
                 qt.active = false;
                 quietTasks.set(nt.idx, qt);
                 QuietTaskGetPut.put();
-                ScheduleNextTask.request("TaskBellType");
+                ScheduleNextTask.request("BellType");
             }
-        }, 2500);
+        }, 3000);
     }
 
 
@@ -97,7 +97,7 @@ public final class TaskBellType {
                     QuietTaskGetPut.put();
                 }
             }
-        }, 1000);
+        }, 2000);
     }
 
     static int secRemaining(NextTask nt, long time) {
@@ -129,7 +129,7 @@ public final class TaskBellType {
                 sounds.sayText(say);
                 ScheduleNextTask.request("event");
             }
-        }, 1500);
+        }, 2500);
     }
 
 }

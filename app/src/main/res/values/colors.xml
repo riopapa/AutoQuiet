@@ -4,7 +4,6 @@
     <color name="colorTimer">#CEECE8</color>
     <color name="colorPrimaryDark">#02937F</color>
     <color name="colorAccent">#ccD81B60</color>
-    <color name="black">#000000</color>
     <color name="white">#FFF</color>
 
     <color name="widgetText">#EAEAD0</color>
@@ -14,13 +13,13 @@
 
     <color name="itemNormalBorder">#788887</color>
     <color name="itemNormalFill">#9FCF67</color>
+    <color name="itemNotSelected">#209FCF67</color>
     <color name="itemSelectBorder">#91BABA</color>
     <color name="itemSelectFill">#697D54</color>
     <color name="colorSelected">#66AFA2</color>
 
     <color name="itemAgendaFill">#CAF1A3</color>
 
-    <color name="colorMain">#AAE1A3</color>
     <color name="colorClockDark">#0D9186</color>
     <color name="colorInactiveBack">#808080</color>
     <color name="colorOn">#000080</color>

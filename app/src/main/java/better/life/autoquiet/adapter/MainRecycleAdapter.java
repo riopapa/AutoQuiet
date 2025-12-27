@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -233,6 +234,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
                 boolean[] week = qt.week;
                 for (int i = 0; i < 7; i++) {
                     tViewWeek[i].setTextColor(active ? colorActive : colorOff);
+                    tViewWeek[i].setTypeface(null, active && week[i] ? Typeface.BOLD : Typeface.ITALIC);
                     if (active)
                         tViewWeek[i].setBackgroundColor(week[i] ? colorOnBack : colorOffBack);
                     else

@@ -52,7 +52,7 @@ public final class TaskRun {
                 break;
 
             default:
-                String say = nt.subject + "AlarmType 에러 확인 "+nt.alarmType;
+                String say = nt.subject + "AM Type 에러 "+nt.alarmType;
                 sounds.sayText(say);
         }
     }
@@ -74,9 +74,9 @@ public final class TaskRun {
                         sounds.setVibrateMode();
                     ScheduleNextTask.request("Start");
                 }
-            }, 10000);
+            }, 30000);
             }
-        }, 3000);
+        }, 2000);
     }
 
     public static void one(NextTask nt) {
@@ -86,7 +86,7 @@ public final class TaskRun {
             @Override
             public void run() {
                 String say = "지금은 " + nowTimeToString(System.currentTimeMillis()) +
-                        " 입니다. 무음 모드가 끝났습니다";
+                        " 입니다. 무음 모드 끄읏";
                 sounds.sayText(say);
             }
         }, 2000);
@@ -94,7 +94,7 @@ public final class TaskRun {
         qt.active = false;
         quietTasks.set(0, qt);
         QuietTaskGetPut.put();
-        ScheduleNextTask.request("After oneTime");
+        ScheduleNextTask.request("#o");
     }
 
     static String nowTimeToString(long time) {
@@ -110,7 +110,7 @@ public final class TaskRun {
                 sounds.setVolumeTo(10);
                 finish_Normal(nt);
             }
-        }, 500);
+        }, 1000);
     }
 
     private static void finish_Normal(NextTask nt) {
@@ -130,7 +130,7 @@ public final class TaskRun {
                 new Utils().deleteOldLogFiles();
                 PhoneVibrate.go(1);
             }
-        }, 1800);
+        }, 2200);
     }
 
 }

@@ -50,7 +50,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     private Context context;
     private int xSize, numPos;
     private Dialog dialog;
-    final String[] weekName = {"주", "월", "화", "수", "목", "금", "토"};
+    private String[] weekName;
 
     final int[] alarmTypeNames = { 0,
         R.string.bell_several_time,
@@ -99,13 +99,23 @@ public class ActivityAddEdit extends AppCompatActivity {
 //        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
 
+        weekName = new String[]{
+                getString(R.string.week_0),
+                getString(R.string.week_1),
+                getString(R.string.week_2),
+                getString(R.string.week_3),
+                getString(R.string.week_4),
+                getString(R.string.week_5),
+                getString(R.string.week_6)
+        };
+
         weekView[0] = binding.avWeek0; weekView[1] = binding.avWeek1;
         weekView[2] = binding.avWeek2; weekView[3] = binding.avWeek3;
         weekView[4] = binding.avWeek4; weekView[5] = binding.avWeek5;
         weekView[6] = binding.avWeek6;
         colorOn = ContextCompat.getColor(context, R.color.colorOn);
         colorOnBack = ContextCompat.getColor(context, R.color.colorOnBack);
-        colorOffBack = ContextCompat.getColor(context, R.color.itemNormalFill);
+        colorOffBack = ContextCompat.getColor(context, R.color.itemNotSelected);
         BGColorOff = ContextCompat.getColor(context, R.color.BackGroundActiveOff);
         BGColorOn = ContextCompat.getColor(context, R.color.BackGroundActiveOn);
 
@@ -247,7 +257,7 @@ public class ActivityAddEdit extends AppCompatActivity {
         });
 
         if (agenda) {
-            SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd(EEE)", Locale.getDefault());
+            SimpleDateFormat sdfDate = new SimpleDateFormat(getString(R.string.date_format), Locale.getDefault());
             String s = sdfDate.format(qT.calBegDate);
             if (!qT.calLocation.isEmpty())
                 s += "\n" + qT.calLocation;
@@ -333,7 +343,7 @@ public class ActivityAddEdit extends AppCompatActivity {
     }
 
     private void show_ResultTime() {
-        binding.amPm.setText(am ? "오전":"오후");
+        binding.amPm.setText(am ? getString(R.string.am) : getString(R.string.pm));
         String s = (sHour > 9) ? String.valueOf(sHour) : "0"+sHour;
         String s1 = s.substring(0,1); String s2 = s.substring(1);
         binding.numHH1.setText(s1); binding.numHH1.setBackgroundColor(0x00bbbbbb);
@@ -370,13 +380,13 @@ public class ActivityAddEdit extends AppCompatActivity {
             for (int wk = 0; wk < 7; wk++) {
                 week[wk] = i == wk;
                 weekView[wk].setBackgroundColor((week[wk]) ? colorOnBack : colorOffBack);
-                weekView[wk].setTypeface(null, (week[wk]) ? Typeface.BOLD : Typeface.NORMAL);
+                weekView[wk].setTypeface(null, (week[wk]) ? Typeface.BOLD : Typeface.ITALIC);
                 weekView[wk].invalidate();
             }
         } else {
             week[i] ^= true;
             weekView[i].setBackgroundColor((week[i]) ? colorOnBack : colorOffBack);
-            weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD : Typeface.NORMAL);
+            weekView[i].setTypeface(null, (week[i]) ? Typeface.BOLD : Typeface.ITALIC);
             v.invalidate();
         }
     }
@@ -481,7 +491,7 @@ public class ActivityAddEdit extends AppCompatActivity {
             if (weekDay > 6)
                 weekDay = 0;
             week[weekDay] = true;
-            Toast.makeText(context, "요일을 "+weekName[weekDay]+" 로 바꿈",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.changed_to_weekday, weekName[weekDay]),Toast.LENGTH_SHORT).show();
         }
         qT = new QuietTask(subject, begHour, begMin, endHour, endMin,
                 week, active, alarmType, sayDate);

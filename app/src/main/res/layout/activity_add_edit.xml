@@ -4,7 +4,8 @@
               android:id = "@+id/addUpdate"
               android:orientation="vertical"
               android:layout_width = "match_parent"
-              android:layout_height = "match_parent">
+              android:layout_height = "match_parent"
+              android:fitsSystemWindows="true">
     <LinearLayout
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
@@ -12,7 +13,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/alarm_type"
+            android:id="@+id/alarmType"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_margin="4dp"
@@ -41,7 +42,6 @@
         android:gravity = "center">
 
         <TextView
-            android:id="@+id/txt_beg"
             android:layout_width = "0dp"
             android:layout_height = "wrap_content"
             android:layout_margin = "2dp"
@@ -53,7 +53,7 @@
             android:textStyle = "bold" />
 
         <TextView
-            android:id="@+id/txt_end"
+            android:id="@+id/txtEnd"
             android:layout_width = "0dp"
             android:layout_height = "wrap_content"
             android:layout_margin = "2dp"
@@ -67,7 +67,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id = "@+id/timeTicker"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:gravity = "center"
@@ -116,11 +115,11 @@
                 android:textSize = "32sp" />
 
             <TextView
-                android:id = "@+id/am_pm"
+                android:id="@+id/amPm"
                 android:layout_width = "0dp"
                 android:layout_height = "wrap_content"
                 android:layout_weight = "3"
-                android:text = "오전"
+                android:text = "@string/am"
                 android:textColor = "#33CC33"
                 android:textSize = "24sp" />
 
@@ -376,7 +375,7 @@
                 android:background = "@drawable/button_number"
                 android:gravity = "center"
                 android:tag = "b"
-                android:text = "←"
+                android:text = "@string/arrow_back"
                 android:textColor = "#510A0A"
                 android:textSize = "32sp" />
 
@@ -401,7 +400,7 @@
                 android:background = "@drawable/button_number"
                 android:gravity = "center"
                 android:tag = "o"
-                android:text = "→"
+                android:text = "@string/arrow_fore"
                 android:textColor = "#1733D1"
                 android:textSize = "32sp" />
 
@@ -427,17 +426,17 @@
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_gravity = "center_vertical"
-            android:text = "활성화"
+            android:text = "@string/active"
             android:gravity="end"
             android:textColor="#235E23"
             android:textSize = "14sp"
             tools:ignore = "UseSwitchCompatOrMaterialXml" />
 
         <Switch
-            android:id = "@+id/say_date"
+            android:id="@+id/sayDate"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
-            android:text = "날짜 반복"
+            android:text = "@string/repeat_date"
             android:gravity="end"
             android:textColor="#235E23"
             android:textSize = "14sp"
@@ -448,7 +447,7 @@
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_gravity = "center_vertical"
-            android:text = "내일"
+            android:text = "@string/tomorrow"
             android:gravity="end"
             android:textColor="#235E23"
             android:textSize = "14sp"
@@ -459,7 +458,7 @@
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_gravity = "center_vertical"
-            android:text = "떨기"
+            android:text = "@string/vibrate"
             android:gravity="end"
             android:textColor="#235E23"
             android:textSize = "14sp"
@@ -468,7 +467,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id = "@+id/titles"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:gravity = "center"
@@ -494,7 +492,7 @@
         android:layout_weight="3"
         android:layout_height = "wrap_content"
         android:layout_gravity = "center_vertical"
-        android:text = "시계"
+        android:text = "@string/clock"
         android:gravity="end"
         android:textColor="#235E23"
         android:textSize = "14sp"
@@ -509,7 +507,7 @@
         android:orientation = "horizontal">
 
         <TextView
-            android:id = "@+id/av_week0"
+            android:id="@+id/avWeek0"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -522,7 +520,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week1"
+            android:id="@+id/avWeek1"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -535,7 +533,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week2"
+            android:id="@+id/avWeek2"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -548,7 +546,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week3"
+            android:id="@+id/avWeek3"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -561,7 +559,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week4"
+            android:id="@+id/avWeek4"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -574,7 +572,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week5"
+            android:id="@+id/avWeek5"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"
@@ -587,7 +585,7 @@
             android:textSize = "@dimen/edit_week" />
 
         <TextView
-            android:id = "@+id/av_week6"
+            android:id="@+id/avWeek6"
             android:layout_width = "wrap_content"
             android:layout_height = "wrap_content"
             android:layout_margin = "1dp"

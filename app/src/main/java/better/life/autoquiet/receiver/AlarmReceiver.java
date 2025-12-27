@@ -3,10 +3,12 @@ package better.life.autoquiet.receiver;
 import static better.life.autoquiet.activity.ActivityMain.quietTasks;
 import static better.life.autoquiet.activity.ActivityMain.sounds;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import better.life.autoquiet.QuietTaskGetPut;
 import better.life.autoquiet.TaskAction.TaskRun;
@@ -29,6 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (sounds == null) {
             sounds =  Sounds.getInstance(context.getApplicationContext());
         }
+
         Bundle args = intent.getBundleExtra("DATA");
         nt = (NextTask) args.getSerializable("nextTask");
         if (quietTasks == null)
@@ -48,4 +51,5 @@ public class AlarmReceiver extends BroadcastReceiver {
                         + " " + nt.subject);
         }
     }
+
 }

@@ -123,7 +123,6 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/iVVibrate"
             android:layout_width="40dp"
             android:layout_height="48dp"
             android:src="@drawable/phone_vibrate"
@@ -136,7 +135,6 @@
             android:textStyle="bold"
             android:textSize="16sp" />
         <ImageView
-            android:id="@+id/aBegLoop"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@drawable/speak_on"
@@ -149,7 +147,6 @@
             android:text="종료"
             android:textSize="16sp" />
         <ImageView
-            android:id="@+id/aEndLoop"
             android:layout_width="28dp"
             android:layout_height="32dp"
             android:src="@drawable/speak_on"

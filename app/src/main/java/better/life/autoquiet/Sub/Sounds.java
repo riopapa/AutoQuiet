@@ -2,6 +2,7 @@ package better.life.autoquiet.Sub;
 
 import static better.life.autoquiet.NotificationService.isBlueToothOn;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -150,7 +151,7 @@ public class Sounds {
                     } else if (isMute) {
                         mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
                     }
-                }, 2000);
+                }, 3000);
             }
         });
 
@@ -160,12 +161,12 @@ public class Sounds {
             if (voice.getName().equals("ko-kr-x-kod-local")) {
                 mTTS.setVoice(voice);
                 voiceSet = true;
-                Log.d(TAG, "Set TTS voice to: " + voice.getName());
+//                Log.d(TAG, "Set TTS voice to: " + voice.getName());
                 break;
             }
         }
         if (!voiceSet) {
-            utils.log(TAG, "Specific Korean voice 'ko-kr-x-kod-local' not found. Using default.");
+            utils.log(TAG, "#l 'ko-kr-x-kod-local'");
         }
     }
 
@@ -183,14 +184,26 @@ public class Sounds {
     }
 
     public void setNormalMode() {
+        if (!canChangeDnd()) {
+            utils.log(TAG, "No DND permission, skip setNormalMode");
+            return;
+        }
         mAM.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     public void setSilentMode() {
+        if (!canChangeDnd()) {
+            utils.log(TAG, "No DND permission, skip setNormalMode");
+            return;
+        }
         mAM.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     }
 
     public void setVibrateMode() {
+        if (!canChangeDnd()) {
+            utils.log(TAG, "No DND permission, skip setNormalMode");
+            return;
+        }
         mAM.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
     }
 
@@ -198,7 +211,7 @@ public class Sounds {
         if (context != null) {
             mAM = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         } else {
-            utils.log(TAG, "Context is null, cannot initialize AudioManager.");
+            utils.log(TAG, "#k Context is null");
         }
     }
 
@@ -212,7 +225,7 @@ public class Sounds {
             beepMP.setDataSource(context, dataSrc[beep.ordinal()]);
             beepMP.setOnPreparedListener(MediaPlayer::start);
             beepMP.setOnErrorListener((mp, what, extra) -> {
-                utils.log(TAG, "#m MediaPlayer Error: " + what + ", " + extra);
+                utils.log(TAG, "#m MP Error: " + what + ", " + extra);
                 mp.release();
                 return true;
             });
@@ -222,7 +235,7 @@ public class Sounds {
                 mp.release();
             });
         } catch (Exception err) {
-            new Utils().log(TAG,"setDataSource "+beep+" Error: "+err);
+            new Utils().log(TAG,"#h DataSource "+beep+" Err: "+err);
             beepMP.release();
             setVolumeTo(rVol);
             return;
@@ -235,7 +248,7 @@ public class Sounds {
             beepMP.prepareAsync();
         } catch (Exception err) {
             beepMP.release();
-            new Utils().log(TAG,"prepareAsync "+beep+" Error: "+err);
+            new Utils().log(TAG,"#g Async "+beep+" Err: "+err);
         }
     }
 
@@ -253,26 +266,26 @@ public class Sounds {
         }
         synchronized (ttsInitLock) {
             if (!ttsReady) {
-                utils.log(TAG, "TTS not ready, queuing sayTask request: " + say);
+                utils.log(TAG, "#f TTS not ready " + say);
                 pendingSayTasks.add(() -> sayText(say));
                 return;
             }
         }
 
         if (mTTS == null) {
-            utils.log(TAG, "mTTS is null in sayTask despite ttsReady being true. Re-initializing TTS.");
+            utils.log(TAG, "#e mTTS is null");
             initTextToSpeech();
             pendingSayTasks.add(() -> sayText(say));
             return;
         }
         if (context == null) {
-            utils.log(TAG, "Context is null in sayTask, cannot proceed with TTS.");
+            utils.log(TAG, "#d Context is null");
             return;
         }
         if (mAM == null) {
             initAudioManager();
             if (mAM == null) {
-                utils.log(TAG, "AudioManager not initialized in sayTask, cannot proceed with TTS.");
+                utils.log(TAG, "#c AM not initialized");
                 return;
             }
         }
@@ -289,7 +302,7 @@ public class Sounds {
                 .build();
         int res = mAM.requestAudioFocus(mFocusGain);
         if (res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-            utils.log(TAG, "Audio focus request failed.");
+            utils.log(TAG, "#b Afocus failed.");
         }
         if (mTTS != null) {
             mTTS.setAudioAttributes(attr);
@@ -298,15 +311,18 @@ public class Sounds {
             } else{
                 setVolumeTo(10);
             }
-            int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "uniqueUtteranceId_" + System.currentTimeMillis());
+            int result = mTTS.speak(say, TextToSpeech.QUEUE_FLUSH, null, "u_" + System.currentTimeMillis());
             if (result == TextToSpeech.ERROR) {
-                utils.log(TAG, "Error speaking: " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
+                utils.log(TAG, "#y Error " + say + " (TTS status: " + mTTS.isSpeaking() + ")");
                 setVolumeTo(1);
             } else {
-                utils.log(TAG, "TTS speaking: " + say);
+                getCurrVolumes();
+                Log.w("volume","after speak rVol = "+rVol);
+//                if (rVol > ")
+//                utils.log(TAG, "TTS speaking: " + say);
             }
         } else {
-            utils.log(TAG, "mTTS is null when attempting to speak: " + say);
+            utils.log(TAG, "#x mTTS is null " + say);
         }
     }
 
@@ -315,7 +331,7 @@ public class Sounds {
             mAM.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
             mAM.setStreamVolume(AudioManager.STREAM_ACCESSIBILITY, volume, 0);
         } else {
-            new Utils().log(TAG, "AudioManager is null, cannot set volume.");
+            new Utils().log(TAG, "#z AM null");
         }
     }
 
@@ -323,22 +339,28 @@ public class Sounds {
         if (mAM != null) {
             rVol = mAM.getStreamVolume(AudioManager.STREAM_RING);
         } else {
-            utils.log(TAG, "AudioManager is null, cannot get current volumes.");
+            utils.log(TAG, "#a AM null");
         }
     }
 
-    public void shutdown() {
-        synchronized (ttsInitLock) {
-            if (mTTS != null) {
-                mTTS.stop();
-                mTTS.shutdown();
-                mTTS = null;
-            }
-            if (mAM != null && mFocusGain != null) {
-                mAM.abandonAudioFocusRequest(mFocusGain);
-            }
-            ttsReady = false;
-            pendingSayTasks.clear();
-        }
+    private boolean canChangeDnd() {
+        NotificationManager nm =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        return nm != null && nm.isNotificationPolicyAccessGranted();
     }
+
+//    public void shutdown() {
+//        synchronized (ttsInitLock) {
+//            if (mTTS != null) {
+//                mTTS.stop();
+//                mTTS.shutdown();
+//                mTTS = null;
+//            }
+//            if (mAM != null && mFocusGain != null) {
+//                mAM.abandonAudioFocusRequest(mFocusGain);
+//            }
+//            ttsReady = false;
+//            pendingSayTasks.clear();
+//        }
+//    }
 }
